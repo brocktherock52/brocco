@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#050807">
+<title>Claude Desktop MCP servers in 2026: 10 every builder should install</title>
+<meta name="description" content="Ten Claude Desktop MCP servers worth installing in 2026: filesystem, GitHub, Brave, Postgres, brocco, Slack, Notion, Linear, Stripe, Tavily. Setup configs and when to combine them.">
+<meta property="og:title" content="Claude Desktop MCP servers in 2026: 10 every builder should install">
+<meta property="og:description" content="Ten MCP servers worth installing today, with setup snippets and when to combine.">
+<meta property="og:type" content="article">
+<meta property="og:image" content="/assets/og.svg">
+<meta property="article:published_time" content="2026-05-02T18:00:00-04:00">
+<meta property="article:author" content="brocco.ai">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="canonical" href="https://brocco.ai/blog/claude-desktop-mcp-servers-2026">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/styles.css">
+<style>
+  .post-hero { padding: 140px 0 36px; border-bottom: 1px solid var(--border); }
+  .post-meta { font-family: var(--font-mono); font-size: 12.5px; color: var(--fg-dim); margin-bottom: 18px; letter-spacing: 0.06em; }
+  .post-meta .by { color: var(--brand-glow); }
+  .post-hero h1 { font-size: clamp(36px, 5.5vw, 60px); margin: 0 0 18px; letter-spacing: -0.025em; line-height: 1.05; }
+  .post-hero .lead { font-size: 19px; color: var(--fg-mid); max-width: 740px; margin: 0; }
+  .post { max-width: 760px; margin: 56px auto 96px; padding: 0 var(--gutter); color: var(--fg-mid); }
+  .post p, .post li { line-height: 1.7; font-size: 17px; }
+  .post p { margin: 22px 0; }
+  .post strong { color: var(--fg); }
+  .post em { color: var(--fg); font-style: italic; }
+  .post h2 { font-size: 28px; margin: 56px 0 16px; color: var(--fg); letter-spacing: -0.02em; }
+  .post h3 { font-size: 21px; margin: 36px 0 12px; color: var(--brand-glow); letter-spacing: -0.015em; }
+  .post a { color: var(--brand-glow); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  .post a:hover { color: var(--fg); }
+  .post pre { background: var(--bg-2); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin: 14px 0 22px; overflow-x: auto; font-family: var(--font-mono); font-size: 13px; line-height: 1.55; color: var(--fg); }
+  .post code { font-family: var(--font-mono); font-size: 14.5px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 5px; padding: 1px 6px; color: var(--brand-glow); }
+  .post pre code { background: none; border: 0; padding: 0; color: var(--fg); }
+  .post blockquote { border-left: 3px solid var(--brand); padding: 6px 0 6px 22px; margin: 28px 0; color: var(--fg); font-size: 18px; line-height: 1.55; }
+  .post hr { border: 0; border-top: 1px solid var(--border); margin: 48px 0; }
+  .toc { background: var(--bg-1); border: 1px solid var(--border); border-radius: 12px; padding: 22px 26px; margin: 28px 0 36px; }
+  .toc h4 { font-family: var(--font-mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.16em; color: var(--fg-faint); margin: 0 0 10px; }
+  .toc ol { padding-left: 22px; margin: 0; color: var(--fg-mid); }
+  .toc ol li { padding: 3px 0; font-size: 14.5px; }
+  .toc ol li a { color: var(--fg-mid); text-decoration: none; }
+  .toc ol li a:hover { color: var(--brand-glow); }
+  .end-cta { padding: 36px; background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(34,197,94,0.02)); border: 1px solid rgba(34,197,94,0.25); border-radius: var(--radius-lg); margin: 56px 0; text-align: center; }
+  .end-cta h3 { color: var(--fg); margin: 0 0 8px; font-size: 22px; }
+  .end-cta p { margin: 0 0 18px; color: var(--fg-mid); }
+  .badge-row { display: flex; flex-wrap: wrap; gap: 8px; margin: 24px 0; }
+  .badge-row .b { padding: 5px 12px; background: var(--bg-1); border: 1px solid var(--border); border-radius: 999px; font-size: 12.5px; color: var(--fg-mid); font-family: var(--font-mono); }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Claude Desktop MCP servers in 2026: 10 every builder should install",
+  "description": "Ten Claude Desktop MCP servers worth installing in 2026 with setup configs.",
+  "image": "https://brocco.ai/assets/og.svg",
+  "datePublished": "2026-05-02T18:00:00-04:00",
+  "dateModified": "2026-05-02T18:00:00-04:00",
+  "author": { "@type": "Organization", "name": "brocco.ai" },
+  "publisher": { "@type": "Organization", "name": "brocco.ai", "logo": { "@type": "ImageObject", "url": "https://brocco.ai/assets/logomark.svg" } },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://brocco.ai/blog/claude-desktop-mcp-servers-2026" }
+}
+</script>
+</head>
+<body>
+
+<nav class="nav scrolled">
+  <a href="/" class="nav__brand">
+    <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true">
+      <path d="M 2 36 L 4 38 Q 1 42 5 42 L 10 40 L 16 39 L 20 39 L 20 44 L 18 44 L 18 38.5 L 26 38 L 32 38 L 32 44 L 30 44 L 30 38 L 36 38 L 42 38.5 L 48 39.5 L 56 40.5 L 62 41 L 62 39 L 58 39 L 58 37 L 62 37 L 62 35 L 56 33 L 50 32 L 46 31 L 40 30 L 38 27 L 36 30 L 32 30 L 30 26 L 28 30 L 24 30 L 22 27 L 20 30 L 16 31 L 12 33 L 8 34 Z"/>
+      <circle cx="52" cy="33" r="1.3" fill="#0a0d10"/>
+    </svg>
+    <span>brocco<span class="dim">.ai</span></span>
+  </a>
+  <div class="nav__links">
+    <a href="/app/" style="color: var(--brand-glow); font-weight: 600;">Open app</a>
+    <a href="/recipes">Recipes</a>
+    <a href="/#pricing">Pricing</a>
+    <a href="/docs">Docs</a>
+    <a href="/download">Download</a>
+  </div>
+  <div class="nav__cta">
+    <a href="/#cta" class="btn btn--primary" style="padding: 9px 16px; font-size: 13.5px;">Open app <span class="arrow">&rarr;</span></a>
+  </div>
+</nav>
+
+<header class="post-hero">
+  <div class="container">
+    <div class="post-meta">May 2026 . 9 min read . <span class="by">tested live in Claude Desktop 1.x</span></div>
+    <h1>Claude Desktop MCP servers in 2026: 10 every builder should install</h1>
+    <p class="lead">MCP went from "interesting protocol" to "the way Claude Desktop talks to your tools" in about six months. Here are the ten servers that justify the install time, what each one unlocks, and the configs to paste.</p>
+    <div class="badge-row">
+      <span class="b">filesystem</span><span class="b">github</span><span class="b">brave</span><span class="b">postgres</span><span class="b">brocco</span>
+      <span class="b">slack</span><span class="b">notion</span><span class="b">linear</span><span class="b">stripe</span><span class="b">tavily</span>
+    </div>
+  </div>
+</header>
+
+<article class="post">
+
+<p>If you opened Claude Desktop a year ago, it was a chat window. If you open it today, it's a chat window plus access to your filesystem, your codebase, your CRM, your database, your task tracker, your billing, and a dozen other things you didn't even know you wanted Claude to see. The thing that changed: <strong>Model Context Protocol (MCP)</strong>, Anthropic's standard for letting Claude call tools that live outside the model.</p>
+
+<p>The catch: there are now hundreds of MCP servers, most of them not worth installing. This post is a tested shortlist. Ten servers, what each one actually does for you, and the exact <code>claude_desktop_config.json</code> snippet to paste. By the end you'll have a Claude Desktop that can read your repo, query your database, draft a Linear ticket, post to Slack, and run multi-agent research jobs, all without leaving the conversation.</p>
+
+<div class="toc">
+  <h4>The 10</h4>
+  <ol>
+    <li><a href="#filesystem">Filesystem</a> &mdash; read and write local files</li>
+    <li><a href="#github">GitHub</a> &mdash; issues, PRs, code search</li>
+    <li><a href="#brave">Brave Search</a> &mdash; private web search</li>
+    <li><a href="#postgres">Postgres</a> &mdash; query your real database</li>
+    <li><a href="#brocco">brocco</a> &mdash; multi-agent runs as MCP tools</li>
+    <li><a href="#slack">Slack</a> &mdash; read channels and post messages</li>
+    <li><a href="#notion">Notion</a> &mdash; pages, databases, blocks</li>
+    <li><a href="#linear">Linear</a> &mdash; issues, projects, cycles</li>
+    <li><a href="#stripe">Stripe</a> &mdash; customers, subscriptions, invoices</li>
+    <li><a href="#tavily">Tavily</a> &mdash; web search with synthesis</li>
+  </ol>
+</div>
+
+<h2>Quick MCP primer (skip if you've shipped one)</h2>
+
+<p>MCP is a JSON-RPC 2.0 protocol over stdin/stdout. A "server" is any process that registers a list of tools when Claude Desktop launches it. Claude calls a tool, the server runs whatever code it wants, returns a result. That's the entire shape.</p>
+
+<p>You configure servers by editing <code>claude_desktop_config.json</code> (Claude Desktop &raquo; Settings &raquo; Developer &raquo; Edit Config). The file looks like:</p>
+
+<pre><code>{
+  "mcpServers": {
+    "name-of-your-choice": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-foo"],
+      "env": { "API_KEY": "..." }
+    }
+  }
+}</code></pre>
+
+<p>Restart Claude Desktop and the tools appear under the &darr; menu in the message input. You can call them in plain English: <em>"use the filesystem tool to read package.json."</em></p>
+
+<p>One operational note: Claude Desktop runs each server as a separate subprocess. Servers that need network or credentials get them through the <code>env</code> block in the config. Don't put real secrets in a file you commit. Use a <code>.env.local</code> file the config references, or a secret manager.</p>
+
+<h2 id="filesystem">1. Filesystem MCP server</h2>
+
+<p>This is the one to install first. The official <code>@modelcontextprotocol/server-filesystem</code> gives Claude Desktop read and write access to a directory you scope. Claude can read your project, edit files, run git, all without you copy-pasting code into the chat.</p>
+
+<pre><code>"filesystem": {
+  "command": "npx",
+  "args": [
+    "-y",
+    "@modelcontextprotocol/server-filesystem",
+    "/Users/you/projects/my-app",
+    "/Users/you/Documents"
+  ]
+}</code></pre>
+
+<p>Pass one or more directory paths as args. Claude can read, write, and list anything inside those roots, but cannot escape them. If you only want read-only access, scope to a directory the user-account doesn't have write permission on.</p>
+
+<p>What this unlocks: <em>"read README.md, then update package.json to bump the version, then write a CHANGELOG entry."</em></p>
+
+<h2 id="github">2. GitHub MCP server</h2>
+
+<p>The official GitHub MCP server lets Claude search repos, read issues and PRs, write comments, and create issues or PRs. Faster than asking Claude to invent code that might not match what's actually on main.</p>
+
+<pre><code>"github": {
+  "command": "npx",
+  "args": ["-y", "@modelcontextprotocol/server-github"],
+  "env": {
+    "GITHUB_PERSONAL_ACCESS_TOKEN": "ghp_..."
+  }
+}</code></pre>
+
+<p>Generate a token at github.com/settings/tokens with <code>repo</code> + <code>read:org</code> scopes. The server respects the token's permissions, so you can use a fine-grained token scoped to one repo if you want.</p>
+
+<p>What this unlocks: <em>"search issues in brocco-ai/charter for 'BOM' and summarize the resolved ones."</em></p>
+
+<h2 id="brave">3. Brave Search MCP server</h2>
+
+<p>Web search inside Claude Desktop without paying Anthropic for the search-augmented model tier. Brave's API is cheap (free tier 2k queries/mo, $5/mo for 20k) and the privacy story is actually believable.</p>
+
+<pre><code>"brave": {
+  "command": "npx",
+  "args": ["-y", "@modelcontextprotocol/server-brave-search"],
+  "env": { "BRAVE_API_KEY": "..." }
+}</code></pre>
+
+<p>Why Brave specifically: their API doesn't track queries, doesn't bias toward Bing's index, and works without a card on the free tier. If you want Tavily-style synthesis instead of raw search results, see #10 below.</p>
+
+<h2 id="postgres">4. Postgres MCP server</h2>
+
+<p>Read-only query access to a Postgres database from inside the chat. The official <code>@modelcontextprotocol/server-postgres</code> defaults to read-only, which is the right default for Claude. Schema introspection on connect, so Claude knows your tables.</p>
+
+<pre><code>"postgres": {
+  "command": "npx",
+  "args": [
+    "-y",
+    "@modelcontextprotocol/server-postgres",
+    "postgresql://user:pass@host:5432/mydb"
+  ]
+}</code></pre>
+
+<p>What this unlocks: <em>"how many users signed up last week, broken down by referral source?"</em> Claude writes the SQL, runs it, summarizes. Three steps you used to do by tabbing to Metabase.</p>
+
+<p>For writes, run a separate server with a different name and a write-permission database role. Don't use the same role for both.</p>
+
+<h2 id="brocco">5. brocco (multi-agent runs as MCP tools)</h2>
+
+<p>This is where this list stops being just a tool aggregator and starts being a multi-agent platform. <a href="/">brocco</a> is a multi-agent dashboard where each agent (researcher, coder, outreach, supervisor, planner, browser, designer, app_builder, analyst) has its own system prompt and tool set. The brocco MCP server exposes every agent as one MCP tool.</p>
+
+<p>So instead of <em>"search the web for X, then fetch URL Y, then synthesize a brief"</em>, you say <em>"use brocco_researcher to give me a brief on X"</em>, and brocco runs the full agent loop end-to-end inside Claude Desktop. The output comes back as a single tool result with a sourced markdown brief.</p>
+
+<pre><code>"brocco": {
+  "command": "python",
+  "args": ["-m", "charter.mcp_server"],
+  "env": {
+    "ANTHROPIC_API_KEY": "sk-ant-...",
+    "TAVILY_API_KEY": "tvly-..."
+  }
+}</code></pre>
+
+<p>Install: <code>git clone https://github.com/brocco-ai/charter && pip install -e .</code> in that directory once. Setup writeup at <a href="/download#mcp-setup">brocco.ai/download</a>.</p>
+
+<p>Why combine MCP servers this way: each brocco agent already knows the right tool sequence for its specialty. The researcher agent knows to search-then-fetch-then-synthesize. The coder knows to read-then-plan-then-write. By exposing them as MCP tools, you skip the prompt engineering Claude would otherwise need to choreograph the same multi-step loop.</p>
+
+<h2 id="slack">6. Slack MCP server</h2>
+
+<p>The official Slack MCP server lets Claude read channel history and post messages. Combined with the brocco researcher, this becomes <em>"summarize this week's #engineering channel and post the summary to #weekly-updates."</em></p>
+
+<pre><code>"slack": {
+  "command": "npx",
+  "args": ["-y", "@modelcontextprotocol/server-slack"],
+  "env": {
+    "SLACK_BOT_TOKEN": "xoxb-...",
+    "SLACK_TEAM_ID": "T0123ABCD"
+  }
+}</code></pre>
+
+<p>Generate the bot token at api.slack.com/apps. Required scopes: <code>channels:history</code>, <code>chat:write</code>, <code>users:read</code>. Add the bot to channels you want it to access.</p>
+
+<h2 id="notion">7. Notion MCP server</h2>
+
+<p>Read pages, write blocks, query databases. The official Notion server respects your integration's page-level permissions, so it can only see what you've shared with it.</p>
+
+<pre><code>"notion": {
+  "command": "npx",
+  "args": ["-y", "@notionhq/notion-mcp-server"],
+  "env": { "NOTION_API_KEY": "secret_..." }
+}</code></pre>
+
+<p>What this unlocks: <em>"draft a one-pager based on the 'Q3 Goals' page in Notion, save it as a new sub-page."</em></p>
+
+<h2 id="linear">8. Linear MCP server</h2>
+
+<p>Issue creation, status updates, project queries. Less mature than the GitHub or Slack servers, but the killer use case is <em>"create three Linear issues for the bugs we just discussed, assign them to me, put them in the next cycle."</em></p>
+
+<pre><code>"linear": {
+  "command": "npx",
+  "args": ["-y", "linear-mcp-server"],
+  "env": { "LINEAR_API_KEY": "lin_api_..." }
+}</code></pre>
+
+<p>Generate the key at linear.app/settings/api. Read-only is enough for most workflows; only switch to write scope when you trust your prompts.</p>
+
+<h2 id="stripe">9. Stripe MCP server</h2>
+
+<p>Customer lookup, subscription queries, invoice creation. Stripe's official MCP server is read-write, so be cautious about prompts that could move money. Default to a restricted API key.</p>
+
+<pre><code>"stripe": {
+  "command": "npx",
+  "args": ["-y", "@stripe/mcp"],
+  "env": { "STRIPE_API_KEY": "rk_live_..." }
+}</code></pre>
+
+<p>What this unlocks: <em>"how many active subscribers do we have on the Solo plan, what's MRR, who churned this week?"</em> Three queries you used to do by clicking around the Stripe dashboard.</p>
+
+<h2 id="tavily">10. Tavily MCP server</h2>
+
+<p>Web search with built-in synthesis. Brave (#3) returns raw results; Tavily returns "the answer is X, here are the 5 best sources." Different use cases. Use Tavily when you want a quick answer, Brave when you want sources to skim.</p>
+
+<pre><code>"tavily": {
+  "command": "npx",
+  "args": ["-y", "tavily-mcp"],
+  "env": { "TAVILY_API_KEY": "tvly-..." }
+}</code></pre>
+
+<p>Tavily's free tier is 1k searches/mo, paid starts at $20/mo for 4k. Worth it if you do real research-heavy work in Claude Desktop.</p>
+
+<hr>
+
+<h2>How to combine them (the part most posts skip)</h2>
+
+<p>The interesting prompts are the ones that chain three or four of these:</p>
+
+<blockquote>
+"Use brocco_researcher to find the top 3 customer-support competitors, then query the Postgres MCP to pull our last 30 days of NPS, then create a Linear issue summarizing the gap and assign it to @sarah."
+</blockquote>
+
+<p>Claude figures out the order by reading each tool's description. The trick is naming your servers clearly. <code>"brocco_researcher"</code> is more discoverable to Claude than <code>"server-1"</code>. Likewise <code>"postgres-prod"</code> vs <code>"postgres-staging"</code> if you have multiple environments.</p>
+
+<p>Two combinations that earn their keep weekly for me:</p>
+
+<ul>
+  <li><strong>brocco + Slack + Notion</strong>: Monday morning, "use brocco_planner to turn last week's Slack #wins channel into a 5-bullet weekly review, save it to the Notion 'Weekly Reviews' database." Done in 90 seconds.</li>
+  <li><strong>GitHub + filesystem + brocco_coder</strong>: "read the latest issue in brocco-ai/charter, then read the relevant file via filesystem, then use brocco_coder to draft the fix as a diff."</li>
+</ul>
+
+<h2>Servers I deliberately left off</h2>
+
+<p>Browser-automation MCP servers (Playwright, browser-use) are powerful but slow and finicky. Better to use a managed service via REST. Calendar MCP servers exist but Google Calendar's MCP is rough; use the browser. Email MCPs are dangerous (silent send), avoid until they sandbox better. Twitter MCPs are mostly dead since the API priced out indie use.</p>
+
+<h2>What's coming</h2>
+
+<p>The MCP surface is going to keep expanding for at least another year. Watch for: HTTP transport (so MCP servers can be deployed anywhere, not just stdio), better permission UX (per-tool approval inside Claude), and more first-party servers from CRM and accounting vendors. By Q4 2026 the question won't be "what MCP server should I install" but "which 50 are turned on right now and how do I keep track of which one Claude is calling."</p>
+
+<p>For now: install the ten above, restart Claude Desktop, watch the tools menu fill up. Most of your normal work happens at that menu now.</p>
+
+<div class="end-cta">
+  <h3>Try the brocco MCP server.</h3>
+  <p>Each brocco agent registers as one MCP tool inside Claude Desktop. Five minutes to install, plus a working Claude key.</p>
+  <a href="/download#mcp-setup" class="btn btn--primary btn--lg">MCP setup steps <span class="arrow">&rarr;</span></a>
+</div>
+
+<p style="font-size: 13px; color: var(--fg-faint); border-top: 1px solid var(--border); padding-top: 24px; margin-top: 56px;">
+  <strong style="color: var(--fg-dim);">More like this:</strong>
+  <a href="/blog/agentic-ai-platforms-2026">The 2026 agentic AI platform landscape</a>
+  &middot;
+  <a href="/vs/cursor">Brocco vs Cursor</a>
+  &middot;
+  <a href="/vs/claude-code">Brocco vs Claude Code</a>
+</p>
+
+</article>
+
+<footer>
+  <div class="container">
+    <div>
+      <a href="/" class="nav__brand" style="color: white;">
+        <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true">
+          <path d="M 2 36 L 4 38 Q 1 42 5 42 L 10 40 L 16 39 L 20 39 L 20 44 L 18 44 L 18 38.5 L 26 38 L 32 38 L 32 44 L 30 44 L 30 38 L 36 38 L 42 38.5 L 48 39.5 L 56 40.5 L 62 41 L 62 39 L 58 39 L 58 37 L 62 37 L 62 35 L 56 33 L 50 32 L 46 31 L 40 30 L 38 27 L 36 30 L 32 30 L 30 26 L 28 30 L 24 30 L 22 27 L 20 30 L 16 31 L 12 33 L 8 34 Z"/>
+          <circle cx="52" cy="33" r="1.3" fill="#0a0d10"/>
+        </svg>
+        <span>brocco<span class="dim">.ai</span></span>
+      </a>
+    </div>
+    <div><h4>Read more</h4><ul><li><a href="/blog/claude-desktop-mcp-servers-2026" style="color: var(--brand-glow);">10 MCP servers</a></li><li><a href="/blog/agentic-ai-platforms-2026">2026 platform landscape</a></li></ul></div>
+    <div><h4>Developers</h4><ul><li><a href="/docs">Docs</a></li><li><a href="/download">Download</a></li><li><a href="/api/v1/agents">API</a></li></ul></div>
+    <div><h4>Company</h4><ul><li><a href="/about">About</a></li><li><a href="mailto:hello@brocco.ai">hello@brocco.ai</a></li></ul></div>
+    <div class="credit container" style="padding-left: 0; padding-right: 0;">
+      <span>&copy; 2026 brocco.ai &middot; a BDP Consulting product</span>
+    </div>
+  </div>
+</footer>
+<script src="/scripts/main.js" defer></script>
+</body>
+</html>
