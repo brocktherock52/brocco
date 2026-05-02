@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#050807">
+<title>How to run multiple AI agents in parallel from one prompt (2026)</title>
+<meta name="description" content="Three patterns for parallel AI agents: broadcast, supervisor, and custom fan-out. With paste-ready code, when each pattern fits, and how to wire it without writing your own framework.">
+<meta property="og:title" content="How to run multiple AI agents in parallel from one prompt">
+<meta property="og:description" content="Three patterns for parallel AI agents, with paste-ready code.">
+<meta property="og:type" content="article">
+<meta property="og:image" content="/assets/og.svg">
+<meta property="article:published_time" content="2026-05-02T20:00:00-04:00">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="canonical" href="https://brocco.ai/blog/run-multiple-ai-agents-parallel-one-prompt">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/styles.css">
+<style>
+  .post-hero { padding: 140px 0 36px; border-bottom: 1px solid var(--border); }
+  .post-meta { font-family: var(--font-mono); font-size: 12.5px; color: var(--fg-dim); margin-bottom: 18px; letter-spacing: 0.06em; }
+  .post-meta .by { color: var(--brand-glow); }
+  .post-hero h1 { font-size: clamp(36px, 5.5vw, 60px); margin: 0 0 18px; letter-spacing: -0.025em; line-height: 1.05; }
+  .post-hero .lead { font-size: 19px; color: var(--fg-mid); max-width: 740px; margin: 0; }
+  .post { max-width: 760px; margin: 56px auto 96px; padding: 0 var(--gutter); color: var(--fg-mid); }
+  .post p, .post li { line-height: 1.7; font-size: 17px; }
+  .post p { margin: 22px 0; }
+  .post strong { color: var(--fg); }
+  .post em { color: var(--fg); font-style: italic; }
+  .post h2 { font-size: 28px; margin: 56px 0 16px; color: var(--fg); letter-spacing: -0.02em; }
+  .post h3 { font-size: 21px; margin: 36px 0 12px; color: var(--brand-glow); letter-spacing: -0.015em; }
+  .post a { color: var(--brand-glow); text-decoration: underline; text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  .post a:hover { color: var(--fg); }
+  .post pre { background: var(--bg-2); border: 1px solid var(--border); border-radius: 10px; padding: 16px 18px; margin: 14px 0 22px; overflow-x: auto; font-family: var(--font-mono); font-size: 13px; line-height: 1.55; color: var(--fg); }
+  .post code { font-family: var(--font-mono); font-size: 14.5px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 5px; padding: 1px 6px; color: var(--brand-glow); }
+  .post pre code { background: none; border: 0; padding: 0; color: var(--fg); }
+  .post blockquote { border-left: 3px solid var(--brand); padding: 6px 0 6px 22px; margin: 28px 0; color: var(--fg); font-size: 18px; line-height: 1.55; }
+  .post hr { border: 0; border-top: 1px solid var(--border); margin: 48px 0; }
+  .end-cta { padding: 36px; background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(34,197,94,0.02)); border: 1px solid rgba(34,197,94,0.25); border-radius: var(--radius-lg); margin: 56px 0; text-align: center; }
+  .end-cta h3 { color: var(--fg); margin: 0 0 8px; font-size: 22px; }
+  .end-cta p { margin: 0 0 18px; color: var(--fg-mid); }
+</style>
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "How to run multiple AI agents in parallel from one prompt",
+  "description": "Three patterns for parallel AI agents with paste-ready code.",
+  "image": "https://brocco.ai/assets/og.svg",
+  "datePublished": "2026-05-02T20:00:00-04:00",
+  "dateModified": "2026-05-02T20:00:00-04:00",
+  "author": { "@type": "Organization", "name": "brocco.ai" },
+  "publisher": { "@type": "Organization", "name": "brocco.ai", "logo": { "@type": "ImageObject", "url": "https://brocco.ai/assets/logomark.svg" } },
+  "mainEntityOfPage": { "@type": "WebPage", "@id": "https://brocco.ai/blog/run-multiple-ai-agents-parallel-one-prompt" }
+}
+</script>
+</head>
+<body>
+
+<a class="skip-link" href="#main">Skip to content</a>
+
+<nav class="nav scrolled">
+  <a href="/" class="nav__brand">
+    <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true">
+      <path d="M 2 36 L 4 38 Q 1 42 5 42 L 10 40 L 16 39 L 20 39 L 20 44 L 18 44 L 18 38.5 L 26 38 L 32 38 L 32 44 L 30 44 L 30 38 L 36 38 L 42 38.5 L 48 39.5 L 56 40.5 L 62 41 L 62 39 L 58 39 L 58 37 L 62 37 L 62 35 L 56 33 L 50 32 L 46 31 L 40 30 L 38 27 L 36 30 L 32 30 L 30 26 L 28 30 L 24 30 L 22 27 L 20 30 L 16 31 L 12 33 L 8 34 Z"/>
+      <circle cx="52" cy="33" r="1.3" fill="#0a0d10"/>
+    </svg>
+    <span>brocco<span class="dim">.ai</span></span>
+  </a>
+  <div class="nav__links">
+    <a href="/app/" style="color: var(--brand-glow); font-weight: 600;">Open app</a>
+    <a href="/recipes">Recipes</a>
+    <a href="/#pricing">Pricing</a>
+    <a href="/blog">Blog</a>
+    <a href="/download">Download</a>
+  </div>
+  <div class="nav__cta">
+    <a href="/app/" class="btn btn--primary" style="padding: 9px 16px; font-size: 13.5px;">Open app <span class="arrow">&rarr;</span></a>
+  </div>
+</nav>
+
+<header class="post-hero" id="main">
+  <div class="container">
+    <div class="post-meta">May 2026 . 6 min read . <span class="by">three patterns, paste-ready</span></div>
+    <h1>How to run multiple AI agents in parallel from one prompt</h1>
+    <p class="lead">Tab-switching between Claude, ChatGPT, and Cursor for one task is the silent productivity tax of 2026. Here are three patterns for parallel agents that work today, with code you can paste in 5 minutes.</p>
+  </div>
+</header>
+
+<article class="post">
+
+<p>You have a goal. Five steps. Three of them depend on the others, two don't. The right architecture is not "one agent doing everything" or "one tab per step", it's <strong>parallel agents that fan out and rejoin</strong>. The hard part isn't the model, it's the orchestration. Here's how to do it in three patterns, ranked by how much engineering you'll do.</p>
+
+<h2>Pattern 1: Broadcast (one prompt, N agents, no coordination)</h2>
+
+<p>The simplest pattern. You have a goal that benefits from multiple perspectives or specializations, and the agents don't need each other's outputs. Send the same prompt to N agents, each with a different system prompt and tool set, in parallel. Wait for all to finish, present results side-by-side.</p>
+
+<p>Use case: <em>"plan my product launch"</em> -&gt; researcher fetches competitor positioning, outreach drafts launch tweets, planner produces a 14-day execution sequence. None of the three needs the others' output.</p>
+
+<p>Implementation in 30 lines using the Anthropic SDK:</p>
+
+<pre><code>import asyncio
+from anthropic import AsyncAnthropic
+
+client = AsyncAnthropic()
+
+AGENTS = {
+  "researcher": "You research the web. Return a sourced brief.",
+  "outreach":   "You draft cold emails and tweets. No AI cliches.",
+  "planner":    "You output numbered execution plans, 5-10 verb-first steps.",
+}
+
+async def run_agent(name, system, prompt):
+    resp = await client.messages.create(
+        model="claude-sonnet-4-6",
+        max_tokens=2048,
+        system=system,
+        messages=[{"role": "user", "content": prompt}],
+    )
+    return name, resp.content[0].text
+
+async def broadcast(prompt):
+    results = await asyncio.gather(*[
+        run_agent(name, system, prompt) for name, system in AGENTS.items()
+    ])
+    for name, text in results:
+        print(f"\n=== {name} ===\n{text}")
+
+asyncio.run(broadcast("plan a launch for a new BYOK AI dashboard"))
+</code></pre>
+
+<p>That's it. <code>asyncio.gather</code> runs all three agents concurrently. Total wall time = the slowest agent, not the sum.</p>
+
+<p>Tradeoffs: each agent is independent, so they can't reference each other's work. If your goal needs synthesis (combine 3 outputs into 1), this pattern doesn't help, see Pattern 2.</p>
+
+<h2>Pattern 2: Supervisor (one agent decomposes, N sub-agents execute, supervisor synthesizes)</h2>
+
+<p>The classical multi-agent pattern. One supervisor agent reads the goal, decomposes it into sub-tasks, dispatches each to a specialist via a <code>delegate</code> tool, then synthesizes the results into a final answer.</p>
+
+<p>Use case: <em>"qualify yesterday's signups, draft personalized intro emails to the top 5, post a summary to Slack"</em> -&gt; supervisor reads, decides "step 1 needs the analyst, step 2 needs outreach, step 3 needs slack", calls each, then writes the final summary.</p>
+
+<p>Implementation skeleton:</p>
+
+<pre><code>SUPERVISOR_PROMPT = """You decompose goals and delegate to specialists.
+Available specialists (call via the delegate tool):
+- analyst: data analysis and pattern-finding
+- outreach: cold message drafts
+- slack: post messages to Slack
+
+After all delegates return, synthesize a final answer."""
+
+DELEGATE_TOOL = {
+    "name": "delegate",
+    "description": "Spawn a specialist sub-agent and return its result",
+    "input_schema": {
+        "type": "object",
+        "properties": {
+            "agent": {"type": "string"},
+            "task": {"type": "string"},
+        },
+        "required": ["agent", "task"],
+    },
+}
+
+# Pseudo-code: in the supervisor's tool-use loop, when delegate is called,
+# spawn a sub-agent with the named system prompt and the task as user input.
+# When the sub-agent finishes, return its final text as the tool result.
+</code></pre>
+
+<p>Tradeoffs: the supervisor is the bottleneck. If it makes a bad plan, all the work downstream is wasted. Mitigation: keep the supervisor's job small ("decompose and call specialists; do not do the work yourself"). Don't let it write the final synthesis until all sub-agents return.</p>
+
+<h2>Pattern 3: Custom fan-out (you write the DAG)</h2>
+
+<p>For workflows where some steps depend on others, write the DAG explicitly. This is the "graph runtime" pattern (LangGraph, CrewAI, etc.). You define nodes (agents) and edges (dependencies), then a runtime executes the graph in topological order, parallelizing where possible.</p>
+
+<p>Use case: <em>"research X, then write code based on the research, then write tests for the code, then write docs based on both code and research"</em>. Research must finish before coding. Tests can run in parallel with docs (both depend on the same code + research).</p>
+
+<p>You usually don't want to write this from scratch. Use LangGraph if you're a LangChain shop, CrewAI if you want a higher-level abstraction. The graph definition is what you'll iterate on, not the runtime.</p>
+
+<h2>How to pick</h2>
+
+<ul>
+  <li><strong>Pattern 1 (Broadcast)</strong>: independent perspectives, don't need each other. Easiest. 30 lines of code.</li>
+  <li><strong>Pattern 2 (Supervisor)</strong>: one final answer needed, sub-tasks share no data. Most common in practice. 100-200 lines for a custom impl, or use a library.</li>
+  <li><strong>Pattern 3 (DAG)</strong>: explicit dependencies between sub-agents. Use a framework, don't roll your own.</li>
+</ul>
+
+<h2>The practical wrapper that does all three</h2>
+
+<p>If you don't want to write any of this, that's exactly what brocco's <a href="/app/">multi-agent dashboard</a> does. <strong>Broadcast mode</strong> = pattern 1, pick N agents from the library, type one prompt, hit run, watch each agent stream in its own pane. <strong>Supervisor mode</strong> = pattern 2, the supervisor agent decomposes and delegates. <strong>Custom mode</strong> + the <code>delegate</code> tool = pattern 3, you can write recipes that compose specific agents in specific orders.</p>
+
+<p>BYOK pattern means you bring your own Anthropic key (or any OpenAI-compatible endpoint), agent calls go directly from your browser to the model provider, brocco never sees the prompts. Free tier covers ~100 multi-agent runs/month on Sonnet.</p>
+
+<h2>The mistake everyone makes</h2>
+
+<p>Spawning 5 agents to do work that 1 well-prompted agent could do faster. Parallel agents have an overhead, each one is a separate API call with its own latency. If your task fits in one prompt, use one agent. The math: 5 agents at 8s each running in parallel is still 8s wall-clock, but it's 5x the token cost.</p>
+
+<p>Use parallel agents when the work actually parallelizes. Don't use them as a hammer for tasks that aren't nails.</p>
+
+<div class="end-cta">
+  <h3>Try the three patterns in 30 seconds.</h3>
+  <p>Brocco's recipes gallery has working examples of all three. Pick one, paste your Anthropic key, watch agents fan out.</p>
+  <a href="/recipes" class="btn btn--primary btn--lg">Open recipes <span class="arrow">&rarr;</span></a>
+</div>
+
+<p style="font-size: 13px; color: var(--fg-faint); border-top: 1px solid var(--border); padding-top: 24px; margin-top: 56px;">
+  <strong style="color: var(--fg-dim);">More like this:</strong>
+  <a href="/blog/claude-desktop-mcp-servers-2026">10 MCP servers</a> &middot;
+  <a href="/blog/cursor-pricing-2026-breakdown">Cursor pricing</a> &middot;
+  <a href="/blog/agentic-ai-platforms-2026">2026 platform landscape</a>
+</p>
+
+</article>
+
+<footer>
+  <div class="container">
+    <div>
+      <a href="/" class="nav__brand" style="color: white;">
+        <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true">
+          <path d="M 2 36 L 4 38 Q 1 42 5 42 L 10 40 L 16 39 L 20 39 L 20 44 L 18 44 L 18 38.5 L 26 38 L 32 38 L 32 44 L 30 44 L 30 38 L 36 38 L 42 38.5 L 48 39.5 L 56 40.5 L 62 41 L 62 39 L 58 39 L 58 37 L 62 37 L 62 35 L 56 33 L 50 32 L 46 31 L 40 30 L 38 27 L 36 30 L 32 30 L 30 26 L 28 30 L 24 30 L 22 27 L 20 30 L 16 31 L 12 33 L 8 34 Z"/>
+          <circle cx="52" cy="33" r="1.3" fill="#0a0d10"/>
+        </svg>
+        <span>brocco<span class="dim">.ai</span></span>
+      </a>
+    </div>
+    <div><h4>Read more</h4><ul><li><a href="/blog">All posts</a></li><li><a href="/blog/cursor-pricing-2026-breakdown">Cursor pricing</a></li></ul></div>
+    <div><h4>Use</h4><ul><li><a href="/app/">Open app</a></li><li><a href="/recipes">Recipes</a></li><li><a href="/download">Download</a></li></ul></div>
+    <div><h4>Company</h4><ul><li><a href="/about">About</a></li><li><a href="mailto:hello@brocco.ai">hello@brocco.ai</a></li></ul></div>
+    <div class="credit container" style="padding-left: 0; padding-right: 0;">
+      <span>&copy; 2026 brocco.ai &middot; a BDP Consulting product</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

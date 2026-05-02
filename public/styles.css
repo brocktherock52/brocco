@@ -41,6 +41,22 @@
 *::selection { background: var(--brand); color: #04140a; }
 
 html, body { margin: 0; padding: 0; }
+
+/* a11y: skip-to-content link */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 100;
+  padding: 8px 14px;
+  background: var(--brand);
+  color: #04140a;
+  font-weight: 600;
+  font-size: 13px;
+  border-radius: 0 0 8px 0;
+  text-decoration: none;
+}
+.skip-link:focus { left: 0; }
 html { scroll-behavior: smooth; }
 
 body {

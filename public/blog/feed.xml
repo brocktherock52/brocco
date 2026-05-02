@@ -9,6 +9,14 @@
   <lastBuildDate>Sat, 02 May 2026 19:00:00 -0400</lastBuildDate>
 
   <item>
+    <title>How to run multiple AI agents in parallel from one prompt</title>
+    <link>https://brocco.ai/blog/run-multiple-ai-agents-parallel-one-prompt</link>
+    <guid isPermaLink="true">https://brocco.ai/blog/run-multiple-ai-agents-parallel-one-prompt</guid>
+    <pubDate>Sat, 02 May 2026 20:00:00 -0400</pubDate>
+    <description>Three patterns for parallel AI agents: broadcast, supervisor, and custom DAG. Paste-ready code.</description>
+  </item>
+
+  <item>
     <title>Cursor pricing in 2026: full breakdown vs alternatives</title>
     <link>https://brocco.ai/blog/cursor-pricing-2026-breakdown</link>
     <guid isPermaLink="true">https://brocco.ai/blog/cursor-pricing-2026-breakdown</guid>
