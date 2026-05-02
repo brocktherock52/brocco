@@ -20,13 +20,32 @@ This document is the single source of truth for picking up where the previous se
 
 ---
 
-## 2. What is blocked, and what unblocks it
+## 2. Stripe status: LIVE (activated 2026-05-02 evening)
 
-Exactly one blocker right now:
+Stripe is fully wired and accepting real subscriptions. All 4 tier/interval combinations return real `cs_live_*` Checkout URLs. The `STRIPE_SECRET_KEY` was sourced from `projects/bdp/shared/engine/config/.env.secrets` (the BDP-shared Stripe live key). Subscription revenue routes to that account.
 
-### Stripe activation needs `STRIPE_SECRET_KEY`
+**Active in production (verified 2026-05-02):**
 
-Workspace `.env` has `STRIPE_PUBLISHABLE_KEY` (pk_, client-only) and `VERCEL_TOKEN`, but is missing the secret key needed to create Products, Prices, Checkout Sessions, and Webhook Endpoints from server-side.
+| Var | Value |
+|---|---|
+| `STRIPE_API_KEY`             | `sk_live_*` (BDP-shared) |
+| `STRIPE_WEBHOOK_SECRET`      | `***REMOVED***` |
+| `STRIPE_PRICE_SOLO_MONTHLY`  | `price_1TSlXoGruI6cvQMo7JTYJGoX` ($49/mo) |
+| `STRIPE_PRICE_SOLO_ANNUAL`   | `price_1TSlXpGruI6cvQMo7eSkzuKc` ($490/yr) |
+| `STRIPE_PRICE_TEAM_MONTHLY`  | `price_1TSlXpGruI6cvQMoegp1rLG0` ($199/mo) |
+| `STRIPE_PRICE_TEAM_ANNUAL`   | `price_1TSlXpGruI6cvQMoMy7wgIAU` ($1,990/yr) |
+| `APP_URL`                    | `https://brocco-site.vercel.app` |
+| Webhook endpoint             | `we_1TSlYIGruI6cvQMoYlEGueE4` -> `/api/stripe-webhook` |
+
+**Lesson learned:** the BDP-shared `.env.secrets` file had a UTF-8 BOM mid-file that contaminated the Stripe key when read via PowerShell + piped through `vercel env add` stdin. PowerShell's pipeline re-introduced the BOM even after stripping. Fix: read the file via Node, strip zero-width chars, push to Vercel via Node `child_process` with `Buffer.from(value, "utf8")` written directly to the CLI's stdin (bytes-only, no encoding layer). All 7 env vars were re-pushed this way and verified clean.
+
+**To rotate or change the Stripe key in the future:** see the original `tmp-vercel-fix-all.mjs` pattern (deleted, but the recipe is in this paragraph). DO NOT use PowerShell stdin pipes for secrets stored in BOM-prone files.
+
+**Outstanding Stripe follow-ups:**
+
+- The `/api/stripe-webhook` handler currently logs to console. Wire it to a DB (Supabase / Neon / KV) so paid plan status is queryable from `/account` (which doesn't exist yet, see action 3 below).
+- Build `/account` page with Customer Portal button (needs auth first).
+- Set up `success_url` page at `/billing/success` (currently 404s after a successful Stripe checkout returns).
 
 **To unblock**, the user (Brock) adds to `C:\Users\gigix\OneDrive\Desktop\BDP Consulting\.env`:
 
