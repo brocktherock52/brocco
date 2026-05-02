@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom" xmlns:content="http://purl.org/rss/1.0/modules/content/">
+<channel>
+  <title>brocco.ai blog</title>
+  <link>https://brocco.ai/blog</link>
+  <atom:link href="https://brocco.ai/blog/feed.xml" rel="self" type="application/rss+xml"/>
+  <description>Field notes from shipping brocco. Agentic AI, MCP servers, multi-agent workflows, BYOK.</description>
+  <language>en-us</language>
+  <lastBuildDate>Sat, 02 May 2026 19:00:00 -0400</lastBuildDate>
+
+  <item>
+    <title>Cursor pricing in 2026: full breakdown vs alternatives</title>
+    <link>https://brocco.ai/blog/cursor-pricing-2026-breakdown</link>
+    <guid isPermaLink="true">https://brocco.ai/blog/cursor-pricing-2026-breakdown</guid>
+    <pubDate>Sat, 02 May 2026 19:00:00 -0400</pubDate>
+    <description>Cursor pricing breakdown for 2026 with alternatives at every tier.</description>
+  </item>
+
+  <item>
+    <title>Claude Desktop MCP servers in 2026: 10 every builder should install</title>
+    <link>https://brocco.ai/blog/claude-desktop-mcp-servers-2026</link>
+    <guid isPermaLink="true">https://brocco.ai/blog/claude-desktop-mcp-servers-2026</guid>
+    <pubDate>Sat, 02 May 2026 18:00:00 -0400</pubDate>
+    <description>Ten Claude Desktop MCP servers worth installing in 2026 with setup configs.</description>
+  </item>
+
+  <item>
+    <title>The 2026 agentic AI platform landscape</title>
+    <link>https://brocco.ai/blog/agentic-ai-platforms-2026</link>
+    <guid isPermaLink="true">https://brocco.ai/blog/agentic-ai-platforms-2026</guid>
+    <pubDate>Fri, 02 May 2026 12:00:00 -0400</pubDate>
+    <description>Twenty platforms surveyed. Three white spaces nobody owns. One moat.</description>
+  </item>
+
+</channel>
+</rss>
