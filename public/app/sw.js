@@ -1,6 +1,6 @@
 /* Brocco app service worker - app-shell offline cache */
 
-const CACHE = 'brocco-app-v7-tour';
+const CACHE = 'brocco-app-v8-cache-bust';
 const SHELL = [
   '/app/',
   '/app/styles.css',
