@@ -32,6 +32,9 @@
           const val = mode === 'monthly' ? el.dataset.monthly : el.dataset.annual;
           el.textContent = '$' + val;
         });
+        document.querySelectorAll('.tier__price .per[data-per-monthly]').forEach(el => {
+          el.textContent = mode === 'monthly' ? el.dataset.perMonthly : el.dataset.perAnnual;
+        });
       });
     });
   }
