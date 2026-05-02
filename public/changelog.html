@@ -63,6 +63,38 @@
 
   <div class="release">
     <div class="release__head">
+      <span class="release__ver">v12</span>
+      <span class="release__date">2026-05-02</span>
+      <h2>Stripe live. Accepting real subscriptions.</h2>
+    </div>
+    <ul>
+      <li><strong>Stripe checkout is real now</strong>. <code>/api/checkout</code> returns live <code>cs_live_*</code> URLs for all 4 tier+interval combos (Solo $49/mo, Solo $490/yr, Team $199/mo, Team $1,990/yr).</li>
+      <li>Webhook endpoint registered and HMAC-SHA256 verified via WebCrypto in Vercel Edge.</li>
+      <li><code>/billing/success</code> page added so post-checkout redirects don't 404.</li>
+      <li>One subscriber-blocking bug fixed mid-activation: the BDP-shared <code>.env.secrets</code> file had a UTF-8 BOM that contaminated the API key via PowerShell's pipe. Switched to Node <code>child_process</code> with <code>Buffer.from(value, "utf8")</code> written directly to <code>vercel env add</code> stdin. All 7 env vars re-pushed clean.</li>
+    </ul>
+  </div>
+
+  <div class="release">
+    <div class="release__head">
+      <span class="release__ver">v11</span>
+      <span class="release__date">2026-05-02</span>
+      <h2>Legitimacy polish for first subscribers</h2>
+    </div>
+    <ul>
+      <li>Trust partner row (Anthropic / OpenAI / Ollama / Stripe / Vercel / Tavily) above the fold.</li>
+      <li>3-persona use cases section with concrete workflows + recipe deep-links.</li>
+      <li>CSS-animated app mockup in the "How it works" section showing 3 panes streaming.</li>
+      <li>FAQ rewrite for the BYOK reality. Updated hero metrics (9 agents, 13 tools, 2 providers).</li>
+      <li><code>/about</code>, <code>/privacy</code>, <code>/terms</code> pages.</li>
+      <li>Structured data: <code>Organization</code> + <code>SoftwareApplication</code> + <code>FAQPage</code> JSON-LD for rich Google results.</li>
+      <li>Custom <code>/404</code>, sticky mobile CTA, announcement bar at top, footer social icons.</li>
+      <li>Footer attribution updated to "a BDP Consulting product" per the locked HFW style rule (no first-name personal attribution on public marketing).</li>
+    </ul>
+  </div>
+
+  <div class="release">
+    <div class="release__head">
       <span class="release__ver">v7</span>
       <span class="release__date">2026-05-02</span>
       <h2>Recipes gallery + changelog</h2>
