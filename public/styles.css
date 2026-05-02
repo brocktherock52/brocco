@@ -71,35 +71,6 @@ button {
 .section { padding: clamp(80px, 11vw, 140px) 0; position: relative; }
 .section--tight { padding: clamp(56px, 8vw, 96px) 0; }
 
-/* ── announcement bar ───────────────────────────────────────────────── */
-.annc-bar {
-  position: relative;
-  z-index: 40;
-  display: flex; align-items: center; justify-content: center; gap: 10px;
-  padding: 9px 16px;
-  background: linear-gradient(90deg, rgba(34,197,94,0.08), rgba(34,197,94,0.18), rgba(34,197,94,0.08));
-  border-bottom: 1px solid rgba(34,197,94,0.25);
-  font-family: var(--font-mono);
-  font-size: 12.5px;
-  color: var(--fg);
-  text-decoration: none;
-  text-align: center;
-  transition: background .18s;
-}
-.annc-bar:hover { background: linear-gradient(90deg, rgba(34,197,94,0.12), rgba(34,197,94,0.24), rgba(34,197,94,0.12)); }
-.annc-bar .annc-pill { padding: 2px 8px; background: var(--brand); color: #04140a; border-radius: 4px; font-weight: 700; letter-spacing: 0.04em; font-size: 11px; }
-.annc-bar .annc-text { color: var(--fg-mid); }
-.annc-bar:hover .annc-text { color: var(--fg); }
-.annc-bar .annc-arrow { color: var(--brand-glow); transition: transform .15s; }
-.annc-bar:hover .annc-arrow { transform: translateX(3px); }
-@media (max-width: 720px) {
-  .annc-bar { font-size: 11px; padding: 7px 12px; }
-  .annc-bar .annc-text { display: none; }
-  .annc-bar::after { content: 'see what is new'; color: var(--fg-mid); }
-}
-.nav { top: 0; }
-@media (max-width: 720px) { .nav { top: 32px; } }
-
 /* ── nav ────────────────────────────────────────────────────────────── */
 .nav {
   position: fixed; top: 0; left: 0; right: 0; z-index: 50;
