@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#050807">
+<title>Privacy . brocco.ai</title>
+<meta name="description" content="Brocco's privacy policy. Plain English: BYOK keeps your key in your browser. We never sell or share data. We never train on your data.">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="canonical" href="https://brocco.ai/privacy">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/styles.css">
+<style>
+  .doc-hero { padding: 140px 0 56px; border-bottom: 1px solid var(--border); }
+  .doc-hero h1 { font-size: clamp(40px, 6vw, 64px); margin: 0 0 14px; }
+  .doc-body { max-width: 760px; margin: 56px auto 96px; padding: 0 var(--gutter); }
+  .doc-body p, .doc-body li { color: var(--fg-mid); line-height: 1.65; font-size: 15.5px; }
+  .doc-body ul { padding-left: 22px; }
+  .doc-body strong { color: var(--fg); }
+  .doc-body h2 { font-size: 24px; margin: 48px 0 14px; color: var(--fg); letter-spacing: -0.015em; }
+  .doc-body code { font-family: var(--font-mono); font-size: 13px; background: var(--bg-2); border: 1px solid var(--border); padding: 1px 6px; border-radius: 4px; color: var(--brand-glow); }
+</style>
+</head>
+<body>
+
+<nav class="nav scrolled">
+  <a href="/" class="nav__brand">
+    <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true">
+      <path d="M 2 34 Q 6 28, 14 28 L 28 26 Q 32 24, 36 27 L 46 28 Q 52 28, 58 30 L 62 31 L 62 33 L 56 34 Q 54 38, 50 34 L 44 35 L 43 40 L 40 40 L 39 35 L 26 37 L 25 42 L 22 42 L 21 37 L 12 38 Q 6 38, 4 36 Z"/>
+      <path d="M 18 28 L 21 25 L 24 28 Z M 28 27 L 31 24 L 34 27 Z M 38 28 L 41 25 L 44 28 Z"/>
+      <circle cx="54" cy="30.5" r="1" fill="#0a0d10"/>
+    </svg>
+    <span>brocco<span class="dim">.ai</span></span>
+  </a>
+  <div class="nav__links">
+    <a href="/app/" style="color: var(--brand-glow); font-weight: 600;">Open app</a>
+    <a href="/recipes">Recipes</a>
+    <a href="/#pricing">Pricing</a>
+    <a href="/security">Security</a>
+  </div>
+  <div class="nav__cta">
+    <a href="/app/" class="btn btn--primary" style="padding: 9px 16px; font-size: 13.5px;">Open app <span class="arrow">&rarr;</span></a>
+  </div>
+</nav>
+
+<section class="doc-hero">
+  <div class="container">
+    <div class="section__eyebrow">Privacy policy</div>
+    <h1>Privacy in plain English.</h1>
+    <p class="lead">No legalese, no hidden tricks. The short version: your key stays in your browser, your data stays yours, we sell nothing to anyone.</p>
+  </div>
+</section>
+
+<div class="doc-body">
+
+<h2>The 30-second version</h2>
+<ul>
+  <li><strong>Your API key is stored in your browser only</strong>. We never see it server-side when you use the BYOK flow at <code>/app</code>.</li>
+  <li><strong>Your prompts and outputs go directly to your model provider</strong> (Anthropic, OpenAI, your local Ollama). They do not pass through brocco's servers.</li>
+  <li><strong>We never train models on your data</strong>. Anthropic and OpenAI both honor zero-data-retention when used via API; we recommend local models if maximum privacy matters.</li>
+  <li><strong>We never sell your data</strong> to advertisers, brokers, or analytics buyers. We do not have an ads business.</li>
+  <li><strong>You can delete everything in one click</strong>: clear browser localStorage, or use the "Clear all" button in the BYOK modal.</li>
+</ul>
+
+<h2>What we collect when you visit brocco.ai</h2>
+<p>Standard server logs (IP address, user agent, page accessed, timestamp). Used to detect abuse and keep the site up. Logs are auto-rotated after 30 days. No third-party trackers, no Google Analytics, no Facebook pixel.</p>
+
+<h2>What we collect when you use /app</h2>
+<p>Nothing. The dashboard runs entirely in your browser. Your API key, prompts, agent outputs, and run history live in your browser's localStorage. None of it is sent to brocco's servers.</p>
+<p>Two exceptions:</p>
+<ul>
+  <li><strong>HTTP proxy (<code>/api/proxy</code>):</strong> when an agent needs to fetch a public web page that does not allow CORS, the request is relayed through brocco's edge function. We do not log the URL or response body. The agent and the destination site see the full request.</li>
+  <li><strong>Optional Stripe checkout:</strong> if you subscribe to a paid plan, Stripe collects your billing info per their privacy policy. We receive only the customer ID and subscription status from Stripe.</li>
+</ul>
+
+<h2>What we collect for paid customers</h2>
+<p>Email, billing info via Stripe, plan tier, subscription status. Stored in our database. Used to provision your account and send service emails. Deleted within 30 days of cancellation.</p>
+
+<h2>Cookies</h2>
+<p>One first-party cookie: <code>brocco_demo_used</code>. Set when you use the free <code>/api/run</code> demo, used to enforce the 1-run-per-day limit. Expires after 24 hours. No tracking cookies, no advertising cookies.</p>
+
+<h2>Children</h2>
+<p>Brocco is not intended for users under 13. We do not knowingly collect data from children.</p>
+
+<h2>Your rights</h2>
+<p>If you are in the EU (GDPR), UK, California (CCPA), or similar jurisdiction: you have the right to access, correct, or delete your data. Email <code>privacy@brocco.ai</code> and we will respond within 30 days.</p>
+
+<h2>Changes to this policy</h2>
+<p>If we make material changes, we will email paid customers and update the date below. The current version is permalinked at <code>brocco.ai/privacy</code>.</p>
+
+<h2>Contact</h2>
+<p>Privacy questions: <code>privacy@brocco.ai</code>. Security disclosures: <code>security@brocco.ai</code>. Everything else: <code>hello@brocco.ai</code>.</p>
+
+<p style="margin-top: 56px; color: var(--fg-faint); font-size: 13px; font-family: var(--font-mono);">Last updated: 2026-05-02. brocco.ai is a BDP Consulting product.</p>
+
+</div>
+
+<footer>
+  <div class="container">
+    <div>
+      <a href="/" class="nav__brand" style="color: white;">
+        <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true">
+          <path d="M 2 34 Q 6 28, 14 28 L 28 26 Q 32 24, 36 27 L 46 28 Q 52 28, 58 30 L 62 31 L 62 33 L 56 34 Q 54 38, 50 34 L 44 35 L 43 40 L 40 40 L 39 35 L 26 37 L 25 42 L 22 42 L 21 37 L 12 38 Q 6 38, 4 36 Z"/>
+          <path d="M 18 28 L 21 25 L 24 28 Z M 28 27 L 31 24 L 34 27 Z M 38 28 L 41 25 L 44 28 Z"/>
+          <circle cx="54" cy="30.5" r="1" fill="#0a0d10"/>
+        </svg>
+        <span>brocco<span class="dim">.ai</span></span>
+      </a>
+    </div>
+    <div><h4>Use</h4><ul><li><a href="/app/">Open app</a></li><li><a href="/recipes">Recipes</a></li><li><a href="/changelog">Changelog</a></li></ul></div>
+    <div><h4>Trust</h4><ul><li><a href="/security">Security</a></li><li><a href="/privacy" style="color: var(--brand-glow);">Privacy</a></li><li><a href="/terms">Terms</a></li></ul></div>
+    <div><h4>Company</h4><ul><li><a href="mailto:hello@brocco.ai">hello@brocco.ai</a></li></ul></div>
+    <div class="credit container" style="padding-left: 0; padding-right: 0;">
+      <span>&copy; 2026 brocco.ai &middot; BDP Consulting</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

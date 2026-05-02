@@ -1,0 +1,15 @@
+{
+  "name": "Brocco AI",
+  "short_name": "Brocco",
+  "description": "Multi-agent dashboard. Run Claude-powered agents in parallel, in your browser.",
+  "start_url": "/app/",
+  "scope": "/app/",
+  "display": "standalone",
+  "background_color": "#0a0d10",
+  "theme_color": "#0a0d10",
+  "orientation": "any",
+  "categories": ["productivity", "developer", "business"],
+  "icons": [
+    { "src": "/assets/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }
+  ]
+}

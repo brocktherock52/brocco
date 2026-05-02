@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 32" fill="currentColor" aria-label="brocco mark">
+  <!-- crocodile profile, facing right -->
+  <path d="M 2 18 Q 6 12, 14 12 L 28 10 Q 32 8, 36 11 L 46 12 Q 52 12, 58 14 L 62 15 L 62 17 L 56 18 Q 54 22, 50 18 L 44 19 L 43 24 L 40 24 L 39 19 L 26 21 L 25 26 L 22 26 L 21 21 L 12 22 Q 6 22, 4 20 Z"/>
+  <!-- dorsal scales (sawtooth) -->
+  <path d="M 18 12 L 21 9 L 24 12 Z M 28 11 L 31 8 L 34 11 Z M 38 12 L 41 9 L 44 12 Z"/>
+  <!-- eye -->
+  <circle cx="54" cy="14.5" r="1" fill="#0a0d10"/>
+</svg>

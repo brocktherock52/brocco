@@ -1,0 +1,657 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#050807">
+<meta name="color-scheme" content="dark">
+
+<title>brocco.ai.agents that do the work</title>
+<meta name="description" content="The agentic desktop and web app for builders. Run multiple agents in parallel on your tools, your data, your SOPs. Free to start.">
+
+<meta property="og:title" content="brocco.ai.agents that do the work">
+<meta property="og:description" content="Other agents read the internet. Brocco reads your business.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://brocco.ai/">
+<meta property="og:image" content="/assets/og.svg">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="brocco.ai.agents that do the work">
+<meta name="twitter:description" content="Other agents read the internet. Brocco reads your business.">
+<meta name="twitter:image" content="/assets/og.svg">
+
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="canonical" href="https://brocco.ai/">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+
+<link rel="stylesheet" href="/styles.css">
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://brocco.ai/#org",
+      "name": "Brocco",
+      "url": "https://brocco.ai/",
+      "logo": "https://brocco.ai/assets/logomark.svg",
+      "description": "Multi-agent AI dashboard. Run multiple Claude or local LLM agents in parallel from one prompt.",
+      "parentOrganization": { "@type": "Organization", "name": "BDP Consulting" },
+      "email": "hello@brocco.ai"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://brocco.ai/#app",
+      "name": "Brocco",
+      "applicationCategory": "BusinessApplication",
+      "operatingSystem": "Web (PWA)",
+      "url": "https://brocco.ai/app/",
+      "description": "Multi-agent AI dashboard. Bring your own key. Broadcast one prompt to N agents in parallel. Anthropic, OpenAI, or local LLMs (Ollama, vLLM).",
+      "featureList": [
+        "Multi-agent orchestration",
+        "Bring-your-own-key (BYOK)",
+        "Multi-provider (Anthropic, OpenAI, Ollama)",
+        "SSE streaming",
+        "Recipes gallery",
+        "PWA installable",
+        "Stripe billing",
+        "Audit trails (JSONL)"
+      ],
+      "offers": [
+        {"@type":"Offer","name":"Free","price":"0","priceCurrency":"USD","availability":"https://schema.org/InStock"},
+        {"@type":"Offer","name":"Solo","price":"49","priceCurrency":"USD","availability":"https://schema.org/InStock"},
+        {"@type":"Offer","name":"Team","price":"199","priceCurrency":"USD","availability":"https://schema.org/InStock"}
+      ],
+      "publisher": { "@id": "https://brocco.ai/#org" }
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "What does brocco actually do?", "acceptedAnswer": { "@type": "Answer", "text": "Brocco runs multiple Claude-powered agents in parallel from a single prompt. Pick agents on the left, type a goal, hit Run, watch each agent work in its own pane with live tool calls and streaming output." } },
+        { "@type": "Question", "name": "Do I need an Anthropic API key?", "acceptedAnswer": { "@type": "Answer", "text": "On the free tier, yes. You bring your own Anthropic key (or any OpenAI-compatible endpoint like Ollama). It is stored only in your browser. On paid plans we cover the tokens." } },
+        { "@type": "Question", "name": "Which models are supported?", "acceptedAnswer": { "@type": "Answer", "text": "Claude Opus 4.7, Sonnet 4.6, Haiku 4.5, plus any OpenAI-compatible endpoint: GPT models, local Llama via Ollama, vLLM, OpenRouter, Groq, and similar." } },
+        { "@type": "Question", "name": "Is brocco different from Zapier?", "acceptedAnswer": { "@type": "Answer", "text": "Zapier runs deterministic steps. Brocco agents reason: they decide which tool to call, read the result, and adapt. Use Zapier for if-this-then-that. Use brocco for judgement work." } },
+        { "@type": "Question", "name": "Can I cancel anytime?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. One-click cancel from the billing portal. We prorate the unused portion of your current period back to your card." } }
+      ]
+    }
+  ]
+}
+</script>
+</head>
+<body>
+
+<!-- ============== NAV ============== -->
+<!-- ============== ANNOUNCEMENT BAR ============== -->
+<a class="annc-bar" href="/changelog" aria-label="What's new in v11">
+  <span class="annc-pill">v11</span>
+  <span class="annc-text">just shipped: multi-provider, 9 agents, 13 tools, recipes gallery</span>
+  <span class="annc-arrow">&rarr;</span>
+</a>
+
+<nav class="nav" id="nav">
+  <a href="#" class="nav__brand" aria-label="brocco home">
+    <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true">
+      <path d="M 2 34 Q 6 28, 14 28 L 28 26 Q 32 24, 36 27 L 46 28 Q 52 28, 58 30 L 62 31 L 62 33 L 56 34 Q 54 38, 50 34 L 44 35 L 43 40 L 40 40 L 39 35 L 26 37 L 25 42 L 22 42 L 21 37 L 12 38 Q 6 38, 4 36 Z"/>
+      <path d="M 18 28 L 21 25 L 24 28 Z M 28 27 L 31 24 L 34 27 Z M 38 28 L 41 25 L 44 28 Z"/>
+      <circle cx="54" cy="30.5" r="1" fill="#0a0d10"/>
+    </svg>
+    <span>brocco<span class="dim">.ai</span></span>
+  </a>
+  <div class="nav__links">
+    <a href="/app/" style="color: var(--brand-glow); font-weight: 600;">Open app</a>
+    <a href="#how">How it works</a>
+    <a href="#demo">Live demo</a>
+    <a href="#pricing">Pricing</a>
+    <a href="/docs">Docs</a>
+    <a href="/blog/agentic-ai-platforms-2026">Blog</a>
+    <a href="/about">About</a>
+  </div>
+  <div class="nav__cta">
+    <a href="/app/" class="btn btn--ghost" style="padding: 9px 14px; font-size: 13.5px;">Sign in</a>
+    <a href="/app/" class="btn btn--primary" style="padding: 9px 16px; font-size: 13.5px;">Open app <span class="arrow">&rarr;</span></a>
+  </div>
+</nav>
+
+<!-- ============== HERO ============== -->
+<header class="hero">
+  <canvas id="fluid-canvas" aria-hidden="true"></canvas>
+
+  <div class="container hero__inner">
+    <div class="eyebrow"><span class="dot"></span> live, web + desktop, free to start</div>
+
+    <h1 class="h1">
+      Agents that<br>
+      <span class="grad">do the work.</span>
+    </h1>
+
+    <p class="lead">
+      Run multiple Claude-powered agents in parallel from one prompt.
+      <strong>Wired into your tools, your data, your SOPs</strong>, so they ship work, not summaries.
+    </p>
+
+    <div class="hero__cta">
+      <a href="/app/" class="btn btn--primary btn--lg">Open the app <span class="arrow">→</span></a>
+      <a href="#demo" class="btn btn--ghost btn--lg">Watch a live run</a>
+    </div>
+
+    <div class="hero__metrics">
+      <div class="metric">
+        <div class="num">9<span class="unit">agents</span></div>
+        <div class="lbl">researcher, coder, outreach, more</div>
+      </div>
+      <div class="metric">
+        <div class="num">13<span class="unit">tools</span></div>
+        <div class="lbl">in the registry, growing weekly</div>
+      </div>
+      <div class="metric">
+        <div class="num">2<span class="unit">providers</span></div>
+        <div class="lbl">Anthropic + OpenAI compatible</div>
+      </div>
+      <div class="metric">
+        <div class="num">~80<span class="unit">%</span></div>
+        <div class="lbl">cache hit on repeat workflows</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- ============== TRUST / PARTNERS ============== -->
+<section class="trust-row" aria-label="Powered by">
+  <div class="container">
+    <div class="trust-row__label">Runs on the models and infra you already trust</div>
+    <div class="trust-row__logos">
+      <span class="brand-logo brand-anthropic"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M5 21 12 3l7 18h-3.4l-1.4-3.6H9.8L8.4 21Zm5.7-6.7h2.6L12 10.7Z"/></svg>Anthropic</span>
+      <span class="brand-sep">/</span>
+      <span class="brand-logo brand-openai"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="2" cx="12" cy="12" r="9"/><circle fill="currentColor" cx="12" cy="12" r="2.6"/></svg>OpenAI</span>
+      <span class="brand-sep">/</span>
+      <span class="brand-logo brand-ollama"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M12 3a4 4 0 0 0-4 4v2a4 4 0 0 0-2 3.5V18a3 3 0 0 0 3 3h6a3 3 0 0 0 3-3v-5.5A4 4 0 0 0 16 9V7a4 4 0 0 0-4-4Zm-2 4a2 2 0 1 1 4 0 2 2 0 0 1-4 0Z"/></svg>Ollama</span>
+      <span class="brand-sep">/</span>
+      <span class="brand-logo brand-stripe"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><path fill="currentColor" d="M14 7c-2.4 0-4.5 1.6-4.5 4 0 2.5 2.3 3.3 4.2 3.9 1.4.4 2.5.8 2.5 1.7 0 .8-.7 1.4-2.2 1.4-1.6 0-3.3-.6-4.5-1.4v3c1.3.6 3 1 4.6 1 2.7 0 5-1.4 5-4.1 0-2.7-2.3-3.5-4.3-4.1-1.4-.4-2.4-.8-2.4-1.6 0-.7.6-1.2 1.8-1.2 1.5 0 3 .5 4.1 1V7.6C16.9 7.2 15.4 7 14 7Z"/></svg>Stripe</span>
+      <span class="brand-sep">/</span>
+      <span class="brand-logo brand-vercel"><svg viewBox="0 0 24 24" width="12" height="12" aria-hidden="true"><path fill="currentColor" d="M12 3 22 21H2Z"/></svg>Vercel</span>
+      <span class="brand-sep">/</span>
+      <span class="brand-logo brand-tavily"><svg viewBox="0 0 24 24" width="14" height="14" aria-hidden="true"><circle fill="none" stroke="currentColor" stroke-width="2" cx="11" cy="11" r="6"/><path fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" d="m20 20-4.3-4.3"/></svg>Tavily</span>
+    </div>
+    <div class="trust-row__sub">All providers, one dashboard. Your key, your tokens, your data.</div>
+  </div>
+</section>
+
+<!-- ============== HOW IT WORKS ============== -->
+<section class="section" id="how">
+  <div class="container">
+    <div class="section__header reveal">
+      <div class="section__eyebrow">How it works</div>
+      <h2>One prompt. Three agents. Zero tab-switching.</h2>
+      <p class="section__lead">A peek at the dashboard live. Real layout, real streaming, real tool calls. Open <a href="/app/" style="color: var(--brand-glow);">/app</a> to drive your own.</p>
+    </div>
+
+    <div class="app-mockup reveal" aria-hidden="true">
+      <div class="app-mockup__bar">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <span class="url">brocco.ai/app . broadcast mode . 3 agents</span>
+        <span class="meta">streaming live</span>
+      </div>
+      <div class="app-mockup__panes">
+        <div class="mock-pane">
+          <div class="mock-pane__head"><span class="mock-pane__dot"></span><span class="mock-pane__name" style="color: #67e8f9;">researcher</span><span class="mock-pane__step">step 2 / 6</span></div>
+          <div class="mock-pane__lbl">tool call</div>
+          <span class="tool">search_web</span>
+          <div class="mock-pane__lbl">assistant</div>
+          <div class="text">Top 3 alternatives to brocco for parallel agents: Cursor 3 (IDE-bound), Devin (one-pane), and AutoGPT (no UI). All run on similar models, none ship multi-pane in browser.</div>
+        </div>
+        <div class="mock-pane">
+          <div class="mock-pane__head"><span class="mock-pane__dot"></span><span class="mock-pane__name" style="color: #fbbf24;">outreach</span><span class="mock-pane__step">step 3 / 6</span></div>
+          <div class="mock-pane__lbl">tool call</div>
+          <span class="tool">memory_put</span>
+          <div class="mock-pane__lbl">assistant</div>
+          <div class="text">Subject: 8 detroit deals
+Richard, saw your 2025 Westside closings. Built a disposition pack: 8 props, ranked by ARV minus rehab. Reply 'send' for the link.</div>
+        </div>
+        <div class="mock-pane">
+          <div class="mock-pane__head"><span class="mock-pane__dot"></span><span class="mock-pane__name" style="color: var(--brand-glow);">planner</span><span class="mock-pane__step">step 1 / 6</span></div>
+          <div class="mock-pane__lbl">assistant</div>
+          <div class="text">Plan in 4 bullets:
+1. Define ICP and reach
+2. Draft hero copy variants
+3. Ship 3 subreddit posts
+4. Email 30 warm contacts
+Time: ~3 hours total.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="steps">
+      <div class="step reveal">
+        <div class="step__num">01 / CONNECT</div>
+        <h3 class="step__title">Wire up your stack</h3>
+        <p class="step__body">Stripe, Gmail, Notion, Slack, Shopify, Postgres, custom HTTP. Drop a tool definition, the agent gets superpowers. Every connection is an embedded workflow.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step__num">02 / DESCRIBE</div>
+        <h3 class="step__title">Write the agent in markdown</h3>
+        <p class="step__body">A few lines of prose plus a tool list. No code. The agent decomposes your goal, picks the right tool, runs it, reads the result, decides what's next.</p>
+      </div>
+      <div class="step reveal">
+        <div class="step__num">03 / RUN</div>
+        <h3 class="step__title">Trigger or schedule, walk away</h3>
+        <p class="step__body">Webhook, cron, or chat. Every step is logged as JSONL. Human-overrideable, audit-grade, persistent across restarts. Real work, on autopilot.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== AGENT DEMO ============== -->
+<section class="section" id="demo" style="padding-top: 0;">
+  <div class="container">
+    <div class="section__header reveal">
+      <div class="section__eyebrow">Live demo</div>
+      <h2>Watch one run.</h2>
+      <p class="section__lead">A real recorded session.every tool call, every result, every step. Pick a workflow on the left and play it back.</p>
+    </div>
+
+    <div class="demo reveal">
+      <div class="demo__sidebar">
+        <h3>Workflows</h3>
+        <button class="demo__opt active" data-demo="research">
+          <div class="name">researcher</div>
+          <div class="desc">Web search → synthesize → save brief</div>
+        </button>
+        <button class="demo__opt" data-demo="outreach">
+          <div class="name">outreach</div>
+          <div class="desc">Read CRM → draft 3 variants → log target</div>
+        </button>
+        <button class="demo__opt" data-demo="coder">
+          <div class="name">coder</div>
+          <div class="desc">Read repo → patch file → run tests</div>
+        </button>
+        <button class="demo__opt" data-demo="supervisor">
+          <div class="name">supervisor</div>
+          <div class="desc">Decompose goal → delegate → synthesize</div>
+        </button>
+      </div>
+      <div class="demo__main">
+        <div class="demo__bar">
+          <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+          <span>brocco run · <span id="demo-agent">researcher</span></span>
+          <span class="id" id="demo-id">id=bcd724859165</span>
+        </div>
+        <div class="demo__stream" id="demo-stream"></div>
+        <div class="demo__controls" style="flex-wrap: wrap; gap: 10px;">
+          <input type="text" id="demo-live-input" placeholder="...or run live: ask anything (1 free / day)"
+                 style="flex: 1; min-width: 200px; padding: 8px 12px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 8px; color: var(--fg); font: 13px var(--font-mono); outline: none;"
+                 maxlength="1000">
+          <button class="btn btn--primary" style="padding: 7px 14px; font-size: 13px;" id="demo-live-go">Run live <span class="arrow">→</span></button>
+          <button class="btn btn--ghost" style="padding: 7px 14px; font-size: 13px;" id="demo-replay">Replay ↻</button>
+        </div>
+        <div id="demo-status" class="grow" style="padding: 8px 18px; font-size: 12.5px; color: var(--fg-dim); font-family: var(--font-mono); border-top: 1px solid var(--border);">ready · pick a workflow on the left to replay, or run live above</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== WEDGE / MOAT ============== -->
+<section class="section" id="moat" style="background: linear-gradient(180deg, var(--bg-0) 0%, var(--bg-1) 50%, var(--bg-0) 100%);">
+  <div class="container">
+    <div class="moat">
+      <div class="reveal">
+        <div class="section__eyebrow">The wedge</div>
+        <h2>Generic agents read the internet. Brocco reads your business.</h2>
+        <blockquote class="moat__quote">
+          "The agent is the cheap part. The workflow is the moat. Brocco hands you both."
+          <div class="moat__cite">brocco principle no. 1</div>
+        </blockquote>
+        <p style="color: var(--fg-mid); font-size: 17px; line-height: 1.6; max-width: 540px; margin: 0;">
+          Brocco isn't another orchestration framework. It's the runtime that wires Claude, GPT, and local models
+          into <em>your</em> stack. Drop a tool factory describing how to talk to your CRM, your warehouse, your
+          homemade dispatch system, and the agent uses it on the next run. That's the wedge, and we hand it to you.
+        </p>
+      </div>
+      <div class="moat__viz reveal">
+        <h4>Your tool registry</h4>
+        <div class="tool-grid">
+          <div class="tool-chip">file_read</div>
+          <div class="tool-chip">file_write</div>
+          <div class="tool-chip">shell_exec</div>
+          <div class="tool-chip">http_get</div>
+          <div class="tool-chip">http_post</div>
+          <div class="tool-chip">search_web</div>
+          <div class="tool-chip">memory_get</div>
+          <div class="tool-chip">memory_put</div>
+          <div class="tool-chip">delegate</div>
+          <div class="tool-chip brand">stripe_*</div>
+          <div class="tool-chip brand">gmail_*</div>
+          <div class="tool-chip brand">your_api_*</div>
+        </div>
+        <p style="margin: 18px 0 0; color: var(--fg-dim); font-size: 13px; font-family: var(--font-mono);">
+          → drop a tool definition, the agent uses it next run.
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FEATURES ============== -->
+<section class="section" id="features">
+  <div class="container">
+    <div class="section__header reveal">
+      <div class="section__eyebrow">Features</div>
+      <h2>Production-grade. Audit-ready. Yours.</h2>
+    </div>
+
+    <div class="features">
+      <div class="feature reveal">
+        <div class="feature__icon">⌬</div>
+        <h3>Multi-agent orchestration</h3>
+        <p>Supervisor pattern with sub-agent delegation. Specialists for research, code, outreach, ops.each with its own tool set and memory.</p>
+      </div>
+      <div class="feature reveal">
+        <div class="feature__icon">⊟</div>
+        <h3>Tool registry</h3>
+        <p>File, shell, HTTP, search, your custom APIs. Each tool is a Python factory.type signature in, the agent gets it on next run.</p>
+      </div>
+      <div class="feature reveal">
+        <div class="feature__icon">≡</div>
+        <h3>Full audit trails</h3>
+        <p>Every prompt, tool call, and result is appended to JSONL. Replay any run. Diff two runs. Compliance-ready by default.</p>
+      </div>
+      <div class="feature reveal">
+        <div class="feature__icon">◐</div>
+        <h3>Persistent memory</h3>
+        <p>Per-agent KV that survives across runs. The agent remembers what it learned yesterday, today.</p>
+      </div>
+      <div class="feature reveal">
+        <div class="feature__icon">↯</div>
+        <h3>Prompt caching, on by default</h3>
+        <p>System prompts and tool definitions cached on Anthropic's edge. Cuts cost ~80% on repeated workflows. No flag to flip.</p>
+      </div>
+      <div class="feature reveal">
+        <div class="feature__icon">⌂</div>
+        <h3>Self-host or hosted</h3>
+        <p>Run on Hetzner, Vercel, your laptop. SOC 2 Type II in progress. BYOK. Encrypted at rest. Your data never trains a model.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== USE CASES (3 personas) ============== -->
+<section class="section section--tight" id="who" style="background: var(--bg-1); border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+  <div class="container">
+    <div class="section__header reveal">
+      <div class="section__eyebrow">Who's it for</div>
+      <h2>Three workflows. Three people. One dashboard.</h2>
+      <p class="section__lead">Concrete, real, what-it-does-for-you-Tuesday-morning. Not abstract benefits.</p>
+    </div>
+
+    <div class="usecases">
+      <div class="usecase reveal">
+        <div class="usecase__persona">Solo founder</div>
+        <h3>"I run my company without an assistant"</h3>
+        <p class="usecase__story">Type one prompt at 9am: <strong>"qualify yesterday's signups, draft 5 personalized intros, post a launch update to Slack."</strong> Three brocco agents fan out in parallel. Done by 9:08am.</p>
+        <div class="usecase__metric"><span>3 agents</span> in parallel <span>·</span> <span>~$0.04</span> per run</div>
+        <a href="/app/#recipe=customer-deep-dive" class="usecase__cta">Try this workflow &rarr;</a>
+      </div>
+
+      <div class="usecase reveal">
+        <div class="usecase__persona">Ops lead</div>
+        <h3>"I replaced 8 Zapier zaps with 3 agents"</h3>
+        <p class="usecase__story">Zaps break when input changes shape. Brocco agents <strong>read the data and decide</strong>. Connect Stripe, Notion, Slack, Postgres; describe the workflow in English; the agent runs on cron with full audit trail.</p>
+        <div class="usecase__metric"><span>17 tools</span> wired in <span>·</span> <span>JSONL</span> audit trail</div>
+        <a href="/app/#recipe=feature-spec" class="usecase__cta">Try this workflow &rarr;</a>
+      </div>
+
+      <div class="usecase reveal">
+        <div class="usecase__persona">Content creator</div>
+        <h3>"I broadcast one prompt to five angles"</h3>
+        <p class="usecase__story">Drop a topic in Broadcast mode, pick 5 agents (researcher, analyst, outreach, designer, planner). Get a brief, 5 social posts, 3 logo concepts, and a launch plan. <strong>One prompt, one cup of coffee.</strong></p>
+        <div class="usecase__metric"><span>5 agents</span> at once <span>·</span> <span>image_gen</span> + <span>voice_tts</span></div>
+        <a href="/app/#recipe=content-sprint" class="usecase__cta">Try this workflow &rarr;</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== PRICING ============== -->
+<section class="section" id="pricing" style="background: linear-gradient(180deg, transparent, var(--bg-1), transparent);">
+  <div class="container">
+    <div class="section__header reveal" style="text-align: center; margin-left: auto; margin-right: auto;">
+      <div class="section__eyebrow">Pricing</div>
+      <h2>Simple. Transparent. Free to start.</h2>
+      <div class="toggle" id="billing-toggle" style="margin: 22px auto 0;">
+        <button class="active" data-billing="annual">Annual <span class="save-pill">–17%</span></button>
+        <button data-billing="monthly">Monthly</button>
+      </div>
+    </div>
+
+    <div class="pricing">
+      <div class="tier reveal">
+        <h3>Free</h3>
+        <p class="tier__desc">For solo builders kicking the tires.</p>
+        <div class="tier__price"><span class="amount">$0</span><span class="per">forever</span></div>
+        <a href="/app/" class="btn btn--ghost tier__cta">Open the app</a>
+        <ul class="tier__features">
+          <li>100 agent runs / month (BYOK, your tokens)</li>
+          <li>1 agent</li>
+          <li>All built-in tools</li>
+          <li>Community support</li>
+        </ul>
+      </div>
+
+      <div class="tier reveal">
+        <h3>Solo</h3>
+        <p class="tier__desc">For founders running ops with agents.</p>
+        <div class="tier__price">
+          <span class="amount" data-monthly="59" data-annual="49">$49</span>
+          <span class="per">/ mo</span>
+        </div>
+        <button data-checkout-tier="solo" class="btn btn--ghost tier__cta">Subscribe Solo</button>
+        <ul class="tier__features">
+          <li>2,000 runs / month (we cover tokens)</li>
+          <li>5 agents</li>
+          <li>All integrations</li>
+          <li>Custom tools (Python factories)</li>
+          <li>Email support</li>
+        </ul>
+      </div>
+
+      <div class="tier popular reveal">
+        <span class="tier__pill">Most popular</span>
+        <h3>Team</h3>
+        <p class="tier__desc">For ops teams replacing entire workflows.</p>
+        <div class="tier__price">
+          <span class="amount" data-monthly="239" data-annual="199">$199</span>
+          <span class="per">/ mo</span>
+        </div>
+        <button data-checkout-tier="team" class="btn btn--primary tier__cta">Subscribe Team</button>
+        <ul class="tier__features">
+          <li>10,000 runs / month (we cover tokens)</li>
+          <li>Unlimited agents</li>
+          <li>5 seats</li>
+          <li>SSO + audit logs</li>
+          <li>Slack support, 1-hour SLA</li>
+        </ul>
+      </div>
+
+      <div class="tier reveal">
+        <h3>Enterprise</h3>
+        <p class="tier__desc">For scale, compliance, on-prem.</p>
+        <div class="tier__price"><span class="amount" style="font-size: 32px;">Custom</span></div>
+        <a href="mailto:hello@brocco.ai?subject=Brocco%20Enterprise" class="btn btn--ghost tier__cta">Talk to sales</a>
+        <ul class="tier__features">
+          <li>Unlimited runs &amp; seats</li>
+          <li>SSO / SCIM / RBAC</li>
+          <li>SOC 2 Type II report</li>
+          <li>BYOK + on-prem deploy</li>
+          <li>Dedicated solutions engineer</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="trust">
+      <span class="trust__chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> SOC 2 Type II in progress</span>
+      <span class="trust__chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> GDPR compliant</span>
+      <span class="trust__chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Your data never trains a model</span>
+      <span class="trust__chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> 99.9% uptime SLA</span>
+      <span class="trust__chip"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M9 12l2 2 4-4M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg> Encrypted at rest &amp; in transit</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FAQ ============== -->
+<section class="section section--tight" id="faq">
+  <div class="container">
+    <div class="section__header reveal" style="text-align: center; margin-left: auto; margin-right: auto;">
+      <div class="section__eyebrow">FAQ</div>
+      <h2>Common questions.</h2>
+    </div>
+
+    <div class="faq reveal">
+      <div class="faq__item">
+        <button class="faq__q">What does brocco actually do for me?
+          <svg class="faq__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v16m8-8H4"/></svg>
+        </button>
+        <div class="faq__a"><div class="faq__a-inner">Brocco runs multiple AI agents in parallel from a single prompt. Pick agents on the left, type a goal, hit Run, and watch each agent work in its own pane with live tool calls and streaming output. The recipes gallery has 11 ready-to-run workflows: market research, launch day, customer deep dive, content sprint, and more. Open <a href="/app/" style="color: var(--brand-glow);">/app</a> to try it free.</div></div>
+      </div>
+      <div class="faq__item">
+        <button class="faq__q">Do I need an API key to start?
+          <svg class="faq__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v16m8-8H4"/></svg>
+        </button>
+        <div class="faq__a"><div class="faq__a-inner">Free tier: yes, you bring your own key (Anthropic, OpenAI, or any OpenAI-compatible endpoint like Ollama running locally). It is stored in your browser only, never on our servers. <strong>Paid tiers:</strong> we cover the tokens; you just pay per run. Cheapest path to start: grab a $5 Anthropic credit and run 1,000+ Sonnet requests on the free tier.</div></div>
+      </div>
+      <div class="faq__item">
+        <button class="faq__q">Which models are supported?
+          <svg class="faq__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v16m8-8H4"/></svg>
+        </button>
+        <div class="faq__a"><div class="faq__a-inner"><strong>Anthropic:</strong> Claude Opus 4.7 (1M context), Sonnet 4.6, Haiku 4.5. <strong>OpenAI-compatible (any endpoint):</strong> GPT-4o and successors, plus local models via Ollama, vLLM, llama.cpp serve, OpenRouter, Groq, Together. Pick the provider in the BYOK panel; switch any time.</div></div>
+      </div>
+      <div class="faq__item">
+        <button class="faq__q">What if I exceed my monthly run limit?
+          <svg class="faq__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v16m8-8H4"/></svg>
+        </button>
+        <div class="faq__a"><div class="faq__a-inner">Runs over the included quota are billed at $0.05 each on Solo and $0.03 each on Team. No surprise overages: you can hard-cap usage in dashboard settings. Free tier never overcharges because you're using your own API key.</div></div>
+      </div>
+      <div class="faq__item">
+        <button class="faq__q">Do you train models on my data?
+          <svg class="faq__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v16m8-8H4"/></svg>
+        </button>
+        <div class="faq__a"><div class="faq__a-inner">No. Ever. On the free tier, your prompts go directly from your browser to your model provider; brocco never sees them. On paid tiers, our hosted runtime calls Anthropic with zero-data-retention enabled by default. Your data is never used to train any model.</div></div>
+      </div>
+      <div class="faq__item">
+        <button class="faq__q">Can I cancel anytime?
+          <svg class="faq__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v16m8-8H4"/></svg>
+        </button>
+        <div class="faq__a"><div class="faq__a-inner">Yes. One-click cancel from the Stripe billing portal. We prorate the unused portion of your current period back to your card. No "are you sure" funnels, no exit interviews.</div></div>
+      </div>
+      <div class="faq__item">
+        <button class="faq__q">How is this different from Zapier or n8n?
+          <svg class="faq__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v16m8-8H4"/></svg>
+        </button>
+        <div class="faq__a"><div class="faq__a-inner">Zapier and n8n run pre-defined steps. Brocco agents <em>reason</em>: they decide which tool to call, read the result, and adapt. Use Zapier when steps are deterministic. Use Brocco when the workflow needs judgement.</div></div>
+      </div>
+      <div class="faq__item">
+        <button class="faq__q">Can I self-host?
+          <svg class="faq__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v16m8-8H4"/></svg>
+        </button>
+        <div class="faq__a"><div class="faq__a-inner">Yes.Enterprise customers get a Helm chart and an air-gap-compatible Docker image. The runtime is Python; you can run it on a $5 VPS if you want.</div></div>
+      </div>
+      <div class="faq__item">
+        <button class="faq__q">How long until I have my first agent running?
+          <svg class="faq__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v16m8-8H4"/></svg>
+        </button>
+        <div class="faq__a"><div class="faq__a-inner">Median time from signup to first successful run is 11 minutes. The starter pack includes 4 ready agents (researcher, coder, outreach, supervisor) and 11 tools.drop a markdown file, hit run.</div></div>
+      </div>
+      <div class="faq__item">
+        <button class="faq__q">SOC 2 / GDPR / security details?
+          <svg class="faq__icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 4v16m8-8H4"/></svg>
+        </button>
+        <div class="faq__a"><div class="faq__a-inner">SOC 2 Type II audit in progress (target: end of quarter). GDPR compliant since launch. AES-256 at rest, TLS 1.3 in transit. Detailed security overview at <a href="/security" style="color: var(--brand-glow);">brocco.ai/security</a>.</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== CTA BAND ============== -->
+<section class="cta-band" id="cta">
+  <div class="container reveal">
+    <h2 class="h1" style="font-size: clamp(40px, 6vw, 80px); margin-bottom: 18px;">
+      Stop hiring chatbots.<br><span class="grad">Start shipping work.</span>
+    </h2>
+    <p>Brocco runs your business while you sleep. 100 agent runs free, every month, forever. No card.</p>
+    <div class="hero__cta">
+      <a href="https://app.brocco.ai/signup" class="btn btn--primary btn--lg">Start free <span class="arrow">→</span></a>
+      <a href="https://cal.com/brocco/demo" class="btn btn--ghost btn--lg">Book a demo</a>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FOOTER ============== -->
+<footer>
+  <div class="container">
+    <div>
+      <a href="#" class="nav__brand" style="color: white;">
+        <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true">
+          <circle cx="32" cy="20" r="10.5"/><circle cx="20" cy="22" r="9"/><circle cx="44" cy="22" r="9"/>
+          <circle cx="26" cy="13" r="7"/><circle cx="38" cy="13" r="7"/>
+          <circle cx="14" cy="29" r="7.5"/><circle cx="50" cy="29" r="7.5"/>
+          <path d="M26.5 33 Q25.5 41 24 49 Q24 54 32 55 Q40 54 40 49 Q38.5 41 37.5 33 Z"/>
+        </svg>
+        <span>brocco<span class="dim">.ai</span></span>
+      </a>
+      <p style="margin: 14px 0 0; max-width: 280px; color: var(--fg-dim); font-size: 13.5px;">
+        The agentic OS for businesses that ship. Built on Claude. Wired into your stack.
+      </p>
+    </div>
+    <div>
+      <h4>Product</h4>
+      <ul>
+        <li><a href="#how">How it works</a></li>
+        <li><a href="#demo">Live demo</a></li>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#pricing">Pricing</a></li>
+        <li><a href="/changelog">Changelog</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Developers</h4>
+      <ul>
+        <li><a href="/docs">Docs</a></li>
+        <li><a href="/docs/api">API reference</a></li>
+        <li><a href="https://github.com/brocco-ai/charter">GitHub</a></li>
+        <li><a href="/security">Security</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Company</h4>
+      <ul>
+        <li><a href="/about">About</a></li>
+        <li><a href="/blog">Blog</a></li>
+        <li><a href="https://cal.com/brocco/demo">Book a demo</a></li>
+        <li><a href="mailto:hello@brocco.ai">hello@brocco.ai</a></li>
+      </ul>
+    </div>
+    <div class="credit container" style="padding-left: 0; padding-right: 0;">
+      <span>&copy; 2026 brocco.ai &middot; <a href="/about" style="color: inherit;">a BDP Consulting product</a></span>
+      <span class="socials">
+        <a href="https://twitter.com/brockpivec" target="_blank" rel="noopener" aria-label="Twitter / X"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg></a>
+        <a href="https://github.com/brocco-ai" target="_blank" rel="noopener" aria-label="GitHub"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .297a12 12 0 0 0-3.79 23.4c.6.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.834 2.807 1.304 3.492.997.107-.776.42-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.31.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.5 11.5 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.553 3.297-1.23 3.297-1.23.654 1.652.243 2.873.119 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576A12.001 12.001 0 0 0 12 .297"/></svg></a>
+        <a href="mailto:hello@brocco.ai" aria-label="Email"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg></a>
+        &middot;
+        <a href="/privacy" style="color: var(--fg-dim);">Privacy</a>
+        &middot;
+        <a href="/terms" style="color: var(--fg-dim);">Terms</a>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<a href="/app/" class="sticky-cta">Open the app, free <span class="arrow">&rarr;</span></a>
+
+<script src="/scripts/fluid-hero.js" defer></script>
+<script src="/scripts/agent-demo.js" defer></script>
+<script src="/scripts/main.js" defer></script>
+
+</body>
+</html>
