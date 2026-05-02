@@ -1,0 +1,200 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#050807">
+<title>Brocco vs Zapier · agentic AI vs deterministic automation</title>
+<meta name="description" content="Zapier runs pre-defined steps. Brocco agents reason. Side-by-side: when to use Zapier, when to use Brocco, and what each one ships with.">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="canonical" href="https://brocco.ai/vs/zapier">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/styles.css">
+<style>
+  .doc-hero { padding: 140px 0 60px; border-bottom: 1px solid var(--border); }
+  .doc-hero h1 { font-size: clamp(40px, 6vw, 72px); margin: 0 0 14px; }
+  .compare { display: grid; grid-template-columns: 1.4fr 1fr 1fr; padding: 0; margin: 56px 0 80px; border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+  @media (max-width: 800px) { .compare { grid-template-columns: 1fr; } }
+  .compare > div { padding: 18px 22px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); font-size: 14.5px; }
+  @media (max-width: 800px) { .compare > div { border-right: 0; } }
+  .compare .h { font-family: var(--font-mono); font-size: 12px; color: var(--fg-faint); text-transform: uppercase; letter-spacing: 0.12em; background: var(--bg-1); }
+  .compare .col-zap { color: var(--fg-mid); background: linear-gradient(180deg, transparent, rgba(251, 113, 133, 0.03)); }
+  .compare .col-bro { color: var(--fg); background: linear-gradient(180deg, transparent, rgba(34, 197, 94, 0.05)); }
+  .compare .yes::before { content: '✓ '; color: var(--brand-glow); font-weight: 700; }
+  .compare .no::before { content: 'x '; color: var(--rose); font-weight: 700; }
+  .compare .meh::before { content: '~ '; color: var(--gold); font-weight: 700; }
+  .when { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 56px 0 80px; }
+  @media (max-width: 800px) { .when { grid-template-columns: 1fr; } }
+  .when__card { padding: 28px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--bg-1); }
+  .when__card.bro { border-color: rgba(34,197,94,0.3); background: rgba(34,197,94,0.04); }
+  .when__card h3 { margin: 0 0 14px; font-size: 18px; letter-spacing: -0.01em; }
+  .when__card ul { padding-left: 20px; margin: 0; color: var(--fg-mid); line-height: 1.7; font-size: 15px; }
+  .when__card li { padding: 4px 0; }
+  .when__card li strong { color: var(--fg); }
+  .docbody p { color: var(--fg-mid); line-height: 1.65; font-size: 15.5px; max-width: 720px; }
+</style>
+</head>
+<body>
+
+<nav class="nav scrolled">
+  <a href="/" class="nav__brand">
+    <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true">
+      <path d="M 2 34 Q 6 28, 14 28 L 28 26 Q 32 24, 36 27 L 46 28 Q 52 28, 58 30 L 62 31 L 62 33 L 56 34 Q 54 38, 50 34 L 44 35 L 43 40 L 40 40 L 39 35 L 26 37 L 25 42 L 22 42 L 21 37 L 12 38 Q 6 38, 4 36 Z"/>
+      <path d="M 18 28 L 21 25 L 24 28 Z M 28 27 L 31 24 L 34 27 Z M 38 28 L 41 25 L 44 28 Z"/>
+      <circle cx="54" cy="30.5" r="1" fill="#0a0d10"/>
+    </svg>
+    <span>brocco<span class="dim">.ai</span></span>
+  </a>
+  <div class="nav__links">
+    <a href="/#how">How it works</a>
+    <a href="/#demo">Live demo</a>
+    <a href="/#pricing">Pricing</a>
+    <a href="/docs">Docs</a>
+    <a href="/security">Security</a>
+  </div>
+  <div class="nav__cta">
+    <a href="/#cta" class="btn btn--primary" style="padding: 9px 16px; font-size: 13.5px;">Start free <span class="arrow">→</span></a>
+  </div>
+</nav>
+
+<section class="doc-hero">
+  <div class="container">
+    <div class="section__eyebrow">Comparison</div>
+    <h1>Brocco vs Zapier.</h1>
+    <p class="lead">Zapier runs <strong style="color: var(--fg);">deterministic steps</strong>. Brocco runs <strong style="color: var(--fg);">agents that reason</strong>. They solve different problems. Here's exactly when to reach for which.</p>
+  </div>
+</section>
+
+<div class="container docbody">
+
+  <h2 style="margin: 56px 0 18px; font-size: 32px; letter-spacing: -0.02em;">The core difference</h2>
+  <p>
+    A Zapier zap is a <strong style="color: var(--fg);">recipe</strong>: when X, do Y, then Z. Beautiful when the steps are knowable up front. Brittle when they aren't.
+  </p>
+  <p>
+    A Brocco agent is a <strong style="color: var(--fg);">reasoner</strong>: given a goal and a tool registry, it picks which tool to call next based on what it sees. It can branch, retry, adapt to weird inputs, and end early when the job is done.
+  </p>
+  <p>
+    The right tool depends on whether your workflow is "if-this-then-that" or "figure out what to do next."
+  </p>
+
+  <h2 style="margin: 56px 0 0; font-size: 32px; letter-spacing: -0.02em;">Side by side</h2>
+
+  <div class="compare">
+    <div class="h"></div>
+    <div class="h col-zap">Zapier</div>
+    <div class="h col-bro">Brocco</div>
+
+    <div>Workflow model</div>
+    <div class="col-zap">Pre-defined linear steps</div>
+    <div class="col-bro">Agent reasons + adapts at runtime</div>
+
+    <div>Branching on data</div>
+    <div class="col-zap meh">Filters &amp; paths (manual)</div>
+    <div class="col-bro yes">Native.agent reads, decides, acts</div>
+
+    <div>Handles ambiguous inputs</div>
+    <div class="col-zap no">Breaks; needs explicit handler</div>
+    <div class="col-bro yes">Asks itself "what's the right next call?"</div>
+
+    <div>Long-horizon tasks</div>
+    <div class="col-zap meh">Capped at ~100 steps, no memory</div>
+    <div class="col-bro yes">Persistent memory across runs</div>
+
+    <div>Integrations library</div>
+    <div class="col-zap yes">7,000+ apps</div>
+    <div class="col-bro meh">100+ shipped + Python factories for anything</div>
+
+    <div>Pricing model</div>
+    <div class="col-zap">Per task ($0.04+ per zap step)</div>
+    <div class="col-bro">Per agent run + tokens (caching cuts ~80%)</div>
+
+    <div>Audit trail</div>
+    <div class="col-zap yes">Task history</div>
+    <div class="col-bro yes">Full JSONL.every prompt, tool call, result</div>
+
+    <div>Self-host</div>
+    <div class="col-zap no">SaaS only</div>
+    <div class="col-bro yes">Enterprise + open runtime</div>
+
+    <div>Zero data retention with model</div>
+    <div class="col-zap yes">N/A (no LLM by default)</div>
+    <div class="col-bro yes">Anthropic API, training opt-out by default</div>
+
+    <div>Best for</div>
+    <div class="col-zap">Triggers, syncs, deterministic glue</div>
+    <div class="col-bro">Decisions, drafts, research, judgment work</div>
+
+    <div style="border-bottom: 0;">Get started</div>
+    <div class="col-zap" style="border-bottom: 0;">zapier.com</div>
+    <div class="col-bro" style="border-bottom: 0;"><a href="/#cta" style="color: var(--brand-glow); font-weight: 600;">brocco.ai · start free →</a></div>
+  </div>
+
+  <h2 style="margin: 0 0 22px; font-size: 32px; letter-spacing: -0.02em;">When to use which</h2>
+
+  <div class="when">
+    <div class="when__card">
+      <h3>Reach for Zapier when…</h3>
+      <ul>
+        <li><strong>The steps are knowable</strong>: form fills → CRM, Calendly → Slack, Stripe charge → invoice email.</li>
+        <li><strong>Volume is high, decisions are zero</strong>: you process 10,000 of the same event and just need glue.</li>
+        <li><strong>You want a 7,000-app library</strong> with no coding.</li>
+        <li><strong>The tradeoff:</strong> any time the input shape changes, the zap breaks loudly.</li>
+      </ul>
+    </div>
+    <div class="when__card bro">
+      <h3>Reach for Brocco when…</h3>
+      <ul>
+        <li><strong>The next step depends on what was just read</strong>: research, synthesis, drafting, qualification.</li>
+        <li><strong>The input is messy</strong>: emails, PDFs, scraped HTML, unstructured forms, voice transcripts.</li>
+        <li><strong>You want one entity that owns a workflow end-to-end</strong>, not a 30-step chain.</li>
+        <li><strong>The tradeoff:</strong> you pay for tokens. Caching brings it under most Zapier task pricing in practice.</li>
+      </ul>
+    </div>
+  </div>
+
+  <p style="font-size: 17px; color: var(--fg); border-left: 3px solid var(--brand); padding-left: 22px; margin: 56px 0 80px; max-width: 720px;">
+    The real answer is <strong>both</strong>. Zapier triggers Brocco. Brocco emits a Slack message that fires another zap. Use the right tool for each layer.
+  </p>
+
+</div>
+
+<section class="cta-band" id="cta">
+  <div class="container">
+    <h2 class="h1" style="font-size: clamp(36px, 5vw, 64px); margin-bottom: 18px;">
+      Try the agent that <span class="grad">reasons.</span>
+    </h2>
+    <p>100 free runs a month. No card. Wire it next to your Zaps.</p>
+    <div class="hero__cta">
+      <a href="https://app.brocco.ai/signup" class="btn btn--primary btn--lg">Start free <span class="arrow">→</span></a>
+      <a href="/docs" class="btn btn--ghost btn--lg">Read the quickstart</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div>
+      <a href="/" class="nav__brand" style="color: white;">
+        <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true">
+          <circle cx="32" cy="20" r="10.5"/><circle cx="20" cy="22" r="9"/><circle cx="44" cy="22" r="9"/>
+          <circle cx="26" cy="13" r="7"/><circle cx="38" cy="13" r="7"/>
+          <circle cx="14" cy="29" r="7.5"/><circle cx="50" cy="29" r="7.5"/>
+          <path d="M26.5 33 Q25.5 41 24 49 Q24 54 32 55 Q40 54 40 49 Q38.5 41 37.5 33 Z"/>
+        </svg>
+        <span>brocco<span class="dim">.ai</span></span>
+      </a>
+    </div>
+    <div><h4>Compare</h4><ul><li><a href="/vs/zapier" style="color: var(--brand-glow);">vs Zapier</a></li></ul></div>
+    <div><h4>Developers</h4><ul><li><a href="/docs">Docs</a></li><li><a href="/security">Security</a></li></ul></div>
+    <div><h4>Company</h4><ul><li><a href="mailto:hello@brocco.ai">hello@brocco.ai</a></li></ul></div>
+    <div class="credit container" style="padding-left: 0; padding-right: 0;">
+      <span>© 2026 brocco.ai · BDP Consulting</span>
+    </div>
+  </div>
+</footer>
+<script src="/scripts/main.js" defer></script>
+</body>
+</html>

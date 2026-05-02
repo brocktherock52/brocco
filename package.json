@@ -1,0 +1,11 @@
+{
+  "name": "brocco-site",
+  "version": "0.1.0",
+  "private": true,
+  "description": "brocco.ai marketing site -static + WebGL fluid hero",
+  "scripts": {
+    "dev": "npx http-server public -p 4321 -c-1",
+    "deploy": "vercel deploy --prod",
+    "preview": "vercel"
+  }
+}
