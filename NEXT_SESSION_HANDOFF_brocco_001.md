@@ -1,10 +1,19 @@
-# NEXT_SESSION_HANDOFF.md
+# NEXT_SESSION_HANDOFF_brocco_001.md
+
+> **Why the numbered filename:** multiple Claude Code sessions are
+> active in this workspace concurrently (brocco, Detroit FB outreach,
+> Cleveland multifamily, Parker St 8-pack, etc). Each session writes its
+> own handoff. This file is the **brocco arm's handoff #001** so it
+> doesn't collide with siblings. The shared `NEXT_SESSION_HANDOFF.md`
+> at the workspace root is owned by another session (Detroit outreach
+> as of 2026-05-03 14:15). Don't write to that one from a brocco
+> session; bump this number (002, 003, ...) instead.
 
 **Project:** brocco.ai (multi-agent AI dashboard) + Charter (Python runtime)
 **Repo:** https://github.com/brocktherock52/bdp-consulting (private mono-repo, branch `main`)
 **Live site:** https://brocco-site.vercel.app/
 **Vercel project:** `brocktherock52s-projects/brocco-site`
-**Handoff date:** 2026-05-03
+**Handoff date:** 2026-05-03 (handoff #001, brocco arm)
 
 ---
 
@@ -329,7 +338,7 @@ Next up:
 You are continuing from the previous session. The full transcript is in
 session_logs/session_transcript_2026-05-03_18-05-00.md (synthesized,
 human-readable) and session_logs/raw/session_2026-05-03_18-05-00.jsonl
-(raw 7.2MB Claude Code JSONL). Read NEXT_SESSION_HANDOFF.md first, then
+(raw 7.2MB Claude Code JSONL). Read NEXT_SESSION_HANDOFF_brocco_001.md first, then
 HANDOFF.md for the deeper architecture map. Memory files at
 ~/.claude/projects/.../memory/ auto-load and include the locked Brock
 style rules (no em-dashes, no "Brock Pivec" on public surfaces, banded
@@ -339,7 +348,7 @@ prices wired and verified, /app PWA installable on Mac/Win/iOS/Android,
 3 SEO articles shipped, REST API + MCP server live. Stripe was the
 biggest recurring bug source - the toggle defaulted to annual, which
 billed users for the year instead of monthly. That's fixed. Next
-priorities are in section 4 of NEXT_SESSION_HANDOFF.md - the priority-A
+priorities are in section 4 of NEXT_SESSION_HANDOFF_brocco_001.md - the priority-A
 list is "drive first paying subscriber".
 ```
 
@@ -358,7 +367,7 @@ projects/bdp-consulting/arms/
     scripts/smoke_test.py       # Smoke test
   brocco_site/                  # The marketing + app
     HANDOFF.md                  # Comprehensive deeper handoff
-    NEXT_SESSION_HANDOFF.md     # This file
+    NEXT_SESSION_HANDOFF_brocco_001.md     # This file
     README.md                   # Local dev instructions
     vercel.json                 # cleanUrls: true, trailingSlash: false
     api/                        # Vercel Edge functions
