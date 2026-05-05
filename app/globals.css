@@ -1,0 +1,138 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    color-scheme: dark;
+  }
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  body {
+    @apply bg-bg-0 text-ink font-sans antialiased;
+    background-image:
+      radial-gradient(900px 500px at 50% -200px, rgba(124, 58, 237, 0.18), transparent 60%),
+      radial-gradient(700px 400px at 90% 10%, rgba(34, 211, 238, 0.08), transparent 60%);
+    background-attachment: fixed;
+  }
+  ::selection {
+    background: rgba(124, 58, 237, 0.5);
+    color: #fff;
+  }
+  /* prettier scrollbars */
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb {
+    background: rgba(255,255,255,0.08);
+    border-radius: 8px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: rgba(255,255,255,0.16);
+  }
+}
+
+@layer components {
+  .container-x {
+    @apply mx-auto w-full max-w-[1200px] px-5 md:px-8;
+  }
+  .glass {
+    @apply bg-white/[0.03] backdrop-blur-xl border border-white/[0.06];
+  }
+  .glass-strong {
+    @apply bg-white/[0.05] backdrop-blur-2xl border border-white/[0.10];
+  }
+  .text-grad {
+    background: linear-gradient(135deg, #fff 0%, #C4B5FD 30%, #67E8F9 60%, #A78BFA 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .text-grad-brand {
+    background: linear-gradient(135deg, #A78BFA 0%, #22D3EE 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .ring-soft {
+    @apply ring-1 ring-white/[0.06];
+  }
+  .grid-bg {
+    background-image:
+      linear-gradient(rgba(255,255,255,0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.045) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: radial-gradient(60% 60% at 50% 30%, #000 0%, transparent 75%);
+  }
+  .btn-primary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full
+           px-5 py-3 text-sm font-semibold
+           bg-gradient-to-r from-brand to-cyan
+           text-white shadow-glow2
+           transition-all duration-200
+           hover:scale-[1.02] hover:shadow-glow active:scale-[0.99];
+  }
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full
+           px-5 py-3 text-sm font-semibold
+           bg-white/[0.04] border border-white/[0.10]
+           text-ink hover:text-white
+           transition-all duration-200
+           hover:bg-white/[0.07] hover:border-white/[0.20];
+  }
+  .pill {
+    @apply inline-flex items-center gap-1.5 rounded-full
+           border border-white/[0.10] bg-white/[0.04]
+           px-3 py-1 text-xs font-medium text-ink-dim;
+  }
+  .card {
+    @apply rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-sm
+           shadow-card;
+  }
+  .card-hover {
+    @apply transition-all duration-300 hover:border-white/[0.14]
+           hover:bg-white/[0.04] hover:-translate-y-0.5;
+  }
+  .kbd {
+    @apply inline-flex items-center justify-center
+           rounded-md border border-white/[0.10] bg-white/[0.06]
+           px-1.5 py-0.5 font-mono text-[11px] text-ink-dim;
+  }
+}
+
+/* hero shine */
+.hero-shine::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.06) 50%, transparent 100%);
+  transform: translateX(-100%);
+  pointer-events: none;
+  animation: shine 4s ease-in-out infinite;
+}
+
+/* reveal */
+.reveal-on-scroll {
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.reveal-on-scroll.is-visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* terminal type for jsonl viewer */
+.jsonl {
+  font-family: var(--font-mono, "JetBrains Mono", monospace);
+  font-size: 12.5px;
+  line-height: 1.55;
+  color: #C7D2FE;
+}
+.jsonl .key { color: #A78BFA; }
+.jsonl .str { color: #67E8F9; }
+.jsonl .num { color: #FBBF24; }
+.jsonl .bool { color: #FB7185; }
+.jsonl .dim { color: #6B7280; }
