@@ -36,8 +36,9 @@ export function HowItWorks() {
       <div className="container-x">
         <div className="max-w-2xl">
           <p className="pill">How it works</p>
-          <h2 className="mt-5 text-display-lg text-grad">
-            One prompt. Three agents. Zero tab-switching.
+          <h2 className="mt-5 text-display-lg">
+            <span className="text-grad">One prompt. Three agents.</span>{' '}
+            <span className="font-serif italic font-normal text-grad-brand">Zero tab-switching.</span>
           </h2>
           <p className="mt-4 max-w-xl text-[16px] text-ink-dim">
             A peek at the dashboard live. Real layout, real streaming, real tool calls. Open <a href="/app" className="text-cyan-glow underline-offset-4 hover:underline">/app</a> to drive your own.

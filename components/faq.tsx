@@ -52,7 +52,10 @@ export function Faq() {
       <div className="container-x">
         <div className="mx-auto max-w-2xl text-center">
           <p className="pill mx-auto">FAQ</p>
-          <h2 className="mt-5 text-display-lg text-grad">Common questions.</h2>
+          <h2 className="mt-5 text-display-lg">
+            <span className="text-grad">Common</span>{' '}
+            <span className="font-serif italic font-normal text-grad-brand">questions.</span>
+          </h2>
         </div>
 
         <div className="mx-auto mt-12 max-w-3xl">

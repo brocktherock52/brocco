@@ -104,7 +104,10 @@ export function Pricing({ standalone = false }: { standalone?: boolean }) {
       <div className="container-x">
         <div className="mx-auto max-w-2xl text-center">
           <p className="pill mx-auto">Pricing</p>
-          <h2 className="mt-5 text-display-lg text-grad">Simple. Transparent. Free to start.</h2>
+          <h2 className="mt-5 text-display-lg">
+            <span className="text-grad">Simple. Transparent.</span>{' '}
+            <span className="font-serif italic font-normal text-grad-brand">Free to start.</span>
+          </h2>
           <p className="mt-4 text-[16px] text-ink-dim">
             BYOK on free, hosted runs on paid, custom on enterprise. Cancel anytime, prorated refund.
           </p>
