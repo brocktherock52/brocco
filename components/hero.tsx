@@ -6,6 +6,23 @@ import { motion, useInView, useMotionValue, useSpring, useTransform } from 'fram
 import { ArrowRight, Play, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 import { ParticleField } from './particle-field';
+import {
+  AnthropicIcon,
+  OpenAIIcon,
+  OllamaIcon,
+  StripeIcon,
+  VercelIcon,
+  TavilyIcon,
+} from './brand-icons';
+
+const TRUST_LOGOS = [
+  { name: 'Anthropic', Icon: AnthropicIcon },
+  { name: 'OpenAI', Icon: OpenAIIcon },
+  { name: 'Ollama', Icon: OllamaIcon },
+  { name: 'Stripe', Icon: StripeIcon },
+  { name: 'Vercel', Icon: VercelIcon },
+  { name: 'Tavily', Icon: TavilyIcon },
+];
 
 const STATS = [
   { value: 9, label: 'agents', suffix: '', sub: 'researcher, coder, outreach, more' },
@@ -31,7 +48,7 @@ function CountUp({ value, suffix = '' }: { value: number; suffix?: string }) {
   );
 }
 
-const TRUST = ['Anthropic', 'OpenAI', 'Ollama', 'Stripe', 'Vercel', 'Tavily'];
+// trust strip uses inline brand icons for visual recognition
 
 export function Hero() {
   const [confetti, setConfetti] = useState<{ id: number; x: number }[]>([]);
@@ -174,10 +191,14 @@ export function Hero() {
           <p className="text-center text-[11.5px] uppercase tracking-[0.18em] text-ink-faint">
             Runs on the models and infra you already trust
           </p>
-          <ul className="mt-5 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-[14px] text-ink-dim md:gap-x-12">
-            {TRUST.map((t) => (
-              <li key={t} className="opacity-70 transition-opacity hover:opacity-100">
-                {t}
+          <ul className="mt-5 flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-[14px] text-ink-dim md:gap-x-12">
+            {TRUST_LOGOS.map(({ name, Icon }) => (
+              <li
+                key={name}
+                className="inline-flex items-center gap-2 opacity-70 transition-opacity hover:opacity-100"
+              >
+                <Icon className="h-4 w-4" />
+                <span>{name}</span>
               </li>
             ))}
           </ul>
