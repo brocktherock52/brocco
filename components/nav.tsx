@@ -44,7 +44,7 @@ const DEVELOPERS: MegaItem[] = [
   { href: '/docs', label: 'docs', desc: 'agents, tools, recipes, mcp, rest', Icon: Boxes },
   { href: '/api/v1/agents', label: 'api reference', desc: 'live /api/v1/agents endpoint', Icon: TerminalSquare, external: true },
   { href: '/download', label: 'install / pwa', desc: 'mac, windows, mobile', Icon: Download },
-  { href: 'https://github.com/brocktherock52/bdp-consulting', label: 'github', desc: 'source + releases', Icon: Code2, external: true },
+  { href: 'https://github.com/brocktherock52/brocco', label: 'github', desc: 'source · 11 tagged releases', Icon: Code2, external: true },
   { href: '/blog', label: 'blog', desc: 'field notes from production agents', Icon: ScrollText },
   { href: '/changelog', label: 'changelog', desc: 'every version, dated, no spin', Icon: ScrollText },
 ];

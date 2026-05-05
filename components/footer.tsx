@@ -31,7 +31,7 @@ export function Footer() {
             { href: '/docs', label: 'docs' },
             { href: '/security', label: 'security' },
             { href: '/api/v1/agents', label: 'api reference' },
-            { href: 'https://github.com/brocktherock52/bdp-consulting', label: 'github' },
+            { href: 'https://github.com/brocktherock52/brocco', label: 'github' },
           ]} />
           <FooterCol title="company" links={[
             { href: 'mailto:hello@brocco.ai', label: 'hello@brocco.ai' },
