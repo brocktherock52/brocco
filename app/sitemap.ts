@@ -1,9 +1,16 @@
 import type { MetadataRoute } from 'next';
+import { POSTS } from '@/lib/posts';
 
 const SITE = 'https://brocco-site.vercel.app';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
+  const blog = POSTS.map((p) => ({
+    url: `${SITE}/blog/${p.slug}`,
+    lastModified: new Date(p.date),
+    changeFrequency: 'monthly' as const,
+    priority: 0.7,
+  }));
   return [
     { url: `${SITE}/`, lastModified: now, changeFrequency: 'weekly', priority: 1 },
     { url: `${SITE}/app`, lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
@@ -20,5 +27,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE}/privacy`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
     { url: `${SITE}/terms`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
     { url: `${SITE}/billing/success`, lastModified: now, changeFrequency: 'yearly', priority: 0.2 },
+    { url: `${SITE}/blog`, lastModified: now, changeFrequency: 'weekly', priority: 0.75 },
+    ...blog,
   ];
 }

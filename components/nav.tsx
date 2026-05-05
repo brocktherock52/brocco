@@ -12,7 +12,7 @@ const LINKS = [
   { href: '/#integrations', label: 'Integrations' },
   { href: '/pricing', label: 'Pricing' },
   { href: '/download', label: 'Download' },
-  { href: '/docs', label: 'Docs' },
+  { href: '/blog', label: 'Blog' },
 ];
 
 export function Nav() {

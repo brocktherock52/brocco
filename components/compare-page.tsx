@@ -33,8 +33,47 @@ export interface ComparePageProps {
 export function ComparePage(props: ComparePageProps) {
   const { competitor, hero, oneLine, matrix, wins, faq, competitorTagline } = props;
 
+  // FAQPage schema lets Google render the FAQ as rich snippets directly
+  // in search results.
+  const ldFaq = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: faq.map((f) => ({
+      '@type': 'Question',
+      name: f.q,
+      acceptedAnswer: { '@type': 'Answer', text: f.a },
+    })),
+  };
+
+  // Article schema gives the page a clean editorial signal on top of
+  // the FAQPage. We treat each /vs/* as an editorial comparison piece.
+  const ldArticle = {
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: `${hero.titleA} ${hero.titleB}`,
+    description: props.hero.subtitle,
+    author: { '@type': 'Organization', name: 'brocco.ai' },
+    publisher: {
+      '@type': 'Organization',
+      name: 'brocco.ai',
+      logo: { '@type': 'ImageObject', url: 'https://brocco-site.vercel.app/icon.png' },
+    },
+    about: [
+      { '@type': 'SoftwareApplication', name: 'brocco.ai' },
+      { '@type': 'SoftwareApplication', name: competitor },
+    ],
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(ldFaq) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(ldArticle) }}
+      />
       <Nav />
       <main>
         {/* HERO */}

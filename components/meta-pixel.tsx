@@ -1,17 +1,28 @@
 'use client';
 
+import { useEffect, useState } from 'react';
 import Script from 'next/script';
+import { hasConsent } from './cookie-consent';
 
 /**
  * Meta (Facebook) Pixel client snippet.
- * Only renders when NEXT_PUBLIC_META_PIXEL_ID is set, so dev + previews
- * stay clean. PageView fires once on load. Custom events (ViewContent,
- * InitiateCheckout, Subscribe, Lead) are dispatched from the rest of
- * the app via window.fbq when the user crosses each funnel step.
+ * Renders only when:
+ *   - NEXT_PUBLIC_META_PIXEL_ID is set (no-op in dev / preview)
+ *   - the user has accepted analytics cookies (GDPR posture)
+ * PageView fires once on load. Custom events are dispatched from the rest of
+ * the app via window.fbq + the trackPixel helper.
  */
 export function MetaPixel() {
   const id = process.env.NEXT_PUBLIC_META_PIXEL_ID;
+  const [allowed, setAllowed] = useState(false);
+  useEffect(() => {
+    const update = () => setAllowed(hasConsent('marketing'));
+    update();
+    window.addEventListener('brocco:consent-change', update);
+    return () => window.removeEventListener('brocco:consent-change', update);
+  }, []);
   if (!id) return null;
+  if (!allowed) return null;
   return (
     <>
       <Script
