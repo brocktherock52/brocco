@@ -10,7 +10,6 @@ import {
   History,
   KeyRound,
   Play,
-  Radio,
   Share2,
   Sparkles,
   Square,
@@ -18,7 +17,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Logomark } from '@/components/logo';
-import { AGENTS, type AgentName, RECIPES } from '@/lib/agents';
+import { AGENTS, type AgentName } from '@/lib/agents';
 import { runAgent, type SimEvent } from '@/lib/simulator';
 import { runClaudeLive, SYSTEM_PROMPTS, type LiveEvent } from '@/lib/claude';
 import { recordRun, freeTierExceeded, remainingFreeRuns, getUsage, FREE_LIMIT } from '@/lib/usage';
@@ -55,8 +54,13 @@ interface RunHistoryEntry {
 }
 
 export function AppShell() {
-  const [selected, setSelected] = useState<AgentName[]>(['supervisor']);
-  const [broadcast, setBroadcast] = useState(false);
+  // v3.0: broadcast is the product. Default to 3 specialists selected.
+  const [selected, setSelected] = useState<AgentName[]>([
+    'researcher',
+    'planner',
+    'outreach',
+  ]);
+  const [broadcast, setBroadcast] = useState(true);
   const [goal, setGoal] = useState('');
   const [model, setModel] = useState(MODELS[0].id);
   const [modelOpen, setModelOpen] = useState(false);
@@ -109,18 +113,11 @@ export function AppShell() {
   const running = panes.some((p) => p.status === 'running');
 
   function toggleAgent(name: AgentName) {
+    // v3.0: broadcast always on, toggle adds/removes from the set.
+    // Minimum 1, no upper bound.
     setSelected((s) =>
-      s.includes(name) ? s.filter((x) => x !== name) : broadcast ? [...s, name] : [name],
+      s.includes(name) ? (s.length > 1 ? s.filter((x) => x !== name) : s) : [...s, name],
     );
-  }
-
-  function loadRecipe(id: string) {
-    const r = RECIPES.find((x) => x.id === id);
-    if (!r) return;
-    setSelected(r.agents);
-    setBroadcast(true);
-    setGoal(r.goal);
-    toast.success(`Loaded recipe: ${r.name}`, { description: 'Hit Run when ready.' });
   }
 
   async function run() {
@@ -142,7 +139,8 @@ export function AppShell() {
       return;
     }
 
-    const runAgents = broadcast ? selected : selected.slice(0, 1);
+    // v3.0: broadcast is always on; runAgents is just selected.
+    const runAgents = selected;
     const next: PaneState[] = runAgents.map((name) => ({
       id: uid('p'),
       agent: name,
@@ -318,10 +316,7 @@ export function AppShell() {
         e.preventDefault();
         document.getElementById('goal-input')?.focus();
       }
-      if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'b') {
-        e.preventDefault();
-        setBroadcast((v) => !v);
-      }
+      // Cmd+B no longer toggles broadcast (always on in v3.0)
     };
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
@@ -437,30 +432,15 @@ export function AppShell() {
 
       {/* MAIN */}
       <div className="flex min-h-0 flex-1">
-        {/* SIDEBAR */}
-        <aside className="hidden w-[280px] shrink-0 overflow-y-auto border-r border-white/[0.06] bg-bg-1/30 md:block">
+        {/* SIDEBAR — v3.0: agents only, broadcast always on, no recipe browser */}
+        <aside className="hidden w-[260px] shrink-0 overflow-y-auto border-r border-white/[0.06] bg-bg-1/30 md:block">
           <div className="p-4">
-            <p className="px-1 font-mono text-[10.5px] uppercase tracking-wider text-ink-faint">
-              Agents
+            <p className="px-1 font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-faint">
+              specialists · {selected.length} selected
             </p>
-            <label className="mt-2 flex items-center justify-between rounded-lg border border-white/[0.06] bg-white/[0.02] p-2.5">
-              <span className="inline-flex items-center gap-2 text-[12.5px] font-medium">
-                <Radio className="h-3.5 w-3.5 text-brand-glow" />
-                Broadcast mode
-              </span>
-              <button
-                onClick={() => setBroadcast((v) => !v)}
-                className={`relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full transition-colors ${broadcast ? 'bg-brand' : 'bg-white/[0.10]'}`}
-              >
-                <span
-                  className={`pointer-events-none inline-block h-4 w-4 transform rounded-full bg-white shadow-md transition-transform ${broadcast ? 'translate-x-[18px]' : 'translate-x-0.5'} translate-y-0.5`}
-                />
-              </button>
-            </label>
-            <p className="mt-1.5 px-1 text-[11px] text-ink-faint">
-              {broadcast ? 'One prompt fans out to every selected agent in parallel.' : 'Single agent run. Toggle on for parallel.'}
+            <p className="mt-1.5 px-1 text-[11.5px] leading-snug text-ink-dim">
+              broadcast is always on. one prompt fans out to every selected agent in parallel.
             </p>
-
             <div className="mt-4 space-y-2">
               {AGENTS.map((a) => (
                 <AgentCard
@@ -469,22 +449,6 @@ export function AppShell() {
                   selected={selected.includes(a.name)}
                   onToggle={() => toggleAgent(a.name)}
                 />
-              ))}
-            </div>
-
-            <p className="mt-6 px-1 font-mono text-[10.5px] uppercase tracking-wider text-ink-faint">
-              Recipes
-            </p>
-            <div className="mt-2 space-y-1.5">
-              {RECIPES.map((r) => (
-                <button
-                  key={r.id}
-                  onClick={() => loadRecipe(r.id)}
-                  className="w-full rounded-lg border border-white/[0.06] bg-white/[0.02] p-2.5 text-left transition hover:border-white/[0.12] hover:bg-white/[0.04]"
-                >
-                  <div className="text-[13px] font-semibold text-white">{r.name}</div>
-                  <div className="mt-0.5 text-[11px] text-ink-faint">{r.description}</div>
-                </button>
               ))}
             </div>
           </div>
@@ -497,7 +461,7 @@ export function AppShell() {
             <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-1 shadow-card">
               <textarea
                 id="goal-input"
-                placeholder="Type a goal. e.g. 'survey the top 5 competitors to brocco, output a 1-page brief and 5 cold-email angles'"
+                placeholder="type one goal. n agents run in parallel. e.g. 'research the top 5 alternatives to notion, draft 3 cold-email angles, and outline a launch plan.'"
                 value={goal}
                 onChange={(e) => setGoal(e.target.value)}
                 rows={3}
@@ -507,12 +471,9 @@ export function AppShell() {
                 <span className="kbd">⌘</span>
                 <span className="kbd">Enter</span>
                 <span className="text-[11px] text-ink-faint">to run</span>
-                <span className="ml-3 kbd">⌘</span>
-                <span className="kbd">B</span>
-                <span className="text-[11px] text-ink-faint">broadcast</span>
                 <div className="ml-auto flex items-center gap-2">
                   <span className="font-mono text-[11px] text-ink-faint">
-                    {selected.length} agent{selected.length !== 1 && 's'} {broadcast && selected.length > 1 ? '(parallel)' : ''}
+                    {selected.length} agent{selected.length !== 1 && 's'} · parallel
                   </span>
                   <button
                     onClick={run}
@@ -521,11 +482,11 @@ export function AppShell() {
                   >
                     {running ? (
                       <span className="inline-flex items-center gap-1.5">
-                        <Sparkles className="h-3.5 w-3.5 animate-pulse" /> Running
+                        <Sparkles className="h-3.5 w-3.5 animate-pulse" /> running
                       </span>
                     ) : (
                       <span className="inline-flex items-center gap-1.5">
-                        <Play className="h-3 w-3 fill-current" /> Run agents <ArrowRight className="h-3 w-3" />
+                        <Play className="h-3 w-3 fill-current" /> run agents <ArrowRight className="h-3 w-3" />
                       </span>
                     )}
                   </button>
@@ -539,7 +500,7 @@ export function AppShell() {
             {/* panes */}
             <div className="min-h-0 overflow-y-auto">
               {panes.length === 0 ? (
-                <EmptyState onPick={loadRecipe} />
+                <EmptyState onPick={(g) => setGoal(g)} />
               ) : (
                 <div
                   className={`grid gap-3 ${panes.length === 1 ? 'grid-cols-1' : panes.length === 2 ? 'grid-cols-1 xl:grid-cols-2' : 'grid-cols-1 xl:grid-cols-2'}`}
@@ -637,39 +598,45 @@ function ModeBadge({ live }: { live: boolean }) {
   );
 }
 
-function EmptyState({ onPick }: { onPick: (id: string) => void }) {
+/** v3.0: empty state shows 3 hardcoded "try this" goals that pre-fill the input. */
+const TRY_THESE = [
+  'research the top 5 alternatives to notion, output a 1-page brief and 5 cold-email angles',
+  'plan a 7-day launch for a $49/mo dev tool with 0 audience and a $200 budget',
+  'review my landing-page copy, suggest 5 a/b test variants, and draft 3 launch tweets',
+];
+
+function EmptyState({ onPick }: { onPick: (goal: string) => void }) {
   return (
-    <div className="flex h-full min-h-[480px] items-center justify-center">
-      <div className="max-w-md text-center">
-        <Logomark className="mx-auto h-14 w-14 opacity-90" />
-        <h2 className="mt-5 text-[22px] font-semibold tracking-tight">Spawn an agent.</h2>
-        <p className="mt-2 text-[14px] text-ink-dim">
-          Pick agents on the left, type a goal, hit Run. Toggle <strong>Broadcast</strong> to fan one prompt out to N agents in parallel.
+    <div className="flex h-full min-h-[480px] items-center justify-center px-4">
+      <div className="max-w-lg text-center">
+        <Logomark className="mx-auto h-12 w-12 opacity-90" />
+        <h2 className="mt-6 text-[24px] font-semibold tracking-tight lowercase">
+          <span className="text-grad">type one goal.</span>{' '}
+          <span className="font-serif italic font-normal text-grad-brand">three agents work.</span>
+        </h2>
+        <p className="mt-3 text-[14px] leading-relaxed text-ink-dim">
+          broadcast is always on. each specialist runs in its own pane, in parallel. every step appears in the jsonl log on the right.
         </p>
-        <p className="mt-4 inline-flex items-center gap-2 text-[12px] text-ink-faint">
+        <p className="mt-5 inline-flex items-center gap-2 text-[12px] text-ink-faint">
           <span className="kbd">⌘</span>
           <span className="kbd">Enter</span>
-          send
+          run
           <span className="kbd ml-3">⌘</span>
           <span className="kbd">K</span>
-          focus prompt
-          <span className="kbd ml-3">⌘</span>
-          <span className="kbd">B</span>
-          broadcast
+          focus
         </p>
 
-        <p className="mt-8 px-1 text-left font-mono text-[10.5px] uppercase tracking-wider text-ink-faint">
-          One-click recipes
+        <p className="mt-10 text-left font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-faint">
+          try one of these
         </p>
-        <div className="mt-2 grid gap-2 text-left sm:grid-cols-2">
-          {RECIPES.map((r) => (
+        <div className="mt-3 space-y-2 text-left">
+          {TRY_THESE.map((g, i) => (
             <button
-              key={r.id}
-              onClick={() => onPick(r.id)}
-              className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 transition hover:border-white/[0.12] hover:bg-white/[0.04]"
+              key={i}
+              onClick={() => onPick(g)}
+              className="block w-full rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 text-[13px] leading-relaxed text-ink-dim transition hover:border-white/[0.12] hover:bg-white/[0.04] hover:text-white"
             >
-              <div className="text-[13px] font-semibold text-white">{r.name}</div>
-              <div className="mt-0.5 text-[11.5px] text-ink-faint">{r.description}</div>
+              {g}
             </button>
           ))}
         </div>
@@ -679,14 +646,18 @@ function EmptyState({ onPick }: { onPick: (id: string) => void }) {
 }
 
 function SaveActions() {
+  // v3.0: real OAuth integrations ship in PR4-6. For now, three primary
+  // destinations only (notion, slack, linear). Email/drive/webhook deferred.
   return (
     <div className="mt-3 flex flex-wrap items-center gap-2 rounded-xl border border-white/[0.06] bg-white/[0.02] p-3">
-      <span className="font-mono text-[11px] text-ink-faint">SAVE OUTPUT TO</span>
-      {['Notion', 'Slack', 'Email', 'Google Drive', 'Webhook'].map((dest) => (
+      <span className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-faint">save output to</span>
+      {['Notion', 'Slack', 'Linear'].map((dest) => (
         <button
           key={dest}
-          onClick={() => toast.success(`Saved to ${dest}`, { description: 'Connect this destination on your paid plan.' })}
-          className="rounded-full border border-white/[0.10] bg-white/[0.04] px-2.5 py-1 text-[11.5px] font-medium text-ink-dim hover:bg-white/[0.07] hover:text-white"
+          onClick={() => toast.message(`${dest} oauth shipping in v3.0 PR ${dest === 'Notion' ? '4' : dest === 'Slack' ? '5' : '6'}`, {
+            description: 'real integration with token refresh + scoped permissions. coming next.',
+          })}
+          className="rounded-full border border-white/[0.10] bg-white/[0.04] px-3 py-1 text-[12px] font-medium text-ink-dim hover:bg-white/[0.07] hover:text-white"
         >
           {dest}
         </button>
