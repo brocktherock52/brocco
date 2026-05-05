@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Toaster } from 'sonner';
+import { PwaRegister } from '@/components/pwa-register';
 import './globals.css';
 
 const SITE_URL = 'https://brocco-site.vercel.app';
@@ -129,6 +130,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             className: 'border border-white/10 bg-bg-2/90 backdrop-blur-xl',
           }}
         />
+        <PwaRegister />
         <Analytics />
         <SpeedInsights />
       </body>

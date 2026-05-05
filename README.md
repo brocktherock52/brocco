@@ -1,8 +1,18 @@
 # brocco.ai
 
-The agentic AI platform marketing site + interactive `/app` demo. Next.js 15 (App Router) +
-TypeScript + Tailwind + Radix + Framer Motion. Production-deployed on Vercel as
+The agentic AI platform marketing site + interactive `/app` dashboard. Next.js 15 (App Router) +
+TypeScript + Tailwind + Radix + Framer Motion + PWA. Production-deployed on Vercel as
 `brocktherock52s-projects/brocco-site` at https://brocco-site.vercel.app.
+
+## Versioning history
+
+| Version | Date | Tag | Highlights |
+|---|---|---|---|
+| **v2.1** | 2026-05-05 | (current branch `v2.1-production`) | Live BYOK Claude, PWA install, onboarding, /privacy, /terms, /changelog, loading + error boundaries, free-tier usage tracking |
+| **v2.0** | 2026-05-05 | `v2.0-nextjs-rebuild` | Full Next.js 15 rebuild from static HTML. New /app dashboard, /pricing, /security, /docs |
+| **v1.x** | 2026-05-02 | `v1.0-static` | Original static HTML site. Custom WebGL fluid hero, scripted demo. Preserved under `legacy-static/` and `legacy/v1-*` |
+
+Restore any version with `git checkout <tag>` or `git checkout v2.1-production`.
 
 ## Stack
 

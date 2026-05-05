@@ -117,7 +117,7 @@ export default function SecurityPage() {
               <div className="inline-flex items-center gap-2 font-mono text-[11.5px] uppercase tracking-wider text-emerald-300">
                 <CheckCircle2 className="h-3.5 w-3.5" /> Status
               </div>
-              <p className="mt-1.5">All systems operational. View live status at <a href="https://status.brocco.ai" className="text-cyan-glow underline-offset-4 hover:underline">status.brocco.ai</a>.</p>
+              <p className="mt-1.5">All systems operational. We post incidents to the changelog and email paid customers within the hour.</p>
             </div>
 
             <div className="mx-auto mt-10 max-w-3xl text-center text-[13.5px] text-ink-dim">

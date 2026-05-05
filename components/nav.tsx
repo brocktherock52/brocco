@@ -5,13 +5,14 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { ArrowRight, Menu, X } from 'lucide-react';
 import { Logomark } from './logo';
+import { InstallButton } from './install-button';
 import { cn } from '@/lib/utils';
 
 const LINKS = [
   { href: '/#how', label: 'How it works' },
   { href: '/#features', label: 'Features' },
   { href: '/pricing', label: 'Pricing' },
-  { href: '/security', label: 'Security' },
+  { href: '/download', label: 'Download' },
   { href: '/docs', label: 'Docs' },
 ];
 
@@ -38,7 +39,7 @@ export function Nav() {
     >
       <div className="container-x flex h-16 items-center justify-between md:h-[68px]">
         <Link href="/" className="group flex items-center gap-2.5">
-          <Logomark className="h-7 w-7 text-brand-glow transition-transform group-hover:scale-105" />
+          <Logomark className="h-6 w-12 text-brand-glow transition-transform group-hover:scale-105" />
           <span className="text-[15px] font-semibold tracking-tight">
             brocco<span className="text-ink-faint">.ai</span>
           </span>
@@ -57,9 +58,7 @@ export function Nav() {
         </div>
 
         <div className="hidden items-center gap-2 md:flex">
-          <Link href="/app" className="rounded-full px-3 py-1.5 text-[13.5px] text-ink-dim transition-colors hover:text-white">
-            Sign in
-          </Link>
+          <InstallButton />
           <Link
             href="/app"
             className="group inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-brand to-cyan px-4 py-2 text-[13px] font-semibold text-white shadow-glow2 transition-all hover:shadow-glow"

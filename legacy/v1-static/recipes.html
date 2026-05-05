@@ -1,0 +1,251 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#050807">
+<title>Brocco recipes . multi-agent workflows you can run in 30 seconds</title>
+<meta name="description" content="Eight ready-to-run multi-agent workflows: market research, launch day, customer deep dive, content sprint, and more. One click, paste your key, watch it work.">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="canonical" href="https://brocco.ai/recipes">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/styles.css">
+<style>
+  .doc-hero { padding: 140px 0 60px; border-bottom: 1px solid var(--border); }
+  .doc-hero h1 { font-size: clamp(40px, 6vw, 72px); margin: 0 0 14px; }
+  .recipe-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; margin: 56px 0 96px; }
+  .rcard {
+    display: block; padding: 26px;
+    background: var(--bg-1); border: 1px solid var(--border); border-radius: var(--radius-lg);
+    color: inherit; text-decoration: none;
+    transition: border-color .15s, transform .15s, background .15s;
+    position: relative; overflow: hidden;
+  }
+  .rcard:hover { border-color: var(--brand); transform: translateY(-2px); background: linear-gradient(180deg, var(--bg-2), var(--bg-1)); }
+  .rcard__mode { position: absolute; top: 16px; right: 16px; font-family: var(--font-mono); font-size: 10.5px; color: var(--brand-glow); padding: 3px 8px; border: 1px solid rgba(34,197,94,0.35); border-radius: 999px; background: rgba(34,197,94,0.05); text-transform: uppercase; letter-spacing: 0.08em; }
+  .rcard h3 { font-size: 19px; margin: 0 0 10px; letter-spacing: -0.015em; padding-right: 80px; }
+  .rcard__prompt { font-family: var(--font-mono); font-size: 12px; color: var(--fg-mid); padding: 12px 14px; background: var(--bg-0); border: 1px solid var(--border); border-radius: 8px; margin: 14px 0 16px; line-height: 1.45; min-height: 60px; }
+  .rcard__agents { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+  .rcard__agent { font-family: var(--font-mono); font-size: 10.5px; padding: 2px 8px; background: var(--bg-2); border: 1px solid var(--border); border-radius: 999px; color: var(--fg-mid); }
+  .rcard__cta { font-size: 13px; color: var(--brand-glow); font-weight: 600; display: flex; align-items: center; gap: 6px; }
+  .rcard:hover .rcard__cta { color: var(--brand); }
+  .filters { display: flex; gap: 8px; flex-wrap: wrap; margin: 32px 0 0; }
+  .filter { padding: 6px 14px; background: var(--bg-1); border: 1px solid var(--border); border-radius: 999px; font-size: 13px; color: var(--fg-mid); cursor: pointer; transition: color .15s, border-color .15s, background .15s; }
+  .filter:hover { color: var(--fg); border-color: var(--border-strong); }
+  .filter.active { background: var(--brand); color: #04140a; border-color: var(--brand); font-weight: 600; }
+</style>
+</head>
+<body>
+
+<nav class="nav scrolled">
+  <a href="/" class="nav__brand">
+    <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true">
+      <path d="M 2 36 L 4 38 Q 1 42 5 42 L 10 40 L 16 39 L 20 39 L 20 44 L 18 44 L 18 38.5 L 26 38 L 32 38 L 32 44 L 30 44 L 30 38 L 36 38 L 42 38.5 L 48 39.5 L 56 40.5 L 62 41 L 62 39 L 58 39 L 58 37 L 62 37 L 62 35 L 56 33 L 50 32 L 46 31 L 40 30 L 38 27 L 36 30 L 32 30 L 30 26 L 28 30 L 24 30 L 22 27 L 20 30 L 16 31 L 12 33 L 8 34 Z"/>
+      <circle cx="52" cy="33" r="1.3" fill="#0a0d10"/>
+    </svg>
+    <span>brocco<span class="dim">.ai</span></span>
+  </a>
+  <div class="nav__links">
+    <a href="/app" style="color: var(--brand-glow); font-weight: 600;">Open app</a>
+    <a href="/#how">How it works</a>
+    <a href="/#pricing">Pricing</a>
+    <a href="/recipes" style="color: var(--fg);">Recipes</a>
+    <a href="/docs">Docs</a>
+  </div>
+  <div class="nav__cta">
+    <a href="/app" class="btn btn--primary" style="padding: 9px 16px; font-size: 13.5px;">Open app <span class="arrow">&rarr;</span></a>
+  </div>
+</nav>
+
+<section class="doc-hero">
+  <div class="container">
+    <div class="section__eyebrow">Recipes</div>
+    <h1>Multi-agent workflows. One click.</h1>
+    <p class="lead">Each recipe is a real workflow we run weekly. Click one, paste your Anthropic key, watch N agents fan out and ship work in parallel. Use them as templates for your own.</p>
+    <div class="filters" id="filters">
+      <button class="filter active" data-filter="all">All (8)</button>
+      <button class="filter" data-filter="research">Research</button>
+      <button class="filter" data-filter="growth">Growth</button>
+      <button class="filter" data-filter="ops">Ops</button>
+      <button class="filter" data-filter="content">Content</button>
+    </div>
+  </div>
+</section>
+
+<div class="container">
+  <div class="recipe-grid" id="recipes">
+
+    <a href="/app#recipe=market-research" class="rcard" data-tags="research,growth">
+      <span class="rcard__mode">Broadcast</span>
+      <h3>Market research</h3>
+      <div class="rcard__prompt">Research the top 5 alternatives to brocco.ai (multi-agent AI desktops) shipping in 2026. Return positioning, pricing, and one weakness for each.</div>
+      <div class="rcard__agents">
+        <span class="rcard__agent">researcher</span>
+        <span class="rcard__agent">analyst</span>
+        <span class="rcard__agent">planner</span>
+      </div>
+      <div class="rcard__cta">Run in app <span>&rarr;</span></div>
+    </a>
+
+    <a href="/app#recipe=launch-day" class="rcard" data-tags="growth,content">
+      <span class="rcard__mode">Broadcast</span>
+      <h3>Launch day kit</h3>
+      <div class="rcard__prompt">Draft 3 launch tweets, find the best subreddits to post in, and produce a 6-step launch-day execution plan.</div>
+      <div class="rcard__agents">
+        <span class="rcard__agent">outreach</span>
+        <span class="rcard__agent">researcher</span>
+        <span class="rcard__agent">planner</span>
+      </div>
+      <div class="rcard__cta">Run in app <span>&rarr;</span></div>
+    </a>
+
+    <a href="/app#recipe=customer-deep-dive" class="rcard" data-tags="ops,growth">
+      <span class="rcard__mode">Supervisor</span>
+      <h3>Customer deep dive</h3>
+      <div class="rcard__prompt">Look up a lead by email, save 3 facts about them to memory, then draft 3 cold opener variants with the outreach agent.</div>
+      <div class="rcard__agents">
+        <span class="rcard__agent">supervisor</span>
+        <span class="rcard__agent">researcher</span>
+        <span class="rcard__agent">outreach</span>
+      </div>
+      <div class="rcard__cta">Run in app <span>&rarr;</span></div>
+    </a>
+
+    <a href="/app#recipe=content-sprint" class="rcard" data-tags="content,growth">
+      <span class="rcard__mode">Broadcast</span>
+      <h3>Content sprint</h3>
+      <div class="rcard__prompt">Write 5 short-form social posts (each under 200 chars) about how multi-agent dashboards beat single-chat interfaces for builders.</div>
+      <div class="rcard__agents">
+        <span class="rcard__agent">researcher</span>
+        <span class="rcard__agent">analyst</span>
+      </div>
+      <div class="rcard__cta">Run in app <span>&rarr;</span></div>
+    </a>
+
+    <a href="/app#recipe=competitor-pricing-watch" class="rcard" data-tags="research,ops">
+      <span class="rcard__mode">Single</span>
+      <h3>Competitor pricing watch</h3>
+      <div class="rcard__prompt">Check the pricing pages of Cursor, Claude Code, Replit, Lovable, and Devin. Tell me what changed since last month and rank by aggressiveness.</div>
+      <div class="rcard__agents">
+        <span class="rcard__agent">analyst</span>
+      </div>
+      <div class="rcard__cta">Run in app <span>&rarr;</span></div>
+    </a>
+
+    <a href="/app#recipe=hn-show-draft" class="rcard" data-tags="growth,content">
+      <span class="rcard__mode">Single</span>
+      <h3>Show HN drafter</h3>
+      <div class="rcard__prompt">Read the README at github.com/[my-repo] (URL coming via prompt), then draft a Show HN title + body that names tradeoffs and weaknesses honestly.</div>
+      <div class="rcard__agents">
+        <span class="rcard__agent">outreach</span>
+      </div>
+      <div class="rcard__cta">Run in app <span>&rarr;</span></div>
+    </a>
+
+    <a href="/app#recipe=daily-news-brief" class="rcard" data-tags="research,content">
+      <span class="rcard__mode">Single</span>
+      <h3>Daily AI news brief</h3>
+      <div class="rcard__prompt">What shipped in agentic AI in the last 24 hours? Search HN, X, the major company blogs. Give me 5 bullets with source links.</div>
+      <div class="rcard__agents">
+        <span class="rcard__agent">researcher</span>
+      </div>
+      <div class="rcard__cta">Run in app <span>&rarr;</span></div>
+    </a>
+
+    <a href="/app#recipe=build-an-app" class="rcard" data-tags="ops,content">
+      <span class="rcard__mode">Single</span>
+      <h3>Build a working app</h3>
+      <div class="rcard__prompt">Build me a working pomodoro timer as a single HTML file. Dark mode default, keyboard shortcuts, sound when each round ends.</div>
+      <div class="rcard__agents">
+        <span class="rcard__agent">app_builder</span>
+      </div>
+      <div class="rcard__cta">Run in app <span>&rarr;</span></div>
+    </a>
+
+    <a href="/app#recipe=design-pack" class="rcard" data-tags="content,growth">
+      <span class="rcard__mode">Single</span>
+      <h3>Logo + brand pack</h3>
+      <div class="rcard__prompt">I'm launching a vibe-coding tool called fizzbuzz.dev. Generate 3 logo concepts (image_gen) and a brand brief: palette, typeface, voice, one-liner.</div>
+      <div class="rcard__agents">
+        <span class="rcard__agent">designer</span>
+      </div>
+      <div class="rcard__cta">Run in app <span>&rarr;</span></div>
+    </a>
+
+    <a href="/app#recipe=site-crawl" class="rcard" data-tags="research,ops">
+      <span class="rcard__mode">Single</span>
+      <h3>Site crawl + extract</h3>
+      <div class="rcard__prompt">Crawl 5 pages of [paste a site URL] and extract every pricing tier, feature list, and customer logo. Output as a clean markdown table.</div>
+      <div class="rcard__agents">
+        <span class="rcard__agent">browser</span>
+      </div>
+      <div class="rcard__cta">Run in app <span>&rarr;</span></div>
+    </a>
+
+    <a href="/app#recipe=feature-spec" class="rcard" data-tags="ops">
+      <span class="rcard__mode">Supervisor</span>
+      <h3>Feature spec from idea</h3>
+      <div class="rcard__prompt">Take this rough feature idea and produce: a 1-page PRD, an API sketch, 3 risks, and a launch checklist. Idea: [paste yours].</div>
+      <div class="rcard__agents">
+        <span class="rcard__agent">supervisor</span>
+        <span class="rcard__agent">analyst</span>
+        <span class="rcard__agent">planner</span>
+        <span class="rcard__agent">coder</span>
+      </div>
+      <div class="rcard__cta">Run in app <span>&rarr;</span></div>
+    </a>
+
+  </div>
+</div>
+
+<section class="cta-band">
+  <div class="container">
+    <h2 class="h1" style="font-size: clamp(32px, 4.5vw, 56px); margin-bottom: 18px;">
+      Build your own <span class="grad">recipe.</span>
+    </h2>
+    <p>Drop a recipe in the gallery: pick agents, write a prompt, share the link. Coming soon: paid users get a public recipe URL anyone can remix.</p>
+    <div class="hero__cta">
+      <a href="/app" class="btn btn--primary btn--lg">Open the app <span class="arrow">&rarr;</span></a>
+      <a href="mailto:hello@brocco.ai?subject=Recipe%20idea" class="btn btn--ghost btn--lg">Submit a recipe</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div>
+      <a href="/" class="nav__brand" style="color: white;">
+        <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true">
+          <path d="M 2 34 Q 6 28, 14 28 L 28 26 Q 32 24, 36 27 L 46 28 Q 52 28, 58 30 L 62 31 L 62 33 L 56 34 Q 54 38, 50 34 L 44 35 L 43 40 L 40 40 L 39 35 L 26 37 L 25 42 L 22 42 L 21 37 L 12 38 Q 6 38, 4 36 Z"/>
+          <path d="M 18 28 L 21 25 L 24 28 Z M 28 27 L 31 24 L 34 27 Z M 38 28 L 41 25 L 44 28 Z"/>
+          <circle cx="54" cy="30.5" r="1" fill="#0a0d10"/>
+        </svg>
+        <span>brocco<span class="dim">.ai</span></span>
+      </a>
+    </div>
+    <div><h4>Use</h4><ul><li><a href="/app">Open app</a></li><li><a href="/recipes" style="color: var(--brand-glow);">Recipes</a></li><li><a href="/docs">Docs</a></li></ul></div>
+    <div><h4>Compare</h4><ul><li><a href="/vs/cursor">vs Cursor</a></li><li><a href="/vs/claude-code">vs Claude Code</a></li><li><a href="/vs/zapier">vs Zapier</a></li></ul></div>
+    <div><h4>Company</h4><ul><li><a href="mailto:hello@brocco.ai">hello@brocco.ai</a></li></ul></div>
+    <div class="credit container" style="padding-left: 0; padding-right: 0;">
+      <span>&copy; 2026 brocco.ai &middot; BDP Consulting</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  document.querySelectorAll('.filter').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.filter').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      const f = btn.dataset.filter;
+      document.querySelectorAll('.rcard').forEach(card => {
+        const tags = (card.dataset.tags || '').split(',');
+        card.style.display = (f === 'all' || tags.includes(f)) ? '' : 'none';
+      });
+    });
+  });
+</script>
+</body>
+</html>
