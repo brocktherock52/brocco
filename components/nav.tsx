@@ -35,8 +35,8 @@ const PRODUCT: MegaItem[] = [
   { href: '/app', label: 'dashboard', desc: 'multi-agent panes, broadcast mode', Icon: Boxes },
   { href: '/api/v1/agents', label: 'api', desc: 'rest + sse stream', Icon: TerminalSquare, external: true },
   { href: '/download#mcp-setup', label: 'mcp server', desc: 'inside claude desktop + cursor', Icon: Plug },
+  { href: '/about', label: 'about', desc: 'wedge, why we built this, surfaces', Icon: Sparkles },
   { href: '/docs', label: 'tool factory', desc: 'wire your stack in 30 lines', Icon: Wrench },
-  { href: '/app', label: 'recipes', desc: 'one-click workflows', Icon: Sparkles },
   { href: '/security', label: 'audit log', desc: 'jsonl, exportable, siem-ready', Icon: ScrollText },
 ];
 

@@ -34,6 +34,7 @@ export function Footer() {
             { href: 'https://github.com/brocktherock52/brocco', label: 'github' },
           ]} />
           <FooterCol title="company" links={[
+            { href: '/about', label: 'about' },
             { href: 'mailto:hello@brocco.ai', label: 'hello@brocco.ai' },
             { href: 'mailto:hello@brocco.ai?subject=Brocco%20demo%20request', label: 'book a demo' },
             { href: '/privacy', label: 'privacy' },

@@ -108,15 +108,6 @@ export function Hero() {
           run multiple claude or local llm agents in <em className="not-italic font-medium text-white">parallel</em> from one prompt. plug into <em className="not-italic font-medium text-white">claude desktop, chatgpt, cursor</em> via mcp, or call the rest api from anywhere.
         </motion.p>
 
-        {/* trust line */}
-        <motion.p
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6, delay: 0.32 }}
-          className="mx-auto mt-3 max-w-xl text-center font-mono text-[12px] text-ink-faint"
-        >
-          used by founders building the next wave · <span className="text-ink-dim">powered by claude 4</span> · <span className="text-ink-dim">runs on your keys</span>
-        </motion.p>
 
         {/* CTAs */}
         <motion.div
@@ -184,28 +175,23 @@ export function Hero() {
           ))}
         </motion.div>
 
-        {/* trust bar */}
-        <motion.div
+        {/* trust bar — restrained, single-row, no border */}
+        <motion.ul
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.7, delay: 0.85 }}
-          className="mt-16 border-t border-white/[0.06] pt-8 md:mt-24"
+          className="mt-16 flex flex-wrap items-center justify-center gap-x-7 gap-y-3 opacity-50 transition-opacity hover:opacity-90 md:mt-20"
         >
-          <p className="text-center font-mono text-[11px] tracking-[0.18em] text-ink-faint">
-            runs on the models and infra you already trust
-          </p>
-          <ul className="mt-5 flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-[14px] text-ink-dim md:gap-x-12">
-            {TRUST_LOGOS.map(({ name, Icon }) => (
-              <li
-                key={name}
-                className="inline-flex items-center gap-2 opacity-70 transition-opacity hover:opacity-100"
-              >
-                <Icon className="h-4 w-4" />
-                <span>{name}</span>
-              </li>
-            ))}
-          </ul>
-        </motion.div>
+          {TRUST_LOGOS.map(({ name, Icon }) => (
+            <li
+              key={name}
+              className="inline-flex items-center gap-1.5 text-[12.5px] text-ink-dim"
+            >
+              <Icon className="h-3.5 w-3.5" />
+              <span className="font-mono">{name.toLowerCase()}</span>
+            </li>
+          ))}
+        </motion.ul>
       </div>
     </section>
   );
