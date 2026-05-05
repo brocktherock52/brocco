@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 
 const LINKS = [
   { href: '/#how', label: 'How it works' },
-  { href: '/#features', label: 'Features' },
+  { href: '/#integrations', label: 'Integrations' },
   { href: '/pricing', label: 'Pricing' },
   { href: '/download', label: 'Download' },
   { href: '/docs', label: 'Docs' },
@@ -39,7 +39,7 @@ export function Nav() {
     >
       <div className="container-x flex h-16 items-center justify-between md:h-[68px]">
         <Link href="/" className="group flex items-center gap-2.5">
-          <Logomark className="h-7 w-7 transition-transform group-hover:scale-105" />
+          <Logomark className="h-6 w-[42px] transition-transform group-hover:scale-105" />
           <span className="text-[15px] font-semibold tracking-tight">
             brocco<span className="text-ink-faint">.ai</span>
           </span>
