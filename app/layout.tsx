@@ -4,6 +4,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 import { Toaster } from 'sonner';
 import { PwaRegister } from '@/components/pwa-register';
 import { BgDecor } from '@/components/bg-decor';
+import { MetaPixel } from '@/components/meta-pixel';
 import './globals.css';
 
 const SITE_URL = 'https://brocco-site.vercel.app';
@@ -139,6 +140,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
         <PwaRegister />
+        <MetaPixel />
         <Analytics />
         <SpeedInsights />
       </body>

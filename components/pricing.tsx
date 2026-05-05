@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { Check, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
+import { trackPixel } from './meta-pixel';
 import { cn } from '@/lib/utils';
 
 type Interval = 'monthly' | 'annual';
@@ -78,6 +79,12 @@ export function Pricing({ standalone = false }: { standalone?: boolean }) {
 
   async function checkout(tier: 'solo' | 'team') {
     setLoading(tier);
+    trackPixel('InitiateCheckout', {
+      content_name: tier,
+      content_category: 'subscription',
+      currency: 'USD',
+      value: tier === 'team' ? (interval === 'annual' ? 1990 : 199) : interval === 'annual' ? 490 : 49,
+    });
     try {
       const r = await fetch('/api/checkout', {
         method: 'POST',
