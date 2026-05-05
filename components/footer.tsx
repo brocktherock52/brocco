@@ -8,7 +8,7 @@ export function Footer() {
         <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>
             <Link href="/" className="inline-flex items-center gap-2.5">
-              <Logomark className="h-6 w-[42px]" />
+              <Logomark className="h-7 w-7" />
               <span className="text-[15px] font-semibold tracking-tight">
                 brocco<span className="text-ink-faint">.ai</span>
               </span>
