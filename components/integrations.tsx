@@ -1,62 +1,63 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { TerminalSquare, Plug } from 'lucide-react';
 import {
-  MessageSquareCode,
-  Workflow,
-  Sparkles,
-  Code2,
-  Plug,
-  Zap,
-  Bot,
-  TerminalSquare,
-} from 'lucide-react';
+  AnthropicIcon,
+  OpenAIIcon,
+  N8nIcon,
+  CursorIcon,
+  ZapierIcon,
+  SlackIcon,
+  McpIcon,
+  OllamaIcon,
+} from './brand-icons';
 
 const ITEMS = [
   {
-    icon: Sparkles,
+    Icon: AnthropicIcon,
     name: 'Claude Desktop',
     via: 'MCP server',
     body: 'Every brocco agent registers as a callable tool inside Claude Desktop. Run a researcher, planner, or outreach agent without leaving the chat.',
   },
   {
-    icon: MessageSquareCode,
+    Icon: OpenAIIcon,
     name: 'ChatGPT and OpenAI',
     via: 'OpenAI-compatible',
     body: 'Plug brocco into ChatGPT custom GPTs, Assistants, and any OpenAI-compatible endpoint. Same agents, same audit log.',
   },
   {
-    icon: Workflow,
+    Icon: N8nIcon,
     name: 'n8n',
     via: 'HTTP node',
     body: 'Drop a brocco run into your n8n workflow with one HTTP node. Stream tool calls back into the next step. SSE supported natively.',
   },
   {
-    icon: Code2,
+    Icon: CursorIcon,
     name: 'Cursor and VS Code',
     via: 'Extension + REST',
     body: 'Trigger brocco agents from your editor command palette. Pipe results into the diff view. Built for the way you already code.',
   },
   {
-    icon: Zap,
+    Icon: ZapierIcon,
     name: 'Zapier and Make',
     via: 'REST webhook',
     body: 'Use brocco as the agentic step in any Zap or Make scenario. Pass any input shape, get a structured artifact back.',
   },
   {
-    icon: Bot,
+    Icon: SlackIcon,
     name: 'Slack and Discord',
     via: 'Bot + slash command',
     body: 'Mention @brocco in any channel to spin up a research, outreach, or planning agent. Results post inline.',
   },
   {
-    icon: TerminalSquare,
-    name: 'REST API',
-    via: 'POST /api/v1/run',
-    body: 'Bearer auth. SSE stream. Bring your own key as the bearer token (BYOK passthrough). Every language, every runtime.',
+    Icon: OllamaIcon,
+    name: 'Ollama and local LLMs',
+    via: 'OpenAI-compatible endpoint',
+    body: 'Point brocco at any OpenAI-compatible local server. Llama 3, Qwen, Mistral, anything you run on your own GPU.',
   },
   {
-    icon: Plug,
+    Icon: McpIcon,
     name: 'Custom HTTP / Postgres / Stripe',
     via: 'Tool factory',
     body: 'Drop a Python tool factory describing your CRM, your warehouse, your dispatch system. The agent uses it on the next run.',
@@ -89,7 +90,7 @@ export function Integrations() {
           className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-4"
         >
           {ITEMS.map((it) => {
-            const Icon = it.icon;
+            const Icon = it.Icon;
             return (
               <motion.div
                 key={it.name}
@@ -103,7 +104,7 @@ export function Integrations() {
                 <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/15" />
 
                 <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-white/[0.06] to-white/[0.02] ring-1 ring-white/[0.08]">
-                  <Icon className="h-4 w-4 text-brand-glow" />
+                  <Icon className="h-4 w-4 text-white" />
                 </div>
 
                 <div className="mt-4 flex items-center gap-2">
