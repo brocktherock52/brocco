@@ -7,14 +7,18 @@
 
 ## tl;dr
 
-To get from 0 to 1,000 paying users on a $49/mo agentic AI platform with our exact shape (BYOK + dashboard + MCP + comparison-page SEO already shipped), the realistic path is **9-15 months** if executed well, **18-24** if average. The single biggest lever is **distribution match** — what works for Cursor (Twitter/X dev community + viral demo videos) is not what works for n8n (open-source self-host community) or Lindy (LinkedIn ops crowd).
+To get from 0 to 1,000 paying users on an agentic AI SaaS with brocco's exact shape (BYOK + multi-agent dashboard + MCP + 5 comparison pages already shipped), the realistic path is **9-15 months** if executed well, **18-24** if average. Verified competitor data (see `path-to-1000-users-competitor-data.md`) reshapes three of the assumptions in earlier drafts of this brief:
+
+1. **The market price is $20, not $49.** Cursor, Devin, Replit Agent, n8n Starter, and Relevance AI all anchor at $19-$20/mo. Lindy is the only outlier at $49.99 and they paid for it by skipping the free tier entirely (CC-required 7-day trial only). brocco at $49 with a free tier is fighting the market on both axes.
+2. **Open-source GitHub is the cheapest channel that's actually verified to work.** n8n and CrewAI both explicitly credit OSS as their primary distribution. brocco shipping the public repo at `github.com/brocktherock52/brocco` (just done in v2.11) is now an actively leveraged channel — but it requires the runtime to be deployable, the README to be a real onboarding, and consistent stars + issues activity.
+3. **One viral demo on X does the work of a year of marketing.** Cognition went $0 → $1M ARR in 6 months on the March 2024 Devin launch video. Lindy got 70k waitlist signups from one demo video. The single highest-leverage marketing move for brocco is a 60-90 second founder-shot demo video showing 5 agents running in parallel, posted on X.
 
 The numbers that matter:
-- 1,000 paying users × $49 ARPU = **$49k MRR ≈ $588k ARR**
-- At a 4% landing→checkout rate (the reasonable target for a $49 dev tool on cold paid), this requires **25,000 paid-traffic visitors** OR **80-150k total visitors** (paid+organic+earned)
-- Plus a 30-50% month-1 retention rate or you're just refilling a leaky bucket
+- 1,000 paying users × blended $94 ARPU (70/30 Solo/Team) = **$94k MRR ≈ $1.13M ARR**
+- At verified 2026 cohort conversion rates: **freemium ~4% → ~25,000 active free signups needed**; **CC-required trial ~31% → ~3,200 trial starts needed**. The Lindy model is **8x more capital-efficient on top-of-funnel**.
+- Plus 80-90% MoM retention or growth flatlines.
 
-This brief covers: the math, the channels that actually work for this product shape, pricing decisions to make before scaling spend, the 90-day plan, and the things that kill platforms at this stage.
+This brief covers: the math, the channels that actually work for this shape, the pricing decision to make before scaling spend, the 90-day plan, and the things that kill platforms at this stage.
 
 ---
 
@@ -87,22 +91,28 @@ Most agentic platforms at this stage have **40-60% gross MoM churn** because use
 
 ---
 
-## 4. channel mix with realistic CAC
+## 4. channel mix with realistic CAC (revised with verified evidence)
 
-This table is the single most useful artifact in this document. CAC ranges are educated estimates for 2026 dev-tool SaaS at $49 ARPU; track actuals from PostHog + Stripe and update.
+This table reflects what comparable platforms actually credit as their growth (see competitor-data file for sourced quotes), reweighted for brocco's position.
 
-| Channel | Realistic CAC | Time to first 10 paying | Effort | Recommended mix at this stage |
-|---|---:|---:|---|---|
-| **Twitter/X founder posts** | $40-150 | 2-4 weeks | High (consistent posting) | 30% |
-| **Hacker News (Show HN)** | $50-200 (if it ranks) | 1 week if top 10 | Low (1 post + day-of moderation) | 10% (one-shot lever) |
-| **Reddit (r/AI_Agents, r/SaaS, r/LocalLLaMA)** | $20-80 | 4-8 weeks | Medium | 10% |
-| **Comparison SEO (vs/)** | $0 marginal | 3-9 months to rank | Medium | 20% (compounding) |
-| **Long-form blog SEO** | $30-100 over 6 mo | 6-12 months | High | 10% (compounding) |
-| **Meta UGC ads** ⭐ | $80-300 (target $200) | 1-3 weeks | Medium | 15% |
-| **LinkedIn cold outreach** | $40-150 | 2-6 weeks | High (manual) | 5% |
-| **YC alumni Slack / warm intros** | ~$0 | 1-4 weeks | Low | (always-on) |
+| Channel | Verified evidence | Realistic CAC | Time to first 10 paying | Effort | Recommended mix |
+|---|---|---:|---:|---|---|
+| **Founder-led X/Twitter (with demo videos)** | Lindy: 70k waitlist from one March-2023 video. Replit: Amjad Masad runs X personally. | $40-150 | 2-4 weeks | High (consistent posting + 1 viral demo) | **30%** |
+| **OSS / public GitHub funnel** | n8n + CrewAI both credit this primary. | $0 marginal, time-investment heavy | 4-12 weeks | High (issue triage, README polish, deploy templates) | **20%** |
+| **Comparison SEO (vs/)** | None of the 7 publicly credited this; brocco's bet that it's underweighted by competitors | $0 marginal | 3-9 months to rank | Medium | **15%** (compounding) |
+| **Meta UGC ads** ⭐ | Not publicly used by the cohort, but Pixel/CAPI is wired and dev-tool ad arbitrage exists | $80-300 (target $200) | 1-3 weeks | Medium | **15%** |
+| **YouTuber / influencer placement** | Lindy 2.0 inflection on MattVidPro video; Lindy founder credits this verbatim | $200-1,500 per placement | 4-8 weeks | Medium (outreach) | **10%** |
+| **Hacker News (one-shot Show HN)** | Cursor + Devin both rode HN front page; not publicly credited as primary | $50-200 if it ranks | 1 week if top 10 | Low (1 post, day-of moderation) | **5%** (one-shot lever) |
+| **Reddit (r/AI_Agents, r/LocalLLaMA, r/SaaS)** | Not credited by cohort but underpriced for technical buyers | $20-80 | 4-8 weeks | Medium | **5%** |
+| **YC alumni / warm intros** | None publicly credited but always-on at zero cost | ~$0 | 1-4 weeks | Low | (always-on) |
 
-The pixel + CAPI infrastructure brocco already ships supports the Meta UGC channel. The Meta UGC playbook in `marketing/meta-ugc-ads.md` is detailed enough to start. Twitter requires founder posting, not paid amplification at this stage. HN is a one-shot — wait until v3.0 or v2.11+, post once at peak, then move on.
+**Key revisions vs prior draft:**
+- OSS / GitHub bumped from 0% to **20%** — now actively leveraged because the public repo `brocktherock52/brocco` shipped in v2.11. Add a one-click Vercel deploy button in the README, ship a Docker image for self-host, and engage star + issue activity weekly.
+- Comparison SEO held at 15% (compounding asset, but not a recurring evidence pattern in the cohort)
+- YouTuber/influencer added at 10% — brand-new channel but verifiably high-leverage (Lindy 2.0)
+- Hacker News deweighted to 5% — high variance, one-shot
+
+The Meta UGC playbook in `marketing/meta-ugc-ads.md` is detailed enough to start. The pixel + CAPI infrastructure (v2.6) is wired and gated on env vars.
 
 ---
 
@@ -110,8 +120,29 @@ The pixel + CAPI infrastructure brocco already ships supports the Meta UGC chann
 
 The current pricing is good but has three open decisions worth resolving before pouring money into ads:
 
-### 5.1 Solo at $49 vs $29
-Cursor sits at $20/mo Pro. Lindy at $49.99. Most agentic SaaS lives in the $20-50 range. Brocco at $49 is fine but has zero margin to go down — if competitors launch at $29 and you're stuck at $49, you have a problem. Recommendation: **keep the public price at $49 but ship a $29 "Founder" tier** (limited to 1 user, 1,000 runs/mo, no SSO, manual support) for the first 100 paying customers as a deliberate undercut. Sunset it at customer #100.
+### 5.1 Solo at $49 vs $29 vs $20 (REVISED based on verified data)
+Original recommendation was to keep $49 with a $29 founder undercut. Verified competitor data flips this:
+
+| Vendor | First paid tier | Free tier? |
+|---|---:|---|
+| Cursor | $20 | yes (Hobby) |
+| Devin | $20 | yes |
+| Replit Agent | $20-$25 | yes |
+| Relevance AI | $19 | yes |
+| n8n Starter | ~$20 | self-host OSS |
+| Lindy | $49.99 | **no** (CC-required 7-day trial) |
+| **brocco today** | **$49** | yes (100 BYOK runs/mo) |
+
+brocco is currently in the worst-of-both-worlds zone: priced like Lindy but free-tiered like Cursor. **Pick a posture and commit:**
+
+- **Posture A — Match Cursor.** Drop Solo to $19 or $20, keep the 100-run BYOK free tier. Bet on volume. Need ~25,000 free signups → 1,000 paid at the cohort-typical 4% conversion.
+- **Posture B — Match Lindy.** Keep Solo at $49 (or push to $59), kill the free tier, replace with a 7-day CC-required trial. Bet on intent. Need only ~3,200 trial starts → 1,000 paid at the verified 31.4% CC-trial conversion. **8x more capital-efficient on top-of-funnel.**
+
+Posture B is the better fit for brocco given the brand work, the editorial design, and the audience (founders + ops leads who already pay Lindy or comparable). Posture A is the safer fit if the channel mix leans toward Hacker News / GitHub / Twitter where price-sensitivity is higher.
+
+**Recommendation: Posture B at $49 with CC-required trial, plus a permanent BYOK demo path** (no signup, no card, runs in the simulator) for tire-kickers. The BYOK demo doesn't count as a "free tier" because nothing leaves the browser. This preserves the trust posture while capturing the trial-conversion math.
+
+If Posture B doesn't work after 60 days of paid traffic, fall back to Posture A.
 
 ### 5.2 Free-tier run limit
 100 runs/mo is generous. The risk is power users burn through them in week 1 and then either churn or upgrade. Recommendation: split the limit into **100 demo-mode runs (free, simulator) + 25 BYOK live runs (free, real tokens via direct browser call)**. Demo runs cost brocco nothing; BYOK live runs cost the user. The cap signals "this is real" without taxing brocco's margins.
@@ -228,29 +259,41 @@ If channel mix is worse: 12-15 months. If product-market-fit is weaker than assu
 
 ## 11. the honest assessment
 
-brocco's product surface at v2.10 is **further along than 80% of agentic AI platforms when they hit their first 100 paid customers**. The 9 agents, 13 tools, MCP, REST API, /vs pages, Stripe, Pixel + CAPI, PostHog, BYOK, PWA, audit log, comparison SEO, 5 blog seeds — that's all good distribution-readiness. The platform is ready.
+brocco's product surface at v2.11 is **further along than ~80% of agentic AI platforms when they hit their first 100 paid customers**. The 9 agents, 13 tools, MCP, REST API, /vs pages, Stripe, Pixel + CAPI, PostHog, BYOK, PWA, audit log, comparison SEO, 5 blog seeds, **public GitHub repo with 11 versioned tags** — that's strong distribution-readiness.
 
-The constraints are not technical at this point. They're three things:
+The constraints at this point are not technical. They're four things:
+
 1. **Domain not pointed at brocco.ai** — every ad creative looks worse on a `*.vercel.app` URL
-2. **No founder content yet** — Brock has the public footprint and the technical credibility but isn't yet posting brocco-specific content cadence-wise
-3. **Pixel/CAPI/PostHog have no data flowing** — the env vars aren't set in Vercel, so we can't measure the funnel we built
+2. **Pricing posture is incoherent** — $49 with free tier is the worst-of-both-worlds. Pick Posture A ($20 + free) or Posture B ($49 + CC-trial) per section 5.1. Until this is resolved, the funnel math is fighting the market.
+3. **No founder content yet** — Brock has the public footprint and technical credibility but isn't posting brocco-specific content cadence-wise. Verified evidence: Lindy 70k waitlist from one demo video. The single highest-leverage marketing move available right now is shooting that video.
+4. **Pixel / CAPI / PostHog have no data flowing** — the env vars aren't set in Vercel, so we can't measure the funnel we built
 
-Resolving those three gates is a 3-day project. Then it's 9 months of disciplined execution against the 90-day plan above.
+Resolving these four gates is a 5-day project. Then it's 9 months of disciplined execution against the 90-day plan above.
 
 ---
 
 ## 12. references and sources
 
-This brief was assembled from public information about comparable platforms (Cursor, Devin, Lindy, Replit Agent, CrewAI, n8n, Relevance AI), industry-standard SaaS conversion benchmarks, and the actual brocco.ai code shipped through v2.10. Specific competitor data was researched in parallel; see `path-to-1000-users-competitor-data.md` for the verified numbers and source URLs.
+This brief was assembled from:
+- **Verified public data** on comparable platforms — see `path-to-1000-users-competitor-data.md` (companion file in this directory) for source-cited per-company snapshots, including pricing, ARR trajectories, and self-credited growth channels.
+- **Industry-standard SaaS conversion benchmarks** from ChartMogul, First Page Sage, Guru Startups (see companion file).
+- **The actual brocco.ai codebase** shipped through v2.11 (lowercase + curl hero + agents grid + product cards + why-we-built + mega-dropdown nav + public GitHub repo).
 
-Update this doc on a quarterly basis. The math sections are stable; the channel and pricing recommendations should evolve based on actual PostHog + Stripe data once the Pixel is live.
+Update this doc on a quarterly basis. The math sections are stable; the channel and pricing recommendations should evolve based on actual PostHog + Stripe data once Pixel is live.
 
 ---
 
-## next step (one decision, not five)
+## next step (one decision, not five) — REVISED
 
-The single highest-leverage move from where brocco sits today is:
+The single highest-leverage move, in priority order, after integrating verified competitor data:
 
-**Point brocco.ai at the Vercel project, set the three env vars (Pixel ID, CAPI token, PostHog key), shoot one 12-second founder POV UGC video showing 5 agents running in parallel, launch Meta at $50/day with the playbook in `marketing/meta-ugc-ads.md`. By day 14 you'll have real CAC data and either kill the channel or scale it. Both outcomes are useful.**
+1. **Pick Posture A or Posture B and ship the pricing change** (section 5.1). The current $49+free is the worst-of-both-worlds. This is a 1-day code change.
+2. **Point brocco.ai DNS at the Vercel project** (1 day per `CUSTOM_DOMAIN.md`).
+3. **Set the three env vars in Vercel** (Pixel ID, CAPI token, PostHog key). 30 minutes.
+4. **Shoot one 60-90 second founder POV demo video** showing 5 agents running in parallel. Post it on X with brocco-handle attached. Verified evidence: Lindy got 70k waitlist signups from one such video.
+5. **Polish the public GitHub README** with a one-click Vercel deploy button + Docker image so the OSS funnel actually converts. n8n + CrewAI both verifiably ride this.
+6. **Then launch Meta UGC at $50/day** with the existing playbook.
 
-Everything else in this brief is downstream of that.
+By day 21 you'll have real CAC data, a viral-or-not signal from the X video, and GitHub stars trending or flat. All three signals are useful.
+
+Everything else in this brief is downstream of those six moves.
