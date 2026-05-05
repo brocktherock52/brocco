@@ -2,10 +2,11 @@
 
 import { useEffect } from 'react';
 import { trackPixel } from '@/components/meta-pixel';
+import { trackEvent } from '@/components/posthog-provider';
 
-/** Fires Meta Pixel "Subscribe" once on the success page. The matching
- *  server-side CAPI event is dispatched from app/api/stripe-webhook on
- *  checkout.session.completed. Both keys ride together for dedup. */
+/** Fires Meta Pixel + PostHog "Subscribe" once on the success page. The
+ *  matching server-side CAPI event is dispatched from app/api/stripe-webhook
+ *  on checkout.session.completed. transaction_id rides on both for dedup. */
 export function SuccessTracker() {
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -17,8 +18,12 @@ export function SuccessTracker() {
       currency: 'USD',
       transaction_id: sessionId,
     });
-    // also a generic Lead for Meta's optimization
     trackPixel('Lead', { content_name: 'subscribe' });
+    trackEvent('subscribe', {
+      transaction_id: sessionId,
+      content_name: 'brocco_paid',
+      currency: 'USD',
+    });
   }, []);
   return null;
 }

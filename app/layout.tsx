@@ -1,10 +1,13 @@
 import type { Metadata, Viewport } from 'next';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import { Suspense } from 'react';
 import { Toaster } from 'sonner';
 import { PwaRegister } from '@/components/pwa-register';
 import { BgDecor } from '@/components/bg-decor';
 import { MetaPixel } from '@/components/meta-pixel';
+import { CookieConsent } from '@/components/cookie-consent';
+import { PostHogProvider } from '@/components/posthog-provider';
 import './globals.css';
 
 const SITE_URL = 'https://brocco-site.vercel.app';
@@ -141,6 +144,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
         <PwaRegister />
         <MetaPixel />
+        <Suspense fallback={null}>
+          <PostHogProvider />
+        </Suspense>
+        <CookieConsent />
         <Analytics />
         <SpeedInsights />
       </body>

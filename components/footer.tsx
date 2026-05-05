@@ -24,6 +24,7 @@ export function Footer() {
             { href: '/pricing', label: 'Pricing' },
             { href: '/app', label: 'Open the app' },
             { href: '/download', label: 'Download' },
+            { href: '/blog', label: 'Blog' },
             { href: '/changelog', label: 'Changelog' },
           ]} />
           <FooterCol title="Developers" links={[
