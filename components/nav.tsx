@@ -3,9 +3,8 @@
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { ArrowRight, Menu, X } from 'lucide-react';
+import { ArrowRight, Download, Menu, X } from 'lucide-react';
 import { Logomark } from './logo';
-import { InstallButton } from './install-button';
 import { cn } from '@/lib/utils';
 
 const LINKS = [
@@ -58,7 +57,13 @@ export function Nav() {
         </div>
 
         <div className="hidden items-center gap-2 md:flex">
-          <InstallButton />
+          <Link
+            href="/download"
+            className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.10] bg-white/[0.04] px-3.5 py-2 text-[13px] font-medium text-ink-dim transition-colors hover:bg-white/[0.07] hover:text-white"
+          >
+            <Download className="h-3.5 w-3.5" />
+            Install app
+          </Link>
           <Link
             href="/app"
             className="group inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-brand to-cyan px-4 py-2 text-[13px] font-semibold text-white shadow-glow2 transition-all hover:shadow-glow"
@@ -94,13 +99,22 @@ export function Nav() {
                 {l.label}
               </Link>
             ))}
-            <Link
-              href="/app"
-              onClick={() => setOpen(false)}
-              className="mt-2 inline-flex items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-brand to-cyan px-4 py-2.5 text-sm font-semibold text-white"
-            >
-              Open app <ArrowRight className="h-3.5 w-3.5" />
-            </Link>
+            <div className="mt-2 grid grid-cols-2 gap-2">
+              <Link
+                href="/download"
+                onClick={() => setOpen(false)}
+                className="inline-flex items-center justify-center gap-1.5 rounded-full border border-white/[0.10] bg-white/[0.04] px-4 py-2.5 text-sm font-medium text-ink-dim hover:bg-white/[0.07] hover:text-white"
+              >
+                <Download className="h-3.5 w-3.5" /> Install
+              </Link>
+              <Link
+                href="/app"
+                onClick={() => setOpen(false)}
+                className="inline-flex items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-brand to-cyan px-4 py-2.5 text-sm font-semibold text-white"
+              >
+                Open app <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </div>
           </div>
         </motion.div>
       )}

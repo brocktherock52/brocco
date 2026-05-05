@@ -76,7 +76,10 @@ export function Features() {
       <div className="container-x">
         <div className="max-w-2xl">
           <p className="pill">Features</p>
-          <h2 className="mt-5 text-display-lg text-grad">Production-grade. Audit-ready. Yours.</h2>
+          <h2 className="mt-5 text-display-lg">
+            <span className="text-grad">Production-grade. Audit-ready.</span>{' '}
+            <span className="font-serif italic font-normal text-grad-brand">Yours.</span>
+          </h2>
           <p className="mt-4 max-w-xl text-[16px] text-ink-dim">
             Everything you need to ship agentic workflows you would actually trust with revenue.
           </p>

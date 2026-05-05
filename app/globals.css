@@ -13,9 +13,16 @@
   }
   body {
     @apply bg-bg-0 text-ink font-sans antialiased;
+    font-feature-settings: "ss01", "ss02", "cv11";
     /* No background-attachment: fixed here — caused scroll repaint flicker on
        Windows Chrome. The decorative gradients live in <BgDecor /> as a
        fixed-position layer with GPU compositing. */
+  }
+  h1, h2, h3, h4 {
+    text-wrap: balance;
+  }
+  p {
+    text-wrap: pretty;
   }
   ::selection {
     background: rgba(124, 58, 237, 0.5);
@@ -43,17 +50,24 @@
   .glass-strong {
     @apply bg-white/[0.05] backdrop-blur-2xl border border-white/[0.10];
   }
+  /* Calmer Claude-design gradients: shorter color travel, more white,
+     subtler accent. Used for primary display text. */
   .text-grad {
-    background: linear-gradient(135deg, #fff 0%, #C4B5FD 30%, #67E8F9 60%, #A78BFA 100%);
+    background: linear-gradient(180deg, #FFFFFF 0%, #E9EEF1 65%, #C4B5FD 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
   }
   .text-grad-brand {
-    background: linear-gradient(135deg, #A78BFA 0%, #22D3EE 100%);
+    background: linear-gradient(135deg, #C4B5FD 0%, #67E8F9 100%);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
+  }
+  /* Editorial display: serif italic accent variant, no gradient. */
+  .display-italic {
+    @apply font-serif italic font-medium;
+    color: #C4B5FD;
   }
   .ring-soft {
     @apply ring-1 ring-white/[0.06];
@@ -83,8 +97,11 @@
   }
   .pill {
     @apply inline-flex items-center gap-1.5 rounded-full
-           border border-white/[0.10] bg-white/[0.04]
-           px-3 py-1 text-xs font-medium text-ink-dim;
+           border border-white/[0.08] bg-white/[0.02]
+           px-3 py-1 text-[11px] font-medium uppercase tracking-[0.18em] text-ink-faint;
+  }
+  .eyebrow {
+    @apply font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-faint;
   }
   .card {
     @apply rounded-2xl border border-white/[0.06] bg-white/[0.02] backdrop-blur-sm

@@ -11,7 +11,7 @@ export default async function OpengraphImage() {
   // Fetch the brand mark so it embeds inside the rendered OG.
   let markSrc: string | null = null;
   try {
-    const r = await fetch(`${SITE}/assets/brocco-mark.png`, { cache: 'force-cache' });
+    const r = await fetch(`${SITE}/assets/brocco-mark-transparent.png`, { cache: 'force-cache' });
     if (r.ok) {
       const buf = await r.arrayBuffer();
       const b64 = Buffer.from(buf).toString('base64');

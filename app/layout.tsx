@@ -38,7 +38,7 @@ export const metadata: Metadata = {
       'Run multiple Claude or local LLM agents in parallel from one prompt. Browser-first. BYOK. Audit-grade.',
     url: SITE_URL,
     siteName: 'brocco.ai',
-    images: [{ url: '/assets/brocco-wordmark.png', width: 1200, height: 1200, alt: 'brocco.ai' }],
+    images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'brocco.ai - agents that do the work' }],
     locale: 'en_US',
     type: 'website',
   },
@@ -46,18 +46,22 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'brocco.ai - agents that do the work',
     description: 'Multi-agent dashboard. BYOK. Browser-first. Built on Claude.',
-    images: ['/assets/brocco-wordmark.png'],
+    images: ['/opengraph-image'],
     creator: '@brockpivec',
   },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true } },
+  // Note: Next.js auto-serves app/icon.png and app/apple-icon.png as the
+  // primary favicon + Apple touch icon. We additionally declare the PWA
+  // sizes so install prompts get crisp icons on every platform.
   icons: {
     icon: [
-      { url: '/assets/brocco-mark.png', type: 'image/png' },
+      { url: '/icon.png', type: 'image/png' },
+      { url: '/assets/brocco-mark-transparent.png', type: 'image/png' },
       { url: '/assets/icon-192.png', sizes: '192x192', type: 'image/png' },
       { url: '/assets/icon-512.png', sizes: '512x512', type: 'image/png' },
     ],
-    apple: [{ url: '/assets/apple-icon.png' }],
-    shortcut: ['/assets/brocco-mark.png'],
+    apple: [{ url: '/apple-icon.png' }],
+    shortcut: ['/assets/brocco-mark-transparent.png'],
   },
   manifest: '/manifest.webmanifest',
 };

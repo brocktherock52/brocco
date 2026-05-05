@@ -81,8 +81,8 @@ export function Hero() {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-cyan opacity-60" />
             <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-cyan" />
           </span>
-          <span className="text-[12px] font-medium text-ink-dim">
-            v13 live - api + mcp server - install as desktop app
+          <span className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-faint">
+            v2.4 · api + mcp server · install as desktop app
           </span>
         </motion.div>
 
@@ -90,22 +90,21 @@ export function Hero() {
         <motion.h1
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.9, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
-          className="mx-auto mt-8 max-w-[18ch] text-center text-display-2xl"
+          transition={{ duration: 0.95, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
+          className="mx-auto mt-9 max-w-[18ch] text-center text-display-2xl"
         >
           <span className="text-grad">Agents that</span>
           <br />
-          <span className="font-serif italic font-medium text-grad-brand">do the work.</span>
+          <span className="font-serif italic font-normal text-grad-brand">do the work.</span>
         </motion.h1>
 
         <motion.p
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.18 }}
-          className="mx-auto mt-6 max-w-2xl text-center text-[17px] leading-relaxed text-ink-dim md:text-[19px]"
+          transition={{ duration: 0.7, delay: 0.22 }}
+          className="mx-auto mt-7 max-w-[58ch] text-center text-[17.5px] leading-[1.55] text-ink-dim md:text-[19px] md:leading-[1.5]"
         >
-          Run multiple Claude or local LLM agents in <strong className="text-white">parallel</strong> from one prompt.
-          Plug into <strong className="text-white">Claude Desktop, ChatGPT, Cursor</strong> via MCP, or call the REST API from anywhere.
+          Run multiple Claude or local LLM agents in <em className="not-italic font-medium text-white">parallel</em> from one prompt. Plug into <em className="not-italic font-medium text-white">Claude Desktop, ChatGPT, Cursor</em> via MCP, or call the REST API from anywhere.
         </motion.p>
 
         {/* trust line */}

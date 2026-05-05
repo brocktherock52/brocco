@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils';
 export function Logomark({ className }: { className?: string }) {
   return (
     <Image
-      src="/assets/brocco-mark.png"
+      src="/assets/brocco-mark-transparent.png"
       alt="brocco crocodile mark"
       width={512}
       height={512}

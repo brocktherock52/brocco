@@ -37,8 +37,9 @@ export function Personas() {
       <div className="container-x">
         <div className="max-w-2xl">
           <p className="pill">Who is it for</p>
-          <h2 className="mt-5 text-display-lg text-grad">
-            Three workflows. Three people. One dashboard.
+          <h2 className="mt-5 text-display-lg">
+            <span className="text-grad">Three workflows. Three people.</span>{' '}
+            <span className="font-serif italic font-normal text-grad-brand">One dashboard.</span>
           </h2>
           <p className="mt-4 max-w-xl text-[16px] text-ink-dim">
             Concrete, real, what-it-does-for-you-Tuesday-morning. Not abstract benefits.
