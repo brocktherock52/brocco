@@ -3,12 +3,28 @@
 
 import { AGENTS, type Agent, type AgentName } from './agents';
 
+/** v3.0: SimEvent now subsumes LiveEvent variants so the dashboard renders
+ *  errors, retries, and rate-limit signals identically across demo+live. */
 export type Event =
   | { type: 'thinking'; text: string }
   | { type: 'tool_call'; tool: string; input: Record<string, unknown> }
   | { type: 'tool_result'; tool: string; result: string }
   | { type: 'text'; text: string }
   | { type: 'delegate'; to: AgentName; task: string }
+  | { type: 'usage'; in: number; out: number; cache_read?: number; cost_usd: number }
+  | {
+      type: 'rate_limit';
+      remaining_requests?: number;
+      remaining_tokens?: number;
+      reset_in_seconds?: number;
+    }
+  | { type: 'retry'; attempt: number; reason: string; wait_ms: number }
+  | {
+      type: 'error';
+      kind: 'auth' | 'rate_limit' | 'overloaded' | 'invalid_request' | 'network' | 'timeout' | 'cancelled' | 'unknown';
+      message: string;
+      retryable: boolean;
+    }
   | { type: 'done'; summary: string };
 
 export type SimEvent = Event & { ts: number; step: number; agent: AgentName };

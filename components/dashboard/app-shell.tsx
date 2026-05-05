@@ -70,7 +70,7 @@ export function AppShell() {
   const [history, setHistory] = useState<RunHistoryEntry[]>([]);
   const [showHistory, setShowHistory] = useState(false);
   const [usage, setUsage] = useState(getUsage());
-  const [tokens, setTokens] = useState({ in: 0, out: 0 });
+  const [tokens, setTokens] = useState({ in: 0, out: 0, cost: 0 });
   const [demoRunsThisSession, setDemoRunsThisSession] = useState(0);
 
   // hydrate
@@ -167,7 +167,8 @@ export function AppShell() {
 
     let totalIn = 0;
     let totalOut = 0;
-    setTokens({ in: 0, out: 0 });
+    let totalCost = 0;
+    setTokens({ in: 0, out: 0, cost: 0 });
 
     await Promise.all(
       next.map((pane, idx) => {
@@ -177,11 +178,12 @@ export function AppShell() {
           const norm = ('ts' in e && e.ts ? e : null) as SimEvent | null;
           const ev = norm ?? ({ ...(e as LiveEvent), ts: Date.now(), step: 0, agent: pane.agent } as SimEvent);
           if ((ev as any).type === 'usage') {
-            const u = ev as unknown as { in: number; out: number };
+            const u = ev as unknown as { in: number; out: number; cost_usd?: number };
             totalIn = u.in;
             totalOut = u.out;
-            setTokens({ in: totalIn, out: totalOut });
-            return;
+            if (typeof u.cost_usd === 'number') totalCost = u.cost_usd;
+            setTokens({ in: totalIn, out: totalOut, cost: totalCost });
+            // fall through so the event is also pushed onto the pane log
           }
           setPanes((curr) =>
             curr.map((p, i) => (i === idx ? { ...p, events: [...p.events, ev as SimEvent] } : p)),
@@ -200,10 +202,13 @@ export function AppShell() {
             systemPrompt: sys,
           })
             .catch((err) => {
-              emit({ type: 'error', message: err instanceof Error ? err.message : String(err) } as any);
-              setPanes((curr) =>
-                curr.map((p, i) => (i === idx ? { ...p, status: 'error' } : p)),
-              );
+              // unexpected exception (not the structured-error event path)
+              emit({
+                type: 'error',
+                kind: 'unknown',
+                message: err instanceof Error ? err.message : String(err),
+                retryable: true,
+              } as any);
             })
             .finally(() => {
               setPanes((curr) =>
@@ -211,7 +216,11 @@ export function AppShell() {
                   i === idx
                     ? {
                         ...p,
-                        status: pane.ctrl.signal.aborted ? 'cancelled' : (p.status === 'error' ? 'error' : 'done'),
+                        status: pane.ctrl.signal.aborted
+                          ? 'cancelled'
+                          : p.events.some((e) => e.type === 'error')
+                            ? 'error'
+                            : 'done',
                       }
                     : p,
                 ),
@@ -242,7 +251,7 @@ export function AppShell() {
     const u = recordRun({ in: totalIn, out: totalOut });
     setUsage(u);
     if (live) {
-      const dollars = ((totalIn * 3 + totalOut * 15) / 1_000_000).toFixed(4);
+      const dollars = (totalCost > 0 ? totalCost : (totalIn * 3 + totalOut * 15) / 1_000_000).toFixed(4);
       toast.success('All agents finished.', {
         description: `Tokens: ${totalIn} in / ${totalOut} out. Est. cost: $${dollars}.`,
       });
@@ -303,6 +312,71 @@ export function AppShell() {
 
   function clearDone() {
     setPanes((curr) => curr.filter((p) => p.status === 'running'));
+  }
+
+  /** Re-run a single failed/cancelled pane without restarting all agents.
+   *  Replaces the pane in-place with a fresh AbortController + empty events. */
+  async function retryPane(paneId: string) {
+    const pane = panes.find((p) => p.id === paneId);
+    if (!pane) return;
+    const a = AGENTS.find((x) => x.name === pane.agent);
+    if (!a) return;
+    const live = !!keyState;
+    const ctrl = new AbortController();
+    setPanes((curr) =>
+      curr.map((p) =>
+        p.id === paneId ? { ...p, events: [], status: 'running' as const, ctrl } : p,
+      ),
+    );
+    const emit = (e: SimEvent | (LiveEvent & { ts?: number; step?: number; agent?: AgentName })) => {
+      const norm = ('ts' in e && e.ts ? e : null) as SimEvent | null;
+      const ev =
+        norm ??
+        ({ ...(e as LiveEvent), ts: Date.now(), step: 0, agent: pane.agent } as SimEvent);
+      if ((ev as any).type === 'usage') {
+        const u = ev as unknown as { in: number; out: number; cost_usd?: number };
+        setTokens((t) => ({
+          in: t.in + (u.in || 0),
+          out: t.out + (u.out || 0),
+          cost: typeof u.cost_usd === 'number' ? t.cost + u.cost_usd : t.cost,
+        }));
+      }
+      setPanes((curr) =>
+        curr.map((p) => (p.id === paneId ? { ...p, events: [...p.events, ev as SimEvent] } : p)),
+      );
+    };
+
+    try {
+      if (live) {
+        const sys = SYSTEM_PROMPTS[a.name] || SYSTEM_PROMPTS.researcher;
+        await runClaudeLive({
+          apiKey: keyState!,
+          modelId: model,
+          agent: a,
+          goal,
+          emit,
+          signal: ctrl.signal,
+          systemPrompt: sys,
+        });
+      } else {
+        await runAgent(a, goal, (e) => emit(e), { cancelled: ctrl.signal.aborted });
+      }
+    } finally {
+      setPanes((curr) =>
+        curr.map((p) =>
+          p.id === paneId
+            ? {
+                ...p,
+                status: ctrl.signal.aborted
+                  ? 'cancelled'
+                  : p.events.some((e) => e.type === 'error')
+                    ? 'error'
+                    : 'done',
+              }
+            : p,
+        ),
+      );
+    }
   }
 
   // keyboard shortcuts
@@ -395,13 +469,19 @@ export function AppShell() {
           {(tokens.in > 0 || tokens.out > 0) && (
             <span
               className="hidden md:inline-flex items-center gap-1.5 rounded-full border border-white/[0.10] bg-white/[0.04] px-2.5 py-1 font-mono text-[11px] text-ink-dim"
-              title="Tokens this run (live mode only)"
+              title="tokens + estimated cost this run (live mode only)"
             >
               <span className="text-cyan-glow">{tokens.in.toLocaleString()}</span>
               <span className="text-ink-faint">in</span>
               <span className="text-ink-faint">/</span>
               <span className="text-brand-glow">{tokens.out.toLocaleString()}</span>
               <span className="text-ink-faint">out</span>
+              {tokens.cost > 0 && (
+                <>
+                  <span className="text-ink-faint">·</span>
+                  <span className="text-emerald-300">${tokens.cost.toFixed(4)}</span>
+                </>
+              )}
             </span>
           )}
           <button
@@ -513,6 +593,7 @@ export function AppShell() {
                         events={p.events}
                         status={p.status}
                         onClose={() => setPanes((curr) => curr.filter((x) => x.id !== p.id))}
+                        onRetry={() => retryPane(p.id)}
                       />
                     ))}
                   </AnimatePresence>
