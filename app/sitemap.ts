@@ -15,6 +15,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE}/vs/cursor`, lastModified: now, changeFrequency: 'monthly', priority: 0.85 },
     { url: `${SITE}/vs/zapier`, lastModified: now, changeFrequency: 'monthly', priority: 0.85 },
     { url: `${SITE}/vs/devin`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${SITE}/vs/n8n`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
+    { url: `${SITE}/vs/crewai`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${SITE}/privacy`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
     { url: `${SITE}/terms`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
     { url: `${SITE}/billing/success`, lastModified: now, changeFrequency: 'yearly', priority: 0.2 },

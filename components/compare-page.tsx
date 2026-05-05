@@ -167,6 +167,8 @@ export function ComparePage(props: ComparePageProps) {
               <ComparePill href="/vs/cursor" current={competitor === 'Cursor'} label="brocco vs Cursor" />
               <ComparePill href="/vs/zapier" current={competitor === 'Zapier'} label="brocco vs Zapier" />
               <ComparePill href="/vs/devin" current={competitor === 'Devin'} label="brocco vs Devin" />
+              <ComparePill href="/vs/n8n" current={competitor === 'n8n'} label="brocco vs n8n" />
+              <ComparePill href="/vs/crewai" current={competitor === 'CrewAI'} label="brocco vs CrewAI" />
             </div>
           </div>
         </section>

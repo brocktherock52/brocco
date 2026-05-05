@@ -11,6 +11,7 @@ import {
   KeyRound,
   Play,
   Radio,
+  Share2,
   Sparkles,
   Square,
   Trash2,
@@ -65,6 +66,8 @@ export function AppShell() {
   const [history, setHistory] = useState<RunHistoryEntry[]>([]);
   const [showHistory, setShowHistory] = useState(false);
   const [usage, setUsage] = useState(getUsage());
+  const [tokens, setTokens] = useState({ in: 0, out: 0 });
+  const [demoRunsThisSession, setDemoRunsThisSession] = useState(0);
 
   // hydrate
   useEffect(() => {
@@ -74,6 +77,22 @@ export function AppShell() {
       const raw = localStorage.getItem('brocco:history');
       if (raw) setHistory(JSON.parse(raw));
     } catch {}
+    // hydrate from share-hash if present
+    if (typeof window !== 'undefined' && window.location.hash) {
+      try {
+        const hash = window.location.hash.replace(/^#/, '');
+        if (hash.startsWith('run=')) {
+          const enc = hash.slice(4);
+          const json = JSON.parse(atob(decodeURIComponent(enc)));
+          if (json.goal) setGoal(json.goal);
+          if (Array.isArray(json.agents) && json.agents.length) setSelected(json.agents);
+          if (typeof json.broadcast === 'boolean') setBroadcast(json.broadcast);
+          toast.message('Loaded shared run', {
+            description: 'Goal + agents pre-filled. Hit run when ready.',
+          });
+        }
+      } catch {}
+    }
   }, []);
 
   // sync history
@@ -150,6 +169,7 @@ export function AppShell() {
 
     let totalIn = 0;
     let totalOut = 0;
+    setTokens({ in: 0, out: 0 });
 
     await Promise.all(
       next.map((pane, idx) => {
@@ -162,6 +182,7 @@ export function AppShell() {
             const u = ev as unknown as { in: number; out: number };
             totalIn = u.in;
             totalOut = u.out;
+            setTokens({ in: totalIn, out: totalOut });
             return;
           }
           setPanes((curr) =>
@@ -223,14 +244,53 @@ export function AppShell() {
     const u = recordRun({ in: totalIn, out: totalOut });
     setUsage(u);
     if (live) {
+      const dollars = ((totalIn * 3 + totalOut * 15) / 1_000_000).toFixed(4);
       toast.success('All agents finished.', {
-        description: `Tokens this run: ${totalIn} in / ${totalOut} out.`,
+        description: `Tokens: ${totalIn} in / ${totalOut} out. Est. cost: $${dollars}.`,
       });
     } else {
+      const next = demoRunsThisSession + 1;
+      setDemoRunsThisSession(next);
       toast.success('All agents finished.', {
         description: `${remainingFreeRuns(u)} free demo runs left this month.`,
       });
+      // Nudge after 1st and 3rd demo run, only when no key is set yet.
+      if (!keyState && (next === 1 || next === 3)) {
+        setTimeout(() => {
+          toast.message('Want real Claude calls?', {
+            description: 'Add your Anthropic key (BYOK). Runs go directly from your browser to Anthropic.',
+            duration: 9000,
+            action: { label: 'Switch to Live', onClick: () => setByokOpen(true) },
+          });
+        }, 800);
+      }
     }
+  }
+
+  function shareLastRun() {
+    if (typeof window === 'undefined') return;
+    const last = history[0];
+    if (!last && !goal.trim()) {
+      toast.error('Nothing to share yet. Run something first.');
+      return;
+    }
+    const payload = {
+      goal: last?.goal ?? goal,
+      agents: last?.agents ?? selected,
+      broadcast,
+    };
+    const enc = encodeURIComponent(btoa(JSON.stringify(payload)));
+    const url = `${window.location.origin}/app#run=${enc}`;
+    navigator.clipboard
+      .writeText(url)
+      .then(() => {
+        toast.success('Share link copied', {
+          description: 'Anyone who opens it gets the same goal + agents pre-filled.',
+        });
+      })
+      .catch(() => {
+        toast.message('Copy this URL', { description: url, duration: 12000 });
+      });
   }
 
   function stopAll() {
@@ -337,6 +397,25 @@ export function AppShell() {
         </button>
 
         <div className="ml-auto flex items-center gap-2">
+          {(tokens.in > 0 || tokens.out > 0) && (
+            <span
+              className="hidden md:inline-flex items-center gap-1.5 rounded-full border border-white/[0.10] bg-white/[0.04] px-2.5 py-1 font-mono text-[11px] text-ink-dim"
+              title="Tokens this run (live mode only)"
+            >
+              <span className="text-cyan-glow">{tokens.in.toLocaleString()}</span>
+              <span className="text-ink-faint">in</span>
+              <span className="text-ink-faint">/</span>
+              <span className="text-brand-glow">{tokens.out.toLocaleString()}</span>
+              <span className="text-ink-faint">out</span>
+            </span>
+          )}
+          <button
+            onClick={shareLastRun}
+            className="hidden sm:inline-flex rounded-full border border-white/[0.10] bg-white/[0.04] p-2 text-ink-dim hover:bg-white/[0.07] hover:text-white"
+            title="Share this run"
+          >
+            <Share2 className="h-3.5 w-3.5" />
+          </button>
           <button
             onClick={() => setShowHistory((v) => !v)}
             className="rounded-full border border-white/[0.10] bg-white/[0.04] p-2 text-ink-dim hover:bg-white/[0.07] hover:text-white"
