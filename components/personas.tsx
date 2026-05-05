@@ -45,14 +45,21 @@ export function Personas() {
           </p>
         </div>
 
-        <div className="mt-12 grid gap-4 md:grid-cols-3 md:gap-5">
-          {PEOPLE.map((p, i) => (
+        <motion.div
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: '-60px' }}
+          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.1 } } }}
+          className="mt-12 grid gap-4 md:grid-cols-3 md:gap-5"
+        >
+          {PEOPLE.map((p) => (
             <motion.div
               key={p.persona}
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true, margin: '-60px' }}
-              transition={{ duration: 0.5, delay: i * 0.08 }}
+              variants={{
+                hidden: { opacity: 0, y: 14 },
+                show: { opacity: 1, y: 0, transition: { duration: 0.6, ease: [0.16, 1, 0.3, 1] } },
+              }}
+              whileHover={{ y: -5, transition: { duration: 0.2 } }}
               className="card card-hover group flex flex-col p-6"
             >
               <span className="self-start rounded-full border border-cyan/30 bg-cyan/10 px-2.5 py-0.5 text-[11px] font-mono text-cyan-glow">
@@ -74,7 +81,7 @@ export function Personas() {
               </Link>
             </motion.div>
           ))}
-        </div>
+        </motion.div>
       </div>
     </section>
   );
