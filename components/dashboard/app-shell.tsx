@@ -19,11 +19,14 @@ import { toast } from 'sonner';
 import { Logomark } from '@/components/logo';
 import { AGENTS, type AgentName, RECIPES } from '@/lib/agents';
 import { runAgent, type SimEvent } from '@/lib/simulator';
+import { runClaudeLive, SYSTEM_PROMPTS, type LiveEvent } from '@/lib/claude';
+import { recordRun, freeTierExceeded, remainingFreeRuns, getUsage, FREE_LIMIT } from '@/lib/usage';
 import { uid } from '@/lib/utils';
 import { AgentCard } from './agent-card';
 import { StreamPane } from './stream-pane';
 import { JsonlLog } from './jsonl-log';
 import { ByokModal, getKey } from './byok-modal';
+import { Onboarding } from './onboarding';
 
 const MODELS = [
   { id: 'claude-sonnet-4-6', label: 'Claude Sonnet 4.6', tag: 'default' },
@@ -38,8 +41,9 @@ interface PaneState {
   id: string;
   agent: AgentName;
   events: SimEvent[];
-  status: 'pending' | 'running' | 'done' | 'cancelled';
-  ctrl: { cancelled: boolean };
+  status: 'pending' | 'running' | 'done' | 'cancelled' | 'error';
+  ctrl: AbortController;
+  mode: 'demo' | 'live';
 }
 
 interface RunHistoryEntry {
@@ -60,10 +64,12 @@ export function AppShell() {
   const [panes, setPanes] = useState<PaneState[]>([]);
   const [history, setHistory] = useState<RunHistoryEntry[]>([]);
   const [showHistory, setShowHistory] = useState(false);
+  const [usage, setUsage] = useState(getUsage());
 
   // hydrate
   useEffect(() => {
     setKeyState(getKey());
+    setUsage(getUsage());
     try {
       const raw = localStorage.getItem('brocco:history');
       if (raw) setHistory(JSON.parse(raw));
@@ -108,13 +114,23 @@ export function AppShell() {
       return;
     }
 
+    const live = !!keyState;
+    if (!live && freeTierExceeded(usage)) {
+      toast.error('Free tier limit reached', {
+        description: `You used your 100 free runs this month. Add an Anthropic key (BYOK) for unlimited runs on your tokens, or upgrade.`,
+        action: { label: 'Upgrade', onClick: () => (window.location.href = '/pricing') },
+      });
+      return;
+    }
+
     const runAgents = broadcast ? selected : selected.slice(0, 1);
     const next: PaneState[] = runAgents.map((name) => ({
       id: uid('p'),
       agent: name,
       events: [],
       status: 'running',
-      ctrl: { cancelled: false },
+      ctrl: new AbortController(),
+      mode: live ? 'live' : 'demo',
     }));
     setPanes(next);
 
@@ -122,13 +138,69 @@ export function AppShell() {
       [{ id: uid('r'), goal: goal, agents: runAgents, ts: Date.now() }, ...h].slice(0, 25),
     );
 
-    if (!keyState) {
-      toast.message('Demo mode', { description: 'Simulated run. Add a key for live agents.' });
+    if (live) {
+      toast.message('Live mode', {
+        description: `Calling Claude directly from your browser with your key.`,
+      });
+    } else {
+      toast.message('Demo mode', {
+        description: 'Simulated run. Add an Anthropic key for live agents on your tokens.',
+      });
     }
+
+    let totalIn = 0;
+    let totalOut = 0;
 
     await Promise.all(
       next.map((pane, idx) => {
         const a = AGENTS.find((x) => x.name === pane.agent)!;
+
+        const emit = (e: SimEvent | (LiveEvent & { ts?: number; step?: number; agent?: AgentName })) => {
+          const norm = ('ts' in e && e.ts ? e : null) as SimEvent | null;
+          const ev = norm ?? ({ ...(e as LiveEvent), ts: Date.now(), step: 0, agent: pane.agent } as SimEvent);
+          if ((ev as any).type === 'usage') {
+            const u = ev as unknown as { in: number; out: number };
+            totalIn = u.in;
+            totalOut = u.out;
+            return;
+          }
+          setPanes((curr) =>
+            curr.map((p, i) => (i === idx ? { ...p, events: [...p.events, ev as SimEvent] } : p)),
+          );
+        };
+
+        if (live) {
+          const sys = SYSTEM_PROMPTS[a.name] || SYSTEM_PROMPTS.researcher;
+          return runClaudeLive({
+            apiKey: keyState!,
+            modelId: model,
+            agent: a,
+            goal,
+            emit: (e) => emit(e),
+            signal: pane.ctrl.signal,
+            systemPrompt: sys,
+          })
+            .catch((err) => {
+              emit({ type: 'error', message: err instanceof Error ? err.message : String(err) } as any);
+              setPanes((curr) =>
+                curr.map((p, i) => (i === idx ? { ...p, status: 'error' } : p)),
+              );
+            })
+            .finally(() => {
+              setPanes((curr) =>
+                curr.map((p, i) =>
+                  i === idx
+                    ? {
+                        ...p,
+                        status: pane.ctrl.signal.aborted ? 'cancelled' : (p.status === 'error' ? 'error' : 'done'),
+                      }
+                    : p,
+                ),
+              );
+            });
+        }
+
+        // demo path: simulator
         return runAgent(
           a,
           goal,
@@ -137,29 +209,37 @@ export function AppShell() {
               curr.map((p, i) => (i === idx ? { ...p, events: [...p.events, e] } : p)),
             );
           },
-          pane.ctrl,
+          { cancelled: pane.ctrl.signal.aborted },
         ).then(() => {
           setPanes((curr) =>
             curr.map((p, i) =>
-              i === idx ? { ...p, status: pane.ctrl.cancelled ? 'cancelled' : 'done' } : p,
+              i === idx ? { ...p, status: pane.ctrl.signal.aborted ? 'cancelled' : 'done' } : p,
             ),
           );
         });
       }),
     );
 
-    toast.success('All agents finished.', {
-      description: 'Save the synthesis or replay any run from history.',
-    });
+    const u = recordRun({ in: totalIn, out: totalOut });
+    setUsage(u);
+    if (live) {
+      toast.success('All agents finished.', {
+        description: `Tokens this run: ${totalIn} in / ${totalOut} out.`,
+      });
+    } else {
+      toast.success('All agents finished.', {
+        description: `${remainingFreeRuns(u)} free demo runs left this month.`,
+      });
+    }
   }
 
   function stopAll() {
-    setPanes((curr) =>
-      curr.map((p) => {
-        if (p.status === 'running') p.ctrl.cancelled = true;
-        return p;
-      }),
-    );
+    setPanes((curr) => {
+      curr.forEach((p) => {
+        if (p.status === 'running') p.ctrl.abort();
+      });
+      return curr;
+    });
     toast.warning('Stopping all agents...');
   }
 
@@ -193,9 +273,11 @@ export function AppShell() {
       {/* TOP BAR */}
       <header className="flex h-14 shrink-0 items-center gap-3 border-b border-white/[0.06] bg-bg-1/70 px-4 backdrop-blur-xl">
         <Link href="/" className="inline-flex items-center gap-2 text-[14px] font-semibold tracking-tight">
-          <Logomark className="h-6 w-6 text-brand-glow" />
+          <Logomark className="h-5 w-10 text-brand-glow" />
           brocco<span className="text-ink-faint">.app</span>
         </Link>
+
+        <ModeBadge live={!!keyState} />
 
         <span className="hidden h-5 w-px bg-white/[0.10] md:block" />
 
@@ -451,7 +533,28 @@ export function AppShell() {
       </div>
 
       <ByokModal open={byokOpen} onOpenChange={setByokOpen} initial={keyState} onSaved={setKeyState} />
+      <Onboarding onOpenByok={() => setByokOpen(true)} />
     </div>
+  );
+}
+
+function ModeBadge({ live }: { live: boolean }) {
+  if (live) {
+    return (
+      <span className="hidden md:inline-flex items-center gap-1.5 rounded-full border border-emerald-400/30 bg-emerald-400/10 px-2.5 py-0.5 font-mono text-[11px] text-emerald-300">
+        <span className="relative flex h-1.5 w-1.5">
+          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
+        </span>
+        live mode
+      </span>
+    );
+  }
+  return (
+    <span className="hidden md:inline-flex items-center gap-1.5 rounded-full border border-amber-400/30 bg-amber-400/10 px-2.5 py-0.5 font-mono text-[11px] text-amber-300">
+      <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
+      demo mode
+    </span>
   );
 }
 
@@ -459,7 +562,7 @@ function EmptyState({ onPick }: { onPick: (id: string) => void }) {
   return (
     <div className="flex h-full min-h-[480px] items-center justify-center">
       <div className="max-w-md text-center">
-        <Logomark className="mx-auto h-12 w-12 text-brand-glow opacity-80" />
+        <Logomark className="mx-auto h-12 w-24 text-brand-glow opacity-80" />
         <h2 className="mt-5 text-[22px] font-semibold tracking-tight">Spawn an agent.</h2>
         <p className="mt-2 text-[14px] text-ink-dim">
           Pick agents on the left, type a goal, hit Run. Toggle <strong>Broadcast</strong> to fan one prompt out to N agents in parallel.

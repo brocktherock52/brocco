@@ -8,7 +8,7 @@ export function Footer() {
         <div className="grid gap-10 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
           <div>
             <Link href="/" className="inline-flex items-center gap-2.5">
-              <Logomark className="h-7 w-7 text-brand-glow" />
+              <Logomark className="h-6 w-12 text-brand-glow" />
               <span className="text-[15px] font-semibold tracking-tight">
                 brocco<span className="text-ink-faint">.ai</span>
               </span>
@@ -23,15 +23,18 @@ export function Footer() {
             { href: '/#features', label: 'Features' },
             { href: '/pricing', label: 'Pricing' },
             { href: '/app', label: 'Open the app' },
+            { href: '/download', label: 'Download' },
+            { href: '/changelog', label: 'Changelog' },
           ]} />
           <FooterCol title="Developers" links={[
             { href: '/docs', label: 'Docs' },
             { href: '/security', label: 'Security' },
+            { href: '/api/v1/agents', label: 'API reference' },
             { href: 'https://github.com/brocktherock52/bdp-consulting', label: 'GitHub' },
           ]} />
           <FooterCol title="Company" links={[
             { href: 'mailto:hello@brocco.ai', label: 'hello@brocco.ai' },
-            { href: 'https://cal.com/brocco/demo', label: 'Book a demo' },
+            { href: 'mailto:hello@brocco.ai?subject=Brocco%20demo%20request', label: 'Book a demo' },
             { href: '/privacy', label: 'Privacy' },
             { href: '/terms', label: 'Terms' },
           ]} />

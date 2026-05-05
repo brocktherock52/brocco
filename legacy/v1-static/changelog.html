@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#050807">
+<title>Changelog . brocco.ai</title>
+<meta name="description" content="Brocco ships fast. Every release, every change, in one place.">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="canonical" href="https://brocco.ai/changelog">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/styles.css">
+<style>
+  .doc-hero { padding: 140px 0 56px; border-bottom: 1px solid var(--border); }
+  .doc-hero h1 { font-size: clamp(40px, 6vw, 72px); margin: 0 0 14px; }
+  .clog { max-width: 760px; margin: 56px auto 96px; padding: 0 var(--gutter); }
+  .release { padding: 28px 0; border-bottom: 1px solid var(--border); }
+  .release:last-child { border-bottom: 0; }
+  .release__head { display: flex; align-items: baseline; gap: 14px; margin-bottom: 8px; flex-wrap: wrap; }
+  .release__ver { font-family: var(--font-mono); font-size: 13px; color: var(--brand-glow); padding: 2px 10px; background: rgba(34,197,94,0.06); border: 1px solid rgba(34,197,94,0.3); border-radius: 999px; }
+  .release__date { font-family: var(--font-mono); font-size: 12px; color: var(--fg-faint); }
+  .release h2 { margin: 0; font-size: 22px; letter-spacing: -0.015em; flex: 1; min-width: 200px; }
+  .release ul { margin: 14px 0 0; padding-left: 22px; color: var(--fg-mid); line-height: 1.65; font-size: 15px; }
+  .release li { padding: 4px 0; }
+  .release li strong { color: var(--fg); }
+  .release li code { font-family: var(--font-mono); font-size: 12.5px; background: var(--bg-2); border: 1px solid var(--border); padding: 1px 6px; border-radius: 4px; color: var(--brand-glow); }
+</style>
+</head>
+<body>
+
+<nav class="nav scrolled">
+  <a href="/" class="nav__brand">
+    <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true">
+      <path d="M 2 36 L 4 38 Q 1 42 5 42 L 10 40 L 16 39 L 20 39 L 20 44 L 18 44 L 18 38.5 L 26 38 L 32 38 L 32 44 L 30 44 L 30 38 L 36 38 L 42 38.5 L 48 39.5 L 56 40.5 L 62 41 L 62 39 L 58 39 L 58 37 L 62 37 L 62 35 L 56 33 L 50 32 L 46 31 L 40 30 L 38 27 L 36 30 L 32 30 L 30 26 L 28 30 L 24 30 L 22 27 L 20 30 L 16 31 L 12 33 L 8 34 Z"/>
+      <circle cx="52" cy="33" r="1.3" fill="#0a0d10"/>
+    </svg>
+    <span>brocco<span class="dim">.ai</span></span>
+  </a>
+  <div class="nav__links">
+    <a href="/app" style="color: var(--brand-glow); font-weight: 600;">Open app</a>
+    <a href="/recipes">Recipes</a>
+    <a href="/#pricing">Pricing</a>
+    <a href="/docs">Docs</a>
+    <a href="/changelog" style="color: var(--fg);">Changelog</a>
+  </div>
+  <div class="nav__cta">
+    <a href="/app" class="btn btn--primary" style="padding: 9px 16px; font-size: 13.5px;">Open app <span class="arrow">&rarr;</span></a>
+  </div>
+</nav>
+
+<section class="doc-hero">
+  <div class="container">
+    <div class="section__eyebrow">Changelog</div>
+    <h1>What's new.</h1>
+    <p class="lead">Brocco ships fast. Six versions in a week. Every change in one place.</p>
+  </div>
+</section>
+
+<div class="clog">
+
+  <div class="release">
+    <div class="release__head">
+      <span class="release__ver">v13</span>
+      <span class="release__date">2026-05-02</span>
+      <h2>Plug brocco into Claude, ChatGPT, Cursor.</h2>
+    </div>
+    <ul>
+      <li><strong>Public REST API</strong>: <code>POST /api/v1/run</code> with Bearer auth (your Anthropic key as BYOK or a brocco API key). 9 agents callable from curl, ChatGPT custom GPTs, n8n, anywhere. Streams the same SSE shape as the in-app loop.</li>
+      <li><strong>Agent discovery</strong>: <code>GET /api/v1/agents</code> returns the full list with descriptions and tool sets.</li>
+      <li><strong>MCP server</strong>: <code>charter.mcp_server</code> module exposes every brocco agent as an MCP tool. Add to <code>claude_desktop_config.json</code>, restart Claude Desktop, brocco agents appear under the tools menu. Each agent runs the real Charter runtime under the hood.</li>
+      <li><strong>/download page</strong>: PWA install (3 platforms covered with one click), Tauri native desktop (coming), MCP setup with copy-paste config.</li>
+      <li>Hero CTAs reordered: "Open the app" + "Download / install" (was "Open the app" + "Watch a live run"; the demo section is right below the fold so the latter felt redundant).</li>
+      <li>Pricing toggle math fixed: monthly/annual now shows real per-month equivalents instead of inflated marked-up "fake monthly" prices. "$/mo, billed yearly" subtitle when annual.</li>
+      <li>Nav-bleed bug fixed (announcement bar no longer leaves a gap above the fixed nav after scroll).</li>
+      <li>Croc face redesigned: front-facing eye-bumps + smile, readable at favicon size.</li>
+    </ul>
+  </div>
+
+  <div class="release">
+    <div class="release__head">
+      <span class="release__ver">v12</span>
+      <span class="release__date">2026-05-02</span>
+      <h2>Stripe live. Accepting real subscriptions.</h2>
+    </div>
+    <ul>
+      <li><strong>Stripe checkout is real now</strong>. <code>/api/checkout</code> returns live <code>cs_live_*</code> URLs for all 4 tier+interval combos (Solo $49/mo, Solo $490/yr, Team $199/mo, Team $1,990/yr).</li>
+      <li>Webhook endpoint registered and HMAC-SHA256 verified via WebCrypto in Vercel Edge.</li>
+      <li><code>/billing/success</code> page added so post-checkout redirects don't 404.</li>
+      <li>One subscriber-blocking bug fixed mid-activation: the BDP-shared <code>.env.secrets</code> file had a UTF-8 BOM that contaminated the API key via PowerShell's pipe. Switched to Node <code>child_process</code> with <code>Buffer.from(value, "utf8")</code> written directly to <code>vercel env add</code> stdin. All 7 env vars re-pushed clean.</li>
+    </ul>
+  </div>
+
+  <div class="release">
+    <div class="release__head">
+      <span class="release__ver">v11</span>
+      <span class="release__date">2026-05-02</span>
+      <h2>Legitimacy polish for first subscribers</h2>
+    </div>
+    <ul>
+      <li>Trust partner row (Anthropic / OpenAI / Ollama / Stripe / Vercel / Tavily) above the fold.</li>
+      <li>3-persona use cases section with concrete workflows + recipe deep-links.</li>
+      <li>CSS-animated app mockup in the "How it works" section showing 3 panes streaming.</li>
+      <li>FAQ rewrite for the BYOK reality. Updated hero metrics (9 agents, 13 tools, 2 providers).</li>
+      <li><code>/about</code>, <code>/privacy</code>, <code>/terms</code> pages.</li>
+      <li>Structured data: <code>Organization</code> + <code>SoftwareApplication</code> + <code>FAQPage</code> JSON-LD for rich Google results.</li>
+      <li>Custom <code>/404</code>, sticky mobile CTA, announcement bar at top, footer social icons.</li>
+      <li>Footer attribution updated to "a BDP Consulting product" per the locked HFW style rule (no first-name personal attribution on public marketing).</li>
+    </ul>
+  </div>
+
+  <div class="release">
+    <div class="release__head">
+      <span class="release__ver">v7</span>
+      <span class="release__date">2026-05-02</span>
+      <h2>Recipes gallery + changelog</h2>
+    </div>
+    <ul>
+      <li><strong>Public <code>/recipes</code> gallery</strong>. 8 ready-to-run multi-agent workflows. Click one to open the app pre-filled.</li>
+      <li><strong>This page</strong>. Trust signal: see how often we ship.</li>
+      <li>Filter recipes by tag (Research, Growth, Ops, Content).</li>
+    </ul>
+  </div>
+
+  <div class="release">
+    <div class="release__head">
+      <span class="release__ver">v6</span>
+      <span class="release__date">2026-05-02</span>
+      <h2>SSE streaming in the app</h2>
+    </div>
+    <ul>
+      <li><strong>Live token streaming</strong>. Text appears character by character as Claude generates it. The agent feels alive.</li>
+      <li>Tool call args render live as they arrive (Anthropic <code>input_json_delta</code> events).</li>
+      <li>Service worker bumped to <code>v2-streaming</code> so users get the new client immediately.</li>
+    </ul>
+  </div>
+
+  <div class="release">
+    <div class="release__head">
+      <span class="release__ver">v5</span>
+      <span class="release__date">2026-05-02</span>
+      <h2>Comparison pages + marketing kit</h2>
+    </div>
+    <ul>
+      <li>New: <code>/vs/cursor</code> and <code>/vs/claude-code</code> comparison pages.</li>
+      <li>Marketing assets in repo: launch-day playbook, Product Hunt checklist, Show HN draft, 4 Reddit post drafts.</li>
+      <li>Sitemap refreshed.</li>
+    </ul>
+  </div>
+
+  <div class="release">
+    <div class="release__head">
+      <span class="release__ver">v4</span>
+      <span class="release__date">2026-05-02</span>
+      <h2>The app + Stripe + croc rebrand</h2>
+    </div>
+    <ul>
+      <li><strong>The big one</strong>: <code>/app</code> multi-agent dashboard PWA. BYOK pattern (your Anthropic key, your tokens, never leaves your browser). Broadcast mode (one prompt fans out to N agents in parallel). Supervisor mode (one agent decomposes a goal and delegates to specialists). 6 built-in agents, 4 prebuilt recipes, Cmd+K picker, install as PWA.</li>
+      <li><strong>Stripe</strong>: <code>/api/checkout</code>, <code>/api/portal</code>, <code>/api/stripe-webhook</code> (HMAC-SHA256 verify via WebCrypto, no SDK), <code>/api/proxy</code> for the in-app <code>http_get</code> tool.</li>
+      <li><strong>Croc rebrand</strong>: white crocodile mark replaces the broccoli. New favicon, OG image, wordmark.</li>
+      <li>All Schmidt mentions removed from copy. Substance kept, brand voice promoted.</li>
+      <li>All em-dashes purged across 12 files.</li>
+    </ul>
+  </div>
+
+  <div class="release">
+    <div class="release__head">
+      <span class="release__ver">v3</span>
+      <span class="release__date">2026-05-02</span>
+      <h2>Live API endpoint + content</h2>
+    </div>
+    <ul>
+      <li><code>/api/run</code> Vercel Edge function: real Claude tool-use loop with SSE streaming. Gracefully off (503) until ANTHROPIC_API_KEY is pushed.</li>
+      <li>Blog post: <a href="/blog/agentic-ai-platforms-2026">The 2026 agentic AI platform landscape</a>.</li>
+      <li>Nav: added <code>/blog</code>.</li>
+    </ul>
+  </div>
+
+  <div class="release">
+    <div class="release__head">
+      <span class="release__ver">v2</span>
+      <span class="release__date">2026-05-02</span>
+      <h2>Trust pages</h2>
+    </div>
+    <ul>
+      <li><code>/security</code>: SOC 2, GDPR, BYOK, data handling, deletion.</li>
+      <li><code>/docs</code>: 11-minute quickstart with code samples.</li>
+      <li><code>/vs/zapier</code>: deterministic vs reasoning comparison.</li>
+    </ul>
+  </div>
+
+  <div class="release">
+    <div class="release__head">
+      <span class="release__ver">v1</span>
+      <span class="release__date">2026-05-02</span>
+      <h2>Site live</h2>
+    </div>
+    <ul>
+      <li>Landing page deployed to Vercel.</li>
+      <li>Custom WebGL fluid hero (fBm Simplex noise + UV warping + 5-color brand grain). 6KB inline shader. <code>prefers-reduced-motion</code> respected.</li>
+      <li>4-tier pricing (Free / Solo $49 / Team $199 / Enterprise).</li>
+      <li>8-question FAQ.</li>
+      <li>Scripted live-feel agent demo (4 recorded workflows replay character by character).</li>
+    </ul>
+  </div>
+
+</div>
+
+<footer>
+  <div class="container">
+    <div>
+      <a href="/" class="nav__brand" style="color: white;">
+        <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true">
+          <path d="M 2 34 Q 6 28, 14 28 L 28 26 Q 32 24, 36 27 L 46 28 Q 52 28, 58 30 L 62 31 L 62 33 L 56 34 Q 54 38, 50 34 L 44 35 L 43 40 L 40 40 L 39 35 L 26 37 L 25 42 L 22 42 L 21 37 L 12 38 Q 6 38, 4 36 Z"/>
+          <path d="M 18 28 L 21 25 L 24 28 Z M 28 27 L 31 24 L 34 27 Z M 38 28 L 41 25 L 44 28 Z"/>
+          <circle cx="54" cy="30.5" r="1" fill="#0a0d10"/>
+        </svg>
+        <span>brocco<span class="dim">.ai</span></span>
+      </a>
+    </div>
+    <div><h4>Use</h4><ul><li><a href="/app">Open app</a></li><li><a href="/recipes">Recipes</a></li><li><a href="/changelog" style="color: var(--brand-glow);">Changelog</a></li></ul></div>
+    <div><h4>Compare</h4><ul><li><a href="/vs/cursor">vs Cursor</a></li><li><a href="/vs/claude-code">vs Claude Code</a></li></ul></div>
+    <div><h4>Company</h4><ul><li><a href="mailto:hello@brocco.ai">hello@brocco.ai</a></li></ul></div>
+    <div class="credit container" style="padding-left: 0; padding-right: 0;">
+      <span>&copy; 2026 brocco.ai &middot; BDP Consulting</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,192 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#050807">
+<title>Brocco vs Cursor . parallel agents vs IDE-bound coding</title>
+<meta name="description" content="Cursor wins inside a codebase. Brocco wins everywhere else. Side-by-side: when to use which, what each one ships with.">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="canonical" href="https://brocco.ai/vs/cursor">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/styles.css">
+<style>
+  .doc-hero { padding: 140px 0 60px; border-bottom: 1px solid var(--border); }
+  .doc-hero h1 { font-size: clamp(40px, 6vw, 72px); margin: 0 0 14px; }
+  .compare { display: grid; grid-template-columns: 1.4fr 1fr 1fr; padding: 0; margin: 56px 0 80px; border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; }
+  @media (max-width: 800px) { .compare { grid-template-columns: 1fr; } }
+  .compare > div { padding: 18px 22px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border); font-size: 14.5px; }
+  @media (max-width: 800px) { .compare > div { border-right: 0; } }
+  .compare .h { font-family: var(--font-mono); font-size: 12px; color: var(--fg-faint); text-transform: uppercase; letter-spacing: 0.12em; background: var(--bg-1); }
+  .compare .col-a { color: var(--fg-mid); background: linear-gradient(180deg, transparent, rgba(251, 113, 133, 0.03)); }
+  .compare .col-b { color: var(--fg); background: linear-gradient(180deg, transparent, rgba(34, 197, 94, 0.05)); }
+  .compare .yes::before { content: 'ok '; color: var(--brand-glow); font-weight: 700; }
+  .compare .no::before { content: 'x '; color: var(--rose); font-weight: 700; }
+  .compare .meh::before { content: '~ '; color: var(--gold); font-weight: 700; }
+  .when { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 56px 0 80px; }
+  @media (max-width: 800px) { .when { grid-template-columns: 1fr; } }
+  .when__card { padding: 28px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: var(--bg-1); }
+  .when__card.bro { border-color: rgba(34,197,94,0.3); background: rgba(34,197,94,0.04); }
+  .when__card h3 { margin: 0 0 14px; font-size: 18px; letter-spacing: -0.01em; }
+  .when__card ul { padding-left: 20px; margin: 0; color: var(--fg-mid); line-height: 1.7; font-size: 15px; }
+  .when__card li { padding: 4px 0; }
+  .when__card li strong { color: var(--fg); }
+  .docbody p { color: var(--fg-mid); line-height: 1.65; font-size: 15.5px; max-width: 720px; }
+</style>
+</head>
+<body>
+
+<nav class="nav scrolled">
+  <a href="/" class="nav__brand">
+    <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true">
+      <path d="M 2 36 L 4 38 Q 1 42 5 42 L 10 40 L 16 39 L 20 39 L 20 44 L 18 44 L 18 38.5 L 26 38 L 32 38 L 32 44 L 30 44 L 30 38 L 36 38 L 42 38.5 L 48 39.5 L 56 40.5 L 62 41 L 62 39 L 58 39 L 58 37 L 62 37 L 62 35 L 56 33 L 50 32 L 46 31 L 40 30 L 38 27 L 36 30 L 32 30 L 30 26 L 28 30 L 24 30 L 22 27 L 20 30 L 16 31 L 12 33 L 8 34 Z"/>
+      <circle cx="52" cy="33" r="1.3" fill="#0a0d10"/>
+    </svg>
+    <span>brocco<span class="dim">.ai</span></span>
+  </a>
+  <div class="nav__links">
+    <a href="/app" style="color: var(--brand-glow); font-weight: 600;">Open app</a>
+    <a href="/#how">How it works</a>
+    <a href="/#pricing">Pricing</a>
+    <a href="/docs">Docs</a>
+    <a href="/security">Security</a>
+  </div>
+  <div class="nav__cta">
+    <a href="/app" class="btn btn--primary" style="padding: 9px 16px; font-size: 13.5px;">Open app <span class="arrow">&rarr;</span></a>
+  </div>
+</nav>
+
+<section class="doc-hero">
+  <div class="container">
+    <div class="section__eyebrow">Comparison</div>
+    <h1>Brocco vs Cursor.</h1>
+    <p class="lead">Cursor is the best <strong style="color: var(--fg);">in-IDE</strong> agent shipping today. Brocco runs <strong style="color: var(--fg);">everywhere else</strong>: parallel research, outreach, planning, ops. They solve different problems.</p>
+  </div>
+</section>
+
+<div class="container docbody">
+
+  <h2 style="margin: 56px 0 18px; font-size: 32px; letter-spacing: -0.02em;">The core difference</h2>
+  <p>Cursor lives inside your codebase. Tab autocomplete, agent in the side panel, edits across files in your repo. If your work is "change this code", Cursor wins.</p>
+  <p>Brocco lives outside your codebase. Browser-first multi-agent dashboard. Drop a research goal in, watch 3 agents fan out and return results in parallel. If your work is "do these 5 things at once and synthesize", Brocco wins.</p>
+  <p>Most builders need both.</p>
+
+  <h2 style="margin: 56px 0 0; font-size: 32px; letter-spacing: -0.02em;">Side by side</h2>
+
+  <div class="compare">
+    <div class="h"></div>
+    <div class="h col-a">Cursor</div>
+    <div class="h col-b">Brocco</div>
+
+    <div>Surface</div>
+    <div class="col-a">Forked VS Code IDE</div>
+    <div class="col-b">Browser app, install as PWA</div>
+
+    <div>Multi-agent in parallel</div>
+    <div class="col-a meh">Cmd+T tabs, agents are separate sessions</div>
+    <div class="col-b yes">Native broadcast: 1 prompt, N panes</div>
+
+    <div>BYOK transparency</div>
+    <div class="col-a meh">Hidden in settings</div>
+    <div class="col-b yes">First-class, in header pill</div>
+
+    <div>Cost meter live</div>
+    <div class="col-a no">Buried in settings, after the fact</div>
+    <div class="col-b yes">Per-pane and per-session in header</div>
+
+    <div>Tools beyond code</div>
+    <div class="col-a no">None native</div>
+    <div class="col-b yes">search, http, memory, file save, delegate</div>
+
+    <div>Free tier</div>
+    <div class="col-a">~50 requests on Hobby</div>
+    <div class="col-b">100 BYOK runs/mo (your tokens)</div>
+
+    <div>Pricing</div>
+    <div class="col-a">$20 Pro / $60 Pro+ / $200 Ultra</div>
+    <div class="col-b">$0 free / $49 Solo / $199 Team</div>
+
+    <div>Cross-app workflows</div>
+    <div class="col-a no">In-IDE only</div>
+    <div class="col-b yes">Browser, with Stripe / Slack / Notion / Postgres tools</div>
+
+    <div>Lock-in</div>
+    <div class="col-a meh">Forked VS Code, your settings tied in</div>
+    <div class="col-b yes">Vanilla browser, leave anytime, BYOK</div>
+
+    <div>Best for</div>
+    <div class="col-a">In-codebase coding, refactors, autocomplete</div>
+    <div class="col-b">Research, outreach, planning, ops, multi-task</div>
+
+    <div style="border-bottom: 0;">Try it</div>
+    <div class="col-a" style="border-bottom: 0;">cursor.com</div>
+    <div class="col-b" style="border-bottom: 0;"><a href="/app" style="color: var(--brand-glow); font-weight: 600;">brocco.ai/app, free, no card &rarr;</a></div>
+  </div>
+
+  <h2 style="margin: 0 0 22px; font-size: 32px; letter-spacing: -0.02em;">When to use which</h2>
+
+  <div class="when">
+    <div class="when__card">
+      <h3>Reach for Cursor when</h3>
+      <ul>
+        <li><strong>You're inside a codebase.</strong> Tab autocomplete + Composer is unmatched.</li>
+        <li><strong>You want one tool for everything in the IDE.</strong> Edit, refactor, run tests, agent runs, all in one window.</li>
+        <li><strong>You're paying for IDE-grade context.</strong> Cursor indexes your repo and the agent uses it.</li>
+        <li><strong>The tradeoff:</strong> almost zero leverage outside the IDE. Tabbing to a chat window for non-code work.</li>
+      </ul>
+    </div>
+    <div class="when__card bro">
+      <h3>Reach for Brocco when</h3>
+      <ul>
+        <li><strong>You need to do 3+ things in parallel.</strong> Broadcast mode, one prompt, N agents, watch them all.</li>
+        <li><strong>The work isn't only code.</strong> Research a competitor, draft outreach, plan a launch.</li>
+        <li><strong>You want full BYOK transparency.</strong> See what each agent costs as it runs.</li>
+        <li><strong>You don't want IDE lock-in.</strong> Browser app, install as PWA, leave anytime.</li>
+      </ul>
+    </div>
+  </div>
+
+  <p style="font-size: 17px; color: var(--fg); border-left: 3px solid var(--brand); padding-left: 22px; margin: 56px 0 80px; max-width: 720px;">
+    The honest answer: use both. Cursor for coding inside your IDE. Brocco for everything else. They cost less than one full-priced ChatGPT seat together and cover what either alone misses.
+  </p>
+
+</div>
+
+<section class="cta-band" id="cta">
+  <div class="container">
+    <h2 class="h1" style="font-size: clamp(36px, 5vw, 64px); margin-bottom: 18px;">
+      Run agents <span class="grad">outside</span> your IDE.
+    </h2>
+    <p>100 free runs a month. BYOK, no card. Open the app and pick a recipe.</p>
+    <div class="hero__cta">
+      <a href="/app" class="btn btn--primary btn--lg">Open the app <span class="arrow">&rarr;</span></a>
+      <a href="/docs" class="btn btn--ghost btn--lg">Read the quickstart</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="container">
+    <div>
+      <a href="/" class="nav__brand" style="color: white;">
+        <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true">
+          <path d="M 2 34 Q 6 28, 14 28 L 28 26 Q 32 24, 36 27 L 46 28 Q 52 28, 58 30 L 62 31 L 62 33 L 56 34 Q 54 38, 50 34 L 44 35 L 43 40 L 40 40 L 39 35 L 26 37 L 25 42 L 22 42 L 21 37 L 12 38 Q 6 38, 4 36 Z"/>
+          <path d="M 18 28 L 21 25 L 24 28 Z M 28 27 L 31 24 L 34 27 Z M 38 28 L 41 25 L 44 28 Z"/>
+          <circle cx="54" cy="30.5" r="1" fill="#0a0d10"/>
+        </svg>
+        <span>brocco<span class="dim">.ai</span></span>
+      </a>
+    </div>
+    <div><h4>Compare</h4><ul><li><a href="/vs/cursor" style="color: var(--brand-glow);">vs Cursor</a></li><li><a href="/vs/claude-code">vs Claude Code</a></li><li><a href="/vs/zapier">vs Zapier</a></li></ul></div>
+    <div><h4>Developers</h4><ul><li><a href="/docs">Docs</a></li><li><a href="/security">Security</a></li></ul></div>
+    <div><h4>Company</h4><ul><li><a href="mailto:hello@brocco.ai">hello@brocco.ai</a></li></ul></div>
+    <div class="credit container" style="padding-left: 0; padding-right: 0;">
+      <span>&copy; 2026 brocco.ai &middot; BDP Consulting</span>
+    </div>
+  </div>
+</footer>
+<script src="/scripts/main.js" defer></script>
+</body>
+</html>

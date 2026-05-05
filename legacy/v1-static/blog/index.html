@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#050807">
+<title>Blog . brocco.ai</title>
+<meta name="description" content="Posts on agentic AI, MCP servers, multi-agent workflows, BYOK patterns, and shipping a SaaS from one laptop.">
+<link rel="icon" type="image/svg+xml" href="/assets/favicon.svg">
+<link rel="canonical" href="https://brocco.ai/blog">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap">
+<link rel="stylesheet" href="/styles.css">
+<style>
+  .doc-hero { padding: 140px 0 56px; border-bottom: 1px solid var(--border); }
+  .doc-hero h1 { font-size: clamp(40px, 6vw, 72px); margin: 0 0 14px; }
+  .posts { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; padding: 56px 0 96px; }
+  @media (max-width: 800px) { .posts { grid-template-columns: 1fr; } }
+  .post-card {
+    display: block; padding: 28px;
+    background: var(--bg-1); border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    color: inherit; text-decoration: none;
+    transition: border-color .15s, transform .15s, background .15s;
+  }
+  .post-card:hover { border-color: var(--brand); transform: translateY(-2px); background: linear-gradient(180deg, var(--bg-2), var(--bg-1)); }
+  .post-card .meta { font-family: var(--font-mono); font-size: 12px; color: var(--fg-faint); letter-spacing: 0.06em; margin-bottom: 14px; }
+  .post-card h2 { font-size: 22px; font-weight: 700; letter-spacing: -0.02em; margin: 0 0 14px; line-height: 1.2; }
+  .post-card p { color: var(--fg-mid); font-size: 14.5px; line-height: 1.55; margin: 0 0 18px; }
+  .post-card .cta { color: var(--brand-glow); font-weight: 600; font-size: 13px; }
+  .featured { grid-column: 1 / -1; padding: 36px; background: linear-gradient(135deg, rgba(34,197,94,0.06), rgba(34,197,94,0.02)); border-color: rgba(34,197,94,0.3); }
+  .featured h2 { font-size: 30px; }
+  .featured .pill { display: inline-block; padding: 3px 10px; background: rgba(34,197,94,0.1); color: var(--brand-glow); font-size: 11px; font-family: var(--font-mono); border-radius: 999px; margin-bottom: 12px; letter-spacing: 0.06em; text-transform: uppercase; }
+</style>
+</head>
+<body>
+
+<nav class="nav scrolled">
+  <a href="/" class="nav__brand">
+    <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true">
+      <path d="M 2 36 L 4 38 Q 1 42 5 42 L 10 40 L 16 39 L 20 39 L 20 44 L 18 44 L 18 38.5 L 26 38 L 32 38 L 32 44 L 30 44 L 30 38 L 36 38 L 42 38.5 L 48 39.5 L 56 40.5 L 62 41 L 62 39 L 58 39 L 58 37 L 62 37 L 62 35 L 56 33 L 50 32 L 46 31 L 40 30 L 38 27 L 36 30 L 32 30 L 30 26 L 28 30 L 24 30 L 22 27 L 20 30 L 16 31 L 12 33 L 8 34 Z"/>
+      <circle cx="52" cy="33" r="1.3" fill="#0a0d10"/>
+    </svg>
+    <span>brocco<span class="dim">.ai</span></span>
+  </a>
+  <div class="nav__links">
+    <a href="/app" style="color: var(--brand-glow); font-weight: 600;">Open app</a>
+    <a href="/recipes">Recipes</a>
+    <a href="/#pricing">Pricing</a>
+    <a href="/docs">Docs</a>
+    <a href="/blog" style="color: var(--fg);">Blog</a>
+  </div>
+  <div class="nav__cta">
+    <a href="/app" class="btn btn--primary" style="padding: 9px 16px; font-size: 13.5px;">Open app <span class="arrow">&rarr;</span></a>
+  </div>
+</nav>
+
+<section class="doc-hero">
+  <div class="container">
+    <div class="section__eyebrow">Blog</div>
+    <h1>Field notes from shipping brocco.</h1>
+    <p class="lead">Agentic AI, MCP servers, multi-agent workflows, BYOK, and the messy stuff in between. Written by the same person doing the building, edited rarely.</p>
+  </div>
+</section>
+
+<div class="container">
+  <div class="posts">
+
+    <a href="/blog/run-multiple-ai-agents-parallel-one-prompt" class="post-card featured">
+      <span class="pill">latest</span>
+      <div class="meta">2026-05-02 . 6 min read</div>
+      <h2>How to run multiple AI agents in parallel from one prompt</h2>
+      <p>Three patterns for parallel AI agents: broadcast, supervisor, and custom DAG. With paste-ready code, when each pattern fits, and how to wire it without writing your own framework.</p>
+      <span class="cta">Read &rarr;</span>
+    </a>
+
+    <a href="/blog/cursor-pricing-2026-breakdown" class="post-card">
+      <div class="meta">2026-05-02 . 7 min read</div>
+      <h2>Cursor pricing in 2026: full breakdown vs alternatives</h2>
+      <p>Five tiers, one credit system, and a churn pattern worth knowing about. What Cursor charges right now, and three alternatives at each price point.</p>
+      <span class="cta">Read &rarr;</span>
+    </a>
+
+    <a href="/blog/claude-desktop-mcp-servers-2026" class="post-card">
+      <div class="meta">2026-05-02 . 9 min read</div>
+      <h2>Claude Desktop MCP servers in 2026: 10 every builder should install</h2>
+      <p>MCP went from interesting protocol to the way Claude Desktop talks to your tools in about six months. Ten servers worth installing today, with the configs to paste.</p>
+      <span class="cta">Read &rarr;</span>
+    </a>
+
+    <a href="/blog/agentic-ai-platforms-2026" class="post-card">
+      <div class="meta">2026-05-02 . 8 min read</div>
+      <h2>The 2026 agentic AI platform landscape</h2>
+      <p>Twenty platforms surveyed. Three white spaces nobody owns. One moat that everyone underestimated until 2026.</p>
+      <span class="cta">Read &rarr;</span>
+    </a>
+
+  </div>
+</div>
+
+<p style="text-align: center; margin: -40px 0 80px; font-size: 13px; font-family: var(--font-mono); color: var(--fg-faint);">
+  <a href="/blog/feed.xml" style="color: var(--fg-dim);">RSS feed</a>
+</p>
+
+<footer>
+  <div class="container">
+    <div>
+      <a href="/" class="nav__brand" style="color: white;">
+        <svg viewBox="0 0 64 64" fill="currentColor" aria-hidden="true">
+          <path d="M 2 36 L 4 38 Q 1 42 5 42 L 10 40 L 16 39 L 20 39 L 20 44 L 18 44 L 18 38.5 L 26 38 L 32 38 L 32 44 L 30 44 L 30 38 L 36 38 L 42 38.5 L 48 39.5 L 56 40.5 L 62 41 L 62 39 L 58 39 L 58 37 L 62 37 L 62 35 L 56 33 L 50 32 L 46 31 L 40 30 L 38 27 L 36 30 L 32 30 L 30 26 L 28 30 L 24 30 L 22 27 L 20 30 L 16 31 L 12 33 L 8 34 Z"/>
+          <circle cx="52" cy="33" r="1.3" fill="#0a0d10"/>
+        </svg>
+        <span>brocco<span class="dim">.ai</span></span>
+      </a>
+    </div>
+    <div><h4>Use</h4><ul><li><a href="/app">Open app</a></li><li><a href="/recipes">Recipes</a></li><li><a href="/blog" style="color: var(--brand-glow);">Blog</a></li></ul></div>
+    <div><h4>Trust</h4><ul><li><a href="/security">Security</a></li><li><a href="/privacy">Privacy</a></li><li><a href="/terms">Terms</a></li></ul></div>
+    <div><h4>Company</h4><ul><li><a href="/about">About</a></li><li><a href="mailto:hello@brocco.ai">hello@brocco.ai</a></li></ul></div>
+    <div class="credit container" style="padding-left: 0; padding-right: 0;">
+      <span>&copy; 2026 brocco.ai &middot; a BDP Consulting product</span>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

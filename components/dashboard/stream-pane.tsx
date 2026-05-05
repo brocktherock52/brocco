@@ -9,7 +9,7 @@ import { cn } from '@/lib/utils';
 interface PaneProps {
   agent: string;
   events: SimEvent[];
-  status: 'pending' | 'running' | 'done' | 'cancelled';
+  status: 'pending' | 'running' | 'done' | 'cancelled' | 'error';
   onClose?: () => void;
 }
 
@@ -89,6 +89,13 @@ function StatusBadge({ status }: { status: PaneProps['status'] }) {
     return (
       <span className="inline-flex items-center rounded-full border border-rose-400/30 bg-rose-400/10 px-1.5 py-0.5 font-mono text-[10px] text-rose-300">
         cancelled
+      </span>
+    );
+  }
+  if (status === 'error') {
+    return (
+      <span className="inline-flex items-center rounded-full border border-rose-400/30 bg-rose-400/10 px-1.5 py-0.5 font-mono text-[10px] text-rose-300">
+        error
       </span>
     );
   }
