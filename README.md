@@ -1,16 +1,27 @@
-# brocco.ai. marketing site
+# brocco.ai
 
-Static site for **brocco.ai**, BDP's agentic AI platform (codename: Charter). Custom WebGL fluid hero, scripted live-agent demo, four-tier pricing, eight-question FAQ. all built around brocco's wedge: agents commoditize, workflows are the moat.
+The agentic AI platform marketing site + interactive `/app` demo. Next.js 15 (App Router) +
+TypeScript + Tailwind + Radix + Framer Motion. Production-deployed on Vercel as
+`brocktherock52s-projects/brocco-site` at https://brocco-site.vercel.app.
 
-## Local
+## Stack
+
+- **Framework**: Next.js 15 (App Router, RSC, edge runtime for `/api/*`)
+- **UI**: Tailwind CSS + Radix Primitives + shadcn-style component patterns
+- **Motion**: Framer Motion
+- **Toasts**: Sonner
+- **Analytics**: Vercel Analytics + Speed Insights
+- **Billing**: Stripe (Checkout + Portal + signed Webhooks via WebCrypto)
+- **Live demo**: Anthropic + Tavily (server-streamed SSE under `/api/v1/run`)
+
+## Quick start
 
 ```powershell
 # from arms/brocco_site/
+npm install
 npm run dev
-# → http://localhost:4321/
+# → http://localhost:3000
 ```
-
-No build step. No frameworks. Just `public/` served raw.
 
 ## Deploy
 
@@ -18,35 +29,83 @@ No build step. No frameworks. Just `public/` served raw.
 vercel deploy --prod
 ```
 
-`vercel.json` ships:
-- `cleanUrls: true`
-- security headers (no-sniff, referrer-policy, permissions-policy)
-- aggressive cache on `/assets/*` (immutable, 30 days)
-- moderate cache on `/styles.css` and `/scripts/*` (1h browser, 24h edge, SWR 7d)
+The Vercel project is already linked. CI: push to `main` on the parent
+`bdp-consulting` repo and Vercel will rebuild.
 
-## Assets
+## Env vars (Production, already set)
 
-- `public/index.html`. single page
-- `public/styles.css`. design system + components
-- `public/scripts/fluid-hero.js`. custom WebGL fragment shader (fBm Simplex noise + UV warp + 5-color brand palette + film grain). ~6KB. Falls back to a CSS gradient on `prefers-reduced-motion` or no-WebGL.
-- `public/scripts/agent-demo.js`. replays 4 recorded agent traces (researcher / outreach / coder / supervisor) for the live-demo section. v2 swaps for a real Charter API call.
-- `public/scripts/main.js`. nav glassify, FAQ accordion, pricing toggle, scroll reveals.
-- `public/assets/logomark.svg`, `logo-wordmark.svg`, `favicon.svg`, `og.svg`. brand kit.
+| Var | Purpose |
+|---|---|
+| `STRIPE_API_KEY` | Stripe live API key |
+| `STRIPE_WEBHOOK_SECRET` | Webhook signing secret |
+| `STRIPE_PRICE_SOLO_MONTHLY` | $49/mo |
+| `STRIPE_PRICE_SOLO_ANNUAL` | $490/yr |
+| `STRIPE_PRICE_TEAM_MONTHLY` | $199/mo |
+| `STRIPE_PRICE_TEAM_ANNUAL` | $1,990/yr |
+| `APP_URL` | https://brocco-site.vercel.app |
+| `ANTHROPIC_API_KEY` | (optional) enables `/api/v1/run` live demo |
+| `TAVILY_API_KEY` | (optional) enables `search_web` in live demo |
 
-## Stack rationale
+## Layout
 
-Custom WebGL > Paper Shaders / three.js for this hero because:
-- zero deps, zero build step → ships from one HTML file
-- full control over palette + motion speed (research recommended 0.13–0.18)
-- 5KB fragment shader vs. ~600KB three.js bundle
-- works offline, no CDN dependency for shader runtime
+```
+app/
+  page.tsx                  - landing
+  app/page.tsx              - interactive multi-agent dashboard
+  pricing/page.tsx          - pricing + feature comparison
+  security/page.tsx         - SOC 2 / GDPR / encryption / ZDR
+  docs/page.tsx             - documentation hub
+  billing/success/page.tsx  - Stripe success page
+  api/
+    checkout/route.ts        - POST: create Stripe Checkout session
+    portal/route.ts          - POST: create Stripe Customer Portal session
+    proxy/route.ts           - GET: read-only HTTP proxy for the in-app browser tool
+    stripe-webhook/route.ts  - POST: signed Stripe webhook (Edge WebCrypto)
+    v1/agents/route.ts       - GET: list available agents
+    v1/run/route.ts          - POST: SSE-stream a live Claude tool-use loop
+  layout.tsx, globals.css, sitemap.ts, robots.ts, not-found.tsx
+components/
+  nav, hero, particle-field, how-it-works, wedge, features, personas,
+  pricing, faq, final-cta, footer, logo
+  dashboard/
+    app-shell, agent-card, stream-pane, jsonl-log, byok-modal
+lib/
+  agents.ts          - 9 built-in agent specs + 13 tools + 4 recipes
+  simulator.ts       - realistic streaming simulator for the demo dashboard
+  utils.ts
+public/
+  assets/            - logos, OG, app icons
+  manifest.webmanifest
+legacy-static/       - the previous static site (kept for reference)
+legacy-api/          - the previous /api Vercel functions (kept for reference)
+```
 
-If we ever need React/Next, drop in `@paper-design/shaders-react MeshGradient` with the same color stops. they'll match.
+## Conversion + growth notes
+
+- **Hero CTA**: primary `Open the app` (confetti + toast), secondary `Watch 47s demo`.
+- **Trust bar**: provider logos right under the hero.
+- **Multiple high-intent CTAs**: header, hero, every section, sticky pricing block,
+  final CTA band.
+- **/app**: works in Demo Mode without a key. Realistic templated streaming so visitors
+  feel the product immediately. BYOK modal saves to localStorage only.
+- **Recipes**: pre-fill the prompt with one click. Lowers TTFV from ~30s to ~5s.
+
+## Lighthouse / SEO
+
+- Edge functions, SSR for static pages, no client-only critical path.
+- Open Graph + Twitter Card + JSON-LD (Organization + SoftwareApplication).
+- `sitemap.ts`, `robots.ts`, semantic landmarks, skip-to-content link.
+- Tailwind purged; no runtime CSS-in-JS.
+- Inter + JetBrains Mono via Google Fonts (preconnected, swap).
 
 ## Roadmap
 
-- v2: real Charter API endpoint behind `/api/run` (Vercel serverless or Hetzner reverse proxy). replaces the scripted demo
-- v2: WebP fallback frame for hero (export shader at 1920×1080 for static OG)
-- v3: regenerate hero photography of broccoli-as-chrome-sculpture via nano-banana-2 once `belt` CLI is installed
-- v3: SEO refresh. /docs, /security, /vs/<competitor> pages
-- v4: A/B test hero copy variants ("Agents that do the work" vs "Other agents read the internet…") with PostHog (key already in workspace .env)
+- [ ] Wire `/api/v1/run` into the dashboard when a key is present (replace simulator)
+- [ ] /account page with Customer Portal CTA
+- [ ] Persist Stripe state in Supabase (currently logs only)
+- [ ] PostHog event taxonomy on hero, pricing, app-run
+- [ ] Migrate blog/changelog/vs-comparison pages from `legacy-static/` into `app/(marketing)/`
+
+---
+
+© 2026 brocco.ai - a BDP Consulting product.
