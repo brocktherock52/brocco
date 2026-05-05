@@ -26,7 +26,7 @@ export function Wedge() {
             <h2 className="mt-5 text-display-lg">
               <span className="text-grad">Generic agents read the internet.</span>
               <br />
-              <span className="text-grad-brand">Brocco reads your business.</span>
+              <span className="font-serif italic font-medium text-grad-brand">Brocco reads your business.</span>
             </h2>
             <blockquote className="mt-7 border-l-2 border-brand/60 pl-5 italic text-[18px] leading-relaxed text-ink/95">
               &quot;The agent is the cheap part. The workflow is the moat. Brocco hands you both.&quot;

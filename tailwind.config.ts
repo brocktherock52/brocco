@@ -51,6 +51,15 @@ const config: Config = {
           'Roboto',
           'sans-serif',
         ],
+        serif: [
+          'Newsreader',
+          'ui-serif',
+          'Georgia',
+          'Cambria',
+          '"Times New Roman"',
+          'Times',
+          'serif',
+        ],
         mono: [
           'JetBrains Mono',
           'ui-monospace',

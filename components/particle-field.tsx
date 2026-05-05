@@ -102,17 +102,51 @@ export function ParticleField({ className }: { className?: string }) {
         ctx.fill();
       }
 
-      raf = requestAnimationFrame(draw);
     }
 
     resize();
-    if (!reduce) raf = requestAnimationFrame(draw);
+
+    let visible = true;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          visible = e.isIntersecting;
+          if (visible && !reduce && !raf) raf = requestAnimationFrame(loop);
+          if (!visible) {
+            cancelAnimationFrame(raf);
+            raf = 0;
+          }
+        }
+      },
+      { rootMargin: '120px' },
+    );
+    io.observe(canvas);
+
+    function loop() {
+      raf = 0;
+      draw();
+      if (visible && !reduce) raf = requestAnimationFrame(loop);
+    }
+
+    if (!reduce) raf = requestAnimationFrame(loop);
+
+    const onVis = () => {
+      if (document.hidden) {
+        cancelAnimationFrame(raf);
+        raf = 0;
+      } else if (visible && !reduce && !raf) {
+        raf = requestAnimationFrame(loop);
+      }
+    };
+    document.addEventListener('visibilitychange', onVis);
 
     const ro = new ResizeObserver(resize);
     ro.observe(canvas);
     return () => {
       cancelAnimationFrame(raf);
       ro.disconnect();
+      io.disconnect();
+      document.removeEventListener('visibilitychange', onVis);
     };
   }, []);
 
@@ -121,7 +155,12 @@ export function ParticleField({ className }: { className?: string }) {
       ref={ref}
       aria-hidden="true"
       className={cn('h-full w-full', className)}
-      style={{ maskImage: 'radial-gradient(60% 60% at 50% 35%, #000 35%, transparent 80%)' }}
+      style={{
+        maskImage: 'radial-gradient(60% 60% at 50% 35%, #000 35%, transparent 80%)',
+        WebkitMaskImage: 'radial-gradient(60% 60% at 50% 35%, #000 35%, transparent 80%)',
+        transform: 'translateZ(0)',
+        willChange: 'transform',
+      }}
     />
   );
 }
