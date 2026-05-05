@@ -75,13 +75,13 @@ export function Features() {
     <section id="features" className="relative py-24 md:py-32">
       <div className="container-x">
         <div className="max-w-2xl">
-          <p className="pill">Features</p>
-          <h2 className="mt-5 text-display-lg">
-            <span className="text-grad">Production-grade. Audit-ready.</span>{' '}
-            <span className="font-serif italic font-normal text-grad-brand">Yours.</span>
+          <p className="pill">features</p>
+          <h2 className="mt-5 text-display-lg lowercase">
+            <span className="text-grad">production-grade. audit-ready.</span>{' '}
+            <span className="text-grad-brand">yours.</span>
           </h2>
           <p className="mt-4 max-w-xl text-[16px] text-ink-dim">
-            Everything you need to ship agentic workflows you would actually trust with revenue.
+            everything you need to ship agentic workflows you would actually trust with revenue.
           </p>
         </div>
 

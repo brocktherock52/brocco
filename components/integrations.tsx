@@ -69,13 +69,13 @@ export function Integrations() {
     <section id="integrations" className="relative py-24 md:py-32">
       <div className="container-x">
         <div className="max-w-2xl">
-          <p className="pill">Integrations</p>
-          <h2 className="mt-5 text-display-lg">
-            <span className="text-grad">Works with the tools you</span>{' '}
-            <span className="font-serif italic font-medium text-grad-brand">already love.</span>
+          <p className="pill">integrations</p>
+          <h2 className="mt-5 text-display-lg lowercase">
+            <span className="text-grad">works with the tools you</span>{' '}
+            <span className="text-grad-brand">already love.</span>
           </h2>
           <p className="mt-4 max-w-xl text-[16px] text-ink-dim">
-            Brocco is the runtime, not a walled garden. Eight first-class integrations on day one, plus a tool factory so your custom stack ships next.
+            brocco is the runtime, not a walled garden. eight first-class integrations on day one, plus a tool factory so your custom stack ships next.
           </p>
         </div>
 

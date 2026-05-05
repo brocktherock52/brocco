@@ -14,36 +14,36 @@ export function Footer() {
               </span>
             </Link>
             <p className="mt-3 max-w-xs text-[13.5px] text-ink-dim">
-              The agentic OS for businesses that ship. Built on Claude. Wired into your stack.
+              the agentic os for businesses that ship. built on claude. wired into your stack.
             </p>
           </div>
 
-          <FooterCol title="Product" links={[
-            { href: '/#how', label: 'How it works' },
-            { href: '/#features', label: 'Features' },
-            { href: '/pricing', label: 'Pricing' },
-            { href: '/app', label: 'Open the app' },
-            { href: '/download', label: 'Download' },
-            { href: '/blog', label: 'Blog' },
-            { href: '/changelog', label: 'Changelog' },
+          <FooterCol title="product" links={[
+            { href: '/#how', label: 'how it works' },
+            { href: '/#features', label: 'features' },
+            { href: '/pricing', label: 'pricing' },
+            { href: '/app', label: 'open the app' },
+            { href: '/download', label: 'download' },
+            { href: '/blog', label: 'blog' },
+            { href: '/changelog', label: 'changelog' },
           ]} />
-          <FooterCol title="Developers" links={[
-            { href: '/docs', label: 'Docs' },
-            { href: '/security', label: 'Security' },
-            { href: '/api/v1/agents', label: 'API reference' },
-            { href: 'https://github.com/brocktherock52/bdp-consulting', label: 'GitHub' },
+          <FooterCol title="developers" links={[
+            { href: '/docs', label: 'docs' },
+            { href: '/security', label: 'security' },
+            { href: '/api/v1/agents', label: 'api reference' },
+            { href: 'https://github.com/brocktherock52/bdp-consulting', label: 'github' },
           ]} />
-          <FooterCol title="Company" links={[
+          <FooterCol title="company" links={[
             { href: 'mailto:hello@brocco.ai', label: 'hello@brocco.ai' },
-            { href: 'mailto:hello@brocco.ai?subject=Brocco%20demo%20request', label: 'Book a demo' },
-            { href: '/privacy', label: 'Privacy' },
-            { href: '/terms', label: 'Terms' },
+            { href: 'mailto:hello@brocco.ai?subject=Brocco%20demo%20request', label: 'book a demo' },
+            { href: '/privacy', label: 'privacy' },
+            { href: '/terms', label: 'terms' },
           ]} />
         </div>
 
         <div className="mt-10 flex flex-col items-start justify-between gap-3 border-t border-white/[0.06] pt-6 text-[12.5px] text-ink-faint md:flex-row md:items-center">
-          <span>© 2026 brocco.ai - a BDP Consulting product</span>
-          <span className="font-mono text-[11px]">made with Claude</span>
+          <span>© 2026 brocco.ai · a bdp consulting product</span>
+          <span className="font-mono text-[11px]">made with claude</span>
         </div>
       </div>
     </footer>

@@ -36,13 +36,13 @@ export function Personas() {
     <section id="personas" className="relative border-y border-white/[0.05] bg-bg-1/40 py-24 md:py-32">
       <div className="container-x">
         <div className="max-w-2xl">
-          <p className="pill">Who is it for</p>
-          <h2 className="mt-5 text-display-lg">
-            <span className="text-grad">Three workflows. Three people.</span>{' '}
-            <span className="font-serif italic font-normal text-grad-brand">One dashboard.</span>
+          <p className="pill">who is it for</p>
+          <h2 className="mt-5 text-display-lg lowercase">
+            <span className="text-grad">three workflows. three people.</span>{' '}
+            <span className="text-grad-brand">one dashboard.</span>
           </h2>
           <p className="mt-4 max-w-xl text-[16px] text-ink-dim">
-            Concrete, real, what-it-does-for-you-Tuesday-morning. Not abstract benefits.
+            concrete, real, what-it-does-for-you-tuesday-morning. not abstract benefits.
           </p>
         </div>
 

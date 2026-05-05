@@ -51,10 +51,10 @@ export function Faq() {
     <section id="faq" className="relative py-24 md:py-32">
       <div className="container-x">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="pill mx-auto">FAQ</p>
-          <h2 className="mt-5 text-display-lg">
-            <span className="text-grad">Common</span>{' '}
-            <span className="font-serif italic font-normal text-grad-brand">questions.</span>
+          <p className="pill mx-auto">faq</p>
+          <h2 className="mt-5 text-display-lg lowercase">
+            <span className="text-grad">common</span>{' '}
+            <span className="text-grad-brand">questions.</span>
           </h2>
         </div>
 
