@@ -1,64 +1,85 @@
 import { cn } from '@/lib/utils';
 
 /**
- * The brocco crocodile mark — friendly, with a face.
- * Profile silhouette inherited from v1.x (Lacoste-style), now with:
- *   - a larger expressive eye + highlight
- *   - a soft smile curve along the snout
- *   - a subtle brow above the eye
- *   - feet/tail tip details preserved
+ * brocco mark — friendly crocodile face.
+ * Front-on, square viewBox, two big domed eyes, gentle smile, tiny tooth, blush.
+ * Brand gradient (violet → cyan) on the head.
  */
 export function Logomark({ className }: { className?: string }) {
   return (
     <svg
-      viewBox="0 0 64 36"
-      fill="currentColor"
+      viewBox="0 0 64 64"
       role="img"
       aria-label="brocco mark"
       className={cn(className)}
     >
       <defs>
-        <linearGradient id="brocco-grad" x1="0" y1="0" x2="64" y2="36" gradientUnits="userSpaceOnUse">
+        <linearGradient id="brocco-grad" x1="0" y1="6" x2="64" y2="62" gradientUnits="userSpaceOnUse">
           <stop offset="0%" stopColor="#A78BFA" />
-          <stop offset="60%" stopColor="#22D3EE" />
+          <stop offset="55%" stopColor="#22D3EE" />
           <stop offset="100%" stopColor="#67E8F9" />
         </linearGradient>
+        <radialGradient id="brocco-shade" cx="32" cy="60" r="34" gradientUnits="userSpaceOnUse">
+          <stop offset="0%" stopColor="#0a0d10" stopOpacity="0.18" />
+          <stop offset="100%" stopColor="#0a0d10" stopOpacity="0" />
+        </radialGradient>
       </defs>
 
-      {/* body silhouette */}
+      {/* eye domes (drawn first so head sits in front) */}
+      <ellipse cx="20" cy="14" rx="8.5" ry="9.5" fill="url(#brocco-grad)" />
+      <ellipse cx="44" cy="14" rx="8.5" ry="9.5" fill="url(#brocco-grad)" />
+
+      {/* main head + snout silhouette */}
       <path
+        d="M 6 32
+           Q 6 18 18 16
+           L 46 16
+           Q 58 18 58 32
+           L 56.5 50
+           Q 54 58.5 32 58.5
+           Q 10 58.5 7.5 50 Z"
         fill="url(#brocco-grad)"
-        d="M 2 22 L 4 24 Q 1 28 5 28 L 10 26 L 16 25 L 20 25 L 20 30 L 18 30 L 18 24.5 L 26 24 L 32 24 L 32 30 L 30 30 L 30 24 L 36 24 L 42 24.5 L 48 25.5 L 56 26.5 L 62 27 L 62 25 L 58 25 L 58 23 L 62 23 L 62 21 L 56 19 L 50 18 L 46 17 L 40 16 L 38 13 L 36 16 L 32 16 L 30 12 L 28 16 L 24 16 L 22 13 L 20 16 L 16 17 L 12 19 L 8 20 Z"
       />
 
-      {/* eyebrow — soft arc above the eye */}
+      {/* soft jaw shadow for depth */}
       <path
-        d="M 50.4 16.6 Q 52 15.5 53.6 16.6"
+        d="M 6 32 Q 6 18 18 16 L 46 16 Q 58 18 58 32 L 56.5 50 Q 54 58.5 32 58.5 Q 10 58.5 7.5 50 Z"
+        fill="url(#brocco-shade)"
+      />
+
+      {/* little scale bumps along the brow ridge */}
+      <circle cx="14" cy="20" r="1.1" fill="#0a0d10" opacity="0.20" />
+      <circle cx="32" cy="18.5" r="1.1" fill="#0a0d10" opacity="0.20" />
+      <circle cx="50" cy="20" r="1.1" fill="#0a0d10" opacity="0.20" />
+
+      {/* eyes (white + pupil + highlight) */}
+      <circle cx="20" cy="15" r="4.6" fill="#FFFFFF" />
+      <circle cx="20.8" cy="16.1" r="2.7" fill="#0a0d10" />
+      <circle cx="21.7" cy="14.9" r="1.0" fill="#FFFFFF" />
+
+      <circle cx="44" cy="15" r="4.6" fill="#FFFFFF" />
+      <circle cx="44.8" cy="16.1" r="2.7" fill="#0a0d10" />
+      <circle cx="45.7" cy="14.9" r="1.0" fill="#FFFFFF" />
+
+      {/* nostrils */}
+      <ellipse cx="27" cy="34" rx="1.1" ry="1.6" fill="#0a0d10" opacity="0.70" />
+      <ellipse cx="37" cy="34" rx="1.1" ry="1.6" fill="#0a0d10" opacity="0.70" />
+
+      {/* smile */}
+      <path
+        d="M 17 43 Q 32 53.5 47 43"
         stroke="#0a0d10"
-        strokeWidth="0.7"
+        strokeWidth="2.2"
         strokeLinecap="round"
         fill="none"
       />
 
-      {/* eye — bigger and friendlier */}
-      <circle cx="52" cy="19" r="2" fill="#fff" />
-      <circle cx="52.2" cy="19.1" r="1.3" fill="#0a0d10" />
-      <circle cx="52.6" cy="18.6" r="0.55" fill="#fff" />
+      {/* tiny tooth peeking out */}
+      <path d="M 30.5 48.6 L 32 51.8 L 33.5 48.6 Z" fill="#FFFFFF" />
 
-      {/* smile — gentle curve along the snout */}
-      <path
-        d="M 56 25.6 Q 58.4 26.7 60.6 25.7"
-        stroke="#0a0d10"
-        strokeWidth="0.7"
-        strokeLinecap="round"
-        fill="none"
-      />
-
-      {/* tiny tooth glint at jaw tip */}
-      <path d="M 59.2 24.2 L 60 24.9 L 60.8 24.2 Z" fill="#fff" />
-
-      {/* cheek blush (very subtle) */}
-      <circle cx="48" cy="22" r="1.2" fill="#fb7185" opacity="0.18" />
+      {/* cheek blush (subtle) */}
+      <ellipse cx="11.5" cy="40" rx="2.4" ry="1.6" fill="#fb7185" opacity="0.22" />
+      <ellipse cx="52.5" cy="40" rx="2.4" ry="1.6" fill="#fb7185" opacity="0.22" />
     </svg>
   );
 }
@@ -66,7 +87,7 @@ export function Logomark({ className }: { className?: string }) {
 export function Wordmark({ className }: { className?: string }) {
   return (
     <span className={cn('inline-flex items-center gap-2 font-semibold', className)}>
-      <Logomark className="h-6 w-12" />
+      <Logomark className="h-7 w-7" />
       <span className="tracking-tight">
         brocco<span className="text-ink-faint">.ai</span>
       </span>

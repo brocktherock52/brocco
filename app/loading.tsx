@@ -4,7 +4,7 @@ export default function Loading() {
   return (
     <main className="flex min-h-screen items-center justify-center px-5">
       <div className="flex flex-col items-center gap-4 text-center">
-        <Logomark className="h-8 w-16 animate-pulse text-brand-glow" />
+        <Logomark className="h-10 w-10 animate-pulse" />
         <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-faint">
           loading brocco
         </span>
