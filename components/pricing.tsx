@@ -113,13 +113,13 @@ export function Pricing({ standalone = false }: { standalone?: boolean }) {
     <section id="pricing" className={cn('relative py-24 md:py-32', standalone && 'pt-32 md:pt-40')}>
       <div className="container-x">
         <div className="mx-auto max-w-2xl text-center">
-          <p className="pill mx-auto">Pricing</p>
-          <h2 className="mt-5 text-display-lg">
-            <span className="text-grad">Simple. Transparent.</span>{' '}
-            <span className="font-serif italic font-normal text-grad-brand">Free to start.</span>
+          <p className="pill mx-auto">pricing</p>
+          <h2 className="mt-5 text-display-lg lowercase">
+            <span className="text-grad">simple. transparent.</span>{' '}
+            <span className="text-grad-brand">free to start.</span>
           </h2>
           <p className="mt-4 text-[16px] text-ink-dim">
-            BYOK on free, hosted runs on paid, custom on enterprise. Cancel anytime, prorated refund.
+            byok on free, hosted runs on paid, custom on enterprise. cancel anytime, prorated refund.
           </p>
 
           <div className="mx-auto mt-7 inline-flex items-center gap-1 rounded-full border border-white/[0.08] bg-white/[0.03] p-1 text-[13px]">

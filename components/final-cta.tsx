@@ -20,17 +20,17 @@ export function FinalCta() {
           <div className="pointer-events-none absolute -right-24 bottom-0 h-72 w-72 rounded-full bg-cyan/20 blur-3xl" />
 
           <div className="relative">
-            <h2 className="mx-auto max-w-3xl text-display-xl">
-              <span className="text-grad">Stop hiring chatbots.</span>
+            <h2 className="mx-auto max-w-3xl text-display-xl lowercase">
+              <span className="text-grad">stop hiring chatbots.</span>
               <br />
-              <span className="font-serif italic font-medium text-grad-brand">Start shipping work.</span>
+              <span className="text-grad-brand">start shipping work.</span>
             </h2>
             <p className="mx-auto mt-5 max-w-xl text-[16px] text-ink-dim">
-              Brocco runs your business while you sleep. 100 agent runs free, every month, forever. No card.
+              brocco runs your business while you sleep. 100 agent runs free, every month, forever. no card.
             </p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
               <Link href="/app" className="btn-primary text-base px-7 py-3.5 group">
-                Start free
+                start free
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </Link>
               <a
@@ -38,7 +38,7 @@ export function FinalCta() {
                 className="btn-ghost text-base px-7 py-3.5"
               >
                 <Calendar className="h-4 w-4" />
-                Book a demo
+                book a demo
               </a>
             </div>
           </div>

@@ -6,6 +6,7 @@ import { motion, useInView, useMotionValue, useSpring, useTransform } from 'fram
 import { ArrowRight, Play, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 import { ParticleField } from './particle-field';
+import { HeroTerminal } from './hero-terminal';
 import {
   AnthropicIcon,
   OpenAIIcon,
@@ -27,7 +28,7 @@ const TRUST_LOGOS = [
 const STATS = [
   { value: 9, label: 'agents', suffix: '', sub: 'researcher, coder, outreach, more' },
   { value: 13, label: 'tools', suffix: '', sub: 'in the registry, growing weekly' },
-  { value: 2, label: 'providers', suffix: '', sub: 'Anthropic + OpenAI compatible' },
+  { value: 2, label: 'providers', suffix: '', sub: 'anthropic + openai compatible' },
   { value: 80, label: 'cache hit', suffix: '%', sub: 'on repeat workflows' },
 ];
 
@@ -91,11 +92,11 @@ export function Hero() {
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.95, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
-          className="mx-auto mt-9 max-w-[18ch] text-center text-display-2xl"
+          className="mx-auto mt-9 max-w-[18ch] text-center text-display-2xl lowercase"
         >
-          <span className="text-grad">Agents that</span>
+          <span className="text-grad">agents that</span>
           <br />
-          <span className="font-serif italic font-normal text-grad-brand">do the work.</span>
+          <span className="text-grad-brand">do the work.</span>
         </motion.h1>
 
         <motion.p
@@ -104,7 +105,7 @@ export function Hero() {
           transition={{ duration: 0.7, delay: 0.22 }}
           className="mx-auto mt-7 max-w-[58ch] text-center text-[17.5px] leading-[1.55] text-ink-dim md:text-[19px] md:leading-[1.5]"
         >
-          Run multiple Claude or local LLM agents in <em className="not-italic font-medium text-white">parallel</em> from one prompt. Plug into <em className="not-italic font-medium text-white">Claude Desktop, ChatGPT, Cursor</em> via MCP, or call the REST API from anywhere.
+          run multiple claude or local llm agents in <em className="not-italic font-medium text-white">parallel</em> from one prompt. plug into <em className="not-italic font-medium text-white">claude desktop, chatgpt, cursor</em> via mcp, or call the rest api from anywhere.
         </motion.p>
 
         {/* trust line */}
@@ -112,9 +113,9 @@ export function Hero() {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 0.6, delay: 0.32 }}
-          className="mx-auto mt-3 max-w-xl text-center text-[13px] text-ink-faint"
+          className="mx-auto mt-3 max-w-xl text-center font-mono text-[12px] text-ink-faint"
         >
-          Used by founders building the next wave - <span className="text-ink-dim">powered by Claude 4</span> - <span className="text-ink-dim">runs on your keys</span>
+          used by founders building the next wave · <span className="text-ink-dim">powered by claude 4</span> · <span className="text-ink-dim">runs on your keys</span>
         </motion.p>
 
         {/* CTAs */}
@@ -126,12 +127,12 @@ export function Hero() {
         >
           <Link href="/app" onClick={handleOpenApp} className="group btn-primary text-base px-7 py-3.5">
             <Sparkles className="h-4 w-4" />
-            Open the app
+            open the app
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </Link>
-          <a href="#demo" className="btn-ghost text-base px-7 py-3.5">
+          <a href="#integrations" className="btn-ghost text-base px-7 py-3.5">
             <Play className="h-3.5 w-3.5 fill-current" />
-            Watch 47s demo
+            watch 47s demo
           </a>
 
           {/* confetti dots */}
@@ -154,6 +155,9 @@ export function Hero() {
             />
           ))}
         </motion.div>
+
+        {/* terminal curl block — inference.sh signature */}
+        <HeroTerminal />
 
         {/* stats */}
         <motion.div
@@ -187,8 +191,8 @@ export function Hero() {
           transition={{ duration: 0.7, delay: 0.85 }}
           className="mt-16 border-t border-white/[0.06] pt-8 md:mt-24"
         >
-          <p className="text-center text-[11.5px] uppercase tracking-[0.18em] text-ink-faint">
-            Runs on the models and infra you already trust
+          <p className="text-center font-mono text-[11px] tracking-[0.18em] text-ink-faint">
+            runs on the models and infra you already trust
           </p>
           <ul className="mt-5 flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-[14px] text-ink-dim md:gap-x-12">
             {TRUST_LOGOS.map(({ name, Icon }) => (
