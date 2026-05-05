@@ -13,10 +13,9 @@
   }
   body {
     @apply bg-bg-0 text-ink font-sans antialiased;
-    background-image:
-      radial-gradient(900px 500px at 50% -200px, rgba(124, 58, 237, 0.18), transparent 60%),
-      radial-gradient(700px 400px at 90% 10%, rgba(34, 211, 238, 0.08), transparent 60%);
-    background-attachment: fixed;
+    /* No background-attachment: fixed here — caused scroll repaint flicker on
+       Windows Chrome. The decorative gradients live in <BgDecor /> as a
+       fixed-position layer with GPU compositing. */
   }
   ::selection {
     background: rgba(124, 58, 237, 0.5);

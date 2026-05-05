@@ -23,7 +23,7 @@ export function FinalCta() {
             <h2 className="mx-auto max-w-3xl text-display-xl">
               <span className="text-grad">Stop hiring chatbots.</span>
               <br />
-              <span className="text-grad-brand">Start shipping work.</span>
+              <span className="font-serif italic font-medium text-grad-brand">Start shipping work.</span>
             </h2>
             <p className="mx-auto mt-5 max-w-xl text-[16px] text-ink-dim">
               Brocco runs your business while you sleep. 100 agent runs free, every month, forever. No card.

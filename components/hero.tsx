@@ -73,12 +73,12 @@ export function Hero() {
         <motion.h1
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
-          className="mx-auto mt-7 max-w-[18ch] text-center text-display-2xl"
+          transition={{ duration: 0.9, delay: 0.05, ease: [0.16, 1, 0.3, 1] }}
+          className="mx-auto mt-8 max-w-[18ch] text-center text-display-2xl"
         >
           <span className="text-grad">Agents that</span>
           <br />
-          <span className="text-grad-brand">do the work.</span>
+          <span className="font-serif italic font-medium text-grad-brand">do the work.</span>
         </motion.h1>
 
         <motion.p
