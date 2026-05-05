@@ -1,19 +1,27 @@
 import { Nav } from '@/components/nav';
 import { Hero } from '@/components/hero';
 import { AgentsGrid } from '@/components/agents-grid';
-import { ProductCards } from '@/components/product-cards';
 import { HowItWorks } from '@/components/how-it-works';
-import { Wedge } from '@/components/wedge';
 import { Integrations } from '@/components/integrations';
-import { WhyWeBuilt } from '@/components/why-we-built';
-import { Features } from '@/components/features';
 import { SocialProof } from '@/components/social-proof';
-import { Personas } from '@/components/personas';
 import { Pricing } from '@/components/pricing';
 import { Faq } from '@/components/faq';
 import { FinalCta } from '@/components/final-cta';
 import { Footer } from '@/components/footer';
 
+/**
+ * Claude-design homepage. 7 sections, not 13. Editorial pacing > feature
+ * dump. The cut sections (Wedge, ProductCards, WhyWeBuilt, Features,
+ * Personas) live on /about for visitors who want the depth, surfaced via
+ * the nav. The home page now reads:
+ *   1. Hero          — one promise, one CTA, one terminal proof
+ *   2. AgentsGrid    — the product itself, not a marketing card
+ *   3. HowItWorks    — three steps, dashboard mock
+ *   4. Integrations  — works with what you already use
+ *   5. SocialProof   — trust + testimonials
+ *   6. Pricing       — the buy decision
+ *   7. Faq + FinalCta — close
+ */
 export default function HomePage() {
   return (
     <>
@@ -21,14 +29,9 @@ export default function HomePage() {
       <main>
         <Hero />
         <AgentsGrid />
-        <ProductCards />
         <HowItWorks />
-        <Wedge />
         <Integrations />
-        <WhyWeBuilt />
-        <Features />
         <SocialProof />
-        <Personas />
         <Pricing />
         <Faq />
         <FinalCta />
