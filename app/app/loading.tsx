@@ -4,7 +4,7 @@ export default function AppLoading() {
   return (
     <div className="flex h-screen items-center justify-center bg-bg-0 text-ink">
       <div className="text-center">
-        <Logomark className="mx-auto h-8 w-16 animate-pulse text-brand-glow" />
+        <Logomark className="mx-auto h-10 w-10 animate-pulse" />
         <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.2em] text-ink-faint">
           spinning up agents
         </p>

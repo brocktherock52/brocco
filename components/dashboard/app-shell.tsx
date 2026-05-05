@@ -273,7 +273,7 @@ export function AppShell() {
       {/* TOP BAR */}
       <header className="flex h-14 shrink-0 items-center gap-3 border-b border-white/[0.06] bg-bg-1/70 px-4 backdrop-blur-xl">
         <Link href="/" className="inline-flex items-center gap-2 text-[14px] font-semibold tracking-tight">
-          <Logomark className="h-5 w-10 text-brand-glow" />
+          <Logomark className="h-6 w-6" />
           brocco<span className="text-ink-faint">.app</span>
         </Link>
 
@@ -562,7 +562,7 @@ function EmptyState({ onPick }: { onPick: (id: string) => void }) {
   return (
     <div className="flex h-full min-h-[480px] items-center justify-center">
       <div className="max-w-md text-center">
-        <Logomark className="mx-auto h-12 w-24 text-brand-glow opacity-80" />
+        <Logomark className="mx-auto h-14 w-14 opacity-90" />
         <h2 className="mt-5 text-[22px] font-semibold tracking-tight">Spawn an agent.</h2>
         <p className="mt-2 text-[14px] text-ink-dim">
           Pick agents on the left, type a goal, hit Run. Toggle <strong>Broadcast</strong> to fan one prompt out to N agents in parallel.
