@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Nav } from '@/components/nav';
 import { Pricing } from '@/components/pricing';
 import { Faq } from '@/components/faq';
+import { Integrations } from '@/components/integrations';
 import { FinalCta } from '@/components/final-cta';
 import { Footer } from '@/components/footer';
 
@@ -19,6 +20,7 @@ export default function PricingPage() {
       <main>
         <Pricing standalone />
         <ComparisonTable />
+        <Integrations />
         <Faq />
         <FinalCta />
       </main>
