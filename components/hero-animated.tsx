@@ -280,46 +280,6 @@ export function HeroAnimated() {
               />
             </motion.div>
 
-            {/* Streaming panel — top-left, repositioned so it's CLEAR of the mascot.
-                Uses extreme negative left so it lives outside the orbital area. */}
-            <motion.div
-              className="absolute left-[-12%] top-[6%] z-10 hidden w-[180px] rounded-lg border border-cyan-400/30 bg-bg-1/80 p-2.5 backdrop-blur-md md:block"
-              style={{ y: useTransform(scrollYProgress, [0, 1], ['0%', '-30%']) }}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.6, duration: 0.7 }}
-            >
-              <div className="flex items-center gap-1.5 border-b border-white/[0.06] pb-1.5 mb-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse" />
-                <span className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-cyan-glow">researcher</span>
-              </div>
-              <div className="space-y-0.5 font-mono text-[10px] leading-snug text-ink-dim">
-                <p className="text-cyan-glow">{'> tavily.search(\'agents 2026\')'}</p>
-                <p>{'> reading 12 results...'}</p>
-                <p>{'> file_save brief.md'}</p>
-                <p className="text-emerald-300">{'> done · 4m 12s · $0.08'}</p>
-              </div>
-            </motion.div>
-
-            {/* Streaming panel — bottom-right, also outside orbital. */}
-            <motion.div
-              className="absolute bottom-[6%] right-[-10%] z-10 hidden w-[190px] rounded-lg border border-violet-400/30 bg-bg-1/80 p-2.5 backdrop-blur-md md:block"
-              style={{ y: useTransform(scrollYProgress, [0, 1], ['0%', '20%']) }}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.85, duration: 0.7 }}
-            >
-              <div className="flex items-center gap-1.5 border-b border-white/[0.06] pb-1.5 mb-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-violet-400 animate-pulse" />
-                <span className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-violet-300">designer</span>
-              </div>
-              <div className="space-y-0.5 font-mono text-[10px] leading-snug text-ink-dim">
-                <p>{'{ "agent": "designer",'}</p>
-                <p>{'  "tool": "image_gen",'}</p>
-                <p className="text-violet-300">{'  "status": "streaming"'}</p>
-                <p>{'  "elapsed": 3812 }'}</p>
-              </div>
-            </motion.div>
           </div>
         </div>
       </div>
