@@ -1,6 +1,7 @@
 import { Nav } from '@/components/nav';
 import { HeroAnimated } from '@/components/hero-animated';
 import { AgentsGrid } from '@/components/agents-grid';
+import { AgentCast } from '@/components/agent-cast';
 import { ProductCards } from '@/components/product-cards';
 import { HowItWorks } from '@/components/how-it-works';
 import { Wedge } from '@/components/wedge';
@@ -23,6 +24,9 @@ export default function HomePage() {
         <HeroAnimated />
         <SectionReveal>
           <AgentsGrid />
+        </SectionReveal>
+        <SectionReveal>
+          <AgentCast />
         </SectionReveal>
         <SectionReveal>
           <ProductCards />
