@@ -7,13 +7,11 @@ import { ArrowRight, Download, Menu, X } from 'lucide-react';
 import { Logomark } from './logo';
 import { cn } from '@/lib/utils';
 
-/**
- * v3.0 nav — three simple links + install + open-app CTA.
- * Mega-dropdowns deleted. Everything else (docs, blog, about,
- * vs/*, security, changelog) is footer-only.
- */
 const LINKS = [
+  { href: '/agents', label: 'agents' },
+  { href: '/for/founders', label: 'for' },
   { href: '/pricing', label: 'pricing' },
+  { href: '/blog', label: 'blog' },
   { href: '/download', label: 'install' },
 ];
 

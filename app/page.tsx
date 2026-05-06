@@ -1,27 +1,36 @@
 import { Nav } from '@/components/nav';
 import { Hero } from '@/components/hero';
+import { AgentsGrid } from '@/components/agents-grid';
+import { ProductCards } from '@/components/product-cards';
+import { HowItWorks } from '@/components/how-it-works';
+import { Wedge } from '@/components/wedge';
+import { Integrations } from '@/components/integrations';
+import { WhyWeBuilt } from '@/components/why-we-built';
+import { Features } from '@/components/features';
 import { SocialProof } from '@/components/social-proof';
+import { Personas } from '@/components/personas';
 import { Pricing } from '@/components/pricing';
+import { Faq } from '@/components/faq';
 import { FinalCta } from '@/components/final-cta';
 import { Footer } from '@/components/footer';
 
-/**
- * v3.0 acquisition-shape homepage. 4 sections, obsessive focus on the
- * one decision: open the app or buy. Everything else (agents catalog,
- * integrations grid, FAQ, how-it-works, why-we-built, personas) lives
- * on /about, /pricing, /docs and is footer-linked.
- *
- * The hero IS the product proof — live brand-icon trust strip, real
- * curl block, dual CTAs. We sell by SHOWING, not telling.
- */
 export default function HomePage() {
   return (
     <>
       <Nav />
       <main>
         <Hero />
+        <AgentsGrid />
+        <ProductCards />
+        <HowItWorks />
+        <Wedge />
+        <Integrations />
+        <WhyWeBuilt />
+        <Features />
         <SocialProof />
+        <Personas />
         <Pricing />
+        <Faq />
         <FinalCta />
       </main>
       <Footer />
