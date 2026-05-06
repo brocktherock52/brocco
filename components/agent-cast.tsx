@@ -3,7 +3,32 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import { ArrowRight, Sparkles } from 'lucide-react';
+import {
+  ArrowRight,
+  BookOpen,
+  ClipboardList,
+  Code2,
+  FileText,
+  GitBranch,
+  Glasses,
+  Hammer,
+  Headphones,
+  ListMusic,
+  Mail,
+  MapPin,
+  Palette,
+  Pencil,
+  Printer,
+  ScrollText,
+  Search,
+  Sparkles,
+  Stamp,
+  StickyNote,
+  Terminal as TerminalIcon,
+  Trello,
+  Wand2,
+  Wine,
+} from 'lucide-react';
 import { AGENT_CAST } from '@/lib/agent-cast';
 
 /**
@@ -101,7 +126,7 @@ function CastCard({ member, index }: { member: typeof AGENT_CAST[number]; index:
               />
             </motion.div>
           ) : (
-            <CastPlaceholder accent={accent} costume={member.costume} />
+            <CastPlaceholder accent={accent} slug={member.slug} index={index} />
           )}
 
           <div
@@ -147,20 +172,106 @@ function CastCard({ member, index }: { member: typeof AGENT_CAST[number]; index:
   );
 }
 
-function CastPlaceholder({ accent, costume }: { accent: string; costume: string }) {
+interface PropSpec {
+  Icon: React.ComponentType<{ className?: string }>;
+  pos: { top: string; left: string };
+  size: number;
+  rot?: number;
+  bob?: { dur: number; delay: number };
+}
+
+const SCENE: Record<string, PropSpec[]> = {
+  researcher: [
+    { Icon: BookOpen, pos: { top: '12%', left: '14%' }, size: 22, rot: -8, bob: { dur: 4.8, delay: 0 } },
+    { Icon: Glasses, pos: { top: '20%', left: '64%' }, size: 26, rot: 6, bob: { dur: 5.6, delay: 0.4 } },
+    { Icon: StickyNote, pos: { top: '70%', left: '12%' }, size: 18, rot: -14, bob: { dur: 5.2, delay: 0.9 } },
+    { Icon: Search, pos: { top: '74%', left: '68%' }, size: 18, rot: 10, bob: { dur: 5.0, delay: 0.6 } },
+  ],
+  planner: [
+    { Icon: Trello, pos: { top: '14%', left: '12%' }, size: 24, rot: -6, bob: { dur: 5.4, delay: 0.2 } },
+    { Icon: ClipboardList, pos: { top: '18%', left: '68%' }, size: 22, rot: 8, bob: { dur: 4.6, delay: 0.5 } },
+    { Icon: Pencil, pos: { top: '74%', left: '14%' }, size: 18, rot: -10, bob: { dur: 5.1, delay: 0.8 } },
+    { Icon: MapPin, pos: { top: '70%', left: '70%' }, size: 18, rot: 12, bob: { dur: 5.5, delay: 0 } },
+  ],
+  outreach: [
+    { Icon: Mail, pos: { top: '14%', left: '14%' }, size: 22, rot: -10, bob: { dur: 4.7, delay: 0.1 } },
+    { Icon: Headphones, pos: { top: '14%', left: '68%' }, size: 24, rot: 6, bob: { dur: 5.3, delay: 0.5 } },
+    { Icon: Mail, pos: { top: '72%', left: '12%' }, size: 18, rot: -14, bob: { dur: 4.9, delay: 0.7 } },
+    { Icon: Stamp, pos: { top: '72%', left: '70%' }, size: 18, rot: 12, bob: { dur: 5.2, delay: 0.3 } },
+  ],
+  designer: [
+    { Icon: Palette, pos: { top: '14%', left: '14%' }, size: 24, rot: -8, bob: { dur: 5.0, delay: 0.2 } },
+    { Icon: Pencil, pos: { top: '14%', left: '68%' }, size: 22, rot: 12, bob: { dur: 4.8, delay: 0.6 } },
+    { Icon: Wand2, pos: { top: '72%', left: '14%' }, size: 18, rot: -12, bob: { dur: 5.4, delay: 0.4 } },
+    { Icon: Sparkles, pos: { top: '72%', left: '68%' }, size: 18, rot: 6, bob: { dur: 5.1, delay: 0 } },
+  ],
+  analyst: [
+    { Icon: FileText, pos: { top: '14%', left: '14%' }, size: 22, rot: -6, bob: { dur: 4.9, delay: 0.3 } },
+    { Icon: BookOpen, pos: { top: '16%', left: '68%' }, size: 22, rot: 8, bob: { dur: 5.4, delay: 0 } },
+    { Icon: ListMusic, pos: { top: '74%', left: '14%' }, size: 18, rot: -10, bob: { dur: 5.0, delay: 0.7 } },
+    { Icon: ScrollText, pos: { top: '72%', left: '70%' }, size: 18, rot: 10, bob: { dur: 4.7, delay: 0.5 } },
+  ],
+  coder: [
+    { Icon: Code2, pos: { top: '14%', left: '14%' }, size: 24, rot: -10, bob: { dur: 4.6, delay: 0.2 } },
+    { Icon: TerminalIcon, pos: { top: '16%', left: '66%' }, size: 22, rot: 6, bob: { dur: 5.1, delay: 0.6 } },
+    { Icon: GitBranch, pos: { top: '72%', left: '12%' }, size: 18, rot: -8, bob: { dur: 5.4, delay: 0.4 } },
+    { Icon: Sparkles, pos: { top: '74%', left: '70%' }, size: 16, rot: 12, bob: { dur: 4.8, delay: 0 } },
+  ],
+  ops: [
+    { Icon: Printer, pos: { top: '14%', left: '14%' }, size: 24, rot: -8, bob: { dur: 5.2, delay: 0.2 } },
+    { Icon: ClipboardList, pos: { top: '16%', left: '66%' }, size: 22, rot: 8, bob: { dur: 4.7, delay: 0.5 } },
+    { Icon: FileText, pos: { top: '72%', left: '14%' }, size: 18, rot: -12, bob: { dur: 5.0, delay: 0.7 } },
+    { Icon: Hammer, pos: { top: '72%', left: '70%' }, size: 18, rot: 10, bob: { dur: 5.3, delay: 0.4 } },
+  ],
+  supervisor: [
+    { Icon: Wand2, pos: { top: '12%', left: '14%' }, size: 24, rot: -10, bob: { dur: 4.9, delay: 0.1 } },
+    { Icon: ListMusic, pos: { top: '16%', left: '66%' }, size: 22, rot: 6, bob: { dur: 5.3, delay: 0.5 } },
+    { Icon: Sparkles, pos: { top: '72%', left: '14%' }, size: 18, rot: -8, bob: { dur: 5.0, delay: 0.4 } },
+    { Icon: Sparkles, pos: { top: '72%', left: '68%' }, size: 18, rot: 12, bob: { dur: 4.7, delay: 0.7 } },
+  ],
+  browser: [
+    { Icon: Wine, pos: { top: '14%', left: '14%' }, size: 22, rot: -10, bob: { dur: 5.1, delay: 0.3 } },
+    { Icon: ScrollText, pos: { top: '16%', left: '68%' }, size: 22, rot: 8, bob: { dur: 4.8, delay: 0.5 } },
+    { Icon: Stamp, pos: { top: '72%', left: '14%' }, size: 18, rot: -12, bob: { dur: 5.4, delay: 0.7 } },
+    { Icon: Sparkles, pos: { top: '74%', left: '70%' }, size: 16, rot: 8, bob: { dur: 5.0, delay: 0 } },
+  ],
+};
+
+function CastPlaceholder({ accent, slug, index }: { accent: string; slug: string; index: number }) {
+  const props = SCENE[slug] ?? SCENE.researcher;
   return (
     <div className="relative h-full w-full">
       <div
         aria-hidden
         className="absolute inset-0"
         style={{
-          background: `radial-gradient(circle at 50% 35%, ${accent}1f 0%, transparent 60%), linear-gradient(135deg, #050807 0%, #0a1116 100%)`,
+          background: `radial-gradient(circle at 50% 35%, ${accent}26 0%, transparent 60%), linear-gradient(135deg, #050807 0%, #0a1116 100%)`,
         }}
       />
       <div className="grid-bg pointer-events-none absolute inset-0 opacity-30" />
+
+      {/* Stage props arranged around the mascot */}
+      {props.map((p, i) => (
+        <motion.div
+          key={i}
+          className="absolute"
+          style={{ top: p.pos.top, left: p.pos.left, color: accent }}
+          animate={{ y: [0, -6, 0, 4, 0], rotate: [(p.rot ?? 0), (p.rot ?? 0) + 4, (p.rot ?? 0)] }}
+          transition={{
+            duration: p.bob?.dur ?? 5,
+            delay: p.bob?.delay ?? 0,
+            repeat: Infinity,
+            ease: 'easeInOut',
+          }}
+        >
+          <p.Icon className="drop-shadow-[0_0_8px_rgba(103,232,249,0.45)]" />
+        </motion.div>
+      ))}
+
+      {/* Mascot center */}
       <motion.div
         className="absolute inset-0 flex items-center justify-center"
-        animate={{ scale: [1, 1.04, 1], y: [0, -6, 0] }}
+        animate={{ scale: [1, 1.04, 1], y: [0, -6, 0], rotate: index % 2 === 0 ? [-1.5, 1.5, -1.5] : [1.5, -1.5, 1.5] }}
         transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
       >
         <Image
@@ -168,16 +279,19 @@ function CastPlaceholder({ accent, costume }: { accent: string; costume: string 
           alt=""
           width={180}
           height={180}
-          className="h-auto w-[44%] opacity-90 drop-shadow-[0_0_24px_rgba(103,232,249,0.30)]"
+          className="h-auto w-[42%] opacity-95 drop-shadow-[0_0_24px_rgba(103,232,249,0.30)]"
+          style={{ filter: `drop-shadow(0 0 18px ${accent}55)` }}
         />
       </motion.div>
+
+      {/* Slug label badge top-center */}
       <div className="absolute inset-x-0 top-3 flex justify-center">
         <span
           className="inline-flex items-center gap-1.5 rounded-full border bg-bg-1/80 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] backdrop-blur-md"
           style={{ borderColor: `${accent}55`, color: accent }}
         >
           <Sparkles className="h-3 w-3" />
-          rendering
+          {slug}
         </span>
       </div>
     </div>
