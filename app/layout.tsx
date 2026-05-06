@@ -8,6 +8,7 @@ import { BgDecor } from '@/components/bg-decor';
 import { MetaPixel } from '@/components/meta-pixel';
 import { CookieConsent } from '@/components/cookie-consent';
 import { PostHogProvider } from '@/components/posthog-provider';
+import { SupportChat } from '@/components/support-chat';
 import './globals.css';
 
 const SITE_URL = 'https://brocco-site.vercel.app';
@@ -148,6 +149,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <PostHogProvider />
         </Suspense>
         <CookieConsent />
+        <SupportChat />
         <Analytics />
         <SpeedInsights />
       </body>
