@@ -10,6 +10,7 @@ import { MetaPixel } from '@/components/meta-pixel';
 import { CookieConsent } from '@/components/cookie-consent';
 import { PostHogProvider } from '@/components/posthog-provider';
 import { SupportChat } from '@/components/support-chat';
+import { CommandPalette } from '@/components/command-palette';
 import './globals.css';
 
 const SITE_URL = 'https://brocco-site.vercel.app';
@@ -152,6 +153,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </Suspense>
         <CookieConsent />
         <SupportChat />
+        <CommandPalette />
         <Analytics />
         <SpeedInsights />
       </body>

@@ -6,6 +6,7 @@ import { Nav } from '@/components/nav';
 import { Footer } from '@/components/footer';
 import { FinalCta } from '@/components/final-cta';
 import { AGENT_PROFILES, getAgentProfile } from '@/lib/agent-profiles';
+import { AgentCardName } from '@/components/agent-shared';
 
 interface PageProps {
   params: Promise<{ slug: string }>;
@@ -75,7 +76,9 @@ export default async function AgentProfilePage({ params }: PageProps) {
             </Link>
             <p className="eyebrow mt-6">Agent profile</p>
             <h1 className="mt-3 text-display-xl">
-              <span className="font-mono font-bold text-cyan-glow">{a.name}</span>
+              <AgentCardName slug={a.slug} className="font-mono font-bold text-cyan-glow">
+                {a.name}
+              </AgentCardName>
             </h1>
             <p className="mt-5 max-w-2xl text-[17px] leading-relaxed text-ink-dim">{a.lead}</p>
             <div className="mt-7 flex flex-wrap gap-3">

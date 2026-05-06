@@ -6,6 +6,7 @@ import { Footer } from '@/components/footer';
 import { FinalCta } from '@/components/final-cta';
 import { AGENT_PROFILES } from '@/lib/agent-profiles';
 import { AnimatedGrid, AnimatedGridItem } from '@/components/animated-grid';
+import { AgentCardName } from '@/components/agent-shared';
 
 export const metadata: Metadata = {
   title: 'Agents — brocco.ai',
@@ -43,9 +44,9 @@ export default function AgentsIndex() {
                     href={`/agents/${a.slug}`}
                     className="card card-hover group block h-full p-6 hover:shadow-glow"
                   >
-                    <p className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-cyan-glow">
+                    <AgentCardName slug={a.slug} className="block font-mono text-[10.5px] uppercase tracking-[0.18em] text-cyan-glow">
                       {a.name}
-                    </p>
+                    </AgentCardName>
                     <h2 className="mt-3 text-[20px] font-semibold leading-snug tracking-tight transition-colors group-hover:text-white">
                       {a.tagline}
                     </h2>

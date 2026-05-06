@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion, useScroll, useTransform, useMotionValue, useSpring } from 'framer-motion';
+import { motion, useScroll, useTransform, useMotionValue, useSpring, useReducedMotion } from 'framer-motion';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { ArrowRight, Download } from 'lucide-react';
 
@@ -51,6 +51,7 @@ const STREAM_LINES_RIGHT = [
 ];
 
 export function HeroAnimated() {
+  const reduce = useReducedMotion();
   const sectionRef = useRef<HTMLElement>(null);
   const { scrollYProgress } = useScroll({
     target: sectionRef,
@@ -113,17 +114,19 @@ export function HeroAnimated() {
       />
 
       {/* Particle field */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 -z-20">
-        {particles.map((p) => (
-          <motion.span
-            key={p.id}
-            className="absolute rounded-full bg-cyan-400"
-            style={{ left: `${p.x}%`, top: `${p.y}%`, width: p.size, height: p.size, opacity: p.opacity }}
-            animate={{ y: [0, -120, -240], opacity: [0, p.opacity, 0] }}
-            transition={{ duration: p.duration, delay: p.delay, repeat: Infinity, ease: 'linear' }}
-          />
-        ))}
-      </div>
+      {!reduce && (
+        <div aria-hidden className="pointer-events-none absolute inset-0 -z-20">
+          {particles.map((p) => (
+            <motion.span
+              key={p.id}
+              className="absolute rounded-full bg-cyan-400"
+              style={{ left: `${p.x}%`, top: `${p.y}%`, width: p.size, height: p.size, opacity: p.opacity }}
+              animate={{ y: [0, -120, -240], opacity: [0, p.opacity, 0] }}
+              transition={{ duration: p.duration, delay: p.delay, repeat: Infinity, ease: 'linear' }}
+            />
+          ))}
+        </div>
+      )}
 
       {/* Big radial glow that follows mouse subtly */}
       <motion.div
