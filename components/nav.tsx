@@ -185,6 +185,24 @@ export function Nav() {
         </div>
 
         <div className="hidden items-center gap-2 md:flex">
+          <button
+            type="button"
+            onClick={() => {
+              if (typeof window !== 'undefined') {
+                window.dispatchEvent(
+                  new KeyboardEvent('keydown', { key: 'k', metaKey: true, ctrlKey: true, bubbles: true }),
+                );
+              }
+            }}
+            className="hidden items-center gap-2 rounded-full border border-white/[0.10] bg-white/[0.04] px-3 py-1.5 text-[12.5px] text-ink-dim transition-colors hover:bg-white/[0.07] hover:text-white lg:inline-flex"
+            aria-label="open command palette"
+          >
+            <span>search</span>
+            <span className="inline-flex items-center gap-0.5">
+              <kbd className="kbd">⌘</kbd>
+              <kbd className="kbd">K</kbd>
+            </span>
+          </button>
           <a
             href="https://calendly.com/brockpivec/"
             target="_blank"

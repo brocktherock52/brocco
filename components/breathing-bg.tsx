@@ -1,6 +1,6 @@
 'use client';
 
-import { motion } from 'framer-motion';
+import { motion, useReducedMotion } from 'framer-motion';
 
 /**
  * Site-wide breathing background. Two slow-pulsing radial glows that
@@ -9,6 +9,15 @@ import { motion } from 'framer-motion';
  * layout work. Pointer-events disabled, behind everything.
  */
 export function BreathingBg() {
+  const reduce = useReducedMotion();
+  if (reduce) {
+    return (
+      <div aria-hidden className="pointer-events-none fixed inset-0 -z-40 overflow-hidden">
+        <div className="absolute -left-24 top-[8%] h-[520px] w-[520px] rounded-full bg-cyan/[0.10] blur-[140px]" />
+        <div className="absolute -right-32 top-[34%] h-[620px] w-[620px] rounded-full bg-brand/[0.10] blur-[160px]" />
+      </div>
+    );
+  }
   return (
     <div aria-hidden className="pointer-events-none fixed inset-0 -z-40 overflow-hidden">
       <motion.div
