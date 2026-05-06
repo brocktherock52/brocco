@@ -9,10 +9,10 @@ import { cn } from '@/lib/utils';
 
 const LINKS = [
   { href: '/agents', label: 'agents' },
-  { href: '/for/founders', label: 'for' },
+  { href: '/recipes', label: 'recipes' },
+  { href: '/tools', label: 'tools' },
+  { href: '/integrations', label: 'integrations' },
   { href: '/pricing', label: 'pricing' },
-  { href: '/blog', label: 'blog' },
-  { href: '/download', label: 'install' },
 ];
 
 export function Nav() {
