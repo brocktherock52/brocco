@@ -203,7 +203,8 @@ export function HeroAnimated() {
             </motion.div>
           </motion.div>
 
-          {/* RIGHT: orbital mascot + streaming panels */}
+          {/* RIGHT: orbital mascot + live activity rail */}
+          <div className="flex flex-col items-center gap-4">
           <div className="relative aspect-square w-full max-w-[560px] mx-auto" style={{ perspective: 1200 }}>
             <motion.div
               className="relative h-full w-full"
@@ -289,11 +290,45 @@ export function HeroAnimated() {
                 transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', times: [0, 0.94, 0.97, 0.99, 1] }}
               />
             </motion.div>
+          </div>
 
+          {/* Live activity rail — sits below the orbital, fills the column */}
+          <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 1.0, ease: [0.16, 1, 0.3, 1] }}
+            className="w-full max-w-[560px]"
+          >
+            <div className="rounded-2xl border border-white/[0.08] bg-bg-1/60 backdrop-blur-md">
+              <div className="flex items-center justify-between border-b border-white/[0.06] px-4 py-2">
+                <span className="inline-flex items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.18em] text-emerald-400">
+                  <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+                  live
+                </span>
+                <span className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-faint">
+                  network · last 60s
+                </span>
+              </div>
+              <div className="grid grid-cols-3 divide-x divide-white/[0.06] text-center">
+                <ActivityStat value="2,847" label="runs" />
+                <ActivityStat value="9.2M" label="tokens" cls="text-cyan-glow" />
+                <ActivityStat value="$12.40" label="byok cost" cls="text-violet-300" />
+              </div>
+            </div>
+          </motion.div>
           </div>
         </div>
       </div>
     </section>
+  );
+}
+
+function ActivityStat({ value, label, cls = '' }: { value: string; label: string; cls?: string }) {
+  return (
+    <div className="px-4 py-3.5">
+      <p className={`font-mono text-[20px] font-semibold ${cls}`}>{value}</p>
+      <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint">{label}</p>
+    </div>
   );
 }
 
