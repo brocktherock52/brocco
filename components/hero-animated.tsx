@@ -246,34 +246,79 @@ export function HeroAnimated() {
                 />
               </svg>
 
-              {/* Orbiting agent dots — inner ring */}
+              {/* Orbiting agent dots */}
               {AGENTS.map((agent, i) => (
                 <OrbitDot key={agent.name} index={i} total={AGENTS.length} agent={agent} />
               ))}
 
-              {/* Center: glowing core (no static mascot — mascot orbits outer ring instead) */}
+              {/* Mascot center — restored. z-30 so it sits ABOVE the streaming panels. */}
               <motion.div
-                aria-hidden
-                className="absolute left-1/2 top-1/2 h-[14%] w-[14%] -translate-x-1/2 -translate-y-1/2 rounded-full"
-                style={{
-                  background: 'radial-gradient(circle, rgba(103,232,249,0.85) 0%, rgba(124,58,237,0.45) 40%, transparent 70%)',
-                  filter: 'blur(8px)',
-                  transformStyle: 'preserve-3d',
-                  translateZ: 30,
+                className="absolute left-1/2 top-1/2 z-30 h-[58%] w-[58%] -translate-x-1/2 -translate-y-1/2"
+                animate={{
+                  y: [0, -8, 4, 0],
+                  scale: [1, 1.03, 0.98, 1],
                 }}
-                animate={{ scale: [1, 1.15, 1], opacity: [0.75, 1, 0.75] }}
-                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-              />
+                transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+                style={{ transformStyle: 'preserve-3d', translateZ: 40 }}
+              >
+                <Image
+                  src="/assets/brocco-mark-transparent.png"
+                  alt="brocco-crocodile mascot"
+                  fill
+                  priority
+                  className="object-contain drop-shadow-[0_0_30px_rgba(103,232,249,0.45)]"
+                  sizes="(min-width: 768px) 30vw, 60vw"
+                />
+              </motion.div>
+
+              {/* Eye blink overlay (positioned over the mark eye) */}
               <motion.div
                 aria-hidden
-                className="absolute left-1/2 top-1/2 h-[6%] w-[6%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-400 shadow-glow"
-                animate={{ scale: [1, 1.2, 1] }}
-                transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
-                style={{ translateZ: 60 }}
+                className="pointer-events-none absolute left-[58%] top-[44%] z-30 h-[14px] w-[14px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-bg-0"
+                animate={{ scaleY: [0, 0, 1, 0, 0] }}
+                transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', times: [0, 0.94, 0.97, 0.99, 1] }}
               />
+            </motion.div>
 
-              {/* Orbiting mascot — outer ring, slow */}
-              <OrbitMascot reduce={!!reduce} />
+            {/* Streaming panel — top-left, repositioned so it's CLEAR of the mascot.
+                Uses extreme negative left so it lives outside the orbital area. */}
+            <motion.div
+              className="absolute left-[-12%] top-[6%] z-10 hidden w-[180px] rounded-lg border border-cyan-400/30 bg-bg-1/80 p-2.5 backdrop-blur-md md:block"
+              style={{ y: useTransform(scrollYProgress, [0, 1], ['0%', '-30%']) }}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.6, duration: 0.7 }}
+            >
+              <div className="flex items-center gap-1.5 border-b border-white/[0.06] pb-1.5 mb-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse" />
+                <span className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-cyan-glow">researcher</span>
+              </div>
+              <div className="space-y-0.5 font-mono text-[10px] leading-snug text-ink-dim">
+                <p className="text-cyan-glow">{'> tavily.search(\'agents 2026\')'}</p>
+                <p>{'> reading 12 results...'}</p>
+                <p>{'> file_save brief.md'}</p>
+                <p className="text-emerald-300">{'> done · 4m 12s · $0.08'}</p>
+              </div>
+            </motion.div>
+
+            {/* Streaming panel — bottom-right, also outside orbital. */}
+            <motion.div
+              className="absolute bottom-[6%] right-[-10%] z-10 hidden w-[190px] rounded-lg border border-violet-400/30 bg-bg-1/80 p-2.5 backdrop-blur-md md:block"
+              style={{ y: useTransform(scrollYProgress, [0, 1], ['0%', '20%']) }}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.85, duration: 0.7 }}
+            >
+              <div className="flex items-center gap-1.5 border-b border-white/[0.06] pb-1.5 mb-1.5">
+                <span className="h-1.5 w-1.5 rounded-full bg-violet-400 animate-pulse" />
+                <span className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-violet-300">designer</span>
+              </div>
+              <div className="space-y-0.5 font-mono text-[10px] leading-snug text-ink-dim">
+                <p>{'{ "agent": "designer",'}</p>
+                <p>{'  "tool": "image_gen",'}</p>
+                <p className="text-violet-300">{'  "status": "streaming"'}</p>
+                <p>{'  "elapsed": 3812 }'}</p>
+              </div>
             </motion.div>
           </div>
         </div>
@@ -330,85 +375,3 @@ function OrbitDot({
   );
 }
 
-function OrbitMascot({ reduce }: { reduce: boolean }) {
-  // Outer-ring orbital path. Mascot travels around at slow speed.
-  // counter-rotated inner Image keeps the croc upright as the orbit
-  // rotates the parent.
-  const radiusPct = 50;
-  const orbitDuration = 60;
-
-  if (reduce) {
-    return (
-      <motion.div
-        aria-hidden
-        className="absolute left-1/2 top-1/2 h-0 w-0"
-        style={{ transformStyle: 'preserve-3d' }}
-      >
-        <div
-          className="absolute"
-          style={{ left: `${radiusPct}%`, top: 0, transform: 'translate(-50%, -50%)' }}
-        >
-          <div
-            className="relative h-[78px] w-[78px] rounded-full bg-bg-1/40 ring-1 ring-cyan-400/30 backdrop-blur-md"
-            style={{ boxShadow: '0 0 36px rgba(103,232,249,0.35)' }}
-          >
-            <Image
-              src="/assets/brocco-mark-transparent.png"
-              alt="brocco mascot"
-              fill
-              priority
-              sizes="78px"
-              className="object-contain p-2.5"
-            />
-          </div>
-        </div>
-      </motion.div>
-    );
-  }
-
-  return (
-    <motion.div
-      aria-hidden
-      className="absolute left-1/2 top-1/2 h-0 w-0"
-      animate={{ rotate: 360 }}
-      transition={{ duration: orbitDuration, repeat: Infinity, ease: 'linear' }}
-      style={{ transformStyle: 'preserve-3d', translateZ: 50 }}
-    >
-      <motion.div
-        className="absolute"
-        style={{ left: `${radiusPct}%`, top: 0, x: '-50%', y: '-50%' }}
-      >
-        {/* Counter-rotate so the mascot stays upright. Idle bob inside. */}
-        <motion.div
-          className="relative h-[88px] w-[88px]"
-          animate={{ rotate: -360 }}
-          transition={{ duration: orbitDuration, repeat: Infinity, ease: 'linear' }}
-        >
-          <motion.div
-            className="relative h-full w-full rounded-full bg-bg-1/50 ring-1 ring-cyan-400/35 backdrop-blur-md"
-            style={{ boxShadow: '0 0 36px rgba(103,232,249,0.45), 0 0 80px rgba(103,232,249,0.18)' }}
-            animate={{ scale: [1, 1.06, 1], y: [0, -3, 0] }}
-            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <Image
-              src="/assets/brocco-mark-transparent.png"
-              alt="brocco mascot"
-              fill
-              priority
-              sizes="88px"
-              className="object-contain p-2.5 drop-shadow-[0_0_18px_rgba(103,232,249,0.55)]"
-            />
-            {/* Trailing comet glow behind the mascot as it orbits */}
-            <motion.span
-              aria-hidden
-              className="pointer-events-none absolute -right-2 top-1/2 h-2 w-12 -translate-y-1/2 rounded-full"
-              style={{ background: 'linear-gradient(90deg, rgba(103,232,249,0.55), transparent)' }}
-              animate={{ opacity: [0.6, 1, 0.6] }}
-              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
-            />
-          </motion.div>
-        </motion.div>
-      </motion.div>
-    </motion.div>
-  );
-}
