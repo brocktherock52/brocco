@@ -1,5 +1,5 @@
 import { Nav } from '@/components/nav';
-import { ScrollHero } from '@/components/scroll-hero';
+import { HeroAnimated } from '@/components/hero-animated';
 import { AgentsGrid } from '@/components/agents-grid';
 import { ProductCards } from '@/components/product-cards';
 import { HowItWorks } from '@/components/how-it-works';
@@ -20,7 +20,7 @@ export default function HomePage() {
     <>
       <Nav />
       <main>
-        <ScrollHero />
+        <HeroAnimated />
         <SectionReveal>
           <AgentsGrid />
         </SectionReveal>
