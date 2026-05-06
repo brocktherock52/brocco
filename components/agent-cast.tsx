@@ -44,6 +44,7 @@ export function AgentCast() {
 
 function CastCard({ member, index }: { member: typeof AGENT_CAST[number]; index: number }) {
   const accent = member.accent;
+  const hasVideo = !!member.videoPath;
   const hasImage = !!member.imagePath;
 
   return (
@@ -68,7 +69,24 @@ function CastCard({ member, index }: { member: typeof AGENT_CAST[number]; index:
           className="relative aspect-[4/5] overflow-hidden rounded-xl"
           style={{ backgroundColor: '#070d12' }}
         >
-          {hasImage ? (
+          {hasVideo ? (
+            <motion.div
+              className="absolute inset-0"
+              animate={{ scale: [1, 1.02, 1], y: [0, -4, 0] }}
+              transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+            >
+              <video
+                src={member.videoPath as string}
+                poster={member.posterPath ?? member.imagePath ?? undefined}
+                autoPlay
+                muted
+                loop
+                playsInline
+                preload="metadata"
+                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+              />
+            </motion.div>
+          ) : hasImage ? (
             <motion.div
               className="absolute inset-0"
               animate={{ scale: [1, 1.02, 1], y: [0, -4, 0] }}
