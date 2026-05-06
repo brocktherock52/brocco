@@ -26,7 +26,7 @@ const AGENTS = [
     slug: 'researcher', accent: '#67E8F9',
     markX: 320, markY: 460, markRot: -4,
     propSvg: `
-      <g transform="translate(640, 380)" stroke="#67E8F9" stroke-width="6" fill="none" opacity="0.85">
+      <g transform="translate(512, 560) scale(1.6)" stroke="#67E8F9" stroke-width="6" fill="none" opacity="0.85">
         <path d="M -120 80 L -120 -80 L 0 -100 L 0 80 Z" fill="#0a1116" />
         <path d="M 0 -100 L 0 80 L 120 80 L 120 -80 Z" fill="#0a1116" />
         <line x1="-100" y1="-60" x2="-20" y2="-70" />
@@ -48,7 +48,7 @@ const AGENTS = [
     slug: 'planner', accent: '#FB7185',
     markX: 290, markY: 480, markRot: 3,
     propSvg: `
-      <g transform="translate(620, 360)" stroke="#FB7185" stroke-width="6" fill="none" opacity="0.85">
+      <g transform="translate(512, 560) scale(1.6)" stroke="#FB7185" stroke-width="6" fill="none" opacity="0.85">
         <rect x="-180" y="-130" width="360" height="240" rx="12" fill="#0a1116" />
         <line x1="-160" y1="-90" x2="100" y2="-90" />
         <line x1="-160" y1="-50" x2="60" y2="-50" />
@@ -62,7 +62,7 @@ const AGENTS = [
     slug: 'outreach', accent: '#FBBF24',
     markX: 310, markY: 470, markRot: -2,
     propSvg: `
-      <g transform="translate(640, 360)" stroke="#FBBF24" stroke-width="6" fill="none" opacity="0.85">
+      <g transform="translate(512, 560) scale(1.6)" stroke="#FBBF24" stroke-width="6" fill="none" opacity="0.85">
         <rect x="-150" y="-100" width="300" height="200" rx="6" fill="#0a1116" />
         <path d="M -150 -100 L 0 30 L 150 -100" />
         <path d="M -150 100 L -30 0" />
@@ -76,7 +76,7 @@ const AGENTS = [
     slug: 'designer', accent: '#F472B6',
     markX: 320, markY: 470, markRot: 4,
     propSvg: `
-      <g transform="translate(620, 380)" stroke="#F472B6" stroke-width="6" fill="none" opacity="0.85">
+      <g transform="translate(512, 560) scale(1.6)" stroke="#F472B6" stroke-width="6" fill="none" opacity="0.85">
         <path d="M 0 -130 C 80 -130 150 -70 150 0 C 150 60 100 100 60 80 C 30 65 50 30 30 30 L -30 30 C -100 30 -150 -10 -150 -50 C -150 -100 -90 -130 0 -130 Z" fill="#0a1116" />
         <circle cx="-90" cy="-70" r="14" fill="#F472B6" />
         <circle cx="-30" cy="-100" r="14" fill="#67E8F9" />
@@ -88,7 +88,7 @@ const AGENTS = [
     slug: 'analyst', accent: '#A78BFA',
     markX: 310, markY: 470, markRot: 0,
     propSvg: `
-      <g transform="translate(620, 380)" stroke="#A78BFA" stroke-width="6" fill="none" opacity="0.85">
+      <g transform="translate(512, 560) scale(1.6)" stroke="#A78BFA" stroke-width="6" fill="none" opacity="0.85">
         <line x1="-180" y1="100" x2="180" y2="100" />
         <line x1="-180" y1="100" x2="-180" y2="-130" />
         <rect x="-150" y="40" width="40" height="60" fill="#0a1116" />
@@ -103,7 +103,7 @@ const AGENTS = [
     slug: 'coder', accent: '#4ADE80',
     markX: 310, markY: 470, markRot: -6,
     propSvg: `
-      <g transform="translate(620, 380)" stroke="#4ADE80" stroke-width="6" fill="none" opacity="0.85">
+      <g transform="translate(512, 560) scale(1.6)" stroke="#4ADE80" stroke-width="6" fill="none" opacity="0.85">
         <rect x="-180" y="-130" width="360" height="240" rx="14" fill="#0a1116" />
         <text x="-160" y="-80" fill="#4ADE80" font-family="JetBrains Mono, monospace" font-size="32" font-weight="500">{ </text>
         <text x="-110" y="-30" fill="#67E8F9" font-family="JetBrains Mono, monospace" font-size="22">"agent":</text>
@@ -130,7 +130,7 @@ const AGENTS = [
     slug: 'supervisor', accent: '#22C55E',
     markX: 310, markY: 470, markRot: 0,
     propSvg: `
-      <g transform="translate(620, 380)" stroke="#22C55E" stroke-width="6" fill="none" opacity="0.85">
+      <g transform="translate(512, 560) scale(1.6)" stroke="#22C55E" stroke-width="6" fill="none" opacity="0.85">
         <circle cx="0" cy="0" r="160" stroke-dasharray="6 10" />
         <circle cx="0" cy="0" r="120" stroke-dasharray="3 7" stroke="#67E8F9" stroke-opacity="0.5" />
         <g fill="#22C55E">
@@ -153,7 +153,7 @@ const AGENTS = [
     slug: 'browser', accent: '#67E8F9',
     markX: 310, markY: 480, markRot: -3,
     propSvg: `
-      <g transform="translate(640, 380)" stroke="#67E8F9" stroke-width="6" fill="none" opacity="0.85">
+      <g transform="translate(512, 560) scale(1.6)" stroke="#67E8F9" stroke-width="6" fill="none" opacity="0.85">
         <rect x="-180" y="-110" width="360" height="220" rx="14" fill="#0a1116" />
         <line x1="-180" y1="-60" x2="180" y2="-60" />
         <circle cx="-150" cy="-85" r="6" fill="#FB7185" />
@@ -209,21 +209,15 @@ async function main() {
   await fs.mkdir(OUT, { recursive: true });
 
   for (const agent of AGENTS) {
-    // Per-agent rotated mark
-    const mark = await sharp(MARK)
-      .resize({ width: MARK_W, height: MARK_W, fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
-      .rotate(agent.markRot, { background: { r: 0, g: 0, b: 0, alpha: 0 } })
-      .toBuffer();
-
+    // Mascot intentionally excluded — these are placeholder dioramas
+    // (prop + accent frame). User is generating real character art
+    // separately and will drop into the same paths.
     const bg = Buffer.from(bgSvg(agent.accent));
     const propFrame = Buffer.from(propAndFrameSvg(agent));
 
-    const outPath = path.join(OUT, `${agent.slug}.jpg`);
+    const outPath = path.join(OUT, `${agent.slug}-v2.jpg`);
     await sharp(bg)
-      .composite([
-        { input: propFrame, top: 0, left: 0 },
-        { input: mark, top: agent.markY, left: agent.markX },
-      ])
+      .composite([{ input: propFrame, top: 0, left: 0 }])
       .jpeg({ quality: 88, mozjpeg: true })
       .toFile(outPath);
 
