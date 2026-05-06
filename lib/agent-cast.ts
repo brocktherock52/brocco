@@ -22,7 +22,7 @@ export const AGENT_CAST: AgentCastMember[] = [
     name: 'researcher',
     costume: 'wire-frame glasses, paper in hand, desk lamp glow',
     scene: 'behind a small wooden desk, books and folders piled high, sticky notes orbiting like thought bubbles',
-    imagePath: '/assets/cast/researcher.jpg',
+    imagePath: null,
     videoPath: null,
     accent: '#67E8F9',
   },
