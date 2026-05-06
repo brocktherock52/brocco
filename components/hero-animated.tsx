@@ -5,6 +5,7 @@ import Image from 'next/image';
 import { motion, useScroll, useTransform, useMotionValue, useSpring, useReducedMotion } from 'framer-motion';
 import { useEffect, useMemo, useRef } from 'react';
 import { ArrowRight, Download } from 'lucide-react';
+import { HeroTerminal } from './hero-terminal';
 
 /**
  * HeroAnimated — fully kinetic hero. Replaces the static spinning
@@ -190,6 +191,15 @@ export function HeroAnimated() {
               <span>no card</span>
               <span>·</span>
               <span>jsonl audit</span>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.9, ease: [0.16, 1, 0.3, 1] }}
+              className="mt-10"
+            >
+              <HeroTerminal />
             </motion.div>
           </motion.div>
 
