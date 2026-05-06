@@ -43,11 +43,16 @@ export function ScrollHero() {
   const panelY2 = useTransform(scrollYProgress, [0, 1], ['0%', '12%']);
   const panelY3 = useTransform(scrollYProgress, [0, 1], ['0%', '-14%']);
 
-  // Mouse drift on the image (light parallax with cursor)
+  // Image spin: scroll-driven 360deg rotation
+  const imageRotate = useTransform(scrollYProgress, [0, 1], [0, 360]);
+
+  // Mouse drift + tilt on the image (light parallax with cursor)
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
   const driftX = useSpring(mouseX, { stiffness: 60, damping: 20 });
   const driftY = useSpring(mouseY, { stiffness: 60, damping: 20 });
+  const mouseTilt = useTransform(mouseX, [-14, 14], [-18, 18]);
+  const tiltSpring = useSpring(mouseTilt, { stiffness: 80, damping: 18 });
 
   useEffect(() => {
     if (typeof window === 'undefined') return;
@@ -122,27 +127,31 @@ export function ScrollHero() {
             whileHover={{ scale: 1.015, transition: { duration: 0.4, ease: [0.16, 1, 0.3, 1] } }}
           >
             <motion.div
-              style={{ scale: imageScale, y: imageY, opacity: imageOpacity }}
+              style={{ scale: imageScale, y: imageY, opacity: imageOpacity, rotate: imageRotate }}
               className="absolute inset-0"
             >
               <motion.div
                 className="absolute inset-0"
-                animate={{
-                  scale: [1, 1.025, 1.005, 1],
-                  rotate: [0, 0.4, -0.3, 0],
-                  x: [0, 6, -4, 0],
-                  y: [0, -3, 4, 0],
-                }}
-                transition={{ duration: 14, repeat: Infinity, ease: 'easeInOut' }}
+                style={{ rotate: tiltSpring }}
               >
-                <Image
-                  src="/assets/hero-broccoli-croc.jpg"
-                  alt="brocco-crocodile mascot with floating agent panels"
-                  fill
-                  priority
-                  className="object-cover"
-                  sizes="(min-width: 768px) 50vw, 100vw"
-                />
+                <motion.div
+                  className="absolute inset-0"
+                  animate={{
+                    scale: [1, 1.04, 1.005, 1],
+                    x: [0, 8, -6, 0],
+                    y: [0, -5, 6, 0],
+                  }}
+                  transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut' }}
+                >
+                  <Image
+                    src="/assets/hero-broccoli-croc.jpg"
+                    alt="brocco-crocodile mascot with floating agent panels"
+                    fill
+                    priority
+                    className="object-cover"
+                    sizes="(min-width: 768px) 50vw, 100vw"
+                  />
+                </motion.div>
               </motion.div>
             </motion.div>
 
