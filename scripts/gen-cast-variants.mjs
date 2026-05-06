@@ -215,7 +215,7 @@ async function main() {
     const bg = Buffer.from(bgSvg(agent.accent));
     const propFrame = Buffer.from(propAndFrameSvg(agent));
 
-    const outPath = path.join(OUT, `${agent.slug}-v2.jpg`);
+    const outPath = path.join(OUT, `${agent.slug}-v3.jpg`);
     await sharp(bg)
       .composite([{ input: propFrame, top: 0, left: 0 }])
       .jpeg({ quality: 88, mozjpeg: true })
