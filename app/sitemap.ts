@@ -2,6 +2,9 @@ import type { MetadataRoute } from 'next';
 import { POSTS } from '@/lib/posts';
 import { AGENT_PROFILES } from '@/lib/agent-profiles';
 import { VERTICALS } from '@/lib/verticals';
+import { TOOL_PROFILES } from '@/lib/tool-profiles';
+import { RECIPE_PROFILES } from '@/lib/recipe-profiles';
+import { INTEGRATION_PROFILES } from '@/lib/integration-profiles';
 
 const SITE = 'https://brocco-site.vercel.app';
 
@@ -25,10 +28,31 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: 'monthly' as const,
     priority: 0.85,
   }));
+  const tools = TOOL_PROFILES.map((t) => ({
+    url: `${SITE}/tools/${t.slug}`,
+    lastModified: now,
+    changeFrequency: 'monthly' as const,
+    priority: 0.75,
+  }));
+  const recipes = RECIPE_PROFILES.map((r) => ({
+    url: `${SITE}/recipes/${r.slug}`,
+    lastModified: now,
+    changeFrequency: 'monthly' as const,
+    priority: 0.85,
+  }));
+  const integrations = INTEGRATION_PROFILES.map((i) => ({
+    url: `${SITE}/integrations/${i.slug}`,
+    lastModified: now,
+    changeFrequency: 'monthly' as const,
+    priority: 0.75,
+  }));
   return [
     { url: `${SITE}/`, lastModified: now, changeFrequency: 'weekly', priority: 1 },
     { url: `${SITE}/app`, lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${SITE}/agents`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${SITE}/tools`, lastModified: now, changeFrequency: 'weekly', priority: 0.85 },
+    { url: `${SITE}/recipes`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${SITE}/integrations`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
     { url: `${SITE}/pricing`, lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${SITE}/security`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${SITE}/docs`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
@@ -45,7 +69,10 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE}/billing/success`, lastModified: now, changeFrequency: 'yearly', priority: 0.2 },
     { url: `${SITE}/blog`, lastModified: now, changeFrequency: 'weekly', priority: 0.75 },
     ...agents,
+    ...tools,
+    ...recipes,
     ...verticals,
+    ...integrations,
     ...blog,
   ];
 }
