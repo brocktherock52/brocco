@@ -34,7 +34,9 @@ export function FinalCta() {
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </Link>
               <a
-                href="mailto:hello@brocco.ai?subject=Brocco%20demo%20request"
+                href="https://calendly.com/brockpivec/"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="btn-ghost text-base px-7 py-3.5"
               >
                 <Calendar className="h-4 w-4" />

@@ -5,6 +5,7 @@ import { Nav } from '@/components/nav';
 import { Footer } from '@/components/footer';
 import { FinalCta } from '@/components/final-cta';
 import { AGENT_PROFILES } from '@/lib/agent-profiles';
+import { AnimatedGrid, AnimatedGridItem } from '@/components/animated-grid';
 
 export const metadata: Metadata = {
   title: 'Agents — brocco.ai',
@@ -35,12 +36,12 @@ export default function AgentsIndex() {
 
         <section className="pb-24">
           <div className="container-x">
-            <ul className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
+            <AnimatedGrid className="grid grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3" staggerMs={50}>
               {AGENT_PROFILES.map((a) => (
-                <li key={a.slug}>
+                <AnimatedGridItem key={a.slug}>
                   <Link
                     href={`/agents/${a.slug}`}
-                    className="card card-hover group block h-full p-6"
+                    className="card card-hover group block h-full p-6 hover:shadow-glow"
                   >
                     <p className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-cyan-glow">
                       {a.name}
@@ -65,9 +66,9 @@ export default function AgentsIndex() {
                       Open profile <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                     </span>
                   </Link>
-                </li>
+                </AnimatedGridItem>
               ))}
-            </ul>
+            </AnimatedGrid>
           </div>
         </section>
         <FinalCta />
