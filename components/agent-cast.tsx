@@ -284,16 +284,6 @@ function CastPlaceholder({ accent, slug, index }: { accent: string; slug: string
         />
       </motion.div>
 
-      {/* Slug label badge top-center */}
-      <div className="absolute inset-x-0 top-3 flex justify-center">
-        <span
-          className="inline-flex items-center gap-1.5 rounded-full border bg-bg-1/80 px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] backdrop-blur-md"
-          style={{ borderColor: `${accent}55`, color: accent }}
-        >
-          <Sparkles className="h-3 w-3" />
-          {slug}
-        </span>
-      </div>
     </div>
   );
 }

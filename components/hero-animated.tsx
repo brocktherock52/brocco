@@ -3,7 +3,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, useScroll, useTransform, useMotionValue, useSpring, useReducedMotion } from 'framer-motion';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { ArrowRight, Download } from 'lucide-react';
 
 /**
@@ -34,21 +34,6 @@ const AGENTS = [
   { name: 'browser', color: '#67E8F9', delay: 3.2 },
 ];
 
-const STREAM_LINES_LEFT = [
-  '> tavily.search("ai agent platforms 2026")',
-  '> http_get https://news.ycombinator.com',
-  '> reading 12 results... synthesizing',
-  '> file_save brief.md (2.3kb, 14 cites)',
-  '> done. cost $0.08 · 4m 12s',
-];
-
-const STREAM_LINES_RIGHT = [
-  '{ "agent": "designer", "step": 3,',
-  '  "tool": "image_gen",',
-  '  "prompt": "moodboard hero shot",',
-  '  "status": "streaming...",',
-  '  "elapsed_ms": 3812 }',
-];
 
 export function HeroAnimated() {
   const reduce = useReducedMotion();
@@ -261,68 +246,34 @@ export function HeroAnimated() {
                 />
               </svg>
 
-              {/* Orbiting agent dots */}
+              {/* Orbiting agent dots — inner ring */}
               {AGENTS.map((agent, i) => (
                 <OrbitDot key={agent.name} index={i} total={AGENTS.length} agent={agent} />
               ))}
 
-              {/* Mascot center */}
-              <motion.div
-                className="absolute left-1/2 top-1/2 h-[58%] w-[58%] -translate-x-1/2 -translate-y-1/2"
-                animate={{
-                  y: [0, -8, 4, 0],
-                  scale: [1, 1.03, 0.98, 1],
-                }}
-                transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
-                style={{ transformStyle: 'preserve-3d', translateZ: 40 }}
-              >
-                <Image
-                  src="/assets/brocco-mark-transparent.png"
-                  alt="brocco-crocodile mascot"
-                  fill
-                  priority
-                  className="object-contain drop-shadow-[0_0_30px_rgba(103,232,249,0.35)]"
-                  sizes="(min-width: 768px) 30vw, 60vw"
-                />
-              </motion.div>
-
-              {/* Eye blink overlay (positioned over the existing mark eye) */}
+              {/* Center: glowing core (no static mascot — mascot orbits outer ring instead) */}
               <motion.div
                 aria-hidden
-                className="pointer-events-none absolute left-[58%] top-[44%] h-[14px] w-[14px] -translate-x-1/2 -translate-y-1/2 rounded-full bg-bg-0"
-                animate={{ scaleY: [0, 0, 1, 0, 0] }}
-                transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut', times: [0, 0.94, 0.97, 0.99, 1] }}
+                className="absolute left-1/2 top-1/2 h-[14%] w-[14%] -translate-x-1/2 -translate-y-1/2 rounded-full"
+                style={{
+                  background: 'radial-gradient(circle, rgba(103,232,249,0.85) 0%, rgba(124,58,237,0.45) 40%, transparent 70%)',
+                  filter: 'blur(8px)',
+                  transformStyle: 'preserve-3d',
+                  translateZ: 30,
+                }}
+                animate={{ scale: [1, 1.15, 1], opacity: [0.75, 1, 0.75] }}
+                transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
               />
-            </motion.div>
+              <motion.div
+                aria-hidden
+                className="absolute left-1/2 top-1/2 h-[6%] w-[6%] -translate-x-1/2 -translate-y-1/2 rounded-full bg-cyan-400 shadow-glow"
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
+                style={{ translateZ: 60 }}
+              />
 
-            {/* Streaming panel — left */}
-            <motion.div
-              className="absolute -left-2 top-[12%] hidden w-[200px] rounded-lg border border-cyan-400/30 bg-bg-1/85 p-2.5 backdrop-blur-md md:block"
-              style={{ y: useTransform(scrollYProgress, [0, 1], ['0%', '-30%']), x: driftX }}
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.6, duration: 0.7 }}
-            >
-              <div className="flex items-center gap-1.5 border-b border-white/[0.06] pb-1.5 mb-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-cyan-400 animate-pulse" />
-                <span className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-cyan-glow">researcher</span>
-              </div>
-              <Typewriter lines={STREAM_LINES_LEFT} />
-            </motion.div>
-
-            {/* Streaming panel — right */}
-            <motion.div
-              className="absolute -right-2 bottom-[10%] hidden w-[210px] rounded-lg border border-violet-400/30 bg-bg-1/85 p-2.5 backdrop-blur-md md:block"
-              style={{ y: useTransform(scrollYProgress, [0, 1], ['0%', '20%']), x: driftX }}
-              initial={{ opacity: 0, x: 20 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ delay: 0.85, duration: 0.7 }}
-            >
-              <div className="flex items-center gap-1.5 border-b border-white/[0.06] pb-1.5 mb-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-violet-400 animate-pulse" />
-                <span className="font-mono text-[9.5px] uppercase tracking-[0.18em] text-violet-300">designer</span>
-              </div>
-              <Typewriter lines={STREAM_LINES_RIGHT} delay={1.2} />
+              {/* Orbiting mascot — outer ring, slow */}
+              <OrbitMascot reduce={!!reduce} />
             </motion.div>
           </div>
         </div>
@@ -379,69 +330,85 @@ function OrbitDot({
   );
 }
 
-function Typewriter({ lines, delay = 0 }: { lines: string[]; delay?: number }) {
-  const [shown, setShown] = useState<string[]>([]);
-  const [currentLine, setCurrentLine] = useState(0);
-  const [currentChar, setCurrentChar] = useState(0);
+function OrbitMascot({ reduce }: { reduce: boolean }) {
+  // Outer-ring orbital path. Mascot travels around at slow speed.
+  // counter-rotated inner Image keeps the croc upright as the orbit
+  // rotates the parent.
+  const radiusPct = 50;
+  const orbitDuration = 60;
 
-  useEffect(() => {
-    let timer: ReturnType<typeof setTimeout>;
-    let started = false;
-
-    const tick = () => {
-      if (!started) {
-        started = true;
-        timer = setTimeout(tick, delay * 1000);
-        return;
-      }
-
-      if (currentLine >= lines.length) {
-        timer = setTimeout(() => {
-          setShown([]);
-          setCurrentLine(0);
-          setCurrentChar(0);
-        }, 4000);
-        return;
-      }
-
-      const line = lines[currentLine];
-      if (currentChar < line.length) {
-        setShown((prev) => {
-          const next = [...prev];
-          next[currentLine] = line.slice(0, currentChar + 1);
-          return next;
-        });
-        setCurrentChar((c) => c + 1);
-        timer = setTimeout(tick, 22 + Math.random() * 14);
-      } else {
-        setCurrentLine((l) => l + 1);
-        setCurrentChar(0);
-        timer = setTimeout(tick, 320);
-      }
-    };
-
-    timer = setTimeout(tick, 40);
-    return () => clearTimeout(timer);
-  }, [currentLine, currentChar, lines, delay]);
+  if (reduce) {
+    return (
+      <motion.div
+        aria-hidden
+        className="absolute left-1/2 top-1/2 h-0 w-0"
+        style={{ transformStyle: 'preserve-3d' }}
+      >
+        <div
+          className="absolute"
+          style={{ left: `${radiusPct}%`, top: 0, transform: 'translate(-50%, -50%)' }}
+        >
+          <div
+            className="relative h-[78px] w-[78px] rounded-full bg-bg-1/40 ring-1 ring-cyan-400/30 backdrop-blur-md"
+            style={{ boxShadow: '0 0 36px rgba(103,232,249,0.35)' }}
+          >
+            <Image
+              src="/assets/brocco-mark-transparent.png"
+              alt="brocco mascot"
+              fill
+              priority
+              sizes="78px"
+              className="object-contain p-2.5"
+            />
+          </div>
+        </div>
+      </motion.div>
+    );
+  }
 
   return (
-    <div className="space-y-0.5 font-mono text-[10px] leading-snug text-ink-dim">
-      {lines.map((line, i) => (
-        <p key={i} className={i === currentLine ? 'text-cyan-glow' : ''}>
-          {shown[i] ?? ''}
-          {i === currentLine && <BlinkingCursor />}
-        </p>
-      ))}
-    </div>
-  );
-}
-
-function BlinkingCursor() {
-  return (
-    <motion.span
-      className="ml-0.5 inline-block h-3 w-1 align-middle bg-cyan-400"
-      animate={{ opacity: [1, 0, 1] }}
-      transition={{ duration: 0.9, repeat: Infinity, ease: 'easeInOut' }}
-    />
+    <motion.div
+      aria-hidden
+      className="absolute left-1/2 top-1/2 h-0 w-0"
+      animate={{ rotate: 360 }}
+      transition={{ duration: orbitDuration, repeat: Infinity, ease: 'linear' }}
+      style={{ transformStyle: 'preserve-3d', translateZ: 50 }}
+    >
+      <motion.div
+        className="absolute"
+        style={{ left: `${radiusPct}%`, top: 0, x: '-50%', y: '-50%' }}
+      >
+        {/* Counter-rotate so the mascot stays upright. Idle bob inside. */}
+        <motion.div
+          className="relative h-[88px] w-[88px]"
+          animate={{ rotate: -360 }}
+          transition={{ duration: orbitDuration, repeat: Infinity, ease: 'linear' }}
+        >
+          <motion.div
+            className="relative h-full w-full rounded-full bg-bg-1/50 ring-1 ring-cyan-400/35 backdrop-blur-md"
+            style={{ boxShadow: '0 0 36px rgba(103,232,249,0.45), 0 0 80px rgba(103,232,249,0.18)' }}
+            animate={{ scale: [1, 1.06, 1], y: [0, -3, 0] }}
+            transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+          >
+            <Image
+              src="/assets/brocco-mark-transparent.png"
+              alt="brocco mascot"
+              fill
+              priority
+              sizes="88px"
+              className="object-contain p-2.5 drop-shadow-[0_0_18px_rgba(103,232,249,0.55)]"
+            />
+            {/* Trailing comet glow behind the mascot as it orbits */}
+            <motion.span
+              aria-hidden
+              className="pointer-events-none absolute -right-2 top-1/2 h-2 w-12 -translate-y-1/2 rounded-full"
+              style={{ background: 'linear-gradient(90deg, rgba(103,232,249,0.55), transparent)' }}
+              animate={{ opacity: [0.6, 1, 0.6] }}
+              transition={{ duration: 2, repeat: Infinity, ease: 'easeInOut' }}
+            />
+          </motion.div>
+        </motion.div>
+      </motion.div>
+    </motion.div>
   );
 }
