@@ -12,6 +12,7 @@ import {
   Key,
   Activity,
 } from 'lucide-react';
+import { SpotlightCard } from './ui/spotlight-card';
 
 const FEATURES = [
   {
@@ -102,14 +103,19 @@ export function Features() {
                   show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] } },
                 }}
                 whileHover={{ y: -4, transition: { duration: 0.2 } }}
-                className="card card-hover group relative overflow-hidden p-6"
               >
-                <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/10" />
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-white/[0.06] to-white/[0.02] ring-1 ring-white/[0.08]">
-                  <Icon className="h-4 w-4 text-brand-glow" />
-                </div>
-                <h3 className="mt-4 text-[16.5px] font-semibold tracking-tight">{f.title}</h3>
-                <p className="mt-2 text-[14px] leading-relaxed text-ink-dim">{f.body}</p>
+                <SpotlightCard
+                  spotlightSize={320}
+                  spotlightColor="rgba(167, 139, 250, 0.16)"
+                  className="card card-hover group relative h-full overflow-hidden p-6"
+                >
+                  <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/10" />
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-white/[0.06] to-white/[0.02] ring-1 ring-white/[0.08] transition-transform duration-300 group-hover:scale-110">
+                    <Icon className="h-4 w-4 text-brand-glow" />
+                  </div>
+                  <h3 className="mt-4 text-[16.5px] font-semibold tracking-tight">{f.title}</h3>
+                  <p className="mt-2 text-[14px] leading-relaxed text-ink-dim">{f.body}</p>
+                </SpotlightCard>
               </motion.div>
             );
           })}

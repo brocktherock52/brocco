@@ -4,7 +4,7 @@
   "private": true,
   "description": "brocco.ai - agentic AI platform marketing site + interactive demo",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --webpack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",

@@ -1,11 +1,11 @@
 'use client';
 
 import { motion } from 'framer-motion';
+import { SpotlightCard } from './ui/spotlight-card';
 
-/** Six brocco-specific problem statements. Mirrors inference.sh's
- *  "why we built this" block. Each entry is a constraint we ran into
- *  and what we did about it. Editorial italic on the close line keeps
- *  the Claude-design rhythm. */
+/** Six brocco-specific problem statements. Each entry is a constraint
+ *  we ran into and what we did about it. Editorial italic on the close
+ *  line keeps the Claude-design rhythm. */
 const WHY = [
   {
     title: 'specialists beat generalists',
@@ -14,7 +14,7 @@ const WHY = [
     closer: 'a researcher does not write code. a coder does not draft cold emails.',
   },
   {
-    title: 'observability or it didn\'t happen',
+    title: "observability or it didn't happen",
     body:
       'every step of every run is appended to a single jsonl file. you can grep it, diff it, replay it, hand it to your security team.',
     closer: 'no black-box autonomy. no surprise tool calls.',
@@ -56,7 +56,8 @@ export function WhyWeBuilt() {
             <span className="text-grad-brand">agent runtime should ship.</span>
           </h2>
           <p className="mt-4 max-w-xl text-[16px] text-ink-dim">
-            the constraints we ran into building agents in production, and the design decisions they forced. each is non-negotiable in brocco.
+            the constraints we ran into building agents in production, and the design decisions
+            they forced. each is non-negotiable in brocco.
           </p>
         </div>
 
@@ -74,18 +75,24 @@ export function WhyWeBuilt() {
                 hidden: { opacity: 0, y: 14 },
                 show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] } },
               }}
-              className="card card-hover relative overflow-hidden p-6"
+              whileHover={{ y: -3 }}
             >
-              <span className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-faint">
-                {String(i + 1).padStart(2, '0')}
-              </span>
-              <h3 className="mt-2 text-[16.5px] font-semibold leading-snug tracking-tight">
-                {w.title}
-              </h3>
-              <p className="mt-3 text-[13.5px] leading-relaxed text-ink-dim">{w.body}</p>
-              <p className="mt-3 border-t border-white/[0.06] pt-3 font-serif italic text-[13.5px] leading-snug text-ink/95">
-                {w.closer}
-              </p>
+              <SpotlightCard
+                spotlightSize={320}
+                spotlightColor="rgba(167, 139, 250, 0.16)"
+                className="card card-hover group relative h-full overflow-hidden p-6"
+              >
+                <span className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-faint">
+                  {String(i + 1).padStart(2, '0')}
+                </span>
+                <h3 className="mt-2 text-[16.5px] font-semibold leading-snug tracking-tight">
+                  {w.title}
+                </h3>
+                <p className="mt-3 text-[13.5px] leading-relaxed text-ink-dim">{w.body}</p>
+                <p className="mt-3 border-t border-white/[0.06] pt-3 font-serif italic text-[13.5px] leading-snug text-ink/95">
+                  {w.closer}
+                </p>
+              </SpotlightCard>
             </motion.li>
           ))}
         </motion.ul>
