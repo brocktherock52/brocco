@@ -80,12 +80,34 @@
     mask-image: radial-gradient(60% 60% at 50% 30%, #000 0%, transparent 75%);
   }
   .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 rounded-full
+    @apply relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full
            px-5 py-3 text-sm font-semibold
            bg-gradient-to-r from-brand to-cyan
            text-white shadow-glow2
            transition-all duration-200
            hover:scale-[1.02] hover:shadow-glow active:scale-[0.99];
+  }
+  .btn-primary::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      120deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.22) 40%,
+      rgba(255, 255, 255, 0.22) 60%,
+      transparent 100%
+    );
+    transform: translateX(-120%);
+    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    pointer-events: none;
+  }
+  .btn-primary:hover::before {
+    transform: translateX(120%);
+  }
+  .btn-primary > * {
+    position: relative;
+    z-index: 1;
   }
   .btn-ghost {
     @apply inline-flex items-center justify-center gap-2 rounded-full

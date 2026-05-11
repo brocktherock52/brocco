@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion';
 import { Plug, FileText, Zap } from 'lucide-react';
+import { SpotlightCard } from './ui/spotlight-card';
 
 const STEPS = [
   {
@@ -41,7 +42,11 @@ export function HowItWorks() {
             <span className="text-grad-brand">zero tab-switching.</span>
           </h2>
           <p className="mt-4 max-w-xl text-[16px] text-ink-dim">
-            a peek at the dashboard live. real layout, real streaming, real tool calls. open <a href="/app" className="text-cyan-glow underline-offset-4 hover:underline">/app</a> to drive your own.
+            a peek at the dashboard live. real layout, real streaming, real tool calls. open{' '}
+            <a href="/app" className="text-cyan-glow underline-offset-4 hover:underline">
+              /app
+            </a>{' '}
+            to drive your own.
           </p>
         </div>
 
@@ -51,6 +56,7 @@ export function HowItWorks() {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: '-80px' }}
           transition={{ duration: 0.7 }}
+          whileHover={{ y: -3 }}
           className="mt-12 overflow-hidden rounded-2xl border border-white/[0.08] bg-bg-1/80 shadow-card backdrop-blur"
         >
           <div className="flex items-center gap-3 border-b border-white/[0.06] bg-white/[0.02] px-4 py-2.5">
@@ -59,7 +65,9 @@ export function HowItWorks() {
               <span className="h-2.5 w-2.5 rounded-full bg-amber-400/60" />
               <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/60" />
             </span>
-            <span className="font-mono text-[12px] text-ink-faint">brocco.ai/app - broadcast - 3 agents</span>
+            <span className="font-mono text-[12px] text-ink-faint">
+              brocco.ai/app - broadcast - 3 agents
+            </span>
             <span className="ml-auto inline-flex items-center gap-1.5 font-mono text-[11px] text-emerald-400">
               <span className="relative flex h-1.5 w-1.5">
                 <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
@@ -69,14 +77,35 @@ export function HowItWorks() {
             </span>
           </div>
           <div className="grid gap-2 p-2 md:grid-cols-3 md:gap-3 md:p-3">
-            <MockPane name="researcher" color="text-cyan-glow" step="step 2 / 6" tool="search_web">
-              Top 3 alternatives to brocco for parallel agents: Cursor 3 (IDE-bound), Devin (one-pane), and AutoGPT (no UI). All run on similar models, none ship multi-pane in browser.
+            <MockPane
+              name="researcher"
+              color="text-cyan-glow"
+              step="step 2 / 6"
+              tool="search_web"
+              delay={0}
+            >
+              Top 3 alternatives to brocco for parallel agents: Cursor 3 (IDE-bound), Devin
+              (one-pane), and AutoGPT (no UI). All run on similar models, none ship multi-pane in
+              browser.
             </MockPane>
-            <MockPane name="outreach" color="text-amber-300" step="step 3 / 6" tool="memory_put">
+            <MockPane
+              name="outreach"
+              color="text-amber-300"
+              step="step 3 / 6"
+              tool="memory_put"
+              delay={0.15}
+            >
               Subject: 8 detroit deals
-              {'\n'}Richard, saw your 2025 Westside closings. Built a disposition pack: 8 props, ranked by ARV minus rehab. Reply &apos;send&apos;.
+              {'\n'}Richard, saw your 2025 Westside closings. Built a disposition pack: 8 props,
+              ranked by ARV minus rehab. Reply &apos;send&apos;.
             </MockPane>
-            <MockPane name="planner" color="text-brand-glow" step="step 1 / 6" tool="memory_put">
+            <MockPane
+              name="planner"
+              color="text-brand-glow"
+              step="step 1 / 6"
+              tool="memory_put"
+              delay={0.3}
+            >
               Plan in 4 bullets:
               {'\n'}1. Define ICP and reach
               {'\n'}2. Draft hero copy variants
@@ -97,19 +126,25 @@ export function HowItWorks() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true, margin: '-60px' }}
                 transition={{ duration: 0.5, delay: i * 0.08 }}
-                className="card card-hover relative overflow-hidden p-6"
+                whileHover={{ y: -4 }}
               >
-                <div className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-brand/10 blur-3xl" />
-                <div className="flex items-center gap-3">
-                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand/30 to-cyan/20 ring-1 ring-white/[0.08]">
-                    <Icon className="h-4.5 w-4.5 text-brand-glow" />
+                <SpotlightCard
+                  spotlightSize={340}
+                  spotlightColor="rgba(124, 58, 237, 0.20)"
+                  className="card card-hover group relative h-full overflow-hidden p-6"
+                >
+                  <div className="pointer-events-none absolute -right-12 -top-12 h-40 w-40 rounded-full bg-brand/10 blur-3xl transition-all duration-500 group-hover:bg-brand/20" />
+                  <div className="flex items-center gap-3">
+                    <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-br from-brand/30 to-cyan/20 ring-1 ring-white/[0.08] transition-transform duration-300 group-hover:scale-110 group-hover:rotate-3">
+                      <Icon className="h-4 w-4 text-brand-glow" />
+                    </div>
+                    <span className="font-mono text-[11px] tracking-wider text-ink-faint">
+                      {s.num} / {s.eyebrow}
+                    </span>
                   </div>
-                  <span className="font-mono text-[11px] tracking-wider text-ink-faint">
-                    {s.num} / {s.eyebrow}
-                  </span>
-                </div>
-                <h3 className="mt-5 text-[20px] font-semibold tracking-tight">{s.title}</h3>
-                <p className="mt-2 text-[14.5px] leading-relaxed text-ink-dim">{s.body}</p>
+                  <h3 className="mt-5 text-[20px] font-semibold tracking-tight">{s.title}</h3>
+                  <p className="mt-2 text-[14.5px] leading-relaxed text-ink-dim">{s.body}</p>
+                </SpotlightCard>
               </motion.div>
             );
           })}
@@ -125,25 +160,45 @@ function MockPane({
   step,
   tool,
   children,
+  delay = 0,
 }: {
   name: string;
   color: string;
   step: string;
   tool: string;
   children: React.ReactNode;
+  delay?: number;
 }) {
   return (
-    <div className="rounded-xl border border-white/[0.06] bg-bg-2/70 p-3.5">
+    <motion.div
+      initial={{ opacity: 0, y: 8 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: '-40px' }}
+      transition={{ duration: 0.5, delay, ease: [0.16, 1, 0.3, 1] }}
+      className="rounded-xl border border-white/[0.06] bg-bg-2/70 p-3.5"
+    >
       <div className="flex items-center gap-2 text-[12px]">
-        <span className={`font-mono font-semibold ${color}`}>{name}</span>
+        <motion.span
+          className={`relative font-mono font-semibold ${color}`}
+          animate={{ opacity: [0.85, 1, 0.85] }}
+          transition={{ duration: 2.6, repeat: Infinity, ease: 'easeInOut', delay }}
+        >
+          {name}
+        </motion.span>
         <span className="ml-auto font-mono text-[10.5px] text-ink-faint">{step}</span>
       </div>
       <div className="mt-2 inline-flex items-center gap-1.5 rounded-md bg-white/[0.04] px-1.5 py-0.5 font-mono text-[10.5px] text-ink-dim">
         <span className="h-1 w-1 rounded-full bg-cyan" /> {tool}
       </div>
-      <pre className="mt-2 whitespace-pre-wrap text-[12.5px] leading-relaxed text-ink/90 font-sans">
+      <pre className="mt-2 whitespace-pre-wrap font-sans text-[12.5px] leading-relaxed text-ink/90">
         {children}
+        <motion.span
+          aria-hidden
+          className="ml-0.5 inline-block h-3 w-1.5 align-middle bg-cyan-glow"
+          animate={{ opacity: [1, 0, 1] }}
+          transition={{ duration: 1.0, repeat: Infinity, ease: 'easeInOut' }}
+        />
       </pre>
-    </div>
+    </motion.div>
   );
 }

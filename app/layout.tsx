@@ -11,6 +11,7 @@ import { CookieConsent } from '@/components/cookie-consent';
 import { PostHogProvider } from '@/components/posthog-provider';
 import { SupportChat } from '@/components/support-chat';
 import { CommandPalette } from '@/components/command-palette';
+import { ScrollProgress } from '@/components/ui/scroll-progress';
 import './globals.css';
 
 const SITE_URL = 'https://brocco-site.vercel.app';
@@ -129,6 +130,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         />
       </head>
       <body>
+        <ScrollProgress />
         <BgDecor />
         <BreathingBg />
         <a

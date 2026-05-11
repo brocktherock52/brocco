@@ -1,7 +1,6 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { TerminalSquare, Plug } from 'lucide-react';
 import {
   AnthropicIcon,
   OpenAIIcon,
@@ -12,6 +11,7 @@ import {
   McpIcon,
   OllamaIcon,
 } from './brand-icons';
+import { SpotlightCard } from './ui/spotlight-card';
 
 const ITEMS = [
   {
@@ -75,7 +75,8 @@ export function Integrations() {
             <span className="text-grad-brand">already love.</span>
           </h2>
           <p className="mt-4 max-w-xl text-[16px] text-ink-dim">
-            brocco is the runtime, not a walled garden. eight first-class integrations on day one, plus a tool factory so your custom stack ships next.
+            brocco is the runtime, not a walled garden. eight first-class integrations on day one,
+            plus a tool factory so your custom stack ships next.
           </p>
         </div>
 
@@ -99,28 +100,35 @@ export function Integrations() {
                   show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
                 }}
                 whileHover={{ y: -4 }}
-                className="card card-hover group relative overflow-hidden p-5"
+                style={{ perspective: 1000 }}
               >
-                <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/15" />
+                <SpotlightCard
+                  tilt
+                  spotlightSize={300}
+                  spotlightColor="rgba(124, 58, 237, 0.22)"
+                  className="card card-hover group h-full overflow-hidden p-5"
+                >
+                  <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/15" />
 
-                <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-white/[0.06] to-white/[0.02] ring-1 ring-white/[0.08]">
-                  <Icon className="h-4 w-4 text-white" />
-                </div>
+                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-white/[0.06] to-white/[0.02] ring-1 ring-white/[0.08] transition-transform duration-300 group-hover:scale-110">
+                    <Icon className="h-4 w-4 text-white" />
+                  </div>
 
-                <div className="mt-4 flex items-center gap-2">
-                  <h3 className="text-[15px] font-semibold tracking-tight">{it.name}</h3>
-                </div>
-                <p className="mt-0.5 font-mono text-[10.5px] uppercase tracking-wider text-ink-faint">
-                  {it.via}
-                </p>
-                <p className="mt-3 text-[13px] leading-relaxed text-ink-dim">{it.body}</p>
+                  <div className="mt-4 flex items-center gap-2">
+                    <h3 className="text-[15px] font-semibold tracking-tight">{it.name}</h3>
+                  </div>
+                  <p className="mt-0.5 font-mono text-[10.5px] uppercase tracking-wider text-ink-faint">
+                    {it.via}
+                  </p>
+                  <p className="mt-3 text-[13px] leading-relaxed text-ink-dim">{it.body}</p>
+                </SpotlightCard>
               </motion.div>
             );
           })}
         </motion.div>
 
         <p className="mt-10 text-center text-[13px] text-ink-faint">
-          Don't see your tool?{' '}
+          Don&apos;t see your tool?{' '}
           <a
             href="mailto:hello@brocco.ai?subject=Brocco%20integration%20request"
             className="text-cyan-glow underline-offset-4 hover:underline"

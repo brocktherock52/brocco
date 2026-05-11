@@ -26,19 +26,29 @@ export function Wedge() {
             <h2 className="mt-5 text-display-lg">
               <span className="text-grad">Generic agents read the internet.</span>
               <br />
-              <span className="font-serif italic font-medium text-grad-brand">Brocco reads your business.</span>
+              <span className="font-serif italic font-medium text-grad-brand">
+                Brocco reads your business.
+              </span>
             </h2>
-            <blockquote className="mt-7 border-l-2 border-brand/60 pl-5 italic text-[18px] leading-relaxed text-ink/95">
-              &quot;The agent is the cheap part. The workflow is the moat. Brocco hands you both.&quot;
+            <motion.blockquote
+              initial={{ opacity: 0, x: -8 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, margin: '-40px' }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+              className="mt-7 border-l-2 border-brand/60 pl-5 italic text-[18px] leading-relaxed text-ink/95"
+            >
+              &quot;The agent is the cheap part. The workflow is the moat. Brocco hands you
+              both.&quot;
               <div className="mt-2 not-italic font-mono text-[11.5px] tracking-wider text-ink-faint">
                 BROCCO PRINCIPLE NO. 1
               </div>
-            </blockquote>
+            </motion.blockquote>
             <p className="mt-6 max-w-xl text-[16px] leading-relaxed text-ink-dim">
-              Brocco is not another orchestration framework. It is the runtime that wires Claude, GPT, and local models
-              into <em className="not-italic text-white">your</em> stack. Drop a tool factory describing how to talk to
-              your CRM, your warehouse, your homemade dispatch system, and the agent uses it on the next run. That is
-              the wedge, and we hand it to you.
+              Brocco is not another orchestration framework. It is the runtime that wires Claude,
+              GPT, and local models into <em className="not-italic text-white">your</em> stack.
+              Drop a tool factory describing how to talk to your CRM, your warehouse, your homemade
+              dispatch system, and the agent uses it on the next run. That is the wedge, and we
+              hand it to you.
             </p>
           </div>
 
@@ -47,31 +57,66 @@ export function Wedge() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ duration: 0.6 }}
+            whileHover={{ y: -3 }}
             className="card relative overflow-hidden p-6"
           >
-            <div className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-cyan/10 blur-3xl" />
+            <motion.div
+              aria-hidden
+              className="pointer-events-none absolute -right-16 -top-16 h-44 w-44 rounded-full bg-cyan/10 blur-3xl"
+              animate={{ scale: [1, 1.15, 1], opacity: [0.6, 1, 0.6] }}
+              transition={{ duration: 8, repeat: Infinity, ease: 'easeInOut' }}
+            />
             <div className="flex items-center justify-between">
-              <h4 className="font-mono text-[12px] tracking-wider text-ink-faint">YOUR TOOL REGISTRY</h4>
+              <h4 className="font-mono text-[12px] tracking-wider text-ink-faint">
+                YOUR TOOL REGISTRY
+              </h4>
               <span className="font-mono text-[11px] text-ink-faint">13 tools</span>
             </div>
-            <div className="mt-5 grid grid-cols-3 gap-2 sm:grid-cols-3">
+            <motion.div
+              initial="hidden"
+              whileInView="show"
+              viewport={{ once: true, margin: '-40px' }}
+              variants={{
+                hidden: {},
+                show: { transition: { staggerChildren: 0.03 } },
+              }}
+              className="mt-5 grid grid-cols-3 gap-2 sm:grid-cols-3"
+            >
               {TOOLS.map((t) => (
-                <span
+                <motion.span
                   key={t}
-                  className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-2.5 py-2 text-center font-mono text-[12px] text-ink-dim"
+                  variants={{
+                    hidden: { opacity: 0, y: 6 },
+                    show: {
+                      opacity: 1,
+                      y: 0,
+                      transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] },
+                    },
+                  }}
+                  whileHover={{ scale: 1.04, y: -1 }}
+                  className="rounded-lg border border-white/[0.06] bg-white/[0.02] px-2.5 py-2 text-center font-mono text-[12px] text-ink-dim transition-colors hover:border-white/[0.14] hover:text-white"
                 >
                   {t}
-                </span>
+                </motion.span>
               ))}
               {BRAND_TOOLS.map((t) => (
-                <span
+                <motion.span
                   key={t}
-                  className="rounded-lg border border-brand/30 bg-brand/10 px-2.5 py-2 text-center font-mono text-[12px] text-brand-glow"
+                  variants={{
+                    hidden: { opacity: 0, y: 6 },
+                    show: {
+                      opacity: 1,
+                      y: 0,
+                      transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] },
+                    },
+                  }}
+                  whileHover={{ scale: 1.05, y: -1 }}
+                  className="rounded-lg border border-brand/30 bg-brand/10 px-2.5 py-2 text-center font-mono text-[12px] text-brand-glow shadow-[0_0_16px_-6px_rgba(167,139,250,0.45)]"
                 >
                   {t}
-                </span>
+                </motion.span>
               ))}
-            </div>
+            </motion.div>
             <p className="mt-5 font-mono text-[12px] text-ink-dim">
               → drop a tool definition, the agent uses it next run.
             </p>
