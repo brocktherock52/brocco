@@ -30,6 +30,7 @@ export const AGENTS: Agent[] = [
     color: '#22C55E',
     ring: 'ring-emerald-400/30',
     tools: ['delegate', 'memory_get', 'memory_put', 'done'],
+    emoji: '👑',
     sample: 'Run a launch sprint: research, draft tweets, write a landing hero, plan day-1 outreach.',
   },
   {
@@ -39,6 +40,7 @@ export const AGENTS: Agent[] = [
     color: '#67E8F9',
     ring: 'ring-cyan-400/30',
     tools: ['search_web', 'http_get', 'memory_put', 'file_save', 'done'],
+    emoji: '🔍',
     sample: 'Brief me on the agentic AI market in 2026: top 3 platforms, wedge, pricing, weaknesses.',
   },
   {
@@ -48,6 +50,7 @@ export const AGENTS: Agent[] = [
     color: '#A78BFA',
     ring: 'ring-violet-400/30',
     tools: ['search_web', 'http_get', 'memory_put', 'file_save', 'done'],
+    emoji: '📊',
     sample: 'Compare Claude Opus 4.7 vs Sonnet 4.6 on cost, latency, and tool-use accuracy.',
   },
   {
@@ -57,6 +60,7 @@ export const AGENTS: Agent[] = [
     color: '#FBBF24',
     ring: 'ring-amber-400/30',
     tools: ['search_web', 'memory_put', 'file_save', 'done'],
+    emoji: '💬',
     sample: 'Draft 3 cold emails to YC founders launching agentic workflow tools this quarter.',
   },
   {
@@ -66,6 +70,7 @@ export const AGENTS: Agent[] = [
     color: '#4ADE80',
     ring: 'ring-emerald-300/30',
     tools: ['search_web', 'http_get', 'file_save', 'done'],
+    emoji: '⌨️',
     sample: 'Write a TypeScript debounce function with tests. ESM-only, no deps.',
   },
   {
@@ -75,6 +80,7 @@ export const AGENTS: Agent[] = [
     color: '#22D3EE',
     ring: 'ring-cyan-500/30',
     tools: ['search_web', 'http_get', 'memory_put', 'file_save', 'done'],
+    emoji: '🌐',
     sample: 'Find the pricing pages of Cursor, Devin and Replit Agent and extract the tiers as a table.',
   },
   {
@@ -84,6 +90,7 @@ export const AGENTS: Agent[] = [
     color: '#F472B6',
     ring: 'ring-pink-400/30',
     tools: ['search_web', 'image_gen', 'file_save', 'done'],
+    emoji: '🎨',
     sample: 'Three logo concepts for a calm, trustworthy fintech for solo traders. Dark theme.',
   },
   {
@@ -93,6 +100,7 @@ export const AGENTS: Agent[] = [
     color: '#FB7185',
     ring: 'ring-rose-400/30',
     tools: ['search_web', 'memory_put', 'file_save', 'done'],
+    emoji: '🗂️',
     sample: 'Plan a 7-day launch for a $49/mo SaaS with 0 audience and a $200 budget.',
   },
   {
@@ -102,6 +110,7 @@ export const AGENTS: Agent[] = [
     color: '#F59E0B',
     ring: 'ring-amber-500/30',
     tools: ['search_web', 'file_save', 'done'],
+    emoji: '🔧',
     sample: 'Build a single-file pomodoro timer with keyboard shortcuts and dark mode.',
   },
 ];

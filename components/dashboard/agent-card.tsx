@@ -3,6 +3,7 @@
 import { Check } from 'lucide-react';
 import type { Agent } from '@/lib/agents';
 import { cn } from '@/lib/utils';
+import { AgentCroc } from '@/components/agent-croc';
 
 export function AgentCard({
   agent,
@@ -24,14 +25,12 @@ export function AgentCard({
       )}
     >
       <span
-        className="mt-0.5 inline-flex h-7 w-7 shrink-0 items-center justify-center rounded-lg ring-1 ring-white/[0.10]"
+        className="mt-0.5 inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg ring-1 ring-white/[0.10]"
         style={{
           background: `linear-gradient(135deg, ${agent.color}30 0%, ${agent.color}10 100%)`,
         }}
       >
-        <span className="text-[12px] font-bold" style={{ color: agent.color }}>
-          {agent.label[0]}
-        </span>
+        <AgentCroc agent={agent.name} size="sm" accent={agent.color} />
       </span>
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-1.5">

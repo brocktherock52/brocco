@@ -12,6 +12,7 @@ import { PostHogProvider } from '@/components/posthog-provider';
 import { SupportChat } from '@/components/support-chat';
 import { CommandPalette } from '@/components/command-palette';
 import { ScrollProgress } from '@/components/ui/scroll-progress';
+import { MascotDraggable } from '@/components/mascot-draggable';
 import './globals.css';
 
 const SITE_URL = 'https://brocco-site.vercel.app';
@@ -156,6 +157,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <CookieConsent />
         <SupportChat />
         <CommandPalette />
+        <MascotDraggable />
         <Analytics />
         <SpeedInsights />
       </body>
