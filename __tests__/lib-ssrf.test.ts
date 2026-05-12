@@ -31,6 +31,12 @@ describe('lib/ssrf', () => {
     expect(checkUrl('http://[::1]/').ok).toBe(false);
   });
 
+  it('blocks IPv6 private ranges (fc00::/7)', () => {
+    // ULA (unique local addresses) — IPv6 equivalent of RFC1918
+    expect(checkUrl('http://[fc00::1]/').ok).toBe(false);
+    expect(checkUrl('http://[fd00::1]/').ok).toBe(false);
+  });
+
   it('blocks AWS instance metadata endpoint', () => {
     expect(checkUrl('http://169.254.169.254/latest/meta-data/').ok).toBe(false);
   });

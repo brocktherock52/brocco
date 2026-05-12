@@ -35,7 +35,12 @@ export function checkUrl(input: string): SsrfCheckResult {
   if (!['http:', 'https:'].includes(url.protocol)) {
     return { ok: false, reason: `protocol ${url.protocol} not allowed (http/https only)` };
   }
-  const host = url.hostname.toLowerCase();
+  // URL.hostname keeps the brackets on IPv6 ([::1], [fc00::1], ...). Strip them
+  // so the BLOCKED_HOSTS/PREFIXES checks behave the same for v4 and v6.
+  const rawHost = url.hostname.toLowerCase();
+  const host = rawHost.startsWith('[') && rawHost.endsWith(']')
+    ? rawHost.slice(1, -1)
+    : rawHost;
   if (BLOCKED_HOSTS.has(host)) {
     return { ok: false, reason: `host ${host} is blocked` };
   }
