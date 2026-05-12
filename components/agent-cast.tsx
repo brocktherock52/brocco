@@ -327,20 +327,133 @@ const COSTUME: Record<string, CostumeItem[]> = {
   ],
 };
 
+/*
+ * SCENE_BG — per-agent dramatic backdrop scene. Each card gets a
+ * radically different visual context: terminal-text lines for coder,
+ * blueprint grid for planner, vinyl record rings for designer, etc.
+ *
+ * This makes each card read as a distinct "themed poster" even though
+ * they all use the same mascot image underneath. Wes-Anderson-character
+ * -poster pattern.
+ */
+const SCENE_BG: Record<string, React.CSSProperties> = {
+  researcher: {
+    // Old library / book spines
+    backgroundImage: `
+      radial-gradient(ellipse at 70% 30%, rgba(103,232,249,0.18) 0%, transparent 55%),
+      repeating-linear-gradient(180deg, transparent 0px, transparent 26px, rgba(103,232,249,0.07) 27px, rgba(103,232,249,0.07) 30px),
+      linear-gradient(180deg, #0a1d22 0%, #050b0e 100%)
+    `,
+  },
+  planner: {
+    // Blueprint grid — pink on dark
+    backgroundImage: `
+      radial-gradient(circle at 30% 30%, rgba(251,113,133,0.22) 0%, transparent 60%),
+      linear-gradient(rgba(251,113,133,0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(251,113,133,0.08) 1px, transparent 1px),
+      linear-gradient(135deg, #1a0f13 0%, #060304 100%)
+    `,
+    backgroundSize: 'auto, 28px 28px, 28px 28px, auto',
+  },
+  outreach: {
+    // Warm spotlight from upper-left
+    backgroundImage: `
+      radial-gradient(ellipse at 20% 0%, rgba(251,191,36,0.30) 0%, transparent 60%),
+      radial-gradient(circle at 80% 100%, rgba(251,191,36,0.12) 0%, transparent 55%),
+      linear-gradient(160deg, #1a1408 0%, #050402 100%)
+    `,
+  },
+  designer: {
+    // Color-swatch grid — pinks/purples
+    backgroundImage: `
+      radial-gradient(circle at 50% 40%, rgba(244,114,182,0.20) 0%, transparent 65%),
+      conic-gradient(from 0deg at 50% 50%, rgba(244,114,182,0.10), rgba(251,113,133,0.05), rgba(167,139,250,0.10), rgba(244,114,182,0.10)),
+      linear-gradient(180deg, #1a0a17 0%, #050204 100%)
+    `,
+  },
+  analyst: {
+    // Monitor glow — dual columns of violet
+    backgroundImage: `
+      linear-gradient(90deg, transparent 0%, rgba(167,139,250,0.18) 8%, transparent 22%, transparent 78%, rgba(167,139,250,0.18) 92%, transparent 100%),
+      repeating-linear-gradient(0deg, transparent 0px, transparent 6px, rgba(167,139,250,0.04) 7px, rgba(167,139,250,0.04) 8px),
+      linear-gradient(180deg, #0e0a1a 0%, #04030a 100%)
+    `,
+  },
+  coder: {
+    // CRT terminal — emerald rows + scanlines
+    backgroundImage: `
+      radial-gradient(ellipse at 50% 50%, rgba(74,222,128,0.20) 0%, transparent 65%),
+      repeating-linear-gradient(0deg, transparent 0px, transparent 3px, rgba(74,222,128,0.06) 4px, rgba(74,222,128,0.06) 5px),
+      linear-gradient(180deg, #051410 0%, #02060a 100%)
+    `,
+  },
+  ops: {
+    // Office fluorescent + paper shred
+    backgroundImage: `
+      radial-gradient(ellipse at 50% 0%, rgba(34,211,238,0.18) 0%, transparent 50%),
+      repeating-linear-gradient(20deg, transparent 0px, transparent 40px, rgba(34,211,238,0.05) 41px, rgba(34,211,238,0.05) 43px),
+      linear-gradient(180deg, #061418 0%, #02080a 100%)
+    `,
+  },
+  supervisor: {
+    // Command center — 8 small glow points around the center
+    backgroundImage: `
+      radial-gradient(circle at 20% 25%, rgba(34,197,94,0.18) 0%, transparent 18%),
+      radial-gradient(circle at 80% 25%, rgba(34,197,94,0.12) 0%, transparent 18%),
+      radial-gradient(circle at 20% 75%, rgba(34,197,94,0.12) 0%, transparent 18%),
+      radial-gradient(circle at 80% 75%, rgba(34,197,94,0.18) 0%, transparent 18%),
+      radial-gradient(ellipse at 50% 50%, rgba(34,197,94,0.10) 0%, transparent 60%),
+      linear-gradient(180deg, #0a1a10 0%, #02070a 100%)
+    `,
+  },
+  browser: {
+    // Detective noir — green banker's lamp + smoke wisps
+    backgroundImage: `
+      radial-gradient(ellipse at 30% 20%, rgba(103,232,249,0.28) 0%, transparent 45%),
+      radial-gradient(ellipse at 70% 90%, rgba(34,42,55,0.7) 0%, transparent 60%),
+      linear-gradient(180deg, #0a1418 0%, #050709 100%)
+    `,
+  },
+};
+
+/*
+ * MOOD — per-agent CSS filter applied to the croc image itself, so the
+ * same mascot reads as a different character in each card via color
+ * grading. This is the strongest single tool we have for differentiation
+ * without regenerating the source image.
+ */
+const MOOD: Record<string, string> = {
+  // soft cyan-tinted, slight desaturate (library mood)
+  researcher: 'hue-rotate(170deg) saturate(0.85) brightness(1.05) contrast(1.05)',
+  // pink-tinted, slight blur (planning room marker glow)
+  planner: 'hue-rotate(320deg) saturate(1.1) brightness(1.0)',
+  // warm amber (golden hour sales call)
+  outreach: 'hue-rotate(35deg) saturate(1.2) brightness(1.08) contrast(1.0)',
+  // hot pink studio (designer)
+  designer: 'hue-rotate(300deg) saturate(1.3) brightness(1.05)',
+  // cool violet (analyst monitor glow)
+  analyst: 'hue-rotate(250deg) saturate(1.1) brightness(0.95)',
+  // saturated emerald terminal (coder)
+  coder: 'hue-rotate(95deg) saturate(1.4) brightness(0.95) contrast(1.15)',
+  // cyan crisp office (ops)
+  ops: 'hue-rotate(180deg) saturate(1.0) brightness(1.0)',
+  // warm emerald spotlight (supervisor)
+  supervisor: 'hue-rotate(85deg) saturate(1.15) brightness(1.05)',
+  // noir desaturated + green tint (browser/detective)
+  browser: 'grayscale(0.4) sepia(0.2) hue-rotate(140deg) saturate(1.1) brightness(0.95) contrast(1.1)',
+};
+
 function CastPlaceholder({ accent, slug, index }: { accent: string; slug: string; index: number }) {
   const props = SCENE[slug] ?? SCENE.researcher;
   const costume = COSTUME[slug] ?? COSTUME.researcher;
+  const bgStyle = SCENE_BG[slug] ?? SCENE_BG.researcher;
+  const mood = MOOD[slug] ?? '';
   return (
-    <div className="relative h-full w-full">
-      {/* Backdrop wash + grid */}
-      <div
-        aria-hidden
-        className="absolute inset-0"
-        style={{
-          background: `radial-gradient(circle at 50% 35%, ${accent}30 0%, transparent 62%), linear-gradient(135deg, #050807 0%, #0a1116 100%)`,
-        }}
-      />
-      <div className="grid-bg pointer-events-none absolute inset-0 opacity-30" />
+    <div className="relative h-full w-full overflow-hidden">
+      {/* Per-agent dramatic backdrop — radically different per slug */}
+      <div aria-hidden className="absolute inset-0" style={bgStyle} />
+      {/* faint dot grid layered on top of the backdrop for texture */}
+      <div className="grid-bg pointer-events-none absolute inset-0 opacity-[0.12]" />
 
       {/* Stage props arranged around the mascot — corners */}
       {props.map((p, i) => (
@@ -356,11 +469,11 @@ function CastPlaceholder({ accent, slug, index }: { accent: string; slug: string
             ease: 'easeInOut',
           }}
         >
-          <p.Icon className="drop-shadow-[0_0_8px_rgba(0,0,0,0.45)]" />
+          <p.Icon className="drop-shadow-[0_0_8px_rgba(0,0,0,0.55)]" />
         </motion.div>
       ))}
 
-      {/* Mascot — larger, centered. Sits below costume accessories. */}
+      {/* Mascot — larger, centered. CSS filter recolors it per agent. */}
       <motion.div
         className="absolute inset-0 z-10 flex items-end justify-center pb-6"
         animate={{
@@ -375,8 +488,10 @@ function CastPlaceholder({ accent, slug, index }: { accent: string; slug: string
           alt=""
           width={420}
           height={420}
-          className="h-auto w-[68%] max-w-[280px] opacity-[0.97]"
-          style={{ filter: `drop-shadow(0 12px 32px ${accent}66) drop-shadow(0 0 24px ${accent}33)` }}
+          className="h-auto w-[68%] max-w-[280px]"
+          style={{
+            filter: `${mood} drop-shadow(0 12px 32px ${accent}66) drop-shadow(0 0 24px ${accent}33)`,
+          }}
           priority={false}
         />
       </motion.div>
