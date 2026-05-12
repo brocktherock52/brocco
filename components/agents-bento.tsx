@@ -14,6 +14,7 @@ import { motion } from 'framer-motion';
 import { ArrowRight, ChevronRight } from 'lucide-react';
 import { AGENTS, type Agent } from '@/lib/agents';
 import { SpotlightCard } from './ui/spotlight-card';
+import { AgentCroc } from './agent-croc';
 import { cn } from '@/lib/utils';
 
 // Tile placement specs (12-col grid)
@@ -62,8 +63,17 @@ function AgentTile({ a, hero = false }: { a: Agent; hero?: boolean }) {
           style={{ backgroundColor: a.color }}
         />
 
-        {/* row header */}
+        {/* row header — persona croc + name + tool count */}
         <div className="flex items-center gap-2.5">
+          <span
+            className={cn(
+              'shrink-0 rounded-md ring-1 ring-white/[0.06]',
+              hero ? 'p-1.5' : 'p-1',
+            )}
+            style={{ backgroundColor: `${a.color}10` }}
+          >
+            <AgentCroc agent={a.name} size={hero ? 'md' : 'sm'} accent={a.color} />
+          </span>
           <motion.span
             className="h-2 w-2 rounded-full"
             style={{ backgroundColor: a.color, boxShadow: `0 0 10px ${a.color}` }}

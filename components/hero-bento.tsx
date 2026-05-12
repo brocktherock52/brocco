@@ -22,6 +22,7 @@
 
 import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
+import Image from 'next/image';
 import {
   motion,
   useReducedMotion,
@@ -221,6 +222,39 @@ function HeadlineTile() {
         <span>no card</span>
         <span>·</span>
         <span>11 min to first run</span>
+      </motion.div>
+
+      {/* Brocco mascot — floats in the bottom-right of the headline tile.
+          Gives the hero a face. Subtle idle float (reduced-motion safe).
+          The mascot is decorative; aria-hidden so screen readers skip it. */}
+      <motion.div
+        aria-hidden
+        initial={{ opacity: 0, y: 30, rotate: -8 }}
+        animate={
+          reduce
+            ? { opacity: 1, y: 0, rotate: 0 }
+            : { opacity: 1, y: [0, -8, 0], rotate: [-4, 4, -4] }
+        }
+        transition={
+          reduce
+            ? { duration: 0.6, delay: 0.6 }
+            : {
+                opacity: { duration: 0.8, delay: 0.6 },
+                y: { duration: 5.5, repeat: Infinity, ease: 'easeInOut', delay: 1 },
+                rotate: { duration: 7, repeat: Infinity, ease: 'easeInOut', delay: 1.2 },
+              }
+        }
+        whileHover={reduce ? undefined : { scale: 1.06 }}
+        className="pointer-events-none absolute bottom-4 right-4 h-32 w-32 sm:bottom-6 sm:right-6 sm:h-40 sm:w-40 md:h-48 md:w-48 lg:h-56 lg:w-56"
+      >
+        <Image
+          src="/assets/brocco-mark-transparent.png"
+          alt=""
+          fill
+          sizes="(min-width: 1024px) 224px, (min-width: 640px) 192px, 128px"
+          priority
+          className="object-contain drop-shadow-[0_20px_40px_rgba(124,58,237,0.45)]"
+        />
       </motion.div>
     </Tile>
   );

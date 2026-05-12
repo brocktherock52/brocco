@@ -30,6 +30,8 @@ import {
   Wine,
 } from 'lucide-react';
 import { AGENT_CAST } from '@/lib/agent-cast';
+import { AgentCroc } from '@/components/agent-croc';
+import type { AgentName } from '@/lib/agents';
 
 /**
  * AgentCast — the brocco-croc playing every role in the office.
@@ -143,13 +145,29 @@ function CastCard({ member, index }: { member: typeof AGENT_CAST[number]; index:
             transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut', delay: index * 0.3, repeatDelay: 4 }}
           />
 
-          <div className="absolute left-3 top-3">
+          <div className="absolute left-3 top-3 flex items-center gap-2">
             <span
               className="inline-flex items-center gap-1.5 rounded-full border bg-bg-1/80 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] backdrop-blur-md"
               style={{ borderColor: `${accent}55`, color: accent }}
             >
               <span className="h-1 w-1 rounded-full" style={{ backgroundColor: accent, boxShadow: `0 0 6px ${accent}` }} />
               {member.name}
+            </span>
+          </div>
+
+          {/* Persona croc SVG — top-right badge. Pairs the photographic
+              croc-character with our 2-bit codey iconography so the
+              brand language is consistent across raster + vector. */}
+          <div className="absolute right-3 top-3">
+            <span
+              className="inline-flex h-9 w-9 items-center justify-center rounded-lg border bg-bg-1/80 backdrop-blur-md ring-1 ring-white/[0.06]"
+              style={{ borderColor: `${accent}40` }}
+            >
+              <AgentCroc
+                agent={(member.slug === 'ops' ? 'planner' : member.slug) as AgentName}
+                size="sm"
+                accent={accent}
+              />
             </span>
           </div>
 
