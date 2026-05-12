@@ -6,6 +6,7 @@ import { motion, useScroll, useTransform, useMotionValue, useSpring, useReducedM
 import { useEffect, useMemo, useRef } from 'react';
 import { ArrowRight, Download } from 'lucide-react';
 import { HeroTerminal } from './hero-terminal';
+import { MagneticLink } from './ui/magnetic';
 
 /**
  * HeroAnimated — fully kinetic hero. Replaces the static spinning
@@ -166,14 +167,14 @@ export function HeroAnimated() {
               transition={{ duration: 0.7, delay: 0.45, ease: [0.16, 1, 0.3, 1] }}
               className="mt-8 flex flex-wrap gap-3"
             >
-              <Link href="/app" className="btn-primary group">
-                open app
+              <MagneticLink href="/app" className="btn-primary group">
+                <span>open app</span>
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-              </Link>
-              <Link href="/download" className="btn-ghost">
+              </MagneticLink>
+              <MagneticLink href="/download" className="btn-ghost" strength={10}>
                 <Download className="h-4 w-4" />
                 install
-              </Link>
+              </MagneticLink>
             </motion.div>
             <motion.div
               initial={{ opacity: 0 }}

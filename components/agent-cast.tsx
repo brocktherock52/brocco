@@ -30,6 +30,9 @@ import {
   Wine,
 } from 'lucide-react';
 import { AGENT_CAST } from '@/lib/agent-cast';
+import { AgentCroc } from '@/components/agent-croc';
+import type { AgentName } from '@/lib/agents';
+import { CAST_CROCS } from '@/components/cast-croc-characters';
 
 /**
  * AgentCast — the brocco-croc playing every role in the office.
@@ -143,13 +146,29 @@ function CastCard({ member, index }: { member: typeof AGENT_CAST[number]; index:
             transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut', delay: index * 0.3, repeatDelay: 4 }}
           />
 
-          <div className="absolute left-3 top-3">
+          <div className="absolute left-3 top-3 flex items-center gap-2">
             <span
               className="inline-flex items-center gap-1.5 rounded-full border bg-bg-1/80 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] backdrop-blur-md"
               style={{ borderColor: `${accent}55`, color: accent }}
             >
               <span className="h-1 w-1 rounded-full" style={{ backgroundColor: accent, boxShadow: `0 0 6px ${accent}` }} />
               {member.name}
+            </span>
+          </div>
+
+          {/* Persona croc SVG — top-right badge. Pairs the photographic
+              croc-character with our 2-bit codey iconography so the
+              brand language is consistent across raster + vector. */}
+          <div className="absolute right-3 top-3">
+            <span
+              className="inline-flex h-9 w-9 items-center justify-center rounded-lg border bg-bg-1/80 backdrop-blur-md ring-1 ring-white/[0.06]"
+              style={{ borderColor: `${accent}40` }}
+            >
+              <AgentCroc
+                agent={(member.slug === 'ops' ? 'planner' : member.slug) as AgentName}
+                size="sm"
+                accent={accent}
+              />
             </span>
           </div>
 
@@ -237,53 +256,228 @@ const SCENE: Record<string, PropSpec[]> = {
   ],
 };
 
+/*
+ * COSTUME — per-agent accessory overlay layered ON the brocco mascot.
+ *
+ * Each entry positions 1-3 large lucide icons OVER the croc image to
+ * "dress" the mascot in their role's outfit. Coordinates are percentages
+ * relative to the card's image area (4:5 aspect, croc occupies the
+ * center ~60%).
+ *
+ * The croc image is rendered first (z-10), then SCENE props float in
+ * the corners (z-20), then COSTUME accessories overlay the croc (z-30).
+ */
+interface CostumeItem {
+  // Wider type than PropSpec — lucide icons accept style + width/height/strokeWidth.
+  Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  /** Position of the accessory ON the croc, as % of card area */
+  pos: { top: string; left: string };
+  /** Pixel size — these are LARGE so the costume reads from a distance */
+  size: number;
+  /** Rotation degrees */
+  rot?: number;
+  /** Fill mode for the icon: solid (filled) or outline */
+  fill?: 'solid' | 'outline';
+}
+
+const COSTUME: Record<string, CostumeItem[]> = {
+  // wire-frame glasses + a paper in front
+  researcher: [
+    { Icon: Glasses, pos: { top: '38%', left: '50%' }, size: 56, rot: -2, fill: 'outline' },
+    { Icon: FileText, pos: { top: '64%', left: '36%' }, size: 32, rot: -8, fill: 'solid' },
+  ],
+  // marker in claw + sticky note headband
+  planner: [
+    { Icon: Pencil, pos: { top: '60%', left: '60%' }, size: 40, rot: 28, fill: 'solid' },
+    { Icon: StickyNote, pos: { top: '22%', left: '52%' }, size: 38, rot: -10, fill: 'solid' },
+  ],
+  // headset across the head + coffee mug in claw
+  outreach: [
+    { Icon: Headphones, pos: { top: '24%', left: '50%' }, size: 64, rot: 0, fill: 'outline' },
+    { Icon: Wine, pos: { top: '62%', left: '60%' }, size: 34, rot: 10, fill: 'solid' },
+  ],
+  // paint palette in claw + stylus on head
+  designer: [
+    { Icon: Palette, pos: { top: '62%', left: '60%' }, size: 44, rot: 12, fill: 'solid' },
+    { Icon: Pencil, pos: { top: '24%', left: '54%' }, size: 36, rot: -28, fill: 'solid' },
+  ],
+  // glasses + clipboard
+  analyst: [
+    { Icon: Glasses, pos: { top: '38%', left: '50%' }, size: 52, rot: 0, fill: 'outline' },
+    { Icon: ClipboardList, pos: { top: '62%', left: '38%' }, size: 36, rot: -10, fill: 'solid' },
+  ],
+  // big hipster glasses + laptop in front
+  coder: [
+    { Icon: Glasses, pos: { top: '36%', left: '50%' }, size: 64, rot: 0, fill: 'outline' },
+    { Icon: TerminalIcon, pos: { top: '64%', left: '50%' }, size: 40, rot: 0, fill: 'solid' },
+  ],
+  // tie hanging + folder
+  ops: [
+    { Icon: ScrollText, pos: { top: '50%', left: '50%' }, size: 38, rot: 0, fill: 'solid' },
+    { Icon: FileText, pos: { top: '64%', left: '38%' }, size: 32, rot: -10, fill: 'solid' },
+  ],
+  // conductor baton in claw + crown-like sparkle on head
+  supervisor: [
+    { Icon: Wand2, pos: { top: '60%', left: '62%' }, size: 44, rot: 30, fill: 'solid' },
+    { Icon: Sparkles, pos: { top: '20%', left: '50%' }, size: 36, rot: 0, fill: 'solid' },
+  ],
+  // fedora-ish wine glass on top + pipe
+  browser: [
+    { Icon: Wine, pos: { top: '22%', left: '50%' }, size: 38, rot: 0, fill: 'solid' },
+    { Icon: ScrollText, pos: { top: '62%', left: '38%' }, size: 32, rot: -8, fill: 'solid' },
+  ],
+};
+
+/*
+ * SCENE_BG — per-agent dramatic backdrop scene. Each card gets a
+ * radically different visual context: terminal-text lines for coder,
+ * blueprint grid for planner, vinyl record rings for designer, etc.
+ *
+ * This makes each card read as a distinct "themed poster" even though
+ * they all use the same mascot image underneath. Wes-Anderson-character
+ * -poster pattern.
+ */
+const SCENE_BG: Record<string, React.CSSProperties> = {
+  researcher: {
+    // Old library / book spines
+    backgroundImage: `
+      radial-gradient(ellipse at 70% 30%, rgba(103,232,249,0.18) 0%, transparent 55%),
+      repeating-linear-gradient(180deg, transparent 0px, transparent 26px, rgba(103,232,249,0.07) 27px, rgba(103,232,249,0.07) 30px),
+      linear-gradient(180deg, #0a1d22 0%, #050b0e 100%)
+    `,
+  },
+  planner: {
+    // Blueprint grid — pink on dark
+    backgroundImage: `
+      radial-gradient(circle at 30% 30%, rgba(251,113,133,0.22) 0%, transparent 60%),
+      linear-gradient(rgba(251,113,133,0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(251,113,133,0.08) 1px, transparent 1px),
+      linear-gradient(135deg, #1a0f13 0%, #060304 100%)
+    `,
+    backgroundSize: 'auto, 28px 28px, 28px 28px, auto',
+  },
+  outreach: {
+    // Warm spotlight from upper-left
+    backgroundImage: `
+      radial-gradient(ellipse at 20% 0%, rgba(251,191,36,0.30) 0%, transparent 60%),
+      radial-gradient(circle at 80% 100%, rgba(251,191,36,0.12) 0%, transparent 55%),
+      linear-gradient(160deg, #1a1408 0%, #050402 100%)
+    `,
+  },
+  designer: {
+    // Color-swatch grid — pinks/purples
+    backgroundImage: `
+      radial-gradient(circle at 50% 40%, rgba(244,114,182,0.20) 0%, transparent 65%),
+      conic-gradient(from 0deg at 50% 50%, rgba(244,114,182,0.10), rgba(251,113,133,0.05), rgba(167,139,250,0.10), rgba(244,114,182,0.10)),
+      linear-gradient(180deg, #1a0a17 0%, #050204 100%)
+    `,
+  },
+  analyst: {
+    // Monitor glow — dual columns of violet
+    backgroundImage: `
+      linear-gradient(90deg, transparent 0%, rgba(167,139,250,0.18) 8%, transparent 22%, transparent 78%, rgba(167,139,250,0.18) 92%, transparent 100%),
+      repeating-linear-gradient(0deg, transparent 0px, transparent 6px, rgba(167,139,250,0.04) 7px, rgba(167,139,250,0.04) 8px),
+      linear-gradient(180deg, #0e0a1a 0%, #04030a 100%)
+    `,
+  },
+  coder: {
+    // CRT terminal — emerald rows + scanlines
+    backgroundImage: `
+      radial-gradient(ellipse at 50% 50%, rgba(74,222,128,0.20) 0%, transparent 65%),
+      repeating-linear-gradient(0deg, transparent 0px, transparent 3px, rgba(74,222,128,0.06) 4px, rgba(74,222,128,0.06) 5px),
+      linear-gradient(180deg, #051410 0%, #02060a 100%)
+    `,
+  },
+  ops: {
+    // Office fluorescent + paper shred
+    backgroundImage: `
+      radial-gradient(ellipse at 50% 0%, rgba(34,211,238,0.18) 0%, transparent 50%),
+      repeating-linear-gradient(20deg, transparent 0px, transparent 40px, rgba(34,211,238,0.05) 41px, rgba(34,211,238,0.05) 43px),
+      linear-gradient(180deg, #061418 0%, #02080a 100%)
+    `,
+  },
+  supervisor: {
+    // Command center — 8 small glow points around the center
+    backgroundImage: `
+      radial-gradient(circle at 20% 25%, rgba(34,197,94,0.18) 0%, transparent 18%),
+      radial-gradient(circle at 80% 25%, rgba(34,197,94,0.12) 0%, transparent 18%),
+      radial-gradient(circle at 20% 75%, rgba(34,197,94,0.12) 0%, transparent 18%),
+      radial-gradient(circle at 80% 75%, rgba(34,197,94,0.18) 0%, transparent 18%),
+      radial-gradient(ellipse at 50% 50%, rgba(34,197,94,0.10) 0%, transparent 60%),
+      linear-gradient(180deg, #0a1a10 0%, #02070a 100%)
+    `,
+  },
+  browser: {
+    // Detective noir — green banker's lamp + smoke wisps
+    backgroundImage: `
+      radial-gradient(ellipse at 30% 20%, rgba(103,232,249,0.28) 0%, transparent 45%),
+      radial-gradient(ellipse at 70% 90%, rgba(34,42,55,0.7) 0%, transparent 60%),
+      linear-gradient(180deg, #0a1418 0%, #050709 100%)
+    `,
+  },
+};
+
+/*
+ * MOOD — per-agent CSS filter applied to the croc image itself, so the
+ * same mascot reads as a different character in each card via color
+ * grading. This is the strongest single tool we have for differentiation
+ * without regenerating the source image.
+ */
+const MOOD: Record<string, string> = {
+  // soft cyan-tinted, slight desaturate (library mood)
+  researcher: 'hue-rotate(170deg) saturate(0.85) brightness(1.05) contrast(1.05)',
+  // pink-tinted, slight blur (planning room marker glow)
+  planner: 'hue-rotate(320deg) saturate(1.1) brightness(1.0)',
+  // warm amber (golden hour sales call)
+  outreach: 'hue-rotate(35deg) saturate(1.2) brightness(1.08) contrast(1.0)',
+  // hot pink studio (designer)
+  designer: 'hue-rotate(300deg) saturate(1.3) brightness(1.05)',
+  // cool violet (analyst monitor glow)
+  analyst: 'hue-rotate(250deg) saturate(1.1) brightness(0.95)',
+  // saturated emerald terminal (coder)
+  coder: 'hue-rotate(95deg) saturate(1.4) brightness(0.95) contrast(1.15)',
+  // cyan crisp office (ops)
+  ops: 'hue-rotate(180deg) saturate(1.0) brightness(1.0)',
+  // warm emerald spotlight (supervisor)
+  supervisor: 'hue-rotate(85deg) saturate(1.15) brightness(1.05)',
+  // noir desaturated + green tint (browser/detective)
+  browser: 'grayscale(0.4) sepia(0.2) hue-rotate(140deg) saturate(1.1) brightness(0.95) contrast(1.1)',
+};
+
 function CastPlaceholder({ accent, slug, index }: { accent: string; slug: string; index: number }) {
-  const props = SCENE[slug] ?? SCENE.researcher;
+  const bgStyle = SCENE_BG[slug] ?? SCENE_BG.researcher;
+  // Look up the bespoke croc character for this agent. Each one is a
+  // unique SVG illustration with its own body shape, pose, and integrated
+  // costume — defined in components/cast-croc-characters.tsx.
+  const CharacterComponent = CAST_CROCS[slug] ?? CAST_CROCS.researcher;
   return (
-    <div className="relative h-full w-full">
-      <div
-        aria-hidden
-        className="absolute inset-0"
-        style={{
-          background: `radial-gradient(circle at 50% 35%, ${accent}26 0%, transparent 60%), linear-gradient(135deg, #050807 0%, #0a1116 100%)`,
-        }}
-      />
-      <div className="grid-bg pointer-events-none absolute inset-0 opacity-30" />
+    <div className="relative h-full w-full overflow-hidden">
+      {/* Per-agent dramatic backdrop — radically different per slug */}
+      <div aria-hidden className="absolute inset-0" style={bgStyle} />
+      {/* faint dot grid layered on top of the backdrop for texture */}
+      <div className="grid-bg pointer-events-none absolute inset-0 opacity-[0.12]" />
 
-      {/* Stage props arranged around the mascot */}
-      {props.map((p, i) => (
-        <motion.div
-          key={i}
-          className="absolute"
-          style={{ top: p.pos.top, left: p.pos.left, color: accent }}
-          animate={{ y: [0, -6, 0, 4, 0], rotate: [(p.rot ?? 0), (p.rot ?? 0) + 4, (p.rot ?? 0)] }}
-          transition={{
-            duration: p.bob?.dur ?? 5,
-            delay: p.bob?.delay ?? 0,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        >
-          <p.Icon className="drop-shadow-[0_0_8px_rgba(103,232,249,0.45)]" />
-        </motion.div>
-      ))}
-
-      {/* Mascot center */}
+      {/* The bespoke character SVG fills the card. Each agent's
+          illustration includes their costume, props, and scene-context
+          elements drawn AS PART of the SVG — not as separate overlays.
+          The SVG uses preserveAspectRatio=meet (default) to fit fully
+          within the 4:5 card area without cropping. */}
       <motion.div
-        className="absolute inset-0 flex items-center justify-center"
-        animate={{ scale: [1, 1.04, 1], y: [0, -6, 0], rotate: index % 2 === 0 ? [-1.5, 1.5, -1.5] : [1.5, -1.5, 1.5] }}
-        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute inset-0 z-10"
+        animate={{
+          y: [0, -4, 0],
+          rotate: index % 2 === 0 ? [-1, 1, -1] : [1, -1, 1],
+        }}
+        transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
       >
-        <Image
-          src="/assets/brocco-mark-transparent.png"
-          alt=""
-          width={180}
-          height={180}
-          className="h-auto w-[42%] opacity-95 drop-shadow-[0_0_24px_rgba(103,232,249,0.30)]"
-          style={{ filter: `drop-shadow(0 0 18px ${accent}55)` }}
+        <CharacterComponent
+          accent={accent}
+          className="absolute inset-0 h-full w-full"
+          style={{
+            filter: `drop-shadow(0 12px 32px ${accent}55) drop-shadow(0 0 24px ${accent}22)`,
+          }}
         />
       </motion.div>
-
     </div>
   );
 }
