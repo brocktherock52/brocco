@@ -255,24 +255,98 @@ const SCENE: Record<string, PropSpec[]> = {
   ],
 };
 
+/*
+ * COSTUME — per-agent accessory overlay layered ON the brocco mascot.
+ *
+ * Each entry positions 1-3 large lucide icons OVER the croc image to
+ * "dress" the mascot in their role's outfit. Coordinates are percentages
+ * relative to the card's image area (4:5 aspect, croc occupies the
+ * center ~60%).
+ *
+ * The croc image is rendered first (z-10), then SCENE props float in
+ * the corners (z-20), then COSTUME accessories overlay the croc (z-30).
+ */
+interface CostumeItem {
+  // Wider type than PropSpec — lucide icons accept style + width/height/strokeWidth.
+  Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
+  /** Position of the accessory ON the croc, as % of card area */
+  pos: { top: string; left: string };
+  /** Pixel size — these are LARGE so the costume reads from a distance */
+  size: number;
+  /** Rotation degrees */
+  rot?: number;
+  /** Fill mode for the icon: solid (filled) or outline */
+  fill?: 'solid' | 'outline';
+}
+
+const COSTUME: Record<string, CostumeItem[]> = {
+  // wire-frame glasses + a paper in front
+  researcher: [
+    { Icon: Glasses, pos: { top: '38%', left: '50%' }, size: 56, rot: -2, fill: 'outline' },
+    { Icon: FileText, pos: { top: '64%', left: '36%' }, size: 32, rot: -8, fill: 'solid' },
+  ],
+  // marker in claw + sticky note headband
+  planner: [
+    { Icon: Pencil, pos: { top: '60%', left: '60%' }, size: 40, rot: 28, fill: 'solid' },
+    { Icon: StickyNote, pos: { top: '22%', left: '52%' }, size: 38, rot: -10, fill: 'solid' },
+  ],
+  // headset across the head + coffee mug in claw
+  outreach: [
+    { Icon: Headphones, pos: { top: '24%', left: '50%' }, size: 64, rot: 0, fill: 'outline' },
+    { Icon: Wine, pos: { top: '62%', left: '60%' }, size: 34, rot: 10, fill: 'solid' },
+  ],
+  // paint palette in claw + stylus on head
+  designer: [
+    { Icon: Palette, pos: { top: '62%', left: '60%' }, size: 44, rot: 12, fill: 'solid' },
+    { Icon: Pencil, pos: { top: '24%', left: '54%' }, size: 36, rot: -28, fill: 'solid' },
+  ],
+  // glasses + clipboard
+  analyst: [
+    { Icon: Glasses, pos: { top: '38%', left: '50%' }, size: 52, rot: 0, fill: 'outline' },
+    { Icon: ClipboardList, pos: { top: '62%', left: '38%' }, size: 36, rot: -10, fill: 'solid' },
+  ],
+  // big hipster glasses + laptop in front
+  coder: [
+    { Icon: Glasses, pos: { top: '36%', left: '50%' }, size: 64, rot: 0, fill: 'outline' },
+    { Icon: TerminalIcon, pos: { top: '64%', left: '50%' }, size: 40, rot: 0, fill: 'solid' },
+  ],
+  // tie hanging + folder
+  ops: [
+    { Icon: ScrollText, pos: { top: '50%', left: '50%' }, size: 38, rot: 0, fill: 'solid' },
+    { Icon: FileText, pos: { top: '64%', left: '38%' }, size: 32, rot: -10, fill: 'solid' },
+  ],
+  // conductor baton in claw + crown-like sparkle on head
+  supervisor: [
+    { Icon: Wand2, pos: { top: '60%', left: '62%' }, size: 44, rot: 30, fill: 'solid' },
+    { Icon: Sparkles, pos: { top: '20%', left: '50%' }, size: 36, rot: 0, fill: 'solid' },
+  ],
+  // fedora-ish wine glass on top + pipe
+  browser: [
+    { Icon: Wine, pos: { top: '22%', left: '50%' }, size: 38, rot: 0, fill: 'solid' },
+    { Icon: ScrollText, pos: { top: '62%', left: '38%' }, size: 32, rot: -8, fill: 'solid' },
+  ],
+};
+
 function CastPlaceholder({ accent, slug, index }: { accent: string; slug: string; index: number }) {
   const props = SCENE[slug] ?? SCENE.researcher;
+  const costume = COSTUME[slug] ?? COSTUME.researcher;
   return (
     <div className="relative h-full w-full">
+      {/* Backdrop wash + grid */}
       <div
         aria-hidden
         className="absolute inset-0"
         style={{
-          background: `radial-gradient(circle at 50% 35%, ${accent}26 0%, transparent 60%), linear-gradient(135deg, #050807 0%, #0a1116 100%)`,
+          background: `radial-gradient(circle at 50% 35%, ${accent}30 0%, transparent 62%), linear-gradient(135deg, #050807 0%, #0a1116 100%)`,
         }}
       />
       <div className="grid-bg pointer-events-none absolute inset-0 opacity-30" />
 
-      {/* Stage props arranged around the mascot */}
+      {/* Stage props arranged around the mascot — corners */}
       {props.map((p, i) => (
         <motion.div
           key={i}
-          className="absolute"
+          className="absolute z-20"
           style={{ top: p.pos.top, left: p.pos.left, color: accent }}
           animate={{ y: [0, -6, 0, 4, 0], rotate: [(p.rot ?? 0), (p.rot ?? 0) + 4, (p.rot ?? 0)] }}
           transition={{
@@ -282,26 +356,65 @@ function CastPlaceholder({ accent, slug, index }: { accent: string; slug: string
             ease: 'easeInOut',
           }}
         >
-          <p.Icon className="drop-shadow-[0_0_8px_rgba(103,232,249,0.45)]" />
+          <p.Icon className="drop-shadow-[0_0_8px_rgba(0,0,0,0.45)]" />
         </motion.div>
       ))}
 
-      {/* Mascot center */}
+      {/* Mascot — larger, centered. Sits below costume accessories. */}
       <motion.div
-        className="absolute inset-0 flex items-center justify-center"
-        animate={{ scale: [1, 1.04, 1], y: [0, -6, 0], rotate: index % 2 === 0 ? [-1.5, 1.5, -1.5] : [1.5, -1.5, 1.5] }}
+        className="absolute inset-0 z-10 flex items-end justify-center pb-6"
+        animate={{
+          scale: [1, 1.03, 1],
+          y: [0, -4, 0],
+          rotate: index % 2 === 0 ? [-1.5, 1.5, -1.5] : [1.5, -1.5, 1.5],
+        }}
         transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
       >
         <Image
           src="/assets/brocco-mark-transparent.png"
           alt=""
-          width={180}
-          height={180}
-          className="h-auto w-[42%] opacity-95 drop-shadow-[0_0_24px_rgba(103,232,249,0.30)]"
-          style={{ filter: `drop-shadow(0 0 18px ${accent}55)` }}
+          width={420}
+          height={420}
+          className="h-auto w-[68%] max-w-[280px] opacity-[0.97]"
+          style={{ filter: `drop-shadow(0 12px 32px ${accent}66) drop-shadow(0 0 24px ${accent}33)` }}
+          priority={false}
         />
       </motion.div>
 
+      {/* Costume overlay — large persona-specific accessories ON the croc */}
+      {costume.map((c, i) => (
+        <motion.div
+          key={`c-${i}`}
+          className="pointer-events-none absolute z-30 flex items-center justify-center"
+          style={{
+            top: c.pos.top,
+            left: c.pos.left,
+            width: 0,
+            height: 0,
+            transform: `translate(-50%, -50%) rotate(${c.rot ?? 0}deg)`,
+            color: '#0A0A0F',
+          }}
+          animate={{ y: [0, -3, 0], rotate: [(c.rot ?? 0) - 1, (c.rot ?? 0) + 1, (c.rot ?? 0) - 1] }}
+          transition={{ duration: 4 + (i % 3), delay: i * 0.4, repeat: Infinity, ease: 'easeInOut' }}
+        >
+          <span
+            className="inline-flex items-center justify-center rounded-full"
+            style={{
+              width: c.size + 14,
+              height: c.size + 14,
+              background: c.fill === 'solid'
+                ? `radial-gradient(circle, ${accent} 30%, ${accent}cc 70%, ${accent}66 100%)`
+                : `linear-gradient(135deg, #ffffff 0%, ${accent}ee 100%)`,
+              boxShadow: `0 6px 18px ${accent}55, inset 0 2px 4px rgba(255,255,255,0.4)`,
+            }}
+          >
+            <c.Icon
+              className="drop-shadow-[0_2px_3px_rgba(0,0,0,0.35)]"
+              style={{ width: c.size * 0.62, height: c.size * 0.62, strokeWidth: 2.5 }}
+            />
+          </span>
+        </motion.div>
+      ))}
     </div>
   );
 }
