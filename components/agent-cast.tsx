@@ -32,6 +32,7 @@ import {
 import { AGENT_CAST } from '@/lib/agent-cast';
 import { AgentCroc } from '@/components/agent-croc';
 import type { AgentName } from '@/lib/agents';
+import { CAST_CROCS } from '@/components/cast-croc-characters';
 
 /**
  * AgentCast — the brocco-croc playing every role in the office.
@@ -444,10 +445,11 @@ const MOOD: Record<string, string> = {
 };
 
 function CastPlaceholder({ accent, slug, index }: { accent: string; slug: string; index: number }) {
-  const props = SCENE[slug] ?? SCENE.researcher;
-  const costume = COSTUME[slug] ?? COSTUME.researcher;
   const bgStyle = SCENE_BG[slug] ?? SCENE_BG.researcher;
-  const mood = MOOD[slug] ?? '';
+  // Look up the bespoke croc character for this agent. Each one is a
+  // unique SVG illustration with its own body shape, pose, and integrated
+  // costume — defined in components/cast-croc-characters.tsx.
+  const CharacterComponent = CAST_CROCS[slug] ?? CAST_CROCS.researcher;
   return (
     <div className="relative h-full w-full overflow-hidden">
       {/* Per-agent dramatic backdrop — radically different per slug */}
@@ -455,81 +457,25 @@ function CastPlaceholder({ accent, slug, index }: { accent: string; slug: string
       {/* faint dot grid layered on top of the backdrop for texture */}
       <div className="grid-bg pointer-events-none absolute inset-0 opacity-[0.12]" />
 
-      {/* Stage props arranged around the mascot — corners */}
-      {props.map((p, i) => (
-        <motion.div
-          key={i}
-          className="absolute z-20"
-          style={{ top: p.pos.top, left: p.pos.left, color: accent }}
-          animate={{ y: [0, -6, 0, 4, 0], rotate: [(p.rot ?? 0), (p.rot ?? 0) + 4, (p.rot ?? 0)] }}
-          transition={{
-            duration: p.bob?.dur ?? 5,
-            delay: p.bob?.delay ?? 0,
-            repeat: Infinity,
-            ease: 'easeInOut',
-          }}
-        >
-          <p.Icon className="drop-shadow-[0_0_8px_rgba(0,0,0,0.55)]" />
-        </motion.div>
-      ))}
-
-      {/* Mascot — larger, centered. CSS filter recolors it per agent. */}
+      {/* The bespoke character SVG fills the card. Each agent's
+          illustration includes their costume, props, and scene-context
+          elements drawn AS PART of the SVG — not as separate overlays. */}
       <motion.div
-        className="absolute inset-0 z-10 flex items-end justify-center pb-6"
+        className="absolute inset-0 z-10 flex items-end justify-center"
         animate={{
-          scale: [1, 1.03, 1],
           y: [0, -4, 0],
-          rotate: index % 2 === 0 ? [-1.5, 1.5, -1.5] : [1.5, -1.5, 1.5],
+          rotate: index % 2 === 0 ? [-1, 1, -1] : [1, -1, 1],
         }}
-        transition={{ duration: 6, repeat: Infinity, ease: 'easeInOut' }}
+        transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
       >
-        <Image
-          src="/assets/brocco-mark-transparent.png"
-          alt=""
-          width={420}
-          height={420}
-          className="h-auto w-[68%] max-w-[280px]"
+        <CharacterComponent
+          accent={accent}
+          className="h-full w-full"
           style={{
-            filter: `${mood} drop-shadow(0 12px 32px ${accent}66) drop-shadow(0 0 24px ${accent}33)`,
+            filter: `drop-shadow(0 12px 32px ${accent}55) drop-shadow(0 0 24px ${accent}22)`,
           }}
-          priority={false}
         />
       </motion.div>
-
-      {/* Costume overlay — large persona-specific accessories ON the croc */}
-      {costume.map((c, i) => (
-        <motion.div
-          key={`c-${i}`}
-          className="pointer-events-none absolute z-30 flex items-center justify-center"
-          style={{
-            top: c.pos.top,
-            left: c.pos.left,
-            width: 0,
-            height: 0,
-            transform: `translate(-50%, -50%) rotate(${c.rot ?? 0}deg)`,
-            color: '#0A0A0F',
-          }}
-          animate={{ y: [0, -3, 0], rotate: [(c.rot ?? 0) - 1, (c.rot ?? 0) + 1, (c.rot ?? 0) - 1] }}
-          transition={{ duration: 4 + (i % 3), delay: i * 0.4, repeat: Infinity, ease: 'easeInOut' }}
-        >
-          <span
-            className="inline-flex items-center justify-center rounded-full"
-            style={{
-              width: c.size + 14,
-              height: c.size + 14,
-              background: c.fill === 'solid'
-                ? `radial-gradient(circle, ${accent} 30%, ${accent}cc 70%, ${accent}66 100%)`
-                : `linear-gradient(135deg, #ffffff 0%, ${accent}ee 100%)`,
-              boxShadow: `0 6px 18px ${accent}55, inset 0 2px 4px rgba(255,255,255,0.4)`,
-            }}
-          >
-            <c.Icon
-              className="drop-shadow-[0_2px_3px_rgba(0,0,0,0.35)]"
-              style={{ width: c.size * 0.62, height: c.size * 0.62, strokeWidth: 2.5 }}
-            />
-          </span>
-        </motion.div>
-      ))}
     </div>
   );
 }
