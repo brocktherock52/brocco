@@ -35,6 +35,7 @@ export function Footer() {
           ]} />
           <FooterCol title="company" links={[
             { href: '/about', label: 'about' },
+            { href: '/threads', label: 'threads' },
             { href: 'mailto:hello@brocco.ai', label: 'hello@brocco.ai' },
             { href: 'https://calendly.com/brockpivec/', label: 'book a demo' },
             { href: '/privacy', label: 'privacy' },
