@@ -459,9 +459,11 @@ function CastPlaceholder({ accent, slug, index }: { accent: string; slug: string
 
       {/* The bespoke character SVG fills the card. Each agent's
           illustration includes their costume, props, and scene-context
-          elements drawn AS PART of the SVG — not as separate overlays. */}
+          elements drawn AS PART of the SVG — not as separate overlays.
+          The SVG uses preserveAspectRatio=meet (default) to fit fully
+          within the 4:5 card area without cropping. */}
       <motion.div
-        className="absolute inset-0 z-10 flex items-end justify-center"
+        className="absolute inset-0 z-10"
         animate={{
           y: [0, -4, 0],
           rotate: index % 2 === 0 ? [-1, 1, -1] : [1, -1, 1],
@@ -470,7 +472,7 @@ function CastPlaceholder({ accent, slug, index }: { accent: string; slug: string
       >
         <CharacterComponent
           accent={accent}
-          className="h-full w-full"
+          className="absolute inset-0 h-full w-full"
           style={{
             filter: `drop-shadow(0 12px 32px ${accent}55) drop-shadow(0 0 24px ${accent}22)`,
           }}
