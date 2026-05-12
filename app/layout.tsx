@@ -12,7 +12,10 @@ import { PostHogProvider } from '@/components/posthog-provider';
 import { SupportChat } from '@/components/support-chat';
 import { CommandPalette } from '@/components/command-palette';
 import { ScrollProgress } from '@/components/ui/scroll-progress';
-import { MascotMount } from '@/components/mascot-mount';
+// MascotMount intentionally unmounted — Next.js 16 + framer-motion drag is throwing
+// "Element type is invalid. Received a promise that resolves to: undefined."
+// even via dynamic({ssr:false}) wrapper. Files preserved in components/mascot-*.tsx
+// for later iteration once the Next 16 client-import root cause is identified.
 import './globals.css';
 
 const SITE_URL = 'https://brocco-site.vercel.app';
@@ -157,7 +160,6 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <CookieConsent />
         <SupportChat />
         <CommandPalette />
-        <MascotMount />
         <Analytics />
         <SpeedInsights />
       </body>
