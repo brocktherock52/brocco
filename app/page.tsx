@@ -4,7 +4,7 @@ import { ScrollAgents } from '@/components/scroll-agents';
 import { MorningRoutine } from '@/components/morning-routine';
 import { AgentsBento } from '@/components/agents-bento';
 import { AgentCast } from '@/components/agent-cast';
-import { SurfacesFilmstrip } from '@/components/surfaces-filmstrip';
+import { BroccoFactory } from '@/components/brocco-factory';
 import { HowItWorks } from '@/components/how-it-works';
 import { Wedge } from '@/components/wedge';
 import { Integrations } from '@/components/integrations';
@@ -49,8 +49,10 @@ export default function HomePage() {
           <AgentCast />
         </SectionReveal>
 
-        {/* 5. Horizontal scroll-tied filmstrip of the 6 surfaces */}
-        <SurfacesFilmstrip />
+        {/* 5. The brocco factory — endless conveyor belt of specialists */}
+        <SectionReveal>
+          <BroccoFactory />
+        </SectionReveal>
 
         {/* 6. How it works (mock dashboard + 3 steps) */}
         <SectionReveal>

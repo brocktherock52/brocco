@@ -69,9 +69,11 @@ export function CosmicBg() {
       aria-hidden
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
       style={{
-        // soft purple wash on top of the existing background
+        // very faint purple wash so it never competes with the hero or cards
         background:
-          'radial-gradient(ellipse at 20% 80%, rgba(167,139,250,0.04) 0%, transparent 55%), radial-gradient(ellipse at 80% 20%, rgba(167,139,250,0.03) 0%, transparent 55%)',
+          'radial-gradient(ellipse at 20% 80%, rgba(167,139,250,0.018) 0%, transparent 55%), radial-gradient(ellipse at 80% 20%, rgba(167,139,250,0.012) 0%, transparent 55%)',
+        // global opacity damper so all sky elements ride at a calm baseline
+        opacity: 0.35,
       }}
     >
       {/* Stars layer — each star is a tiny absolutely-positioned div */}

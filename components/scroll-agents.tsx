@@ -180,64 +180,55 @@ export function ScrollAgents() {
         </p>
       </div>
 
-      {/* Walking-agents layer — fixed full viewport, pointer-events none */}
+      {/* Walking-agents layer — BACKGROUND z (behind content), low opacity.
+          The crocs sweep across the screen like cute shooting stars; the
+          bento "task drops" follow the same path. Never competes with
+          the hero or cards. */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 z-30 hidden overflow-hidden lg:block"
+        className="pointer-events-none fixed inset-0 z-0 hidden overflow-hidden lg:block"
+        style={{ opacity: 0.4 }}
       >
         <AnimatePresence>
           {walkers.map((w) => (
             <Walker key={w.id} walker={w} />
           ))}
         </AnimatePresence>
-      </div>
-
-      {/* Right-edge bento stack — sticky pile of "what just got built" */}
-      <div
-        aria-hidden
-        className="pointer-events-none fixed right-4 top-1/2 z-30 hidden -translate-y-1/2 lg:block"
-        style={{ width: 260 }}
-      >
-        <div className="rounded-2xl border border-white/[0.08] bg-bg-1/80 p-2 shadow-glow backdrop-blur-xl pointer-events-auto">
-          <p className="flex items-center gap-1.5 px-2 py-1 font-mono text-[9.5px] uppercase tracking-[0.2em] text-ink-faint">
-            <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-            live · agents building
-          </p>
-          <ul className="space-y-1.5">
-            <AnimatePresence initial={false}>
-              {bentos.map((b) => (
-                <BentoCard key={b.id} bento={b} />
-              ))}
-            </AnimatePresence>
-          </ul>
-        </div>
+        <AnimatePresence>
+          {bentos.map((b) => (
+            <BentoComet key={b.id} bento={b} />
+          ))}
+        </AnimatePresence>
       </div>
     </>
   );
 }
 
 function Walker({ walker }: { walker: Walker }) {
-  const startX = walker.direction === 'lr' ? -120 : window.innerWidth + 120;
-  const endX = walker.direction === 'lr' ? window.innerWidth + 120 : -120;
+  // Small croc that drifts across the background like a shooting star.
+  // No tooltip — the BentoComet does the narration. Smaller scale +
+  // gentle bob so it reads as ambient motion, never as a UI element.
+  const viewportW = typeof window !== 'undefined' ? window.innerWidth : 1440;
+  const startX = walker.direction === 'lr' ? -80 : viewportW + 80;
+  const endX = walker.direction === 'lr' ? viewportW + 80 : -80;
   return (
     <motion.div
       className="absolute"
       style={{ top: `${walker.yPct}%`, willChange: 'transform' }}
       initial={{ x: startX, opacity: 0 }}
-      animate={{ x: endX, opacity: [0, 1, 1, 1, 0] }}
+      animate={{ x: endX, opacity: [0, 0.7, 0.7, 0.7, 0] }}
       exit={{ opacity: 0 }}
       transition={{ duration: walker.dur, ease: 'linear', times: [0, 0.05, 0.5, 0.95, 1] }}
     >
-      {/* slight up-down bob = the "walking" motion */}
       <motion.div
         animate={{ y: [-2, 2, -2], rotate: walker.direction === 'lr' ? [-3, 3, -3] : [3, -3, 3] }}
-        transition={{ duration: 0.4, repeat: Infinity, ease: 'easeInOut' }}
+        transition={{ duration: 0.5, repeat: Infinity, ease: 'easeInOut' }}
         className="relative"
       >
         <div
-          className="relative h-16 w-16 overflow-hidden rounded-xl bg-black ring-1"
+          className="relative h-9 w-9 overflow-hidden rounded-lg bg-black"
           style={{
-            boxShadow: `inset 0 0 0 1.5px ${walker.agent.accent}55, 0 0 24px ${walker.agent.accent}33`,
+            boxShadow: `inset 0 0 0 1px ${walker.agent.accent}55, 0 0 14px ${walker.agent.accent}33`,
             transform: walker.direction === 'rl' ? 'scaleX(-1)' : 'none',
           }}
         >
@@ -245,69 +236,68 @@ function Walker({ walker }: { walker: Walker }) {
             src={`/assets/cast-v6/${walker.agent.slug}.png`}
             alt=""
             fill
-            sizes="64px"
+            sizes="36px"
             className="object-cover"
           />
         </div>
-        {/* small "task" tooltip floats above the croc as it walks */}
-        <div
-          className="absolute -top-7 left-1/2 -translate-x-1/2 whitespace-nowrap rounded-full border bg-bg-1/90 px-2 py-0.5 font-mono text-[9px] uppercase tracking-[0.18em] backdrop-blur-md"
-          style={{ borderColor: `${walker.agent.accent}55`, color: walker.agent.accent }}
-        >
-          {walker.task}
-        </div>
-        {/* drop-particle: small sparkle behind the croc indicating it "left a card" */}
-        <motion.span
-          className="absolute -bottom-1 -left-1 text-[14px]"
-          style={{ color: walker.agent.accent }}
-          initial={{ opacity: 0, scale: 0 }}
-          animate={{ opacity: [0, 1, 0], scale: [0.5, 1.4, 1.6] }}
-          transition={{ duration: 1.4, delay: walker.dur * 0.55, ease: 'easeOut' }}
-        >
-          ✦
-        </motion.span>
       </motion.div>
     </motion.div>
   );
 }
 
-function BentoCard({ bento }: { bento: Bento }) {
+// BentoComet — a "task drop" that streaks across the background like a
+// shooting star. Random direction, ~9s arc, no sticky stack. Reads as
+// ambient evidence the agents keep producing work.
+function BentoComet({ bento }: { bento: Bento }) {
+  // Spawn at random Y, random horizontal direction, drift across.
+  const fromLeft = Math.random() < 0.5;
+  const startY = 15 + Math.random() * 70;
+  const endY = startY + (Math.random() - 0.5) * 20;
   return (
-    <motion.li
-      layout
-      initial={{ opacity: 0, x: 30, scale: 0.96 }}
-      animate={{ opacity: 1, x: 0, scale: 1 }}
-      exit={{ opacity: 0, x: -30, scale: 0.96 }}
-      transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+    <motion.div
+      className="absolute"
+      style={{ top: `${startY}%`, left: fromLeft ? '-30%' : '110%' }}
+      initial={{ x: 0, opacity: 0 }}
+      animate={{
+        x: fromLeft ? '140vw' : '-140vw',
+        opacity: [0, 0.9, 0.9, 0],
+        top: `${endY}%`,
+      }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 9, ease: 'linear', times: [0, 0.1, 0.9, 1] }}
     >
-      <div
-        className="rounded-xl border bg-white/[0.02] p-2.5"
-        style={{ borderColor: `${bento.agent.accent}26` }}
-      >
-        <div className="flex items-center gap-2">
-          <div
-            className="relative h-7 w-7 shrink-0 overflow-hidden rounded-md bg-black"
-            style={{ boxShadow: `inset 0 0 0 1px ${bento.agent.accent}44` }}
+      <div className="flex items-center gap-2">
+        {/* trail */}
+        <div
+          className="h-px"
+          style={{
+            width: 80,
+            background: `linear-gradient(${fromLeft ? '90deg' : '270deg'}, transparent, ${bento.agent.accent}, transparent)`,
+            boxShadow: `0 0 8px ${bento.agent.accent}55`,
+          }}
+        />
+        {/* mini bento card head */}
+        <div
+          className="flex items-center gap-1.5 rounded-md border px-1.5 py-0.5 backdrop-blur-md"
+          style={{
+            borderColor: `${bento.agent.accent}55`,
+            background: `rgba(0,0,0,0.6)`,
+            boxShadow: `0 0 12px ${bento.agent.accent}33`,
+          }}
+        >
+          <span
+            className="inline-block h-1 w-1 rounded-full"
+            style={{ background: bento.agent.accent, boxShadow: `0 0 5px ${bento.agent.accent}` }}
+          />
+          <span
+            className="font-mono text-[8.5px] uppercase tracking-[0.18em]"
+            style={{ color: bento.agent.accent }}
           >
-            <Image
-              src={`/assets/cast-v6/${bento.agent.slug}.png`}
-              alt=""
-              fill
-              sizes="28px"
-              className="object-cover"
-            />
-          </div>
-          <div className="min-w-0 flex-1">
-            <p
-              className="font-mono text-[9px] uppercase tracking-[0.2em]"
-              style={{ color: bento.agent.accent }}
-            >
-              {bento.agent.label}
-            </p>
-            <p className="line-clamp-2 text-[11px] leading-snug text-ink">{bento.task}</p>
-          </div>
+            {bento.agent.label}
+          </span>
+          <span className="whitespace-nowrap text-[10px] text-ink-dim">{bento.task}</span>
         </div>
       </div>
-    </motion.li>
+    </motion.div>
   );
 }
