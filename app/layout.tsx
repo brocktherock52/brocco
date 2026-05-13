@@ -18,7 +18,7 @@ import { ScrollProgress } from '@/components/ui/scroll-progress';
 // for later iteration once the Next 16 client-import root cause is identified.
 import './globals.css';
 
-const SITE_URL = 'https://brocco-site.vercel.app';
+const SITE_URL = 'https://brocco.dev';
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
