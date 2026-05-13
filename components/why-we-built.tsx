@@ -1,49 +1,71 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { SpotlightCard } from './ui/spotlight-card';
 
-/** Six brocco-specific problem statements. Each entry is a constraint
- *  we ran into and what we did about it. Editorial italic on the close
- *  line keeps the Claude-design rhythm. */
-const WHY = [
+/**
+ * WhyWeBuilt — magazine-style editorial. No cards, no rounded boxes, no
+ * spotlight. The page already has too many card grids. This section now
+ * reads like a print spread: oversized numeric drop caps, vertical column
+ * rules, sans body, serif italic closers. The voice is "broadsheet of one".
+ *
+ * Layout:
+ *   - h2 hero headline (existing rhythm)
+ *   - 3 wide rows of magazine entries; each row has a left rail (number +
+ *     section kicker), a body column, and an italic closer column.
+ *   - On md+ screens those three pieces sit on one line separated by thin
+ *     vertical rules; on mobile they stack vertically so the rules
+ *     collapse out.
+ */
+
+const ENTRIES = [
   {
+    kicker: 'on architecture',
     title: 'specialists beat generalists',
     body:
-      'one agent good at everything is bad at everything. we ship 9 specialists with their own tool lists, system prompts, and memories.',
+      'one agent good at everything is bad at everything. we ship 888 specialists with their own tool lists, system prompts, and memories. each one is small enough to debug and sharp enough to ship.',
     closer: 'a researcher does not write code. a coder does not draft cold emails.',
   },
   {
+    kicker: 'on observability',
     title: "observability or it didn't happen",
     body:
-      'every step of every run is appended to a single jsonl file. you can grep it, diff it, replay it, hand it to your security team.',
+      'every step of every run is appended to a single jsonl file. you can grep it, diff it, replay it, hand it to your security team in the morning and still close tickets by lunch.',
     closer: 'no black-box autonomy. no surprise tool calls.',
   },
   {
+    kicker: 'on concurrency',
     title: 'parallel by default',
     body:
-      'broadcast one prompt to n agents. they run concurrently in their own panes. each finishes when it finishes.',
+      'broadcast one prompt to n agents. they run concurrently in their own panes, each finishing when it finishes. supervisor stitches the outputs together if you want a single report.',
     closer: 'one cup of coffee, five outputs.',
   },
   {
+    kicker: 'on transport',
     title: 'streaming all the way through',
     body:
-      'server-sent events from the model into the dashboard, with no polling and no spinners. live token chip in the header during every run.',
+      'server-sent events from the model into the dashboard, with no polling and no spinners. live token chip in the header during every run so you always know what you are paying for.',
     closer: 'you watch the agent think, not wait for it to finish.',
   },
   {
+    kicker: 'on economics',
     title: 'cost is a first-class citizen',
     body:
-      'prompt caching is on by default. 80% cache hit on repeat workflows. live token meter shows cost in dollars while you wait.',
+      'prompt caching is on by default. 80% cache hit on repeat workflows. live token meter shows cost in dollars while you wait. budgets are enforced before the next tool call, not after.',
     closer: 'a $49/mo tier covers 2,000 runs. solo founders ship in the green.',
   },
   {
+    kicker: 'on data',
     title: 'your data does not train models',
     body:
-      'on free tier, prompts go from your browser to your provider. on paid, our hosted runtime calls anthropic with zdr enabled by default.',
+      'on free tier, prompts go from your browser to your provider. on paid, our hosted runtime calls anthropic with zdr enabled by default. byok on every plan so the key never leaves your wallet.',
     closer: 'byok is not a pricing trick. it is a security posture.',
   },
 ];
+
+const itemVariants = {
+  hidden: { opacity: 0, y: 14 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] } },
+};
 
 export function WhyWeBuilt() {
   return (
@@ -61,41 +83,48 @@ export function WhyWeBuilt() {
           </p>
         </div>
 
-        <motion.ul
+        <motion.div
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, margin: '-60px' }}
-          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06 } } }}
-          className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3"
+          variants={{ hidden: {}, show: { transition: { staggerChildren: 0.07 } } }}
+          className="mt-14 divide-y divide-white/[0.06] border-y border-white/[0.06]"
         >
-          {WHY.map((w, i) => (
-            <motion.li
-              key={w.title}
-              variants={{
-                hidden: { opacity: 0, y: 14 },
-                show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] } },
-              }}
-              whileHover={{ y: -3 }}
+          {ENTRIES.map((e, i) => (
+            <motion.article
+              key={e.title}
+              variants={itemVariants}
+              className="grid gap-6 py-9 md:grid-cols-[7rem_minmax(0,1fr)_minmax(0,16rem)] md:gap-10 md:py-12"
             >
-              <SpotlightCard
-                spotlightSize={320}
-                spotlightColor="rgba(167, 139, 250, 0.16)"
-                className="card card-hover group relative h-full overflow-hidden p-6"
-              >
-                <span className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-faint">
+              {/* Left rail: numeric drop-cap + kicker */}
+              <div className="md:border-r md:border-white/[0.06] md:pr-6">
+                <div className="font-serif text-[44px] leading-none text-grad-brand md:text-[58px]">
                   {String(i + 1).padStart(2, '0')}
-                </span>
-                <h3 className="mt-2 text-[16.5px] font-semibold leading-snug tracking-tight">
-                  {w.title}
+                </div>
+                <div className="mt-3 font-mono text-[10.5px] uppercase tracking-[0.22em] text-ink-faint">
+                  {e.kicker}
+                </div>
+              </div>
+
+              {/* Body column */}
+              <div className="md:pr-6">
+                <h3 className="text-[22px] font-semibold leading-snug tracking-tight text-white md:text-[26px]">
+                  {e.title}
                 </h3>
-                <p className="mt-3 text-[13.5px] leading-relaxed text-ink-dim">{w.body}</p>
-                <p className="mt-3 border-t border-white/[0.06] pt-3 font-serif italic text-[13.5px] leading-snug text-ink/95">
-                  {w.closer}
+                <p className="mt-3 text-[14.5px] leading-relaxed text-ink-dim md:text-[15.5px]">
+                  {e.body}
                 </p>
-              </SpotlightCard>
-            </motion.li>
+              </div>
+
+              {/* Closer column: serif italic pulled quote */}
+              <div className="md:border-l md:border-white/[0.06] md:pl-6">
+                <p className="font-serif italic text-[15px] leading-snug text-ink/95 md:text-[16px]">
+                  &ldquo;{e.closer}&rdquo;
+                </p>
+              </div>
+            </motion.article>
           ))}
-        </motion.ul>
+        </motion.div>
       </div>
     </section>
   );
