@@ -3,7 +3,8 @@
 import { motion } from 'framer-motion';
 import { ArrowRight, Sparkles } from 'lucide-react';
 import Link from 'next/link';
-import { CAST_CROCS } from '@/components/cast-croc-characters';
+import Image from 'next/image';
+import { getCastMember } from '@/lib/agent-cast';
 
 // MorningRoutine — marketing-page section that previews the daily-essential
 // loop. Renders 4 "while you slept" cards as a peek into the dashboard's
@@ -103,7 +104,7 @@ export function MorningRoutine() {
 }
 
 function PeekCard({ row, index }: { row: PeekRow; index: number }) {
-  const Croc = CAST_CROCS[row.slug];
+  const member = getCastMember(row.slug);
   return (
     <motion.article
       initial={{ opacity: 0, y: 24 }}
@@ -121,28 +122,23 @@ function PeekCard({ row, index }: { row: PeekRow; index: number }) {
       />
 
       <div className="flex items-start gap-3">
-        {/* per-agent croc avatar */}
-        <div
-          className="relative h-20 w-16 shrink-0 overflow-hidden rounded-xl ring-1"
-          style={{
-            boxShadow: `inset 0 0 0 1px ${row.accent}33`,
-          }}
+        {/* per-agent croc avatar — uses the AI emoji PNG */}
+        <motion.div
+          className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-black ring-1"
+          style={{ boxShadow: `inset 0 0 0 1px ${row.accent}33` }}
+          animate={{ y: [0, -3, 0] }}
+          transition={{ duration: 5 + (index % 3), repeat: Infinity, ease: 'easeInOut' }}
         >
-          <div
-            aria-hidden
-            className="absolute inset-0"
-            style={{
-              background: `radial-gradient(ellipse at 50% 30%, ${row.accent}40 0%, transparent 70%), linear-gradient(180deg, #0a1014 0%, #050708 100%)`,
-            }}
-          />
-          <motion.div
-            className="absolute inset-0"
-            animate={{ y: [0, -3, 0], rotate: index % 2 === 0 ? [-1, 1, -1] : [1, -1, 1] }}
-            transition={{ duration: 5 + (index % 3), repeat: Infinity, ease: 'easeInOut' }}
-          >
-            <Croc accent={row.accent} className="absolute inset-0 h-full w-full" />
-          </motion.div>
-        </div>
+          {member?.imagePath && (
+            <Image
+              src={member.imagePath}
+              alt=""
+              fill
+              sizes="80px"
+              className="object-cover"
+            />
+          )}
+        </motion.div>
 
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-2">

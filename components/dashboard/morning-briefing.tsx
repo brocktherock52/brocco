@@ -3,7 +3,8 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Clock, Pause, Play, Sparkles, X } from 'lucide-react';
-import { CAST_CROCS } from '@/components/cast-croc-characters';
+import Image from 'next/image';
+import { getCastMember } from '@/lib/agent-cast';
 import type { AgentName } from '@/lib/agents';
 
 // MorningBriefing — the daily-essential home tab.
@@ -171,7 +172,7 @@ function BriefingRow({
   onAct: () => void;
   onDismiss: () => void;
 }) {
-  const Croc = CAST_CROCS[item.slug] ?? CAST_CROCS.researcher;
+  const member = getCastMember(item.slug);
   return (
     <motion.li
       layout
@@ -190,19 +191,20 @@ function BriefingRow({
       />
 
       <div className="flex items-start gap-3">
-        {/* Croc avatar */}
+        {/* Croc avatar — uses the AI emoji PNG with its baked-in black bg */}
         <div
-          className="relative h-16 w-14 shrink-0 overflow-hidden rounded-lg ring-1"
-          style={{ ['--ring' as string]: `${item.accent}55`, boxShadow: `inset 0 0 0 1px ${item.accent}33` }}
+          className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-black ring-1"
+          style={{ boxShadow: `inset 0 0 0 1px ${item.accent}33` }}
         >
-          <div
-            aria-hidden
-            className="absolute inset-0"
-            style={{
-              background: `radial-gradient(ellipse at 50% 30%, ${item.accent}33 0%, transparent 70%), linear-gradient(180deg, #0a1014 0%, #050708 100%)`,
-            }}
-          />
-          <Croc accent={item.accent} className="absolute inset-0 h-full w-full" />
+          {member?.imagePath && (
+            <Image
+              src={member.imagePath}
+              alt=""
+              fill
+              sizes="64px"
+              className="object-cover"
+            />
+          )}
         </div>
 
         {/* Body */}

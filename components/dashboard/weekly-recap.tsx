@@ -4,7 +4,8 @@ import { useEffect, useMemo, useState } from 'react';
 import { motion } from 'framer-motion';
 import { ArrowRight, Calendar, Flame, Sparkles, TrendingUp } from 'lucide-react';
 import Link from 'next/link';
-import { CAST_CROCS } from '@/components/cast-croc-characters';
+import Image from 'next/image';
+import { getCastMember } from '@/lib/agent-cast';
 import { getStreak } from '@/lib/streak';
 import type { AgentName } from '@/lib/agents';
 
@@ -158,18 +159,21 @@ export function WeeklyRecap() {
           <RecapCard title="busiest agents" accent="#67E8F9" Icon={TrendingUp}>
             <ul className="space-y-3">
               {stats.topAgents.map(([agent, count], i) => {
-                const Croc = CAST_CROCS[agent] ?? CAST_CROCS.researcher;
+                const member = getCastMember(agent);
                 const accent = AGENT_ACCENTS[agent] ?? '#67E8F9';
                 const pct = Math.round((count / stats.totalRuns) * 100);
                 return (
                   <li key={agent} className="flex items-center gap-3">
-                    <div
-                      className="relative h-10 w-8 shrink-0 overflow-hidden rounded-md"
-                      style={{
-                        background: `radial-gradient(ellipse at 50% 30%, ${accent}40 0%, transparent 70%), #050708`,
-                      }}
-                    >
-                      <Croc accent={accent} className="absolute inset-0 h-full w-full" />
+                    <div className="relative h-10 w-10 shrink-0 overflow-hidden rounded-md bg-black">
+                      {member?.imagePath && (
+                        <Image
+                          src={member.imagePath}
+                          alt=""
+                          fill
+                          sizes="40px"
+                          className="object-cover"
+                        />
+                      )}
                     </div>
                     <div className="min-w-0 flex-1">
                       <div className="flex items-baseline gap-2">

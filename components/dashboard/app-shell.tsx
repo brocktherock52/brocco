@@ -28,6 +28,7 @@ import { JsonlLog } from './jsonl-log';
 import { ByokModal, getKey } from './byok-modal';
 import { Onboarding } from './onboarding';
 import { MorningBriefing } from './morning-briefing';
+import { EveningWindDown } from './evening-windown';
 import { SuggestionSlot } from './suggestion-slot';
 import { recordStreakTouch } from '@/lib/streak';
 
@@ -720,6 +721,14 @@ function EmptyState({ onPick }: { onPick: (goal: string) => void }) {
     <div className="flex h-full min-h-[480px] flex-col items-center px-4 py-8">
       {/* The daily ritual — appears at the top of the empty dashboard. */}
       <MorningBriefing onAct={(item) => onPick(`Follow up on the ${item.agent}'s overnight run: ${item.output}`)} />
+
+      {/* Evening wind-down — renders only after 7pm local. Below the morning
+          briefing so the day reads top-down chronologically. */}
+      <div className="mt-8 w-full max-w-3xl">
+        <EveningWindDown
+          onAct={(item) => onPick(`${item.agent}: ${item.message}`)}
+        />
+      </div>
 
       {/* Divider */}
       <div className="my-10 flex w-full max-w-3xl items-center gap-3 text-ink-faint">
