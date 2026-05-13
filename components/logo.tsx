@@ -21,7 +21,7 @@ export function Logomark({ className }: { className?: string }) {
 }
 
 /**
- * Wordmark = brocco icon + 'brocco.ai' text.
+ * Wordmark = brocco icon + 'brocco.dev' text.
  * Two layouts: stacked image (uses brocco-wordmark.png with text built in)
  * or inline (mark + spacer + .ai-styled text).
  */
@@ -30,7 +30,7 @@ export function Wordmark({ className }: { className?: string }) {
     <span className={cn('inline-flex items-center gap-2 font-semibold', className)}>
       <Logomark className="h-7 w-7" />
       <span className="tracking-tight">
-        brocco<span className="text-ink-faint">.ai</span>
+        brocco<span className="text-ink-faint">.dev</span>
       </span>
     </span>
   );

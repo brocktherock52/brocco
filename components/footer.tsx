@@ -10,7 +10,7 @@ export function Footer() {
             <Link href="/" className="inline-flex items-center gap-2.5">
               <Logomark className="h-7 w-7" />
               <span className="text-[15px] font-semibold tracking-tight">
-                brocco<span className="text-ink-faint">.ai</span>
+                brocco<span className="text-ink-faint">.dev</span>
               </span>
             </Link>
             <p className="mt-3 max-w-xs text-[13.5px] text-ink-dim">
@@ -44,7 +44,7 @@ export function Footer() {
         </div>
 
         <div className="mt-10 flex flex-col items-start justify-between gap-3 border-t border-white/[0.06] pt-6 text-[12.5px] text-ink-faint md:flex-row md:items-center">
-          <span>© 2026 brocco.ai · a bdp consulting product</span>
+          <span>© 2026 brocco.dev · a bdp consulting product</span>
           <span className="font-mono text-[11px]">made with claude</span>
         </div>
       </div>

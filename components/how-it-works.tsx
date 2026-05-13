@@ -66,7 +66,7 @@ export function HowItWorks() {
               <span className="h-2.5 w-2.5 rounded-full bg-emerald-400/60" />
             </span>
             <span className="font-mono text-[12px] text-ink-faint">
-              brocco.ai/app - broadcast - 3 agents
+              brocco.dev/app - broadcast - 3 agents
             </span>
             <span className="ml-auto inline-flex items-center gap-1.5 font-mono text-[11px] text-emerald-400">
               <span className="relative flex h-1.5 w-1.5">

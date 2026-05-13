@@ -24,8 +24,8 @@ const SITE_URL = 'https://brocco.dev';
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: {
-    default: 'brocco.ai - agents that do the work',
-    template: '%s - brocco.ai',
+    default: 'brocco.dev - agents that do the work',
+    template: '%s - brocco.dev',
   },
   description:
     'The agentic platform for builders. Run multiple Claude or local LLM agents in parallel from one prompt. Bring your own key. JSONL audit trails. Browser-first PWA.',
@@ -46,18 +46,18 @@ export const metadata: Metadata = {
   publisher: 'BDP Consulting',
   alternates: { canonical: SITE_URL },
   openGraph: {
-    title: 'brocco.ai - agents that do the work',
+    title: 'brocco.dev - agents that do the work',
     description:
       'Run multiple Claude or local LLM agents in parallel from one prompt. Browser-first. BYOK. Audit-grade.',
     url: SITE_URL,
-    siteName: 'brocco.ai',
-    images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'brocco.ai - agents that do the work' }],
+    siteName: 'brocco.dev',
+    images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'brocco.dev - agents that do the work' }],
     locale: 'en_US',
     type: 'website',
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'brocco.ai - agents that do the work',
+    title: 'brocco.dev - agents that do the work',
     description: 'Multi-agent dashboard. BYOK. Browser-first. Built on Claude.',
     images: ['/opengraph-image'],
     creator: '@brockpivec',

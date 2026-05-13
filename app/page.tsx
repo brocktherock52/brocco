@@ -17,7 +17,6 @@ import { Faq } from '@/components/faq';
 import { FinalCta } from '@/components/final-cta';
 import { Footer } from '@/components/footer';
 import { SectionReveal } from '@/components/section-reveal';
-import { ScrollMarquee } from '@/components/scroll-marquee';
 
 export default function HomePage() {
   return (
@@ -35,9 +34,6 @@ export default function HomePage() {
         <SectionReveal>
           <MorningRoutine />
         </SectionReveal>
-
-        {/* 3. Editorial type moment: pulls eye, sets cadence */}
-        <ScrollMarquee phrase="broadcast one prompt." accent="run nine specialists." />
 
         {/* 4. Asymmetric bento of 9 specialists */}
         <SectionReveal>
@@ -58,9 +54,6 @@ export default function HomePage() {
         <SectionReveal>
           <HowItWorks />
         </SectionReveal>
-
-        {/* 7. Editorial type moment #2 */}
-        <ScrollMarquee phrase="audit · stream · cache · byok" accent="ship in 11 minutes." />
 
         {/* 8. The wedge / moat */}
         <SectionReveal>

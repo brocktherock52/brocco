@@ -52,14 +52,14 @@ export function ComparePage(props: ComparePageProps) {
     '@type': 'Article',
     headline: `${hero.titleA} ${hero.titleB}`,
     description: props.hero.subtitle,
-    author: { '@type': 'Organization', name: 'brocco.ai' },
+    author: { '@type': 'Organization', name: 'brocco.dev' },
     publisher: {
       '@type': 'Organization',
-      name: 'brocco.ai',
+      name: 'brocco.dev',
       logo: { '@type': 'ImageObject', url: 'https://brocco-site.vercel.app/icon.png' },
     },
     about: [
-      { '@type': 'SoftwareApplication', name: 'brocco.ai' },
+      { '@type': 'SoftwareApplication', name: 'brocco.dev' },
       { '@type': 'SoftwareApplication', name: competitor },
     ],
   };
@@ -105,7 +105,7 @@ export function ComparePage(props: ComparePageProps) {
         <section className="py-10">
           <div className="container-x">
             <div className="mx-auto grid max-w-4xl gap-3 md:grid-cols-2">
-              <Card label="brocco.ai" body={oneLine.brocco} accent="from-brand/30 to-cyan/20" />
+              <Card label="brocco.dev" body={oneLine.brocco} accent="from-brand/30 to-cyan/20" />
               <Card label={competitor} body={oneLine.competitor} accent="from-white/[0.04] to-white/[0.02]" muted />
             </div>
             <p className="mx-auto mt-4 max-w-3xl text-center text-[12.5px] italic text-ink-faint">
@@ -132,7 +132,7 @@ export function ComparePage(props: ComparePageProps) {
                     <th className="px-4 py-3.5 font-mono text-[11px] uppercase tracking-[0.18em] text-ink-faint">
                       Feature
                     </th>
-                    <th className="px-4 py-3.5 font-semibold text-brand-glow">brocco.ai</th>
+                    <th className="px-4 py-3.5 font-semibold text-brand-glow">brocco.dev</th>
                     <th className="px-4 py-3.5 font-semibold text-ink">{competitor}</th>
                   </tr>
                 </thead>

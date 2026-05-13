@@ -42,7 +42,7 @@ interface MegaItem {
 const PRODUCT: MegaItem[] = [
   { href: '/app', label: 'dashboard', desc: 'multi-agent panes, broadcast mode', Icon: Boxes },
   { href: '/agents/library', label: '888 agents', desc: 'browse + fork the full library', Icon: Users },
-  { href: '/agents', label: 'agents', desc: '9 specialists, one prompt', Icon: Cpu },
+  { href: '/agents', label: 'agents', desc: '888 specialists, one prompt', Icon: Cpu },
   { href: '/tools', label: 'tools', desc: '13 typed interfaces, audit-logged', Icon: Wrench },
   { href: '/recipes', label: 'recipes', desc: '11 broadcast patterns', Icon: Sparkles },
   { href: '/integrations', label: 'integrations', desc: 'anthropic, openai, ollama, slack, more', Icon: Plug },
@@ -145,7 +145,7 @@ export function Nav() {
         <Link href="/" className="group flex items-center gap-2.5">
           <Logomark className="h-7 w-7 transition-transform group-hover:scale-105" />
           <span className="text-[15px] font-semibold tracking-tight">
-            brocco<span className="text-ink-faint">.ai</span>
+            brocco<span className="text-ink-faint">.dev</span>
           </span>
         </Link>
 

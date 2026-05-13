@@ -25,7 +25,7 @@ interface Step {
 // move to the next scene.
 const SCENES: Step[][] = [
   [
-    { text: '$ curl -N https://brocco.ai/api/v1/run \\', speedMs: [12, 26] },
+    { text: '$ curl -N https://brocco.dev/api/v1/run \\', speedMs: [12, 26] },
     { text: '    -H "Authorization: Bearer sk-ant-..." \\', speedMs: [10, 22] },
     { text: '    -d \'{"agent":"researcher","prompt":"competitor pricing"}\'', speedMs: [10, 22], pauseAfterMs: 380 },
     { text: '> tavily.search("agent platforms 2026")', speedMs: [8, 18], cls: 'text-cyan-glow' },
@@ -49,13 +49,13 @@ const SCENES: Step[][] = [
   [
     { text: '$ brocco install mcp --client claude-desktop', speedMs: [12, 26], pauseAfterMs: 360 },
     { text: '✓ wrote ~/Library/Application Support/Claude/config.json', speedMs: [8, 16], cls: 'text-emerald-400' },
-    { text: '✓ registered 9 agents as MCP tools', speedMs: [8, 16], cls: 'text-emerald-400' },
+    { text: '✓ registered 888 agents as MCP tools', speedMs: [8, 16], cls: 'text-emerald-400' },
     { text: '✓ allow-listed: search_web · http_get · file_save · ...', speedMs: [8, 16], cls: 'text-cyan-glow' },
     { text: '→ restart claude desktop to pick up the new tools.', speedMs: [10, 20], pauseAfterMs: 1500, cls: 'text-violet-300' },
   ],
 ];
 
-const COPY_SAMPLE = `curl -N https://brocco.ai/api/v1/run \\
+const COPY_SAMPLE = `curl -N https://brocco.dev/api/v1/run \\
   -H "Authorization: Bearer sk-ant-..." \\
   -H "Content-Type: application/json" \\
   -d '{"agent":"researcher","prompt":"competitor pricing"}'`;
