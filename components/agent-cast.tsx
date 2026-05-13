@@ -3,35 +3,11 @@
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
-import {
-  ArrowRight,
-  BookOpen,
-  ClipboardList,
-  Code2,
-  FileText,
-  GitBranch,
-  Glasses,
-  Hammer,
-  Headphones,
-  ListMusic,
-  Mail,
-  MapPin,
-  Palette,
-  Pencil,
-  Printer,
-  ScrollText,
-  Search,
-  Sparkles,
-  Stamp,
-  StickyNote,
-  Terminal as TerminalIcon,
-  Trello,
-  Wand2,
-  Wine,
-} from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { AGENT_CAST } from '@/lib/agent-cast';
 import { AgentCroc } from '@/components/agent-croc';
 import type { AgentName } from '@/lib/agents';
+import { CAST_CROCS } from '@/components/cast-croc-characters';
 
 /**
  * AgentCast — the brocco-croc playing every role in the office.
@@ -190,143 +166,6 @@ function CastCard({ member, index }: { member: typeof AGENT_CAST[number]; index:
   );
 }
 
-interface PropSpec {
-  Icon: React.ComponentType<{ className?: string }>;
-  pos: { top: string; left: string };
-  size: number;
-  rot?: number;
-  bob?: { dur: number; delay: number };
-}
-
-const SCENE: Record<string, PropSpec[]> = {
-  researcher: [
-    { Icon: BookOpen, pos: { top: '12%', left: '14%' }, size: 22, rot: -8, bob: { dur: 4.8, delay: 0 } },
-    { Icon: Glasses, pos: { top: '20%', left: '64%' }, size: 26, rot: 6, bob: { dur: 5.6, delay: 0.4 } },
-    { Icon: StickyNote, pos: { top: '70%', left: '12%' }, size: 18, rot: -14, bob: { dur: 5.2, delay: 0.9 } },
-    { Icon: Search, pos: { top: '74%', left: '68%' }, size: 18, rot: 10, bob: { dur: 5.0, delay: 0.6 } },
-  ],
-  planner: [
-    { Icon: Trello, pos: { top: '14%', left: '12%' }, size: 24, rot: -6, bob: { dur: 5.4, delay: 0.2 } },
-    { Icon: ClipboardList, pos: { top: '18%', left: '68%' }, size: 22, rot: 8, bob: { dur: 4.6, delay: 0.5 } },
-    { Icon: Pencil, pos: { top: '74%', left: '14%' }, size: 18, rot: -10, bob: { dur: 5.1, delay: 0.8 } },
-    { Icon: MapPin, pos: { top: '70%', left: '70%' }, size: 18, rot: 12, bob: { dur: 5.5, delay: 0 } },
-  ],
-  outreach: [
-    { Icon: Mail, pos: { top: '14%', left: '14%' }, size: 22, rot: -10, bob: { dur: 4.7, delay: 0.1 } },
-    { Icon: Headphones, pos: { top: '14%', left: '68%' }, size: 24, rot: 6, bob: { dur: 5.3, delay: 0.5 } },
-    { Icon: Mail, pos: { top: '72%', left: '12%' }, size: 18, rot: -14, bob: { dur: 4.9, delay: 0.7 } },
-    { Icon: Stamp, pos: { top: '72%', left: '70%' }, size: 18, rot: 12, bob: { dur: 5.2, delay: 0.3 } },
-  ],
-  designer: [
-    { Icon: Palette, pos: { top: '14%', left: '14%' }, size: 24, rot: -8, bob: { dur: 5.0, delay: 0.2 } },
-    { Icon: Pencil, pos: { top: '14%', left: '68%' }, size: 22, rot: 12, bob: { dur: 4.8, delay: 0.6 } },
-    { Icon: Wand2, pos: { top: '72%', left: '14%' }, size: 18, rot: -12, bob: { dur: 5.4, delay: 0.4 } },
-    { Icon: Sparkles, pos: { top: '72%', left: '68%' }, size: 18, rot: 6, bob: { dur: 5.1, delay: 0 } },
-  ],
-  analyst: [
-    { Icon: FileText, pos: { top: '14%', left: '14%' }, size: 22, rot: -6, bob: { dur: 4.9, delay: 0.3 } },
-    { Icon: BookOpen, pos: { top: '16%', left: '68%' }, size: 22, rot: 8, bob: { dur: 5.4, delay: 0 } },
-    { Icon: ListMusic, pos: { top: '74%', left: '14%' }, size: 18, rot: -10, bob: { dur: 5.0, delay: 0.7 } },
-    { Icon: ScrollText, pos: { top: '72%', left: '70%' }, size: 18, rot: 10, bob: { dur: 4.7, delay: 0.5 } },
-  ],
-  coder: [
-    { Icon: Code2, pos: { top: '14%', left: '14%' }, size: 24, rot: -10, bob: { dur: 4.6, delay: 0.2 } },
-    { Icon: TerminalIcon, pos: { top: '16%', left: '66%' }, size: 22, rot: 6, bob: { dur: 5.1, delay: 0.6 } },
-    { Icon: GitBranch, pos: { top: '72%', left: '12%' }, size: 18, rot: -8, bob: { dur: 5.4, delay: 0.4 } },
-    { Icon: Sparkles, pos: { top: '74%', left: '70%' }, size: 16, rot: 12, bob: { dur: 4.8, delay: 0 } },
-  ],
-  ops: [
-    { Icon: Printer, pos: { top: '14%', left: '14%' }, size: 24, rot: -8, bob: { dur: 5.2, delay: 0.2 } },
-    { Icon: ClipboardList, pos: { top: '16%', left: '66%' }, size: 22, rot: 8, bob: { dur: 4.7, delay: 0.5 } },
-    { Icon: FileText, pos: { top: '72%', left: '14%' }, size: 18, rot: -12, bob: { dur: 5.0, delay: 0.7 } },
-    { Icon: Hammer, pos: { top: '72%', left: '70%' }, size: 18, rot: 10, bob: { dur: 5.3, delay: 0.4 } },
-  ],
-  supervisor: [
-    { Icon: Wand2, pos: { top: '12%', left: '14%' }, size: 24, rot: -10, bob: { dur: 4.9, delay: 0.1 } },
-    { Icon: ListMusic, pos: { top: '16%', left: '66%' }, size: 22, rot: 6, bob: { dur: 5.3, delay: 0.5 } },
-    { Icon: Sparkles, pos: { top: '72%', left: '14%' }, size: 18, rot: -8, bob: { dur: 5.0, delay: 0.4 } },
-    { Icon: Sparkles, pos: { top: '72%', left: '68%' }, size: 18, rot: 12, bob: { dur: 4.7, delay: 0.7 } },
-  ],
-  browser: [
-    { Icon: Wine, pos: { top: '14%', left: '14%' }, size: 22, rot: -10, bob: { dur: 5.1, delay: 0.3 } },
-    { Icon: ScrollText, pos: { top: '16%', left: '68%' }, size: 22, rot: 8, bob: { dur: 4.8, delay: 0.5 } },
-    { Icon: Stamp, pos: { top: '72%', left: '14%' }, size: 18, rot: -12, bob: { dur: 5.4, delay: 0.7 } },
-    { Icon: Sparkles, pos: { top: '74%', left: '70%' }, size: 16, rot: 8, bob: { dur: 5.0, delay: 0 } },
-  ],
-};
-
-/*
- * COSTUME — per-agent accessory overlay layered ON the brocco mascot.
- *
- * Each entry positions 1-3 large lucide icons OVER the croc image to
- * "dress" the mascot in their role's outfit. Coordinates are percentages
- * relative to the card's image area (4:5 aspect, croc occupies the
- * center ~60%).
- *
- * The croc image is rendered first (z-10), then SCENE props float in
- * the corners (z-20), then COSTUME accessories overlay the croc (z-30).
- */
-interface CostumeItem {
-  // Wider type than PropSpec — lucide icons accept style + width/height/strokeWidth.
-  Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-  /** Position of the accessory ON the croc, as % of card area */
-  pos: { top: string; left: string };
-  /** Pixel size — these are LARGE so the costume reads from a distance */
-  size: number;
-  /** Rotation degrees */
-  rot?: number;
-  /** Fill mode for the icon: solid (filled) or outline */
-  fill?: 'solid' | 'outline';
-}
-
-const COSTUME: Record<string, CostumeItem[]> = {
-  // wire-frame glasses + a paper in front
-  researcher: [
-    { Icon: Glasses, pos: { top: '38%', left: '50%' }, size: 56, rot: -2, fill: 'outline' },
-    { Icon: FileText, pos: { top: '64%', left: '36%' }, size: 32, rot: -8, fill: 'solid' },
-  ],
-  // marker in claw + sticky note headband
-  planner: [
-    { Icon: Pencil, pos: { top: '60%', left: '60%' }, size: 40, rot: 28, fill: 'solid' },
-    { Icon: StickyNote, pos: { top: '22%', left: '52%' }, size: 38, rot: -10, fill: 'solid' },
-  ],
-  // headset across the head + coffee mug in claw
-  outreach: [
-    { Icon: Headphones, pos: { top: '24%', left: '50%' }, size: 64, rot: 0, fill: 'outline' },
-    { Icon: Wine, pos: { top: '62%', left: '60%' }, size: 34, rot: 10, fill: 'solid' },
-  ],
-  // paint palette in claw + stylus on head
-  designer: [
-    { Icon: Palette, pos: { top: '62%', left: '60%' }, size: 44, rot: 12, fill: 'solid' },
-    { Icon: Pencil, pos: { top: '24%', left: '54%' }, size: 36, rot: -28, fill: 'solid' },
-  ],
-  // glasses + clipboard
-  analyst: [
-    { Icon: Glasses, pos: { top: '38%', left: '50%' }, size: 52, rot: 0, fill: 'outline' },
-    { Icon: ClipboardList, pos: { top: '62%', left: '38%' }, size: 36, rot: -10, fill: 'solid' },
-  ],
-  // big hipster glasses + laptop in front
-  coder: [
-    { Icon: Glasses, pos: { top: '36%', left: '50%' }, size: 64, rot: 0, fill: 'outline' },
-    { Icon: TerminalIcon, pos: { top: '64%', left: '50%' }, size: 40, rot: 0, fill: 'solid' },
-  ],
-  // tie hanging + folder
-  ops: [
-    { Icon: ScrollText, pos: { top: '50%', left: '50%' }, size: 38, rot: 0, fill: 'solid' },
-    { Icon: FileText, pos: { top: '64%', left: '38%' }, size: 32, rot: -10, fill: 'solid' },
-  ],
-  // conductor baton in claw + crown-like sparkle on head
-  supervisor: [
-    { Icon: Wand2, pos: { top: '60%', left: '62%' }, size: 44, rot: 30, fill: 'solid' },
-    { Icon: Sparkles, pos: { top: '20%', left: '50%' }, size: 36, rot: 0, fill: 'solid' },
-  ],
-  // fedora-ish wine glass on top + pipe
-  browser: [
-    { Icon: Wine, pos: { top: '22%', left: '50%' }, size: 38, rot: 0, fill: 'solid' },
-    { Icon: ScrollText, pos: { top: '62%', left: '38%' }, size: 32, rot: -8, fill: 'solid' },
-  ],
-};
-
 /*
  * SCENE_BG — per-agent dramatic backdrop scene. Each card gets a
  * radically different visual context: terminal-text lines for coder,
@@ -416,102 +255,9 @@ const SCENE_BG: Record<string, React.CSSProperties> = {
   },
 };
 
-/*
- * MOOD — per-agent CSS filter applied to the croc image itself, so the
- * same mascot reads as a different character in each card via color
- * grading. This is the strongest single tool we have for differentiation
- * without regenerating the source image.
- */
-const MOOD: Record<string, string> = {
-  // soft cyan-tinted, slight desaturate (library mood)
-  researcher: 'hue-rotate(170deg) saturate(0.85) brightness(1.05) contrast(1.05)',
-  // pink-tinted, slight blur (planning room marker glow)
-  planner: 'hue-rotate(320deg) saturate(1.1) brightness(1.0)',
-  // warm amber (golden hour sales call)
-  outreach: 'hue-rotate(35deg) saturate(1.2) brightness(1.08) contrast(1.0)',
-  // hot pink studio (designer)
-  designer: 'hue-rotate(300deg) saturate(1.3) brightness(1.05)',
-  // cool violet (analyst monitor glow)
-  analyst: 'hue-rotate(250deg) saturate(1.1) brightness(0.95)',
-  // saturated emerald terminal (coder)
-  coder: 'hue-rotate(95deg) saturate(1.4) brightness(0.95) contrast(1.15)',
-  // cyan crisp office (ops)
-  ops: 'hue-rotate(180deg) saturate(1.0) brightness(1.0)',
-  // warm emerald spotlight (supervisor)
-  supervisor: 'hue-rotate(85deg) saturate(1.15) brightness(1.05)',
-  // noir desaturated + green tint (browser/detective)
-  browser: 'grayscale(0.4) sepia(0.2) hue-rotate(140deg) saturate(1.1) brightness(0.95) contrast(1.1)',
-};
-
-/**
- * STICKER — cute themed accessory orbiting the croc per agent.
- * Each is a round white-bordered "sticker" with an icon in the agent's
- * accent color. Positioned in the UPPER half of the card so the bottom
- * area stays clear for the name + description text overlay.
- */
-interface Sticker {
-  Icon: React.ComponentType<React.SVGProps<SVGSVGElement>>;
-  /** Position as % of card area — TOP HALF ONLY (top: 5%-45%) so text stays visible */
-  pos: { top: string; left: string };
-  /** Sticker outer diameter in px */
-  size: number;
-  /** Rotation (small, for playful tilt) */
-  rot?: number;
-  /** Use the agent's accent color (true) or a contrasting accent */
-  variant?: 'accent' | 'cream' | 'dark';
-}
-
-const STICKERS: Record<string, Sticker[]> = {
-  researcher: [
-    { Icon: Glasses, pos: { top: '8%', left: '18%' }, size: 44, rot: -12, variant: 'cream' },
-    { Icon: BookOpen, pos: { top: '14%', left: '78%' }, size: 40, rot: 14, variant: 'accent' },
-    { Icon: StickyNote, pos: { top: '38%', left: '82%' }, size: 32, rot: -8, variant: 'accent' },
-  ],
-  planner: [
-    { Icon: ClipboardList, pos: { top: '8%', left: '20%' }, size: 44, rot: -10, variant: 'cream' },
-    { Icon: Pencil, pos: { top: '12%', left: '78%' }, size: 38, rot: 22, variant: 'accent' },
-    { Icon: MapPin, pos: { top: '40%', left: '84%' }, size: 30, rot: -6, variant: 'accent' },
-  ],
-  outreach: [
-    { Icon: Headphones, pos: { top: '6%', left: '50%' }, size: 56, rot: 0, variant: 'accent' },
-    { Icon: Mail, pos: { top: '20%', left: '18%' }, size: 38, rot: -14, variant: 'cream' },
-    { Icon: Wine, pos: { top: '36%', left: '82%' }, size: 32, rot: 10, variant: 'accent' },
-  ],
-  designer: [
-    { Icon: Palette, pos: { top: '12%', left: '20%' }, size: 46, rot: -12, variant: 'accent' },
-    { Icon: Sparkles, pos: { top: '8%', left: '76%' }, size: 36, rot: 18, variant: 'cream' },
-    { Icon: Pencil, pos: { top: '40%', left: '82%' }, size: 30, rot: 28, variant: 'accent' },
-  ],
-  analyst: [
-    { Icon: Glasses, pos: { top: '10%', left: '20%' }, size: 44, rot: 0, variant: 'cream' },
-    { Icon: FileText, pos: { top: '14%', left: '78%' }, size: 40, rot: 12, variant: 'accent' },
-    { Icon: ScrollText, pos: { top: '40%', left: '82%' }, size: 30, rot: -8, variant: 'accent' },
-  ],
-  coder: [
-    { Icon: Glasses, pos: { top: '10%', left: '50%' }, size: 60, rot: 0, variant: 'accent' },
-    { Icon: Code2, pos: { top: '20%', left: '18%' }, size: 38, rot: -14, variant: 'cream' },
-    { Icon: TerminalIcon, pos: { top: '38%', left: '82%' }, size: 34, rot: 8, variant: 'accent' },
-  ],
-  ops: [
-    { Icon: FileText, pos: { top: '10%', left: '20%' }, size: 42, rot: -10, variant: 'cream' },
-    { Icon: Printer, pos: { top: '12%', left: '78%' }, size: 40, rot: 12, variant: 'accent' },
-    { Icon: ClipboardList, pos: { top: '40%', left: '82%' }, size: 30, rot: -6, variant: 'accent' },
-  ],
-  supervisor: [
-    { Icon: Wand2, pos: { top: '6%', left: '54%' }, size: 50, rot: 28, variant: 'accent' },
-    { Icon: Sparkles, pos: { top: '12%', left: '18%' }, size: 36, rot: -14, variant: 'cream' },
-    { Icon: ListMusic, pos: { top: '38%', left: '82%' }, size: 32, rot: 10, variant: 'accent' },
-  ],
-  browser: [
-    { Icon: Wine, pos: { top: '8%', left: '22%' }, size: 44, rot: -10, variant: 'cream' },
-    { Icon: ScrollText, pos: { top: '14%', left: '78%' }, size: 38, rot: 12, variant: 'accent' },
-    { Icon: Stamp, pos: { top: '40%', left: '82%' }, size: 30, rot: -8, variant: 'accent' },
-  ],
-};
-
 function CastPlaceholder({ accent, slug, index }: { accent: string; slug: string; index: number }) {
   const bgStyle = SCENE_BG[slug] ?? SCENE_BG.researcher;
-  const stickers = STICKERS[slug] ?? STICKERS.researcher;
+  const CrocCharacter = CAST_CROCS[slug] ?? CAST_CROCS.researcher;
   return (
     <div className="relative h-full w-full overflow-hidden">
       {/* Per-agent dramatic backdrop — radically different per slug */}
@@ -519,84 +265,41 @@ function CastPlaceholder({ accent, slug, index }: { accent: string; slug: string
       {/* faint dot grid layered on top of the backdrop for texture */}
       <div className="grid-bg pointer-events-none absolute inset-0 opacity-[0.10]" />
 
-      {/* Soft halo behind the croc — pulls eye to the mascot */}
+      {/* Soft halo behind the croc — pulls eye to the bespoke character */}
       <div
         aria-hidden
-        className="absolute left-1/2 top-[20%] h-[55%] w-[55%] -translate-x-1/2 rounded-full blur-3xl opacity-50"
+        className="absolute left-1/2 top-[18%] h-[60%] w-[70%] -translate-x-1/2 rounded-full blur-3xl opacity-50"
         style={{ background: `radial-gradient(circle, ${accent}40 0%, transparent 70%)` }}
       />
 
-      {/* The brocco mascot — cute centered character, sized so the
-          bottom-third of the card stays clear for the name + caption text. */}
+      {/* The bespoke per-agent croc — each one is a distinct illustration
+          (researcher at his desk, planner at the whiteboard, browser in his
+          leather chair, etc.). The whole scene IS the SVG so we don't need
+          to overlay separate prop icons. */}
       <motion.div
-        className="absolute left-1/2 top-[8%] z-10 -translate-x-1/2"
-        animate={{ y: [0, -6, 0], rotate: index % 2 === 0 ? [-2, 2, -2] : [2, -2, 2] }}
-        transition={{ duration: 5 + (index % 3), repeat: Infinity, ease: 'easeInOut' }}
+        className="absolute inset-x-0 top-0 z-10 flex justify-center"
+        animate={{ y: [0, -5, 0, 3, 0], rotate: index % 2 === 0 ? [-1, 1, -1] : [1, -1, 1] }}
+        transition={{ duration: 6 + (index % 3) * 0.5, repeat: Infinity, ease: 'easeInOut' }}
+        style={{
+          filter: `drop-shadow(0 10px 24px ${accent}55) drop-shadow(0 0 22px ${accent}33)`,
+        }}
       >
-        <Image
-          src="/assets/brocco-mark-transparent.png"
-          alt=""
-          width={300}
-          height={300}
-          className="h-auto w-[150px] md:w-[160px] lg:w-[170px]"
-          style={{
-            filter: `drop-shadow(0 10px 24px ${accent}66) drop-shadow(0 0 18px ${accent}33)`,
-          }}
-          priority={false}
+        <CrocCharacter
+          accent={accent}
+          className="h-[88%] w-auto"
+          style={{ aspectRatio: '4 / 5' }}
         />
       </motion.div>
 
-      {/* Cute orbital stickers — large round badges with the persona props.
-          All positioned in the UPPER HALF (top 5%-45%) so the text overlay
-          at the bottom of the card is never covered. */}
-      {stickers.map((s, i) => {
-        const isAccent = s.variant === 'accent';
-        const isDark = s.variant === 'dark';
-        const bg = isAccent
-          ? `radial-gradient(circle at 30% 25%, ${accent} 0%, ${accent}dd 60%, ${accent}99 100%)`
-          : isDark
-            ? `linear-gradient(135deg, #1a1a24 0%, #0a0a0f 100%)`
-            : `linear-gradient(135deg, #FAFAF6 0%, #E5E5DC 100%)`;
-        const iconColor = isAccent ? '#0A0A0F' : isDark ? accent : accent;
-        return (
-          <motion.div
-            key={`s-${i}`}
-            className="absolute z-20"
-            style={{
-              top: s.pos.top,
-              left: s.pos.left,
-              width: 0,
-              height: 0,
-              transform: `translate(-50%, -50%) rotate(${s.rot ?? 0}deg)`,
-            }}
-            animate={{
-              y: [0, -4, 0, 3, 0],
-              rotate: [(s.rot ?? 0) - 2, (s.rot ?? 0) + 2, (s.rot ?? 0) - 2],
-            }}
-            transition={{
-              duration: 4 + (i % 3) * 0.7,
-              delay: i * 0.35,
-              repeat: Infinity,
-              ease: 'easeInOut',
-            }}
-          >
-            <span
-              className="inline-flex items-center justify-center rounded-full ring-2 ring-white/70"
-              style={{
-                width: s.size,
-                height: s.size,
-                background: bg,
-                boxShadow: `0 6px 16px ${accent}66, 0 2px 4px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.35)`,
-              }}
-            >
-              <s.Icon
-                strokeWidth={2.4}
-                style={{ width: s.size * 0.58, height: s.size * 0.58, color: iconColor }}
-              />
-            </span>
-          </motion.div>
-        );
-      })}
+      {/* Subtle accent vignette in the upper-right corner — pulls the eye
+          to the badge area without competing with the character. */}
+      <motion.div
+        aria-hidden
+        className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full blur-2xl"
+        style={{ background: `radial-gradient(circle, ${accent}40 0%, transparent 70%)` }}
+        animate={{ opacity: [0.4, 0.7, 0.4] }}
+        transition={{ duration: 4 + (index % 3), repeat: Infinity, ease: 'easeInOut' }}
+      />
     </div>
   );
 }

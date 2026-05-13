@@ -27,6 +27,7 @@ import { StreamPane } from './stream-pane';
 import { JsonlLog } from './jsonl-log';
 import { ByokModal, getKey } from './byok-modal';
 import { Onboarding } from './onboarding';
+import { MorningBriefing } from './morning-briefing';
 
 const MODELS = [
   { id: 'claude-sonnet-4-6', label: 'Claude Sonnet 4.6', tag: 'default' },
@@ -688,17 +689,27 @@ const TRY_THESE = [
 
 function EmptyState({ onPick }: { onPick: (goal: string) => void }) {
   return (
-    <div className="flex h-full min-h-[480px] items-center justify-center px-4">
+    <div className="flex h-full min-h-[480px] flex-col items-center px-4 py-8">
+      {/* The daily ritual — appears at the top of the empty dashboard. */}
+      <MorningBriefing onAct={(item) => onPick(`Follow up on the ${item.agent}'s overnight run: ${item.output}`)} />
+
+      {/* Divider */}
+      <div className="my-10 flex w-full max-w-3xl items-center gap-3 text-ink-faint">
+        <span className="h-px flex-1 bg-white/[0.06]" />
+        <span className="font-mono text-[10.5px] uppercase tracking-[0.18em]">or start something new</span>
+        <span className="h-px flex-1 bg-white/[0.06]" />
+      </div>
+
       <div className="max-w-lg text-center">
-        <Logomark className="mx-auto h-12 w-12 opacity-90" />
-        <h2 className="mt-6 text-[24px] font-semibold tracking-tight lowercase">
+        <Logomark className="mx-auto h-10 w-10 opacity-90" />
+        <h2 className="mt-4 text-[20px] font-semibold tracking-tight lowercase">
           <span className="text-grad">type one goal.</span>{' '}
           <span className="font-serif italic font-normal text-grad-brand">three agents work.</span>
         </h2>
-        <p className="mt-3 text-[14px] leading-relaxed text-ink-dim">
-          broadcast is always on. each specialist runs in its own pane, in parallel. every step appears in the jsonl log on the right.
+        <p className="mt-2 text-[13.5px] leading-relaxed text-ink-dim">
+          broadcast is always on. each specialist runs in its own pane, in parallel.
         </p>
-        <p className="mt-5 inline-flex items-center gap-2 text-[12px] text-ink-faint">
+        <p className="mt-4 inline-flex items-center gap-2 text-[12px] text-ink-faint">
           <span className="kbd">⌘</span>
           <span className="kbd">Enter</span>
           run
@@ -707,7 +718,7 @@ function EmptyState({ onPick }: { onPick: (goal: string) => void }) {
           focus
         </p>
 
-        <p className="mt-10 text-left font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-faint">
+        <p className="mt-8 text-left font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-faint">
           try one of these
         </p>
         <div className="mt-3 space-y-2 text-left">

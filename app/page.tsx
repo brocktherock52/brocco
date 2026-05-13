@@ -1,5 +1,6 @@
 import { Nav } from '@/components/nav';
 import { HeroBento } from '@/components/hero-bento';
+import { MorningRoutine } from '@/components/morning-routine';
 import { AgentsBento } from '@/components/agents-bento';
 import { AgentCast } from '@/components/agent-cast';
 import { SurfacesFilmstrip } from '@/components/surfaces-filmstrip';
@@ -25,10 +26,15 @@ export default function HomePage() {
         {/* 1. Bento hero — instantly different at first glance */}
         <HeroBento />
 
-        {/* 2. Editorial type moment: pulls eye, sets cadence */}
+        {/* 2. Daily-essential pitch — "open the app, your team already worked" */}
+        <SectionReveal>
+          <MorningRoutine />
+        </SectionReveal>
+
+        {/* 3. Editorial type moment: pulls eye, sets cadence */}
         <ScrollMarquee phrase="broadcast one prompt." accent="run nine specialists." />
 
-        {/* 3. Asymmetric bento of 9 specialists */}
+        {/* 4. Asymmetric bento of 9 specialists */}
         <SectionReveal>
           <AgentsBento />
         </SectionReveal>
