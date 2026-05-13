@@ -67,7 +67,7 @@ const TIERS = [
     annual: -1,
     cta: {
       label: 'Talk to sales',
-      href: 'mailto:hello@brocco.ai?subject=Brocco%20Enterprise',
+      href: 'mailto:help@brocco.dev?subject=Brocco%20Enterprise',
       primary: false,
     },
     features: [
@@ -113,7 +113,7 @@ export function Pricing({ standalone = false }: { standalone?: boolean }) {
         return;
       }
       toast.error('Checkout offline', {
-        description: data.detail || 'Email hello@brocco.ai to start a paid plan.',
+        description: data.detail || 'Email help@brocco.dev to start a paid plan.',
       });
     } catch (_) {
       toast.error('Could not reach checkout. Try again in a moment.');

@@ -17,7 +17,7 @@ export async function POST(req: Request): Promise<Response> {
       {
         error: 'checkout offline',
         detail:
-          'STRIPE_API_KEY not configured. Email hello@brocco.ai to start a paid plan, or set the env to enable self-serve checkout.',
+          'STRIPE_API_KEY not configured. Email help@brocco.dev to start a paid plan, or set the env to enable self-serve checkout.',
       },
       { status: 503 },
     );

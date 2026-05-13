@@ -2,6 +2,24 @@
 
 All notable changes to Brocco. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: semver under the `vMAJOR.MINOR-tag` scheme until 1.0.
 
+## [Unreleased] — daily-essential push (2026-05-12)
+
+### Added
+- **brocco.dev domain registered** on Hostinger. DNS + Vercel switchover steps documented at `docs/internal/CUSTOM_DOMAIN.md` (rewritten for Hostinger's DNS panel + brocco.dev specifically; the doc was previously for `brocco.ai`).
+- **README banner** — wordmark logo at the top, badges row (site / source / license).
+- **Daily auto-briefing** on the dashboard. `<MorningBriefing />` lives above the empty-state and simulates "what brocco did while you slept" — 6 per-agent rows with one-click follow-ups. Stub data today; data-shape stable so swapping to a real per-user feed is a single-line change.
+- **Marketing morning-routine section** between the bento hero and the agents bento. Four peek cards mirror the dashboard briefing so the landing promise matches the in-app reality.
+- **Bespoke 9-croc cast cards.** The agent-cast cards now render the per-slug `CastCrocCharacter` SVG (researcher at his desk, planner at the whiteboard, browser in the leather chair, etc.) instead of the shared brocco mascot. Each card gets a subtle y-bob + rotate idle and a pulsing accent vignette. The previous SCENE / COSTUME / STICKER tables (~280 lines) are gone.
+- **Daily-streak counter** in the nav (`<StreakChip />` + `lib/streak.ts`). Ticks once per local day on /app mount. 1 free skip per ISO week. Color ramps amber → fuchsia → gold at 7 / 30 day milestones.
+- **Proactive suggestion slot** above the panes (`<SuggestionSlot />` + `lib/suggestions.ts`). Three pattern types: recurring candidate (same goal 3×/14d), broadcast drought (>36h idle), agent bias (one agent ≥7×, another <2×). Accept / snooze 7d / dismiss.
+- **Custom-agent wizard** at `/app/agents/new`. 4-step flow (template → name+topic → croc base + accent → tools + save). 8 templates (researcher, closer, reviewer, analyst, qa, recruiter, pm, editor), 9 croc bases, 8 accents, live preview. Persists to localStorage via `lib/custom-agents.ts`. Sidebar gets a "create your own agent" CTA.
+- **DAILY-ESSENTIAL-FEATURES.md** tracker at repo root — 8 daily-essential lanes with status + next steps.
+
+### Changed
+- Removed the per-card hue-rotate filter on the cast cards. The bespoke SVGs carry their own personality; we don't need to grade the same mascot 9 different ways.
+
+---
+
 ## [Unreleased] — review-fixes-2026-05-11 branch
 
 ### Security

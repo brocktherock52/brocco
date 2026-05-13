@@ -45,7 +45,7 @@ const PILLARS = [
   {
     icon: FileWarning,
     title: 'Vulnerability disclosure',
-    body: 'Found something? Email security@brocco.ai. We respond within 1 business day and have a bounty program for verified critical issues.',
+    body: 'Found something? Email security@brocco.dev. We respond within 1 business day and have a bounty program for verified critical issues.',
   },
 ];
 
@@ -122,8 +122,8 @@ export default function SecurityPage() {
 
             <div className="mx-auto mt-10 max-w-3xl text-center text-[13.5px] text-ink-dim">
               Need a copy of our SOC 2 report or a signed DPA? Email{' '}
-              <a href="mailto:security@brocco.ai" className="text-cyan-glow underline-offset-4 hover:underline">
-                security@brocco.ai
+              <a href="mailto:security@brocco.dev" className="text-cyan-glow underline-offset-4 hover:underline">
+                security@brocco.dev
               </a>
               .
             </div>

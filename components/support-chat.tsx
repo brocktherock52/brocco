@@ -8,7 +8,7 @@ import { Calendar, Github, Mail, MessageCircle, X } from 'lucide-react';
  * Floating support chat widget. Self-hosted, no third-party SaaS.
  * Bottom-right FAB; click to open a tray with three contact rails:
  *   1. Book a Calendly demo
- *   2. Email hello@brocco.ai
+ *   2. Email help@brocco.dev
  *   3. Open the public GitHub issues page
  *
  * Style locks: matches site dark UI (white/8% borders, cyan glow accent,
@@ -87,9 +87,9 @@ export function SupportChat() {
               />
               <SupportRow
                 Icon={Mail}
-                label="email hello@brocco.ai"
+                label="email help@brocco.dev"
                 hint="founder direct · usually within an hour"
-                href="mailto:hello@brocco.ai?subject=brocco%20support"
+                href="mailto:help@brocco.dev?subject=brocco%20support"
               />
               <SupportRow
                 Icon={Github}

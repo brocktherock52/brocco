@@ -35,7 +35,7 @@ export default function PrivacyPage() {
               <p>Vercel (hosting), Anthropic (LLM), Stripe (billing), Tavily (search-tool only when enabled). All SOC 2 certified.</p>
             </Section>
             <Section title="Your rights (GDPR / CCPA)">
-              <p>Email <a className="text-cyan-glow underline-offset-4 hover:underline" href="mailto:privacy@brocco.ai">privacy@brocco.ai</a> to access, correct, export, or delete your data. We respond within 30 days.</p>
+              <p>Email <a className="text-cyan-glow underline-offset-4 hover:underline" href="mailto:privacy@brocco.dev">privacy@brocco.dev</a> to access, correct, export, or delete your data. We respond within 30 days.</p>
             </Section>
             <Section title="Children">
               <p>Brocco is not intended for users under 16. We do not knowingly collect data from children.</p>

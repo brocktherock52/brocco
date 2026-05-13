@@ -55,7 +55,7 @@ export default function TermsPage() {
               <p>Delaware, USA. Disputes resolved in the state and federal courts of New Castle County, DE.</p>
             </Section>
             <Section title="9. Contact">
-              <p><a className="text-cyan-glow underline-offset-4 hover:underline" href="mailto:legal@brocco.ai">legal@brocco.ai</a></p>
+              <p><a className="text-cyan-glow underline-offset-4 hover:underline" href="mailto:legal@brocco.dev">legal@brocco.dev</a></p>
             </Section>
           </div>
         </div>

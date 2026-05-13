@@ -1,3 +1,21 @@
+<p align="center">
+  <a href="https://brocco.dev">
+    <img src="public/assets/brocco-wordmark.png" alt="brocco.ai" width="280" />
+  </a>
+</p>
+
+<p align="center">
+  <em>multi-agent broadcast dashboard. one goal, nine specialists, parallel streams.</em>
+</p>
+
+<p align="center">
+  <a href="https://brocco.dev"><img alt="Site" src="https://img.shields.io/badge/site-brocco.dev-22C55E?style=flat-square" /></a>
+  <a href="https://github.com/brocktherock52/brocco"><img alt="GitHub" src="https://img.shields.io/badge/github-source-181717?style=flat-square&logo=github&logoColor=white" /></a>
+  <a href="https://github.com/brocktherock52/brocco/blob/main/LICENSE"><img alt="License" src="https://img.shields.io/badge/license-MIT-67E8F9?style=flat-square" /></a>
+</p>
+
+---
+
 # Brocco
 
 Multi-agent broadcast dashboard for AI agents. Type one goal, fan out to N agents in parallel, each with its own streaming pane and tools. **Bring your own Anthropic key — zero data retention.**

@@ -97,7 +97,7 @@ const ldJson = {
       description:
         'Multi-agent AI dashboard. Run multiple Claude or local LLM agents in parallel from one prompt.',
       parentOrganization: { '@type': 'Organization', name: 'BDP Consulting' },
-      email: 'hello@brocco.ai',
+      email: 'help@brocco.dev',
     },
     {
       '@type': 'SoftwareApplication',

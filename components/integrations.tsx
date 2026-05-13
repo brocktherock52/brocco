@@ -130,7 +130,7 @@ export function Integrations() {
         <p className="mt-10 text-center text-[13px] text-ink-faint">
           Don&apos;t see your tool?{' '}
           <a
-            href="mailto:hello@brocco.ai?subject=Brocco%20integration%20request"
+            href="mailto:help@brocco.dev?subject=Brocco%20integration%20request"
             className="text-cyan-glow underline-offset-4 hover:underline"
           >
             Tell us, we will build it.
