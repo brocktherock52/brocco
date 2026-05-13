@@ -11,6 +11,7 @@ import { CookieConsent } from '@/components/cookie-consent';
 import { PostHogProvider } from '@/components/posthog-provider';
 import { SupportChat } from '@/components/support-chat';
 import { CommandPalette } from '@/components/command-palette';
+import { CosmicBg } from '@/components/cosmic-bg';
 import { ScrollProgress } from '@/components/ui/scroll-progress';
 // MascotMount intentionally unmounted — Next.js 16 + framer-motion drag is throwing
 // "Element type is invalid. Received a promise that resolves to: undefined."
@@ -137,6 +138,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <ScrollProgress />
         <BgDecor />
         <BreathingBg />
+        {/* Cartoony cosmic overlay — stars, planets, galaxies, shooting
+            stars in white + soft purple, low opacity, behind content. */}
+        <CosmicBg />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-md focus:bg-brand focus:px-3 focus:py-2 focus:text-white"

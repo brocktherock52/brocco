@@ -191,10 +191,21 @@ function BriefingRow({
       />
 
       <div className="flex items-start gap-3">
-        {/* Croc avatar — uses the AI emoji PNG with its baked-in black bg */}
-        <div
+        {/* Croc avatar — uses the AI emoji PNG with constant motion */}
+        <motion.div
           className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-black ring-1"
           style={{ boxShadow: `inset 0 0 0 1px ${item.accent}33` }}
+          animate={{
+            y: [0, -4, 0, 2, 0],
+            rotate: [-2, 2, -2, 1, -2],
+            scale: [1, 1.03, 1, 1.015, 1],
+          }}
+          transition={{
+            duration: 4 + (index % 3) * 0.4,
+            repeat: Infinity,
+            ease: 'easeInOut',
+            delay: index * 0.18,
+          }}
         >
           {member?.imagePath && (
             <Image
@@ -205,7 +216,7 @@ function BriefingRow({
               className="object-cover"
             />
           )}
-        </div>
+        </motion.div>
 
         {/* Body */}
         <div className="min-w-0 flex-1">

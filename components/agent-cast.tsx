@@ -70,7 +70,7 @@ function CastCard({ member, index }: { member: typeof AGENT_CAST[number]; index:
 
         <div
           className="relative aspect-[4/5] overflow-hidden rounded-xl"
-          style={{ backgroundColor: '#070d12' }}
+          style={{ backgroundColor: '#000000' }}
         >
           {hasVideo ? (
             <motion.div
@@ -92,15 +92,24 @@ function CastCard({ member, index }: { member: typeof AGENT_CAST[number]; index:
           ) : hasImage ? (
             <motion.div
               className="absolute inset-0"
-              animate={{ scale: [1, 1.02, 1], y: [0, -4, 0] }}
-              transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+              animate={{
+                scale: [1, 1.05, 1.02, 1.05, 1],
+                y: [0, -8, 0, -4, 0],
+                rotate: [-0.8, 0.8, -0.8, 0.4, -0.8],
+              }}
+              transition={{
+                duration: 5 + (index % 3) * 0.7,
+                repeat: Infinity,
+                ease: 'easeInOut',
+                delay: index * 0.2,
+              }}
             >
               <Image
                 src={member.imagePath as string}
                 alt={`${member.name} brocco-croc vignette`}
                 fill
                 sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
-                className="object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                className="object-cover transition-transform duration-700 group-hover:scale-[1.08]"
               />
             </motion.div>
           ) : (

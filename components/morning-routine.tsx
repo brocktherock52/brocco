@@ -122,12 +122,21 @@ function PeekCard({ row, index }: { row: PeekRow; index: number }) {
       />
 
       <div className="flex items-start gap-3">
-        {/* per-agent croc avatar — uses the AI emoji PNG */}
+        {/* per-agent croc avatar — uses the AI emoji PNG, constantly animated */}
         <motion.div
           className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-black ring-1"
           style={{ boxShadow: `inset 0 0 0 1px ${row.accent}33` }}
-          animate={{ y: [0, -3, 0] }}
-          transition={{ duration: 5 + (index % 3), repeat: Infinity, ease: 'easeInOut' }}
+          animate={{
+            y: [0, -5, 0, 3, 0],
+            rotate: [-2, 2, -2, 1, -2],
+            scale: [1, 1.04, 1, 1.02, 1],
+          }}
+          transition={{
+            duration: 4 + (index % 3) * 0.5,
+            repeat: Infinity,
+            ease: 'easeInOut',
+            delay: index * 0.15,
+          }}
         >
           {member?.imagePath && (
             <Image
