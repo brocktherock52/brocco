@@ -22,7 +22,7 @@ import { ArrowRight, Sparkles } from 'lucide-react';
 // drop the path into FACTORY_VIDEO_PATH and the component will swap to
 // the video while preserving captions/CTAs.
 
-const FACTORY_VIDEO_PATH: string | null = '/assets/video/factory.mp4'; // Higgsfield Seedance 2.0 job 76b47b24-aec1-45bc-beea-c71cb5ba955b
+const FACTORY_VIDEO_PATH: string | null = '/assets/video/factory.mp4'; // Higgsfield Seedance 2.0 job 83562331-a8df-4756-ab46-4e0a23489ac4 (2026-05-13 rev2)
 
 const LINE: Array<{ slug: string; accent: string }> = [
   { slug: 'researcher', accent: '#67E8F9' },
@@ -108,7 +108,7 @@ export function BroccoFactory() {
             </span>
             <span className="inline-flex items-center gap-2">
               <span className="h-1.5 w-1.5 rounded-full bg-cyan-400" />
-              888 specialists ready
+              your specialists, on demand
             </span>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-2">
@@ -120,10 +120,10 @@ export function BroccoFactory() {
               <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
             </Link>
             <Link
-              href="/agents/library"
+              href="/agents"
               className="group inline-flex items-center gap-2 rounded-full border border-white/20 px-5 py-2.5 text-[13.5px] font-medium text-white transition-colors hover:bg-white/[0.05]"
             >
-              browse 888 agents
+              meet the cast
               <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
             </Link>
           </div>

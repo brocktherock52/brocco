@@ -27,7 +27,7 @@ export function AgentCast() {
         <div className="mx-auto max-w-2xl text-center">
           <p className="pill mx-auto">the cast</p>
           <h2 className="mt-5 text-display-xl">
-            <span className="text-grad">888 specialists.</span>{' '}
+            <span className="text-grad">your AI team.</span>{' '}
             <span className="font-serif italic font-normal text-grad-brand">one office.</span>
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-[15.5px] leading-relaxed text-ink-dim">
@@ -115,7 +115,6 @@ function CastCard({ member, index }: { member: typeof AGENT_CAST[number]; index:
 
         <div
           className="relative aspect-[4/5] overflow-hidden rounded-xl"
-          style={{ backgroundColor: '#000000' }}
         >
           {hasVideo ? (
             <motion.div
@@ -156,18 +155,9 @@ function CastCard({ member, index }: { member: typeof AGENT_CAST[number]; index:
                 sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                 className="object-cover transition-transform duration-700 group-hover:scale-[1.08]"
               />
-              {/* accent underlay. cast-v7 PNGs ship with true alpha
-                  channels so we no longer need the CSS chroma-key
-                  hack (mix-blend-mode: screen + contrast/saturate
-                  tweaks). this radial just gives each card a slight
-                  themed wash behind the transparent croc. */}
-              <div
-                aria-hidden
-                className="absolute inset-0 -z-10"
-                style={{
-                  background: `radial-gradient(120% 90% at 50% 35%, ${accent}40 0%, ${accent}18 35%, #050b16 75%)`,
-                }}
-              />
+              {/* No backdrop. cast-v7 PNGs ship with true alpha so the
+                  site's cosmic background reads straight through each
+                  card. */}
             </motion.div>
           ) : (
             <CastPlaceholder accent={accent} slug={member.slug} index={index} />
@@ -179,7 +169,7 @@ function CastCard({ member, index }: { member: typeof AGENT_CAST[number]; index:
             style={{
               ['--ring' as string]: `${accent}55`,
               boxShadow:
-                'inset 0 -90px 120px -50px rgba(5,8,16,0.95), inset 0 90px 120px -60px rgba(5,8,16,0.75)',
+                'inset 0 -90px 120px -50px rgba(0,0,0,0.98), inset 0 90px 120px -60px rgba(0,0,0,0.85)',
             }}
           />
 

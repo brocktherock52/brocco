@@ -73,7 +73,7 @@ export default async function OpengraphImage() {
 
         {/* bottom: stats row */}
         <div style={{ display: 'flex', gap: 24, fontSize: 18, color: '#8A96A0' }}>
-          <span>888 agents</span>
+          <span>your AI team</span>
           <span>•</span>
           <span>13 tools</span>
           <span>•</span>

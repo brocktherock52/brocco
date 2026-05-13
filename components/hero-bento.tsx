@@ -205,7 +205,7 @@ function HeadlineTile() {
         transition={{ duration: 0.7, delay: 0.4 }}
         className="relative mt-7 max-w-[460px] text-[17px] leading-[1.55] text-ink-dim"
       >
-        888 specialists. one prompt. they investigate competing hypotheses, divide cross-layer work,
+        your AI team. one prompt. they investigate competing hypotheses, divide cross-layer work,
         and brief you every morning. <span className="text-white">byok</span> on free, hosted on paid.
         the agent-team pattern, productized.
       </motion.p>
@@ -544,7 +544,7 @@ function AgentStackTile() {
     <Tile className="flex h-full flex-col p-6">
       <header className="flex items-center justify-between">
         <span className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-faint">
-          broadcast · 5 / 888 agents
+          broadcast · 5 panes live
         </span>
         <Link
           href="/agents"
@@ -1011,7 +1011,7 @@ function FullWidthLiveNetwork() {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
             <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
           </span>
-          live network · 888 agents online
+          live network · your team online
         </span>
         <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink-faint">
           mesh · streaming

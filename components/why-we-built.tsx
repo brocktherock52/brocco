@@ -22,7 +22,7 @@ const ENTRIES = [
     kicker: 'on architecture',
     title: 'specialists beat generalists',
     body:
-      'one agent good at everything is bad at everything. we ship 888 specialists with their own tool lists, system prompts, and memories. each one is small enough to debug and sharp enough to ship.',
+      'one agent good at everything is bad at everything. we ship a team of specialists with their own tool lists, system prompts, and memories. each one is small enough to debug and sharp enough to ship.',
     closer: 'a researcher does not write code. a coder does not draft cold emails.',
   },
   {
