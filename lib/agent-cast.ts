@@ -16,6 +16,8 @@ export interface AgentCastMember {
   videoPath: string | null;
   posterPath?: string | null;
   accent: string;
+  /** Optional explicit click target. Defaults to /agents/<slug>. */
+  href?: string;
 }
 
 export const AGENT_CAST: AgentCastMember[] = [
@@ -97,6 +99,91 @@ export const AGENT_CAST: AgentCastMember[] = [
     costume: 'fedora and a pinstripe vest, briar pipe with a curl of smoke',
     scene: 'reclined in a leather wing-back chair, leather case file on the lap, banker\'s lamp glowing green',
     imagePath: '/assets/cast-v6/browser.png',
+    videoPath: null,
+    accent: '#67E8F9',
+  },
+  // EXTENDED TEAM — visual cast only for now. Routing through the
+  // runtime selector happens through the custom-agent wizard archetype
+  // map until each gets a dedicated stream.
+  {
+    slug: 'marketer',
+    name: 'marketer',
+    costume: 'backwards cap, phone on a ring-light, engagement charts',
+    scene: 'measuring reach across paid + organic, juggling six campaigns at once',
+    imagePath: '/assets/cast-v6/marketer.png',
+    videoPath: null,
+    accent: '#F472B6',
+    href: '/app/agents/new',
+  },
+  {
+    slug: 'copywriter',
+    name: 'copywriter',
+    costume: 'tortoiseshell reading glasses, feather quill, crumpled drafts',
+    scene: 'rewriting your hero copy until it cuts. 30% shorter than yesterday',
+    imagePath: '/assets/cast-v6/copywriter.png',
+    videoPath: null,
+    accent: '#FBBF24',
+  },
+  {
+    slug: 'qa',
+    name: 'qa',
+    costume: 'high-vis safety vest, clipboard checklist, magnifying glass',
+    scene: 'auditing every output for the dumbest mistake first. then the second dumbest',
+    imagePath: '/assets/cast-v6/qa.png',
+    videoPath: null,
+    accent: '#4ADE80',
+  },
+  {
+    slug: 'data_eng',
+    name: 'data_eng',
+    costume: 'over-ear noise-cancelers, ethernet cable in claw, server rack glow',
+    scene: 'piping clean data from your warehouse to whichever agent needs it next',
+    imagePath: '/assets/cast-v6/data_eng.png',
+    videoPath: null,
+    accent: '#22D3EE',
+  },
+  {
+    slug: 'recruiter',
+    name: 'recruiter',
+    costume: 'navy cardigan, tablet of candidate cards, HIRE mug',
+    scene: 'sourcing 10, screening on hard criteria, drafting personalized outreach',
+    imagePath: '/assets/cast-v6/recruiter.png',
+    videoPath: null,
+    accent: '#A78BFA',
+  },
+  {
+    slug: 'cs',
+    name: 'customer success',
+    costume: 'service headset, big warm smile, floating five-star badges',
+    scene: 'spotting churn signals 14 days early, drafting save-plays that close',
+    imagePath: '/assets/cast-v6/cs.png',
+    videoPath: null,
+    accent: '#22C55E',
+  },
+  {
+    slug: 'finance',
+    name: 'finance',
+    costume: 'green visor, vintage calculator, ledger book, stack of coins',
+    scene: 'modeling unit economics for tomorrow before you ask. and the day after',
+    imagePath: '/assets/cast-v6/finance.png',
+    videoPath: null,
+    accent: '#FB7185',
+  },
+  {
+    slug: 'social',
+    name: 'social',
+    costume: 'pink puffer, smartphone on a ring-light, hearts and play-icons',
+    scene: 'turning every brief into nine-second cuts your audience watches end-to-end',
+    imagePath: '/assets/cast-v6/social.png',
+    videoPath: null,
+    accent: '#F472B6',
+  },
+  {
+    slug: 'founder',
+    name: 'founder',
+    costume: 'black turtleneck, dashboard floating, rocket-ship doodle',
+    scene: 'thinking three moves ahead while the team ships the current one',
+    imagePath: '/assets/cast-v6/founder.png',
     videoPath: null,
     accent: '#67E8F9',
   },

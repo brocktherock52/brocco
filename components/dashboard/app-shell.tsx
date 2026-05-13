@@ -34,6 +34,7 @@ import { recordStreakTouch } from '@/lib/streak';
 import { getCustomAgents, TEMPLATES, deleteCustomAgent, type CustomAgent } from '@/lib/custom-agents';
 import { CustomCroc } from '@/components/custom-croc';
 import { RecurringToggle } from './recurring-toggle';
+import { ConstructionCrew } from './construction-crew';
 
 const MODELS = [
   { id: 'claude-sonnet-4-6', label: 'Claude Sonnet 4.6', tag: 'default' },
@@ -700,7 +701,10 @@ export function AppShell() {
           {/* panes + log */}
           <div className="grid min-h-0 flex-1 grid-cols-1 gap-3 overflow-hidden p-3 lg:grid-cols-[1fr_360px]">
             {/* panes */}
-            <div className="min-h-0 overflow-y-auto">
+            <div className="relative min-h-0 overflow-y-auto">
+              {/* Construction crew — walks across the pane area while runs
+                  are active. Adds visual life to the work-in-progress. */}
+              <ConstructionCrew active={running} />
               {panes.length === 0 ? (
                 <EmptyState onPick={(g) => setGoal(g)} />
               ) : (

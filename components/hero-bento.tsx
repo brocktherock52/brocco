@@ -20,7 +20,7 @@
  * Mobile: single column stack.
  */
 
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
@@ -267,22 +267,30 @@ function MetricsTile() {
   const [runs, setRuns] = useState(2847);
   const [tokens, setTokens] = useState(9.2);
   const [cost, setCost] = useState(12.4);
+  const [bars, setBars] = useState<number[]>(() =>
+    Array.from({ length: 18 }, () => 0.35 + Math.random() * 0.65),
+  );
 
-  // Live-ish telemetry: tick the numbers slowly so the panel feels alive
+  // Live-ish telemetry: tick the numbers fast so the panel is visibly busy
   useEffect(() => {
     const id = setInterval(() => {
-      setRuns((r) => r + Math.floor(Math.random() * 3));
-      setTokens((t) => +(t + Math.random() * 0.02).toFixed(2));
-      setCost((c) => +(c + Math.random() * 0.04).toFixed(2));
-    }, 1800);
+      setRuns((r) => r + Math.floor(Math.random() * 8));
+      setTokens((t) => +(t + Math.random() * 0.06).toFixed(2));
+      setCost((c) => +(c + Math.random() * 0.12).toFixed(2));
+    }, 700);
     return () => clearInterval(id);
   }, []);
 
-  // Sparkline points (animated bars)
-  const bars = useMemo(
-    () => Array.from({ length: 18 }, () => 0.35 + Math.random() * 0.65),
-    [],
-  );
+  // Rotate sparkline values every 2s so the bars actually change shape
+  useEffect(() => {
+    const id = setInterval(() => {
+      setBars((curr) => [
+        ...curr.slice(1),
+        0.35 + Math.random() * 0.65,
+      ]);
+    }, 600);
+    return () => clearInterval(id);
+  }, []);
 
   return (
     <Tile className="flex h-full flex-col p-6">

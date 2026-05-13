@@ -1,8 +1,9 @@
 'use client';
 
+import { useRef } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { motion } from 'framer-motion';
+import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { ArrowRight } from 'lucide-react';
 import { AGENT_CAST } from '@/lib/agent-cast';
 import { AgentCroc } from '@/components/agent-croc';
@@ -49,6 +50,31 @@ function CastCard({ member, index }: { member: typeof AGENT_CAST[number]; index:
   const accent = member.accent;
   const hasVideo = !!member.videoPath;
   const hasImage = !!member.imagePath;
+  const cardRef = useRef<HTMLDivElement | null>(null);
+
+  // Mouse-tracked 3D tilt — premium feel on hover
+  const mx = useMotionValue(0);
+  const my = useMotionValue(0);
+  const sx = useSpring(mx, { stiffness: 200, damping: 24 });
+  const sy = useSpring(my, { stiffness: 200, damping: 24 });
+  const rotateX = useTransform(sy, [-0.5, 0.5], [8, -8]);
+  const rotateY = useTransform(sx, [-0.5, 0.5], [-8, 8]);
+  const glareX = useTransform(sx, [-0.5, 0.5], ['0%', '100%']);
+  const glareY = useTransform(sy, [-0.5, 0.5], ['0%', '100%']);
+
+  function onMove(e: React.MouseEvent<HTMLDivElement>) {
+    const el = cardRef.current;
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    const x = (e.clientX - r.left) / r.width - 0.5;
+    const y = (e.clientY - r.top) / r.height - 0.5;
+    mx.set(x);
+    my.set(y);
+  }
+  function onLeave() {
+    mx.set(0);
+    my.set(0);
+  }
 
   return (
     <motion.li
@@ -57,8 +83,14 @@ function CastCard({ member, index }: { member: typeof AGENT_CAST[number]; index:
       viewport={{ once: true, margin: '-60px' }}
       transition={{ duration: 0.55, delay: (index % 3) * 0.07, ease: [0.16, 1, 0.3, 1] }}
     >
+      <motion.div
+        ref={cardRef}
+        onMouseMove={onMove}
+        onMouseLeave={onLeave}
+        style={{ rotateX, rotateY, transformPerspective: 1000 }}
+      >
       <Link
-        href={`/agents/${member.slug}`}
+        href={member.href ?? `/agents/${member.slug}`}
         className="group relative block overflow-hidden rounded-2xl border border-white/[0.08] bg-bg-1/60 p-1 transition-transform duration-300 hover:-translate-y-1 hover:shadow-glow"
         style={{ ['--accent' as string]: accent }}
       >
@@ -171,6 +203,7 @@ function CastCard({ member, index }: { member: typeof AGENT_CAST[number]; index:
           </div>
         </div>
       </Link>
+      </motion.div>
     </motion.li>
   );
 }
