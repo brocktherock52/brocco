@@ -10,6 +10,7 @@
 // remix.
 
 import type { AgentName } from '@/lib/agents';
+import type { AccessoryId } from '@/components/custom-croc';
 
 export type CustomCrocBase =
   | 'researcher'
@@ -37,6 +38,8 @@ export interface CustomAgent {
   template: TemplateId;
   /** which built-in croc the icon remixes */
   crocBase: CustomCrocBase;
+  /** accessory layered on top of the croc base in the composer */
+  accessory?: AccessoryId;
   /** which tools the agent can call */
   tools: string[];
   /** the system prompt, generated from template + user inputs */
@@ -211,6 +214,7 @@ export function buildAgent(
     topic: string;
     accent?: string;
     crocBase?: CustomCrocBase;
+    accessory?: AccessoryId;
     tools?: string[];
   },
 ): CustomAgent {
@@ -225,6 +229,7 @@ export function buildAgent(
     accent: inputs.accent || template.defaultAccent,
     template: template.id,
     crocBase: inputs.crocBase || template.defaultCrocBase,
+    accessory: inputs.accessory ?? 'none',
     tools: inputs.tools || template.defaultTools,
     systemPrompt,
     createdAt: Date.now(),

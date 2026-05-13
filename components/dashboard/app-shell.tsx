@@ -31,6 +31,9 @@ import { MorningBriefing } from './morning-briefing';
 import { EveningWindDown } from './evening-windown';
 import { SuggestionSlot } from './suggestion-slot';
 import { recordStreakTouch } from '@/lib/streak';
+import { getCustomAgents, TEMPLATES, deleteCustomAgent, type CustomAgent } from '@/lib/custom-agents';
+import { CustomCroc } from '@/components/custom-croc';
+import { RecurringToggle } from './recurring-toggle';
 
 const MODELS = [
   { id: 'claude-sonnet-4-6', label: 'Claude Sonnet 4.6', tag: 'default' },
@@ -76,6 +79,7 @@ export function AppShell() {
   const [usage, setUsage] = useState(getUsage());
   const [tokens, setTokens] = useState({ in: 0, out: 0, cost: 0 });
   const [demoRunsThisSession, setDemoRunsThisSession] = useState(0);
+  const [customAgents, setCustomAgents] = useState<CustomAgent[]>([]);
 
   // hydrate
   useEffect(() => {
@@ -83,6 +87,11 @@ export function AppShell() {
     setUsage(getUsage());
     // Tick the daily-streak counter — opening /app counts as the day's touch.
     recordStreakTouch();
+    // Hydrate custom agents from localStorage + re-read on change.
+    setCustomAgents(getCustomAgents());
+    const onCustomChange = () => setCustomAgents(getCustomAgents());
+    window.addEventListener('brocco:custom-agents-changed', onCustomChange);
+    // cleanup attached via the same useEffect's main return below
     try {
       const raw = localStorage.getItem('brocco:history');
       if (raw) setHistory(JSON.parse(raw));
@@ -103,6 +112,9 @@ export function AppShell() {
         }
       } catch {}
     }
+    return () => {
+      window.removeEventListener('brocco:custom-agents-changed', onCustomChange);
+    };
   }, []);
 
   // sync history
@@ -117,6 +129,34 @@ export function AppShell() {
     [panes],
   );
   const running = panes.some((p) => p.status === 'running');
+
+  // Map a CustomAgent.template -> a built-in AgentName archetype.
+  // Custom agents currently run through their template's existing stream
+  // and dispatch path until the live Claude wrapper accepts custom system
+  // prompts directly. Pre-fills the goal with the agent's saved topic.
+  function useCustomAgent(ca: CustomAgent) {
+    const archetype: AgentName = (
+      ca.template === 'closer'
+        ? 'outreach'
+        : ca.template === 'reviewer' || ca.template === 'analyst'
+          ? 'analyst'
+          : ca.template === 'qa'
+            ? 'coder'
+            : ca.template === 'recruiter'
+              ? 'outreach'
+              : ca.template === 'pm'
+                ? 'planner'
+                : ca.template === 'editor'
+                  ? 'designer'
+                  : 'researcher'
+    ) as AgentName;
+    if (!selected.includes(archetype)) {
+      setSelected((s) => [...s, archetype]);
+    }
+    toast.message(`${ca.label} is on your team`, {
+      description: `Runs through the ${archetype} stream. Edit anytime in /app/agents/new.`,
+    });
+  }
 
   function toggleAgent(name: AgentName) {
     // v3.0: broadcast always on, toggle adds/removes from the set.
@@ -538,10 +578,62 @@ export function AppShell() {
               ))}
             </div>
 
+            {/* Custom agents list — renders below the built-ins. Clicking
+                "use" routes the agent through its template archetype's
+                runtime stream. Full system-prompt override is a follow-up
+                once the live Claude wrapper accepts custom prompts. */}
+            {customAgents.length > 0 && (
+              <div className="mt-5">
+                <p className="px-1 font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-faint">
+                  your agents · {customAgents.length}
+                </p>
+                <ul className="mt-2 space-y-1.5">
+                  {customAgents.map((ca) => (
+                    <li
+                      key={ca.id}
+                      className="group flex items-center gap-2 rounded-lg border border-white/[0.06] bg-white/[0.02] p-2 transition-colors hover:border-white/[0.14] hover:bg-white/[0.04]"
+                    >
+                      <span
+                        className="relative h-9 w-9 shrink-0 overflow-hidden rounded-md bg-black"
+                        style={{ boxShadow: `inset 0 0 0 1px ${ca.accent}33` }}
+                      >
+                        <CustomCroc
+                          accent={ca.accent}
+                          accessory={ca.accessory ?? 'none'}
+                          className="absolute inset-0 h-full w-full"
+                        />
+                      </span>
+                      <div className="min-w-0 flex-1">
+                        <p className="truncate text-[12px] font-medium text-ink">{ca.label}</p>
+                        <p className="truncate font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint">
+                          {ca.template}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={() => useCustomAgent(ca)}
+                        className="rounded-md border border-white/[0.08] bg-white/[0.02] px-2 py-1 text-[10.5px] text-ink-dim transition hover:border-white/[0.18] hover:text-white"
+                      >
+                        use
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          if (confirm(`Delete ${ca.label}?`)) deleteCustomAgent(ca.id);
+                        }}
+                        className="rounded-md p-1 text-ink-faint opacity-0 transition group-hover:opacity-100 hover:text-red-300"
+                        aria-label={`delete ${ca.label}`}
+                      >
+                        <Trash2 className="h-3 w-3" />
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
             {/* Create-your-own-agent entry point — feeds the lib/custom-agents
-                store via the wizard at /app/agents/new. Custom agents will
-                appear here once the runtime can route them; for now this
-                is the one-tap promise. */}
+                store via the wizard at /app/agents/new. */}
             <Link
               href="/app/agents/new"
               className="group mt-4 flex items-center justify-between gap-2 rounded-lg border border-dashed border-white/[0.10] bg-white/[0.02] px-3 py-2.5 text-[12.5px] text-ink-dim transition-colors hover:border-white/[0.22] hover:bg-white/[0.04] hover:text-white"
@@ -631,7 +723,12 @@ export function AppShell() {
               )}
 
               {panes.some((p) => p.status === 'done') && (
-                <SaveActions />
+                <>
+                  <SaveActions />
+                  <div className="mt-2 flex justify-end">
+                    <RecurringToggle goal={goal} agents={selected} />
+                  </div>
+                </>
               )}
             </div>
 

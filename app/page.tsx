@@ -1,5 +1,6 @@
 import { Nav } from '@/components/nav';
 import { HeroBento } from '@/components/hero-bento';
+import { ScrollAgents } from '@/components/scroll-agents';
 import { MorningRoutine } from '@/components/morning-routine';
 import { AgentsBento } from '@/components/agents-bento';
 import { AgentCast } from '@/components/agent-cast';
@@ -22,6 +23,10 @@ export default function HomePage() {
   return (
     <>
       <Nav />
+      {/* SIGNATURE FEATURE — the agents follow the visitor down the page
+          and visibly build each section as it scrolls into view. Every
+          visitor becomes a live witness to the agents working. */}
+      <ScrollAgents />
       <main>
         {/* 1. Bento hero — instantly different at first glance */}
         <HeroBento />

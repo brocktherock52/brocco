@@ -4,5 +4,11 @@
   "buildCommand": "next build",
   "installCommand": "npm install",
   "outputDirectory": ".next",
-  "cleanUrls": true
+  "cleanUrls": true,
+  "crons": [
+    {
+      "path": "/api/cron/morning-briefing",
+      "schedule": "0 * * * *"
+    }
+  ]
 }

@@ -17,6 +17,7 @@ import {
   type CustomCrocBase,
 } from '@/lib/custom-agents';
 import { CAST_CROCS } from '@/components/cast-croc-characters';
+import { CustomCroc, ACCESSORIES, type AccessoryId } from '@/components/custom-croc';
 
 // AgentWizard — 4 step flow for forking an agent template into a custom
 // agent saved to the user's team.
@@ -41,6 +42,7 @@ export function AgentWizard() {
   const [topic, setTopic] = useState('');
   const [accent, setAccent] = useState<string>(ACCENT_OPTIONS[0]);
   const [crocBase, setCrocBase] = useState<CustomCrocBase>('researcher');
+  const [accessory, setAccessory] = useState<AccessoryId>('none');
   const [tools, setTools] = useState<string[]>([]);
 
   // when template changes, seed defaults
@@ -73,7 +75,7 @@ export function AgentWizard() {
 
   function save() {
     if (!tpl) return;
-    const agent = buildAgent(tpl, { name, label: label || name, topic, accent, crocBase, tools });
+    const agent = buildAgent(tpl, { name, label: label || name, topic, accent, crocBase, accessory, tools });
     saveCustomAgent(agent);
     toast.success(`saved ${agent.label}`, {
       description: 'your custom agent is on your team. broadcast a goal and they\'ll show up.',
@@ -255,18 +257,41 @@ export function AgentWizard() {
                       </div>
                     </Field>
                   </div>
+
+                  <div className="mt-6">
+                    <Field label="accessory" hint="layered on the croc — drives the icon composer.">
+                      <div className="flex flex-wrap gap-2">
+                        {ACCESSORIES.map((a) => (
+                          <button
+                            key={a.id}
+                            type="button"
+                            onClick={() => setAccessory(a.id)}
+                            className={`rounded-full border px-3 py-1.5 text-[12px] transition ${
+                              accessory === a.id
+                                ? 'border-white/40 bg-white/[0.08] text-white'
+                                : 'border-white/[0.08] bg-white/[0.02] text-ink-dim hover:border-white/[0.16] hover:text-white'
+                            }`}
+                          >
+                            {a.label}
+                          </button>
+                        ))}
+                      </div>
+                    </Field>
+                  </div>
                 </div>
 
                 {/* Preview */}
                 <div className="rounded-2xl border border-white/[0.08] bg-bg-1/60 p-4">
                   <p className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-faint">live preview</p>
                   <div
-                    className="relative mt-3 aspect-[4/5] overflow-hidden rounded-xl"
-                    style={{
-                      background: `radial-gradient(ellipse at 50% 30%, ${accent}30 0%, transparent 70%), linear-gradient(180deg, #0a1014 0%, #050708 100%)`,
-                    }}
+                    className="relative mt-3 aspect-[4/5] overflow-hidden rounded-xl bg-black"
                   >
-                    <Croc accent={accent} className="absolute inset-0 h-full w-full" />
+                    {/* Render the composer so the accessory shows live */}
+                    <CustomCroc
+                      accent={accent}
+                      accessory={accessory}
+                      className="absolute inset-0 h-full w-full"
+                    />
                     <div
                       className="absolute left-3 top-3 inline-flex items-center gap-1.5 rounded-full border bg-bg-1/80 px-2 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] backdrop-blur-md"
                       style={{ borderColor: `${accent}55`, color: accent }}
