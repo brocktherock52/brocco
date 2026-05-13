@@ -35,6 +35,7 @@ import { getCustomAgents, TEMPLATES, deleteCustomAgent, type CustomAgent } from 
 import { CustomCroc } from '@/components/custom-croc';
 import { RecurringToggle } from './recurring-toggle';
 import { ConstructionCrew } from './construction-crew';
+import { GuidedOnboarding } from './guided-onboarding';
 
 const MODELS = [
   { id: 'claude-sonnet-4-6', label: 'Claude Sonnet 4.6', tag: 'default' },
@@ -650,41 +651,59 @@ export function AppShell() {
 
         {/* CENTER */}
         <main className="flex min-w-0 flex-1 flex-col">
-          {/* goal input */}
-          <div className="border-b border-white/[0.06] bg-bg-0 p-4">
-            <div className="rounded-2xl border border-white/[0.08] bg-white/[0.02] p-1 shadow-card">
-              <textarea
-                id="goal-input"
-                placeholder="type one goal. n agents run in parallel. e.g. 'research the top 5 alternatives to notion, draft 3 cold-email angles, and outline a launch plan.'"
-                value={goal}
-                onChange={(e) => setGoal(e.target.value)}
-                rows={3}
-                className="block w-full resize-none rounded-xl bg-transparent p-3 text-[14.5px] leading-relaxed text-ink outline-none placeholder:text-ink-faint"
-              />
-              <div className="flex items-center gap-2 px-2 py-1.5">
-                <span className="kbd">⌘</span>
-                <span className="kbd">Enter</span>
-                <span className="text-[11px] text-ink-faint">to run</span>
-                <div className="ml-auto flex items-center gap-2">
-                  <span className="font-mono text-[11px] text-ink-faint">
-                    {selected.length} agent{selected.length !== 1 && 's'} · parallel
-                  </span>
-                  <button
-                    onClick={run}
-                    disabled={running}
-                    className="btn-primary text-[13px] px-4 py-2 disabled:opacity-60"
-                  >
-                    {running ? (
-                      <span className="inline-flex items-center gap-1.5">
-                        <Sparkles className="h-3.5 w-3.5 animate-pulse" /> running
+          {/* Chat-first goal input — prominent, centered, ChatGPT-style.
+              Bigger pill, glowing border, larger placeholder, primary CTA. */}
+          <div className="relative border-b border-white/[0.06] bg-bg-0 px-4 py-6">
+            <div className="mx-auto w-full max-w-3xl">
+              <div className="relative">
+                {/* glow halo behind the input */}
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute -inset-1 -z-10 rounded-3xl opacity-60 blur-2xl"
+                  style={{
+                    background:
+                      'radial-gradient(ellipse at 50% 30%, rgba(103,232,249,0.22), transparent 60%), radial-gradient(ellipse at 50% 70%, rgba(167,139,250,0.18), transparent 60%)',
+                  }}
+                />
+                <div className="relative rounded-3xl border border-white/[0.12] bg-bg-1/80 p-1.5 shadow-glow backdrop-blur-xl">
+                  <textarea
+                    id="goal-input"
+                    placeholder="what should your AI team work on today?"
+                    value={goal}
+                    onChange={(e) => setGoal(e.target.value)}
+                    rows={3}
+                    className="block w-full resize-none rounded-2xl bg-transparent px-5 py-4 text-[16px] leading-relaxed text-ink outline-none placeholder:text-ink-faint"
+                  />
+                  <div className="flex items-center gap-2 px-3 pb-2">
+                    <span className="kbd">⌘</span>
+                    <span className="kbd">Enter</span>
+                    <span className="text-[11.5px] text-ink-faint">to run</span>
+                    <div className="ml-auto flex items-center gap-2">
+                      <span className="font-mono text-[11px] text-ink-faint">
+                        {selected.length} agent{selected.length !== 1 && 's'} · parallel
                       </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1.5">
-                        <Play className="h-3 w-3 fill-current" /> run agents <ArrowRight className="h-3 w-3" />
-                      </span>
-                    )}
-                  </button>
+                      <button
+                        onClick={run}
+                        disabled={running}
+                        className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-brand to-cyan px-5 py-2.5 text-[13.5px] font-semibold text-white shadow-glow2 transition-all hover:shadow-glow disabled:opacity-60"
+                      >
+                        {running ? (
+                          <span className="inline-flex items-center gap-1.5">
+                            <Sparkles className="h-4 w-4 animate-pulse" /> agents at work
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-1.5">
+                            <Play className="h-3.5 w-3.5 fill-current" /> broadcast
+                            <ArrowRight className="h-3.5 w-3.5" />
+                          </span>
+                        )}
+                      </button>
+                    </div>
+                  </div>
                 </div>
+                <p className="mt-3 text-center font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-faint">
+                  your AI team · {selected.length}/9 specialists · broadcast mode on
+                </p>
               </div>
             </div>
           </div>
@@ -786,6 +805,7 @@ export function AppShell() {
 
       <ByokModal open={byokOpen} onOpenChange={setByokOpen} initial={keyState} onSaved={setKeyState} />
       <Onboarding onOpenByok={() => setByokOpen(true)} />
+      <GuidedOnboarding />
     </div>
   );
 }

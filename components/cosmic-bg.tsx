@@ -38,17 +38,31 @@ export function CosmicBg() {
   const [planets, setPlanets] = useState<PlanetData[]>([]);
 
   useEffect(() => {
-    // ~140 tiny twinkling stars
+    // Desert-night-sky density: ~280 stars sprinkled across the sky,
+    // 70% concentrated in a wide diagonal "milky way" band running
+    // from upper-left to lower-right. The band rule is: pick a
+    // distance-from-band coefficient and bias the y toward the band.
     const sList: Dot[] = [];
-    for (let i = 0; i < 140; i++) {
+    for (let i = 0; i < 280; i++) {
+      const x = Math.random() * 100;
+      // Probabilistic band placement: 70% near band, 30% scattered
+      let y: number;
+      if (Math.random() < 0.7) {
+        // band y = f(x) with small noise
+        const bandY = 20 + (x / 100) * 60;
+        const jitter = (Math.random() - 0.5) * 30;
+        y = Math.max(0, Math.min(100, bandY + jitter));
+      } else {
+        y = Math.random() * 100;
+      }
       sList.push({
         id: i,
-        xPct: Math.random() * 100,
-        yPct: Math.random() * 100,
-        size: Math.random() * 2 + 1, // 1-3px
-        dur: 2 + Math.random() * 4,
-        delay: Math.random() * 4,
-        color: Math.random() < 0.3 ? PURPLE[Math.floor(Math.random() * PURPLE.length)] : WHITE,
+        xPct: x,
+        yPct: y,
+        size: Math.random() * 1.8 + 0.6, // 0.6-2.4px — tighter dots = more desert pinpoint
+        dur: 2 + Math.random() * 5,
+        delay: Math.random() * 5,
+        color: Math.random() < 0.18 ? PURPLE[Math.floor(Math.random() * PURPLE.length)] : WHITE,
       });
     }
     setStars(sList);
@@ -69,11 +83,11 @@ export function CosmicBg() {
       aria-hidden
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
       style={{
-        // very faint purple wash so it never competes with the hero or cards
+        // Desert-night-sky layers: deeper black core + a soft diagonal
+        // "milky way" band of faint purple wash + a violet glow up-right
         background:
-          'radial-gradient(ellipse at 20% 80%, rgba(167,139,250,0.018) 0%, transparent 55%), radial-gradient(ellipse at 80% 20%, rgba(167,139,250,0.012) 0%, transparent 55%)',
-        // global opacity damper so all sky elements ride at a calm baseline
-        opacity: 0.35,
+          'linear-gradient(135deg, rgba(196,181,253,0.025) 22%, transparent 52%, rgba(167,139,250,0.022) 70%, transparent 90%), radial-gradient(ellipse at 80% 20%, rgba(167,139,250,0.04) 0%, transparent 50%), radial-gradient(ellipse at 20% 80%, rgba(196,181,253,0.028) 0%, transparent 55%)',
+        opacity: 0.55,
       }}
     >
       {/* Stars layer — each star is a tiny absolutely-positioned div */}
@@ -110,7 +124,66 @@ export function CosmicBg() {
       <ShootingStar delay={0} top="22%" angle={-12} />
       <ShootingStar delay={5} top="55%" angle={-8} />
       <ShootingStar delay={11} top="78%" angle={-15} />
+
+      {/* Slow drifting comets — long arcs across the full viewport. Like
+          the cosmic-website Dribbble references (Marcato, FANCY). */}
+      <SlowComet delay={3} startTop="12%" endTop="40%" />
+      <SlowComet delay={20} startTop="68%" endTop="34%" />
+
+      {/* Desert horizon silhouette at the bottom — mesa-shaped, slightly
+          translucent so it reads as the curve of the earth seen from a
+          dark-sky preserve. Matches the user direction "stars and sky
+          when you're in the middle of a desert". */}
+      <div className="absolute inset-x-0 bottom-0 h-[28%] opacity-30">
+        <svg
+          viewBox="0 0 1200 200"
+          preserveAspectRatio="none"
+          className="h-full w-full"
+        >
+          <path
+            d="M 0 200 L 0 140 Q 80 130 140 138 L 220 110 L 280 122 L 360 90 L 440 105 L 540 78 L 640 98 L 760 85 L 860 112 L 960 95 L 1080 118 L 1200 100 L 1200 200 Z"
+            fill="#08060f"
+            stroke="#A78BFA"
+            strokeWidth="0.5"
+            strokeOpacity="0.3"
+          />
+        </svg>
+      </div>
     </div>
+  );
+}
+
+function SlowComet({
+  delay,
+  startTop,
+  endTop,
+}: {
+  delay: number;
+  startTop: string;
+  endTop: string;
+}) {
+  return (
+    <motion.div
+      className="absolute"
+      style={{ left: '-20%', top: startTop, opacity: 0.5 }}
+      animate={{ x: ['0vw', '130vw'], top: [startTop, endTop] }}
+      transition={{ duration: 22, delay, repeat: Infinity, repeatDelay: 18, ease: 'linear' }}
+    >
+      <div className="flex items-center">
+        <div
+          className="h-px"
+          style={{
+            width: 200,
+            background: 'linear-gradient(90deg, transparent, rgba(196,181,253,0.5), rgba(255,255,255,0.85))',
+            boxShadow: '0 0 10px rgba(196,181,253,0.4)',
+          }}
+        />
+        <div
+          className="h-1 w-1 rounded-full bg-white"
+          style={{ boxShadow: '0 0 12px rgba(255,255,255,0.7), 0 0 24px rgba(196,181,253,0.5)' }}
+        />
+      </div>
+    </motion.div>
   );
 }
 

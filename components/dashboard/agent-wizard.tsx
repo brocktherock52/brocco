@@ -18,6 +18,7 @@ import {
 } from '@/lib/custom-agents';
 import { CAST_CROCS } from '@/components/cast-croc-characters';
 import { CustomCroc, ACCESSORIES, type AccessoryId } from '@/components/custom-croc';
+import { MagicalPipe } from '@/components/dashboard/magical-pipe';
 
 // AgentWizard — 4 step flow for forking an agent template into a custom
 // agent saved to the user's team.
@@ -44,6 +45,7 @@ export function AgentWizard() {
   const [crocBase, setCrocBase] = useState<CustomCrocBase>('researcher');
   const [accessory, setAccessory] = useState<AccessoryId>('none');
   const [tools, setTools] = useState<string[]>([]);
+  const [showPipe, setShowPipe] = useState(false);
 
   // when template changes, seed defaults
   function pickTemplate(t: AgentTemplate) {
@@ -77,10 +79,15 @@ export function AgentWizard() {
     if (!tpl) return;
     const agent = buildAgent(tpl, { name, label: label || name, topic, accent, crocBase, accessory, tools });
     saveCustomAgent(agent);
-    toast.success(`saved ${agent.label}`, {
-      description: 'your custom agent is on your team. broadcast a goal and they\'ll show up.',
-    });
-    router.push('/app');
+    // Trigger the magical-pipe reveal, then route to /app after the
+    // animation completes (~3s).
+    setShowPipe(true);
+    window.setTimeout(() => {
+      toast.success(`saved ${agent.label}`, {
+        description: 'your custom agent is on your team. broadcast a goal and they\'ll show up.',
+      });
+      router.push('/app');
+    }, 3200);
   }
 
   const Croc = CAST_CROCS[crocBase] ?? CAST_CROCS.researcher;
@@ -383,6 +390,13 @@ export function AgentWizard() {
           </button>
         </div>
       </div>
+
+      {/* Agent-creation reveal — pipe drops the new croc from the sky */}
+      <AnimatePresence>
+        {showPipe && (
+          <MagicalPipe accent={accent} accessory={accessory} label={label || name || tpl?.label || 'new agent'} />
+        )}
+      </AnimatePresence>
     </div>
   );
 }

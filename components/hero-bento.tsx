@@ -165,7 +165,7 @@ function HeadlineTile() {
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
           className="text-grad block text-[clamp(3.4rem,6.5vw,6rem)] font-[750]"
         >
-          broadcast
+          your AI team.
         </motion.span>
         <motion.span
           initial={{ opacity: 0, y: 24, filter: 'blur(8px)' }}
@@ -173,7 +173,7 @@ function HeadlineTile() {
           transition={{ duration: 0.9, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
           className="text-grad-brand block font-serif text-[clamp(3.4rem,6.5vw,6rem)] font-normal italic"
         >
-          one prompt.
+          on autopilot.
         </motion.span>
       </h1>
 
@@ -183,8 +183,9 @@ function HeadlineTile() {
         transition={{ duration: 0.7, delay: 0.4 }}
         className="relative mt-7 max-w-[460px] text-[17px] leading-[1.55] text-ink-dim"
       >
-        9 specialists run concurrently on your goal. parallel panes. greppable audit logs.{' '}
-        <span className="text-white">byok</span> on free, hosted on paid, same agents either way.
+        nine specialists. one prompt. they investigate competing hypotheses, divide cross-layer work,
+        and brief you every morning. <span className="text-white">byok</span> on free, hosted on paid.
+        the agent-team pattern, productized.
       </motion.p>
 
       {/* CTAs */}
@@ -352,7 +353,63 @@ function MetricsTile() {
           />
         ))}
       </div>
+
+      {/* Live activity stream — never-empty filler under the metrics */}
+      <LiveActivityStream />
     </Tile>
+  );
+}
+
+// LiveActivityStream — a tiny terminal-style feed of agent events. New
+// row pushes in every ~900ms; oldest row falls off when the stack hits 5.
+// Fills what used to be empty space under the network metrics.
+function LiveActivityStream() {
+  const POOL = [
+    { agent: 'researcher', color: 'text-cyan-glow', verb: 'scanning', tail: '18 sources' },
+    { agent: 'planner', color: 'text-rose-300', verb: 'mapping', tail: '7 phases' },
+    { agent: 'outreach', color: 'text-amber-300', verb: 'drafting', tail: '12 emails' },
+    { agent: 'analyst', color: 'text-violet-300', verb: 'analyzing', tail: 'reply rate' },
+    { agent: 'coder', color: 'text-emerald-400', verb: 'committing', tail: 'route handler' },
+    { agent: 'designer', color: 'text-pink-300', verb: 'iterating', tail: 'hero v3' },
+    { agent: 'browser', color: 'text-cyan-glow', verb: 'diffing', tail: 'pricing page' },
+    { agent: 'supervisor', color: 'text-emerald-400', verb: 'synthesizing', tail: 'team report' },
+    { agent: 'ops', color: 'text-cyan-glow', verb: 'shredding', tail: '412 docs' },
+  ];
+  const [rows, setRows] = useState<Array<{ id: number; entry: (typeof POOL)[number] }>>(() => [
+    { id: 1, entry: POOL[0] },
+    { id: 2, entry: POOL[1] },
+    { id: 3, entry: POOL[2] },
+    { id: 4, entry: POOL[3] },
+    { id: 5, entry: POOL[4] },
+  ]);
+  useEffect(() => {
+    let counter = 5;
+    const id = setInterval(() => {
+      counter += 1;
+      const entry = POOL[Math.floor(Math.random() * POOL.length)];
+      setRows((curr) => [{ id: counter, entry }, ...curr].slice(0, 5));
+    }, 900);
+    return () => clearInterval(id);
+  }, []);
+  return (
+    <ul className="mt-4 space-y-1 overflow-hidden font-mono text-[10.5px]">
+      {rows.map((r) => (
+        <motion.li
+          key={r.id}
+          layout
+          initial={{ opacity: 0, y: -6, scale: 0.98 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.96 }}
+          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+          className="flex items-center gap-2"
+        >
+          <span className="inline-block h-1.5 w-1.5 rounded-full bg-emerald-400 shadow-[0_0_6px_rgba(74,222,128,0.6)]" />
+          <span className={`uppercase tracking-[0.18em] ${r.entry.color}`}>{r.entry.agent}</span>
+          <span className="text-ink-faint">{r.entry.verb}</span>
+          <span className="text-ink-dim">{r.entry.tail}</span>
+        </motion.li>
+      ))}
+    </ul>
   );
 }
 
