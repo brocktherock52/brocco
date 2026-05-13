@@ -1,77 +1,75 @@
 'use client';
 
-import { motion } from 'framer-motion';
-import {
-  Boxes,
-  Layers,
-  ListChecks,
-  Brain,
-  Bolt,
-  ServerCog,
-  Lock,
-  Key,
-  Activity,
-} from 'lucide-react';
-import { SpotlightCard } from './ui/spotlight-card';
+import { motion, useReducedMotion } from 'framer-motion';
+import { Check, X } from 'lucide-react';
 
-const FEATURES = [
+/**
+ * Features — was a 9-card spotlight grid; now a comparison diff table that
+ * animates row-by-row on scroll. Two columns: "Generic agent stack" (red
+ * strike) and "brocco runtime" (green check + glow). One row per capability.
+ *
+ * Why this layout: the prompt called out that sections 8-12 all read as
+ * card grids. Comparison-diff is one of the listed alternative treatments,
+ * and it lets us keep all 9 capabilities while making the section feel
+ * like its own moment.
+ */
+
+const ROWS = [
   {
-    icon: Boxes,
-    title: 'Multi-agent orchestration',
-    body:
-      'Supervisor pattern with sub-agent delegation. Specialists for research, code, outreach, ops, each with its own tool set and memory.',
+    capability: 'Multi-agent orchestration',
+    them: 'one mega-prompt, vibes',
+    us: 'supervisor + sub-agents, each with own tools + memory',
   },
   {
-    icon: Layers,
-    title: 'Tool registry',
-    body:
-      'File, shell, HTTP, search, your custom APIs. Each tool is a Python factory. Type signature in, the agent gets it on next run.',
+    capability: 'Tool registry',
+    them: 'JSON schemas pasted into a system prompt',
+    us: 'Python factory in, agent uses it next run',
   },
   {
-    icon: ListChecks,
-    title: 'Full audit trails',
-    body:
-      'Every prompt, tool call, and result is appended to JSONL. Replay any run. Diff two runs. Compliance-ready by default.',
+    capability: 'Audit trails',
+    them: 'whatever the model logged, if anything',
+    us: 'every prompt + tool call + result in JSONL, replayable',
   },
   {
-    icon: Brain,
-    title: 'Persistent memory',
-    body:
-      'Per-agent KV that survives across runs. The agent remembers what it learned yesterday, today, and uses it.',
+    capability: 'Persistent memory',
+    them: 'rebuild context every call',
+    us: 'per-agent KV survives across runs',
   },
   {
-    icon: Bolt,
-    title: 'Prompt caching, on by default',
-    body:
-      'System prompts and tool definitions cached on Anthropic edge. Cuts cost ~80% on repeated workflows. No flag to flip.',
+    capability: 'Prompt caching',
+    them: 'flip a flag, hope for the best',
+    us: 'on by default, ~80% hit on repeated workflows',
   },
   {
-    icon: ServerCog,
-    title: 'Self-host or hosted',
-    body:
-      'Run on Hetzner, Vercel, your laptop. SOC 2 Type II in progress. BYOK. Encrypted at rest. Your data never trains a model.',
+    capability: 'Hosting',
+    them: 'one of two SaaS lock-ins',
+    us: 'self-host on Hetzner / Vercel / laptop, or hosted',
   },
   {
-    icon: Key,
-    title: 'BYOK on every plan',
-    body:
-      'Anthropic, OpenAI, OpenAI-compatible (Ollama, vLLM, OpenRouter, Groq). Your key, your tokens, your data path.',
+    capability: 'BYOK',
+    them: 'paid add-on or not supported',
+    us: 'Anthropic + OpenAI + Ollama + Groq on every plan',
   },
   {
-    icon: Activity,
-    title: 'Streaming everywhere',
-    body:
-      'Server-sent events end-to-end. Watch each token, each tool call, each parallel agent. No polling, no spinners.',
+    capability: 'Streaming',
+    them: 'poll, wait, refresh',
+    us: 'SSE end-to-end, every token, every tool call',
   },
   {
-    icon: Lock,
-    title: 'Zero data retention',
-    body:
-      'On paid plans, brocco calls Anthropic with ZDR enabled by default. We never log your prompts after the run completes.',
+    capability: 'Data retention',
+    them: '"we may use your data to improve the product"',
+    us: 'ZDR enabled by default on paid, never trained on',
   },
 ];
 
+const rowVariants = {
+  hidden: { opacity: 0, y: 8 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] } },
+};
+
 export function Features() {
+  const reduce = useReducedMotion();
+
   return (
     <section id="features" className="relative py-24 md:py-32">
       <div className="container-x">
@@ -82,44 +80,77 @@ export function Features() {
             <span className="text-grad-brand">yours.</span>
           </h2>
           <p className="mt-4 max-w-xl text-[16px] text-ink-dim">
-            everything you need to ship agentic workflows you would actually trust with revenue.
+            nine capabilities side by side: how everyone else does it, how brocco does it. each row
+            is a thing we got tired of reinventing.
           </p>
         </div>
 
+        {/* Header row */}
+        <div className="mt-12 grid grid-cols-1 gap-2 md:grid-cols-[minmax(0,11rem)_minmax(0,1fr)_minmax(0,1fr)] md:gap-4">
+          <div className="hidden font-mono text-[10.5px] uppercase tracking-[0.22em] text-ink-faint md:block">
+            capability
+          </div>
+          <div className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-ink-faint">
+            <span className="inline-flex items-center gap-1.5">
+              <X className="h-3 w-3 text-accent-rose" />
+              generic agent stack
+            </span>
+          </div>
+          <div className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-brand-glow">
+            <span className="inline-flex items-center gap-1.5">
+              <Check className="h-3 w-3 text-accent-green" />
+              brocco
+            </span>
+          </div>
+        </div>
+
+        {/* Rows */}
         <motion.div
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, margin: '-60px' }}
+          viewport={{ once: true, margin: '-80px' }}
           variants={{ hidden: {}, show: { transition: { staggerChildren: 0.06 } } }}
-          className="mt-12 grid gap-4 md:grid-cols-2 lg:grid-cols-3"
+          className="mt-4 divide-y divide-white/[0.06] border-y border-white/[0.06]"
         >
-          {FEATURES.map((f) => {
-            const Icon = f.icon;
-            return (
-              <motion.div
-                key={f.title}
-                variants={{
-                  hidden: { opacity: 0, y: 14 },
-                  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.16, 1, 0.3, 1] } },
-                }}
-                whileHover={{ y: -4, transition: { duration: 0.2 } }}
-              >
-                <SpotlightCard
-                  spotlightSize={320}
-                  spotlightColor="rgba(167, 139, 250, 0.16)"
-                  className="card card-hover group relative h-full overflow-hidden p-6"
-                >
-                  <div className="pointer-events-none absolute -right-10 -top-10 h-32 w-32 rounded-full bg-brand/0 blur-2xl transition-all duration-500 group-hover:bg-brand/10" />
-                  <div className="flex h-9 w-9 items-center justify-center rounded-lg bg-gradient-to-br from-white/[0.06] to-white/[0.02] ring-1 ring-white/[0.08] transition-transform duration-300 group-hover:scale-110">
-                    <Icon className="h-4 w-4 text-brand-glow" />
-                  </div>
-                  <h3 className="mt-4 text-[16.5px] font-semibold tracking-tight">{f.title}</h3>
-                  <p className="mt-2 text-[14px] leading-relaxed text-ink-dim">{f.body}</p>
-                </SpotlightCard>
-              </motion.div>
-            );
-          })}
+          {ROWS.map((r) => (
+            <motion.div
+              key={r.capability}
+              variants={rowVariants}
+              className="grid grid-cols-1 gap-2 py-4 md:grid-cols-[minmax(0,11rem)_minmax(0,1fr)_minmax(0,1fr)] md:gap-4 md:py-5"
+            >
+              <div className="text-[13.5px] font-semibold tracking-tight text-white md:text-[14px]">
+                {r.capability}
+              </div>
+
+              <div className="flex items-start gap-2 text-[13.5px] leading-relaxed text-ink-faint">
+                <X className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent-rose/80" />
+                <span className="line-through decoration-accent-rose/40 decoration-1">
+                  {r.them}
+                </span>
+              </div>
+
+              <div className="relative flex items-start gap-2 text-[13.5px] leading-relaxed text-ink/95">
+                <Check className="mt-0.5 h-3.5 w-3.5 shrink-0 text-accent-green" />
+                <span className="relative">
+                  {r.us}
+                  {!reduce && (
+                    <motion.span
+                      aria-hidden
+                      className="pointer-events-none absolute -inset-x-1 -inset-y-0.5 rounded-md bg-brand/0"
+                      animate={{ backgroundColor: ['rgba(167,139,250,0)', 'rgba(167,139,250,0.08)', 'rgba(167,139,250,0)'] }}
+                      transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
+                    />
+                  )}
+                </span>
+              </div>
+            </motion.div>
+          ))}
         </motion.div>
+
+        <p className="mt-8 max-w-xl text-[13.5px] leading-relaxed text-ink-faint">
+          this is what we mean by &ldquo;production-grade.&rdquo; not a buzzword. nine concrete
+          decisions we already made on your behalf.
+        </p>
       </div>
     </section>
   );
