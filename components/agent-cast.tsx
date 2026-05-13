@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
@@ -27,7 +27,7 @@ export function AgentCast() {
         <div className="mx-auto max-w-2xl text-center">
           <p className="pill mx-auto">the cast</p>
           <h2 className="mt-5 text-display-xl">
-            <span className="text-grad">nine specialists.</span>{' '}
+            <span className="text-grad">888 specialists.</span>{' '}
             <span className="font-serif italic font-normal text-grad-brand">one office.</span>
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-[15.5px] leading-relaxed text-ink-dim">
@@ -52,7 +52,18 @@ function CastCard({ member, index }: { member: typeof AGENT_CAST[number]; index:
   const hasImage = !!member.imagePath;
   const cardRef = useRef<HTMLDivElement | null>(null);
 
-  // Mouse-tracked 3D tilt — premium feel on hover
+  // Mouse-tracked 3D tilt — desktop+fine-pointer only. Disabling on touch
+  // killed the mobile scroll-jank where every touchmove was triggering tilt.
+  const [tiltEnabled, setTiltEnabled] = useState(false);
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const mq = window.matchMedia('(pointer: fine) and (min-width: 1024px)');
+    const apply = () => setTiltEnabled(mq.matches);
+    apply();
+    mq.addEventListener('change', apply);
+    return () => mq.removeEventListener('change', apply);
+  }, []);
+
   const mx = useMotionValue(0);
   const my = useMotionValue(0);
   const sx = useSpring(mx, { stiffness: 200, damping: 24 });
@@ -63,6 +74,7 @@ function CastCard({ member, index }: { member: typeof AGENT_CAST[number]; index:
   const glareY = useTransform(sy, [-0.5, 0.5], ['0%', '100%']);
 
   function onMove(e: React.MouseEvent<HTMLDivElement>) {
+    if (!tiltEnabled) return;
     const el = cardRef.current;
     if (!el) return;
     const r = el.getBoundingClientRect();
@@ -72,6 +84,7 @@ function CastCard({ member, index }: { member: typeof AGENT_CAST[number]; index:
     my.set(y);
   }
   function onLeave() {
+    if (!tiltEnabled) return;
     mx.set(0);
     my.set(0);
   }
@@ -85,9 +98,9 @@ function CastCard({ member, index }: { member: typeof AGENT_CAST[number]; index:
     >
       <motion.div
         ref={cardRef}
-        onMouseMove={onMove}
-        onMouseLeave={onLeave}
-        style={{ rotateX, rotateY, transformPerspective: 1000 }}
+        onMouseMove={tiltEnabled ? onMove : undefined}
+        onMouseLeave={tiltEnabled ? onLeave : undefined}
+        style={tiltEnabled ? { rotateX, rotateY, transformPerspective: 1000 } : undefined}
       >
       <Link
         href={member.href ?? `/agents/${member.slug}`}
@@ -143,6 +156,18 @@ function CastCard({ member, index }: { member: typeof AGENT_CAST[number]; index:
                 sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
                 className="object-cover transition-transform duration-700 group-hover:scale-[1.08]"
               />
+              {/* accent underlay. cast-v7 PNGs ship with true alpha
+                  channels so we no longer need the CSS chroma-key
+                  hack (mix-blend-mode: screen + contrast/saturate
+                  tweaks). this radial just gives each card a slight
+                  themed wash behind the transparent croc. */}
+              <div
+                aria-hidden
+                className="absolute inset-0 -z-10"
+                style={{
+                  background: `radial-gradient(120% 90% at 50% 35%, ${accent}40 0%, ${accent}18 35%, #050b16 75%)`,
+                }}
+              />
             </motion.div>
           ) : (
             <CastPlaceholder accent={accent} slug={member.slug} index={index} />
@@ -151,7 +176,11 @@ function CastCard({ member, index }: { member: typeof AGENT_CAST[number]; index:
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 ring-1 ring-inset transition-colors duration-300"
-            style={{ ['--ring' as string]: `${accent}55`, boxShadow: 'inset 0 -80px 100px -40px rgba(5,8,10,0.85)' }}
+            style={{
+              ['--ring' as string]: `${accent}55`,
+              boxShadow:
+                'inset 0 -90px 120px -50px rgba(5,8,16,0.95), inset 0 90px 120px -60px rgba(5,8,16,0.75)',
+            }}
           />
 
           <motion.div

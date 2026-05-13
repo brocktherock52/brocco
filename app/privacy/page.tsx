@@ -4,7 +4,7 @@ import { Footer } from '@/components/footer';
 
 export const metadata: Metadata = {
   title: 'Privacy',
-  description: 'Privacy policy for brocco.ai — what we collect, what we do not, and how we keep your data yours.',
+  description: 'Privacy policy for brocco.dev — what we collect, what we do not, and how we keep your data yours.',
   alternates: { canonical: '/privacy' },
 };
 

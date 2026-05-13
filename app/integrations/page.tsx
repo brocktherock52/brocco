@@ -7,7 +7,7 @@ import { FinalCta } from '@/components/final-cta';
 import { INTEGRATION_PROFILES } from '@/lib/integration-profiles';
 
 export const metadata: Metadata = {
-  title: 'Integrations — brocco.ai',
+  title: 'Integrations — brocco.dev',
   description:
     'Connect Anthropic, OpenAI, Ollama, Stripe, Slack, Gmail, Notion, Postgres. BYOK on free; hosted with ZDR on paid.',
   alternates: { canonical: '/integrations' },

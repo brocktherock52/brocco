@@ -108,7 +108,7 @@ function Crew({ member }: { member: CrewMember }) {
           }}
         >
           <Image
-            src={`/assets/cast-v6/${member.slug}.png`}
+            src={`/assets/cast-v7/${member.slug}.png`}
             alt=""
             fill
             sizes="28px"

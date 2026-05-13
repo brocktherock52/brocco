@@ -6,7 +6,7 @@ import { Sparkles } from 'lucide-react';
 
 export const metadata: Metadata = {
   title: 'Changelog',
-  description: 'What is new in brocco.ai. Versioned, dated, no spin.',
+  description: 'What is new in brocco.dev. Versioned, dated, no spin.',
   alternates: { canonical: '/changelog' },
 };
 

@@ -14,7 +14,7 @@ const nextConfig = {
   images: {
     formats: ['image/avif', 'image/webp'],
     remotePatterns: [
-      { protocol: 'https', hostname: 'brocco.ai' },
+      { protocol: 'https', hostname: 'brocco.dev' },
       { protocol: 'https', hostname: 'brocco-site.vercel.app' },
     ],
   },

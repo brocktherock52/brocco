@@ -26,7 +26,7 @@ export default function VsCrewAiPage() {
       }}
       oneLine={{
         brocco:
-          'A hosted multi-agent dashboard. 9 specialists, 13 tools, 4 recipes, JSONL log. 11-min median time to first run. BYOK or hosted.',
+          'A hosted multi-agent dashboard. 888 specialists, 13 tools, 4 recipes, JSONL log. 11-min median time to first run. BYOK or hosted.',
         competitor:
           'A Python framework + enterprise platform for designing, deploying, and monitoring multi-agent crews. You write the agents and tasks; CrewAI orchestrates them.',
       }}

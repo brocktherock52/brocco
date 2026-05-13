@@ -155,7 +155,7 @@ export function MorningBriefing({ onAct }: MorningBriefingProps) {
       </ul>
 
       <p className="mt-5 text-center font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-faint">
-        recurring runs · auto-refreshed at 06:00 · powered by 9 specialists
+        recurring runs · auto-refreshed at 06:00 · powered by 888 specialists
       </p>
     </section>
   );

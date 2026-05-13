@@ -22,11 +22,11 @@ export default function VsCursorPage() {
         titleA: 'brocco vs Cursor.',
         titleB: 'Different jobs.',
         subtitle:
-          'Cursor lives inside your code editor. Brocco runs nine agents in parallel for everything that is not code: research, outreach, planning, content, ops. Same Claude under the hood, very different surface.',
+          'Cursor lives inside your code editor. Brocco runs 888 agents in parallel for everything that is not code: research, outreach, planning, content, ops. Same Claude under the hood, very different surface.',
       }}
       oneLine={{
         brocco:
-          'A multi-agent dashboard. Pick from 9 specialists, type one goal, watch them work in parallel with full JSONL audit logs. BYOK or hosted.',
+          'A multi-agent dashboard. Pick from 888 specialists, type one goal, watch them work in parallel with full JSONL audit logs. BYOK or hosted.',
         competitor:
           'An AI-native fork of VS Code with a built-in agent that edits files, runs commands, and reviews diffs. Best when the work IS code.',
       }}

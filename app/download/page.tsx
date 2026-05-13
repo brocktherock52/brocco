@@ -185,7 +185,7 @@ export default function DownloadPage() {
               <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.06] pt-5 text-[13px]">
                 <span className="inline-flex items-center gap-2 font-mono text-[11px] text-ink-faint">
                   <Logomark className="h-5 w-5" />
-                  brocco.ai · v2.4
+                  brocco.dev · v2.4
                 </span>
                 <Link
                   href="/security"

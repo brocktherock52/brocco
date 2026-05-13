@@ -233,7 +233,7 @@ function Walker({ walker }: { walker: Walker }) {
           }}
         >
           <Image
-            src={`/assets/cast-v6/${walker.agent.slug}.png`}
+            src={`/assets/cast-v7/${walker.agent.slug}.png`}
             alt=""
             fill
             sizes="36px"

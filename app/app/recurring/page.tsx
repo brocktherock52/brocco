@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { RecurringList } from '@/components/dashboard/recurring-list';
 
 export const metadata: Metadata = {
-  title: 'recurring runs  ·  brocco.ai',
+  title: 'recurring runs  ·  brocco.dev',
   description: 'every job your team runs on a schedule.',
   robots: { index: false, follow: false },
 };

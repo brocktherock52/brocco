@@ -45,10 +45,10 @@ export default async function BlogPostPage({ params }: PageProps) {
     description: post.description,
     datePublished: post.date,
     keywords: post.keywords.join(', '),
-    author: { '@type': 'Organization', name: 'brocco.ai' },
+    author: { '@type': 'Organization', name: 'brocco.dev' },
     publisher: {
       '@type': 'Organization',
-      name: 'brocco.ai',
+      name: 'brocco.dev',
       logo: { '@type': 'ImageObject', url: 'https://brocco-site.vercel.app/icon.png' },
     },
   };

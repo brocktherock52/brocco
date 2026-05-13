@@ -22,11 +22,11 @@ export default function VsDevinPage() {
         titleA: 'brocco vs Devin.',
         titleB: 'Different bets.',
         subtitle:
-          'Devin is a single autonomous engineer that takes a ticket and ships a PR. Brocco is a multi-agent dashboard where you watch nine specialists run in parallel on whatever your day requires. Different bets, different prices.',
+          'Devin is a single autonomous engineer that takes a ticket and ships a PR. Brocco is a multi-agent dashboard where you watch 888 specialists run in parallel on whatever your day requires. Different bets, different prices.',
       }}
       oneLine={{
         brocco:
-          'A multi-agent dashboard. 9 specialists, 13 tools, parallel panes, JSONL audit log. BYOK on free, hosted on paid.',
+          'A multi-agent dashboard. 888 specialists, 13 tools, parallel panes, JSONL audit log. BYOK on free, hosted on paid.',
         competitor:
           'An autonomous AI engineer. Reads a task, plans, codes, runs tests, ships a PR. One agent, one pane, async by default.',
       }}

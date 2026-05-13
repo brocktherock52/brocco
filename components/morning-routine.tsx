@@ -64,7 +64,7 @@ export function MorningRoutine() {
             <span className="font-serif italic font-normal text-grad-brand">your team already worked.</span>
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-[15.5px] leading-relaxed text-ink-dim">
-            brocco runs on a schedule you set once. every morning the nine specialists ship a briefing.
+            brocco runs on a schedule you set once. every morning your hand-picked specialists ship a briefing.
             you wake up, scan four lines, accept or dismiss. the day is already in motion.
           </p>
         </div>
@@ -122,10 +122,16 @@ function PeekCard({ row, index }: { row: PeekRow; index: number }) {
       />
 
       <div className="flex items-start gap-3">
-        {/* per-agent croc avatar — uses the AI emoji PNG, constantly animated */}
+        {/* per-agent croc avatar. cast-v7 PNGs have true alpha so the
+            CSS chroma-key hack (mixBlendMode + contrast/saturate) has
+            been removed. the radial accent wash now just sits behind
+            the transparent croc as a themed backdrop. */}
         <motion.div
-          className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl bg-black ring-1"
-          style={{ boxShadow: `inset 0 0 0 1px ${row.accent}33` }}
+          className="relative h-20 w-20 shrink-0 overflow-hidden rounded-xl ring-1"
+          style={{
+            background: `radial-gradient(120% 90% at 50% 35%, ${row.accent}40 0%, ${row.accent}15 40%, #050b16 80%)`,
+            boxShadow: `inset 0 0 0 1px ${row.accent}33, inset 0 -28px 36px -16px rgba(5,8,16,0.95)`,
+          }}
           animate={{
             y: [0, -5, 0, 3, 0],
             rotate: [-2, 2, -2, 1, -2],

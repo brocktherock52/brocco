@@ -21,12 +21,12 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const a = getAgentProfile(slug);
   if (!a) return { title: 'Not found' };
   return {
-    title: `${a.name} agent — brocco.ai`,
+    title: `${a.name} agent — brocco.dev`,
     description: a.lead.slice(0, 160),
     alternates: { canonical: `/agents/${a.slug}` },
     keywords: a.keywords,
     openGraph: {
-      title: `${a.name} agent — brocco.ai`,
+      title: `${a.name} agent — brocco.dev`,
       description: a.lead.slice(0, 160),
       type: 'website',
     },

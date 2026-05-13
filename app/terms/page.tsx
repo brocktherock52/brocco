@@ -4,7 +4,7 @@ import { Footer } from '@/components/footer';
 
 export const metadata: Metadata = {
   title: 'Terms of service',
-  description: 'Terms of service for brocco.ai. Plain-language summary up top.',
+  description: 'Terms of service for brocco.dev. Plain-language summary up top.',
   alternates: { canonical: '/terms' },
 };
 

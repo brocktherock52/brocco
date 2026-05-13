@@ -7,7 +7,7 @@ import { FinalCta } from '@/components/final-cta';
 import { TOOL_PROFILES } from '@/lib/tool-profiles';
 
 export const metadata: Metadata = {
-  title: 'Tools — brocco.ai',
+  title: 'Tools — brocco.dev',
   description:
     'The 13 built-in tools brocco agents call: search_web, http_get, http_post, file_read, file_write, memory_get, memory_put, shell_exec, image_gen, voice_tts, postgres, stripe, delegate.',
   alternates: { canonical: '/tools' },

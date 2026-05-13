@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { WeeklyRecap } from '@/components/dashboard/weekly-recap';
 
 export const metadata: Metadata = {
-  title: 'weekly recap  ·  brocco.ai',
+  title: 'weekly recap  ·  brocco.dev',
   description: 'a quiet sunday view of the week your team just worked.',
   robots: { index: false, follow: false },
 };

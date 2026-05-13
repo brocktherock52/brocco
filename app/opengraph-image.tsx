@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
-export const alt = 'brocco.ai - agents that do the work';
+export const alt = 'brocco.dev - agents that do the work';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -44,7 +44,7 @@ export default async function OpengraphImage() {
             <img src={markSrc} width={88} height={88} alt="" style={{ objectFit: 'contain' }} />
           ) : null}
           <span style={{ fontSize: 36, fontWeight: 700, letterSpacing: '-0.02em' }}>
-            brocco<span style={{ color: '#6B7280' }}>.ai</span>
+            brocco<span style={{ color: '#6B7280' }}>.dev</span>
           </span>
         </div>
 
@@ -73,7 +73,7 @@ export default async function OpengraphImage() {
 
         {/* bottom: stats row */}
         <div style={{ display: 'flex', gap: 24, fontSize: 18, color: '#8A96A0' }}>
-          <span>9 agents</span>
+          <span>888 agents</span>
           <span>•</span>
           <span>13 tools</span>
           <span>•</span>

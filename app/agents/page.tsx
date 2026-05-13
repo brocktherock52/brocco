@@ -9,7 +9,7 @@ import { AnimatedGrid, AnimatedGridItem } from '@/components/animated-grid';
 import { AgentCardName } from '@/components/agent-shared';
 
 export const metadata: Metadata = {
-  title: 'Agents — brocco.ai',
+  title: 'Agents — brocco.dev',
   description:
     'Nine specialist agents you can broadcast to from one prompt. Researcher, planner, outreach, designer, analyst, coder, ops, supervisor, browser.',
   alternates: { canonical: '/agents' },

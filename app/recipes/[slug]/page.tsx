@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const r = getRecipeProfile(slug);
   if (!r) return { title: 'Not found' };
   return {
-    title: `${r.name} recipe — brocco.ai`,
+    title: `${r.name} recipe — brocco.dev`,
     description: r.tagline.slice(0, 160),
     alternates: { canonical: `/recipes/${r.slug}` },
     keywords: r.keywords,

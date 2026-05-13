@@ -137,7 +137,7 @@ export const RECIPES: { id: string; name: string; description: string; agents: A
     name: 'Market research',
     description: '3 agents survey competitors',
     agents: ['researcher', 'analyst', 'planner'],
-    goal: 'Survey the top 5 competitors to brocco.ai. Compare pricing, wedge, weaknesses. Output a 1-page brief with a recommendation.',
+    goal: 'Survey the top 5 competitors to brocco.dev. Compare pricing, wedge, weaknesses. Output a 1-page brief with a recommendation.',
   },
   {
     id: 'launch-day',

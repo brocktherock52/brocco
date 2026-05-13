@@ -1,6 +1,6 @@
 {
   "id": "brocco-ai-app",
-  "name": "brocco.ai - agents that do the work",
+  "name": "brocco.dev - agents that do the work",
   "short_name": "brocco",
   "description": "Multi-agent dashboard. Run multiple Claude or local LLM agents in parallel from one prompt. BYOK, browser-first.",
   "start_url": "/app?source=pwa",

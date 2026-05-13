@@ -15,7 +15,7 @@ import type { CSSProperties } from 'react';
 //   - identical render across devices for a given descriptor
 //   - users can iterate in the wizard without API calls
 // The trade-off: 6 stock accessories vs unlimited AI options. We use AI
-// for the *built-in* cast (cast-v6 PNGs); users get the composer.
+// for the *built-in* cast (cast-v7 PNGs); users get the composer.
 
 export type AccessoryId =
   | 'glasses'

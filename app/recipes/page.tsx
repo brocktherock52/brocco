@@ -8,7 +8,7 @@ import { RECIPE_PROFILES } from '@/lib/recipe-profiles';
 import { AnimatedGrid, AnimatedGridItem } from '@/components/animated-grid';
 
 export const metadata: Metadata = {
-  title: 'Recipes — brocco.ai',
+  title: 'Recipes — brocco.dev',
   description:
     'Pre-built broadcast patterns for the work you keep redoing. Market research, content sprints, customer deep dives, launch kits, and 7 more.',
   alternates: { canonical: '/recipes' },
