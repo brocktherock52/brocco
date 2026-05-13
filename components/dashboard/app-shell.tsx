@@ -28,6 +28,8 @@ import { JsonlLog } from './jsonl-log';
 import { ByokModal, getKey } from './byok-modal';
 import { Onboarding } from './onboarding';
 import { MorningBriefing } from './morning-briefing';
+import { SuggestionSlot } from './suggestion-slot';
+import { recordStreakTouch } from '@/lib/streak';
 
 const MODELS = [
   { id: 'claude-sonnet-4-6', label: 'Claude Sonnet 4.6', tag: 'default' },
@@ -78,6 +80,8 @@ export function AppShell() {
   useEffect(() => {
     setKeyState(getKey());
     setUsage(getUsage());
+    // Tick the daily-streak counter — opening /app counts as the day's touch.
+    recordStreakTouch();
     try {
       const raw = localStorage.getItem('brocco:history');
       if (raw) setHistory(JSON.parse(raw));
@@ -532,6 +536,21 @@ export function AppShell() {
                 />
               ))}
             </div>
+
+            {/* Create-your-own-agent entry point — feeds the lib/custom-agents
+                store via the wizard at /app/agents/new. Custom agents will
+                appear here once the runtime can route them; for now this
+                is the one-tap promise. */}
+            <Link
+              href="/app/agents/new"
+              className="group mt-4 flex items-center justify-between gap-2 rounded-lg border border-dashed border-white/[0.10] bg-white/[0.02] px-3 py-2.5 text-[12.5px] text-ink-dim transition-colors hover:border-white/[0.22] hover:bg-white/[0.04] hover:text-white"
+            >
+              <span className="inline-flex items-center gap-2">
+                <Sparkles className="h-3.5 w-3.5 text-brand-glow" />
+                create your own agent
+              </span>
+              <ArrowRight className="h-3 w-3 opacity-60 transition-transform group-hover:translate-x-0.5" />
+            </Link>
           </div>
         </aside>
 
@@ -575,6 +594,15 @@ export function AppShell() {
               </div>
             </div>
           </div>
+
+          {/* Proactive nudge slot — appears above panes when there's an
+              active suggestion, invisible otherwise. */}
+          <SuggestionSlot
+            onAccept={(g, ags) => {
+              if (g) setGoal(g);
+              if (ags && ags.length) setSelected(ags);
+            }}
+          />
 
           {/* panes + log */}
           <div className="grid min-h-0 flex-1 grid-cols-1 gap-3 overflow-hidden p-3 lg:grid-cols-[1fr_360px]">

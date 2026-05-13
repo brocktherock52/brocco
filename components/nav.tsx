@@ -28,6 +28,7 @@ import {
   Zap,
 } from 'lucide-react';
 import { Logomark } from './logo';
+import { StreakChip } from './streak-chip';
 import { cn } from '@/lib/utils';
 
 interface MegaItem {
@@ -185,6 +186,7 @@ export function Nav() {
         </div>
 
         <div className="hidden items-center gap-2 md:flex">
+          <StreakChip />
           <button
             type="button"
             onClick={() => {
