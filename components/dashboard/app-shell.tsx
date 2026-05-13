@@ -36,6 +36,8 @@ import { CustomCroc } from '@/components/custom-croc';
 import { RecurringToggle } from './recurring-toggle';
 import { ConstructionCrew } from './construction-crew';
 import { GuidedOnboarding } from './guided-onboarding';
+import { listThreads, createThread, type ClientThread } from '@/lib/threads-client';
+import { useSession, signOut } from '@/lib/auth-client';
 
 const MODELS = [
   { id: 'claude-sonnet-4-6', label: 'Claude Sonnet 4.6', tag: 'default' },
@@ -78,6 +80,9 @@ export function AppShell() {
   const [panes, setPanes] = useState<PaneState[]>([]);
   const [history, setHistory] = useState<RunHistoryEntry[]>([]);
   const [showHistory, setShowHistory] = useState(false);
+  const [serverThreads, setServerThreads] = useState<ClientThread[]>([]);
+  const [serverOffline, setServerOffline] = useState(true);
+  const session = useSession();
   const [usage, setUsage] = useState(getUsage());
   const [tokens, setTokens] = useState({ in: 0, out: 0, cost: 0 });
   const [demoRunsThisSession, setDemoRunsThisSession] = useState(0);
@@ -98,6 +103,28 @@ export function AppShell() {
       const raw = localStorage.getItem('brocco:history');
       if (raw) setHistory(JSON.parse(raw));
     } catch {}
+    // Pull server-side thread history if signed in; falls back to
+    // localStorage cache when unauthenticated or offline.
+    listThreads().then((res) => {
+      setServerThreads(res.threads);
+      setServerOffline(res.offline);
+      if (!res.offline && res.threads.length) {
+        // Hydrate the in-memory history drawer from the server so signed-in
+        // returners land on a populated list even before clicking History.
+        setHistory((curr) => {
+          const fromServer: RunHistoryEntry[] = res.threads.slice(0, 25).map((t) => ({
+            id: t.id,
+            goal: t.title,
+            agents: t.agents as AgentName[],
+            ts: new Date(t.updatedAt).getTime(),
+          }));
+          // Prefer server entries; merge in any local-only ones that aren't there.
+          const seen = new Set(fromServer.map((h) => h.goal));
+          const merged = [...fromServer, ...curr.filter((h) => !seen.has(h.goal))].slice(0, 25);
+          return merged;
+        });
+      }
+    });
     // hydrate from share-hash if present
     if (typeof window !== 'undefined' && window.location.hash) {
       try {
@@ -202,6 +229,13 @@ export function AppShell() {
     setHistory((h) =>
       [{ id: uid('r'), goal: goal, agents: runAgents, ts: Date.now() }, ...h].slice(0, 25),
     );
+    // Persist as a thread on the server (no-op for anonymous users beyond
+    // the localStorage write-through cache inside threads-client).
+    createThread({ title: goal.slice(0, 200), agents: runAgents as string[] })
+      .then((t) => {
+        if (t) setServerThreads((curr) => [t, ...curr.filter((x) => x.id !== t.id)].slice(0, 50));
+      })
+      .catch(() => {});
 
     if (live) {
       toast.message('Live mode', {
@@ -514,6 +548,27 @@ export function AppShell() {
         </button>
 
         <div className="ml-auto flex items-center gap-2">
+          {/* Session pill — signed-in email + sign out, or a sign-in link. */}
+          {session?.data?.user ? (
+            <span className="hidden md:inline-flex items-center gap-1.5 rounded-full border border-white/[0.10] bg-white/[0.04] px-2.5 py-1 font-mono text-[11px] text-ink-dim">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+              {session.data.user.email}
+              <button
+                type="button"
+                onClick={() => signOut({ fetchOptions: { onSuccess: () => { window.location.href = '/login'; } } })}
+                className="ml-2 text-ink-faint hover:text-white"
+              >
+                sign out
+              </button>
+            </span>
+          ) : (
+            <Link
+              href="/login"
+              className="hidden md:inline-flex items-center gap-1.5 rounded-full border border-white/[0.10] bg-white/[0.04] px-2.5 py-1 font-mono text-[11px] text-ink-dim hover:bg-white/[0.07] hover:text-white"
+            >
+              sign in
+            </Link>
+          )}
           {(tokens.in > 0 || tokens.out > 0) && (
             <span
               className="hidden md:inline-flex items-center gap-1.5 rounded-full border border-white/[0.10] bg-white/[0.04] px-2.5 py-1 font-mono text-[11px] text-ink-dim"
