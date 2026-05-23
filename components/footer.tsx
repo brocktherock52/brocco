@@ -14,7 +14,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="mt-3 max-w-xs text-[13.5px] text-ink-dim">
-              the agentic os for businesses that ship. built on claude. wired into your stack.
+              your AI team. one prompt. ship before coffee. built on Claude, hosted on Vercel.
             </p>
           </div>
 

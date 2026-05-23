@@ -1,6 +1,8 @@
 import type { MetadataRoute } from 'next';
 
-const SITE = 'https://brocco-site.vercel.app';
+// 2026-05-22: was hardcoded to the Vercel preview domain. Now uses the public
+// base URL so robots/sitemap point at brocco.dev and not the staging URL.
+const SITE = process.env.NEXT_PUBLIC_BASE_URL || 'https://brocco.dev';
 
 export default function robots(): MetadataRoute.Robots {
   return {

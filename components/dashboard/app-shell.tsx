@@ -14,6 +14,7 @@ import {
   Sparkles,
   Square,
   Trash2,
+  Users,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Logomark } from '@/components/logo';
@@ -26,7 +27,7 @@ import { AgentCard } from './agent-card';
 import { StreamPane } from './stream-pane';
 import { JsonlLog } from './jsonl-log';
 import { ByokModal, getKey } from './byok-modal';
-import { Onboarding } from './onboarding';
+// Duplicate `Onboarding` modal deleted 2026-05-22 — collided with `GuidedOnboarding`.
 import { MorningBriefing } from './morning-briefing';
 import { EveningWindDown } from './evening-windown';
 import { SuggestionSlot } from './suggestion-slot';
@@ -72,7 +73,11 @@ export function AppShell() {
     'outreach',
   ]);
   const [broadcast, setBroadcast] = useState(true);
-  const [goal, setGoal] = useState('');
+  // Pre-fill so a first-time user can hit Cmd+Enter and see something happen
+  // with zero keystrokes. They are free to clear / overwrite. Punchlist 2026-05-22.
+  const [goal, setGoal] = useState(
+    'Run a launch sprint: research, draft tweets, write a landing hero, plan day-1 outreach.',
+  );
   const [model, setModel] = useState(MODELS[0].id);
   const [modelOpen, setModelOpen] = useState(false);
   const [byokOpen, setByokOpen] = useState(false);
@@ -80,6 +85,10 @@ export function AppShell() {
   const [panes, setPanes] = useState<PaneState[]>([]);
   const [history, setHistory] = useState<RunHistoryEntry[]>([]);
   const [showHistory, setShowHistory] = useState(false);
+  // Mobile bottom-sheet for picking agents. The desktop sidebar remains the
+  // canonical surface above md. See marketing/audit/app-audit-2026-05-22.md
+  // Finding 5a.
+  const [showTeamSheet, setShowTeamSheet] = useState(false);
   const [serverThreads, setServerThreads] = useState<ClientThread[]>([]);
   const [serverOffline, setServerOffline] = useState(true);
   const session = useSession();
@@ -159,6 +168,21 @@ export function AppShell() {
   );
   const running = panes.some((p) => p.status === 'running');
 
+  // v3.0: Tier-based parallel pane cap. Free users see one pane at a time so
+  // the broadcast metaphor still works without burning the trial. Solo upgrades
+  // to 5. Team (and BYOK live mode) gets unbounded parallel runs. The tier
+  // lookup intentionally lives on the client only until a real billing layer
+  // ships. See marketing/audit/app-audit-2026-05-22.md Finding 2c.
+  type Tier = 'free' | 'solo' | 'team';
+  const tier: Tier = useMemo(() => {
+    if (keyState) return 'team';
+    if (typeof window === 'undefined') return 'free';
+    const t = (localStorage.getItem('brocco:tier') || 'free').toLowerCase();
+    return t === 'team' ? 'team' : t === 'solo' ? 'solo' : 'free';
+  }, [keyState]);
+  const paneCap = tier === 'team' ? Infinity : tier === 'solo' ? 5 : 1;
+  const activePaneCount = panes.filter((p) => p.status === 'running' || p.status === 'pending').length;
+
   // Map a CustomAgent.template -> a built-in AgentName archetype.
   // Custom agents currently run through their template's existing stream
   // and dispatch path until the live Claude wrapper accepts custom system
@@ -215,8 +239,26 @@ export function AppShell() {
     }
 
     // v3.0: broadcast is always on; runAgents is just selected.
+    // Enforce the tier's parallel-pane cap. If the user is already at the cap
+    // we still allow the queue but trim the batch to what fits.
     const runAgents = selected;
-    const next: PaneState[] = runAgents.map((name) => ({
+    const headroom = Math.max(0, paneCap - activePaneCount);
+    if (headroom === 0 && tier !== 'team') {
+      toast.error('Parallel run limit reached', {
+        description: tier === 'free'
+          ? 'Free tier runs one pane at a time. Stop the current run or upgrade for 5+ in parallel.'
+          : 'Solo tier runs 5 panes at a time. Wait for one to finish or upgrade to Team for unlimited.',
+        action: { label: 'Upgrade', onClick: () => (window.location.href = '/pricing') },
+      });
+      return;
+    }
+    const allowedAgents = tier === 'team' ? runAgents : runAgents.slice(0, headroom);
+    if (allowedAgents.length < runAgents.length) {
+      toast.message(`Running ${allowedAgents.length} of ${runAgents.length} agents`, {
+        description: `${tier} tier caps parallel panes at ${paneCap}. Upgrade to unlock the rest.`,
+      });
+    }
+    const next: PaneState[] = allowedAgents.map((name) => ({
       id: uid('p'),
       agent: name,
       events: [],
@@ -224,7 +266,10 @@ export function AppShell() {
       ctrl: new AbortController(),
       mode: live ? 'live' : 'demo',
     }));
-    setPanes(next);
+    // Append instead of clobber so a second batch fired while the first one
+    // is still streaming does not wipe in-flight panes. Filter by id keeps the
+    // function idempotent if React re-invokes setState during strict-mode dev.
+    setPanes((curr) => [...curr.filter((p) => !next.find((n) => n.id === p.id)), ...next]);
 
     setHistory((h) =>
       [{ id: uid('r'), goal: goal, agents: runAgents, ts: Date.now() }, ...h].slice(0, 25),
@@ -253,8 +298,9 @@ export function AppShell() {
     setTokens({ in: 0, out: 0, cost: 0 });
 
     await Promise.all(
-      next.map((pane, idx) => {
+      next.map((pane) => {
         const a = AGENTS.find((x) => x.name === pane.agent)!;
+        const paneId = pane.id;
 
         const emit = (e: SimEvent | (LiveEvent & { ts?: number; step?: number; agent?: AgentName })) => {
           const norm = ('ts' in e && e.ts ? e : null) as SimEvent | null;
@@ -267,8 +313,10 @@ export function AppShell() {
             setTokens({ in: totalIn, out: totalOut, cost: totalCost });
             // fall through so the event is also pushed onto the pane log
           }
+          // Match panes by id, not array index. Appending batches reshuffles
+          // index positions so the old `i === idx` check no longer holds.
           setPanes((curr) =>
-            curr.map((p, i) => (i === idx ? { ...p, events: [...p.events, ev as SimEvent] } : p)),
+            curr.map((p) => (p.id === paneId ? { ...p, events: [...p.events, ev as SimEvent] } : p)),
           );
         };
 
@@ -294,8 +342,8 @@ export function AppShell() {
             })
             .finally(() => {
               setPanes((curr) =>
-                curr.map((p, i) =>
-                  i === idx
+                curr.map((p) =>
+                  p.id === paneId
                     ? {
                         ...p,
                         status: pane.ctrl.signal.aborted
@@ -316,14 +364,14 @@ export function AppShell() {
           goal,
           (e) => {
             setPanes((curr) =>
-              curr.map((p, i) => (i === idx ? { ...p, events: [...p.events, e] } : p)),
+              curr.map((p) => (p.id === paneId ? { ...p, events: [...p.events, e] } : p)),
             );
           },
           { cancelled: pane.ctrl.signal.aborted },
         ).then(() => {
           setPanes((curr) =>
-            curr.map((p, i) =>
-              i === idx ? { ...p, status: pane.ctrl.signal.aborted ? 'cancelled' : 'done' } : p,
+            curr.map((p) =>
+              p.id === paneId ? { ...p, status: pane.ctrl.signal.aborted ? 'cancelled' : 'done' } : p,
             ),
           );
         });
@@ -547,6 +595,18 @@ export function AppShell() {
           )}
         </button>
 
+        {/* Mobile-only "team" chip. Opens the agent-picker bottom sheet.
+            Hidden on md+ where the left sidebar is already visible. */}
+        <button
+          type="button"
+          onClick={() => setShowTeamSheet(true)}
+          className="md:hidden inline-flex items-center gap-1.5 rounded-full border border-white/[0.10] bg-white/[0.04] px-3 py-1.5 font-mono text-[12px] text-ink-dim hover:bg-white/[0.07] hover:text-white"
+          aria-label="open team picker"
+        >
+          <Users className="h-3 w-3 text-brand-glow" />
+          team · {selected.length}
+        </button>
+
         <div className="ml-auto flex items-center gap-2">
           {/* Session pill — signed-in email + sign out, or a sign-in link. */}
           {session?.data?.user ? (
@@ -739,12 +799,13 @@ export function AppShell() {
                       </span>
                       <button
                         onClick={run}
-                        disabled={running}
+                        title={running ? 'fire another batch in parallel' : 'broadcast to selected agents'}
                         className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-brand to-cyan px-5 py-2.5 text-[13.5px] font-semibold text-white shadow-glow2 transition-all hover:shadow-glow disabled:opacity-60"
                       >
                         {running ? (
                           <span className="inline-flex items-center gap-1.5">
-                            <Sparkles className="h-4 w-4 animate-pulse" /> agents at work
+                            <Play className="h-3.5 w-3.5 fill-current" /> run another
+                            <ArrowRight className="h-3.5 w-3.5" />
                           </span>
                         ) : (
                           <span className="inline-flex items-center gap-1.5">
@@ -802,7 +863,7 @@ export function AppShell() {
 
               {panes.some((p) => p.status === 'done') && (
                 <>
-                  <SaveActions />
+                  <SaveActions goal={goal} panes={panes} allEvents={allEvents} />
                   <div className="mt-2 flex justify-end">
                     <RecurringToggle goal={goal} agents={selected} />
                   </div>
@@ -816,6 +877,119 @@ export function AppShell() {
             </div>
           </div>
         </main>
+
+        {/* MOBILE TEAM BOTTOM SHEET. Mirrors the desktop sidebar agent list.
+            Backdrop tap or close button dismisses. md+ users still get the
+            persistent left sidebar above. */}
+        <AnimatePresence>
+          {showTeamSheet && (
+            <>
+              <motion.div
+                key="team-sheet-backdrop"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setShowTeamSheet(false)}
+                className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm md:hidden"
+                aria-hidden
+              />
+              <motion.aside
+                key="team-sheet"
+                initial={{ y: '100%' }}
+                animate={{ y: 0 }}
+                exit={{ y: '100%' }}
+                transition={{ type: 'spring', stiffness: 320, damping: 32 }}
+                className="fixed inset-x-0 bottom-0 z-50 max-h-[82vh] overflow-hidden rounded-t-2xl border-t border-white/[0.10] bg-bg-1/98 backdrop-blur-xl md:hidden"
+                role="dialog"
+                aria-modal="true"
+                aria-label="agent picker"
+              >
+                <div className="mx-auto mt-2 h-1 w-10 rounded-full bg-white/[0.16]" aria-hidden />
+                <div className="flex items-center justify-between px-4 py-3">
+                  <div>
+                    <p className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-faint">
+                      specialists · {selected.length} selected
+                    </p>
+                    <p className="mt-1 text-[11.5px] leading-snug text-ink-dim">
+                      broadcast is always on. one prompt fans out in parallel.
+                    </p>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setShowTeamSheet(false)}
+                    className="rounded-full border border-white/[0.10] bg-white/[0.04] px-3 py-1 text-[11.5px] text-ink-dim hover:bg-white/[0.07] hover:text-white"
+                  >
+                    done
+                  </button>
+                </div>
+                <div className="max-h-[68vh] overflow-y-auto px-4 pb-6">
+                  <div className="space-y-2">
+                    {AGENTS.map((a) => (
+                      <AgentCard
+                        key={a.name}
+                        agent={a}
+                        selected={selected.includes(a.name)}
+                        onToggle={() => toggleAgent(a.name)}
+                      />
+                    ))}
+                  </div>
+
+                  {customAgents.length > 0 && (
+                    <div className="mt-5">
+                      <p className="px-1 font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-faint">
+                        your agents · {customAgents.length}
+                      </p>
+                      <ul className="mt-2 space-y-1.5">
+                        {customAgents.map((ca) => (
+                          <li
+                            key={ca.id}
+                            className="flex items-center gap-2 rounded-lg border border-white/[0.06] bg-white/[0.02] p-2"
+                          >
+                            <span
+                              className="relative h-9 w-9 shrink-0 overflow-hidden rounded-md bg-black"
+                              style={{ boxShadow: `inset 0 0 0 1px ${ca.accent}33` }}
+                            >
+                              <CustomCroc
+                                accent={ca.accent}
+                                accessory={ca.accessory ?? 'none'}
+                                className="absolute inset-0 h-full w-full"
+                              />
+                            </span>
+                            <div className="min-w-0 flex-1">
+                              <p className="truncate text-[12px] font-medium text-ink">{ca.label}</p>
+                              <p className="truncate font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint">
+                                {ca.template}
+                              </p>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => useCustomAgent(ca)}
+                              className="rounded-md border border-white/[0.08] bg-white/[0.02] px-2 py-1 text-[10.5px] text-ink-dim hover:border-white/[0.18] hover:text-white"
+                            >
+                              use
+                            </button>
+                          </li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  <Link
+                    href="/app/agents/new"
+                    onClick={() => setShowTeamSheet(false)}
+                    className="mt-4 flex items-center justify-between gap-2 rounded-lg border border-dashed border-white/[0.10] bg-white/[0.02] px-3 py-2.5 text-[12.5px] text-ink-dim hover:border-white/[0.22] hover:bg-white/[0.04] hover:text-white"
+                  >
+                    <span className="inline-flex items-center gap-2">
+                      <Sparkles className="h-3.5 w-3.5 text-brand-glow" />
+                      create your own agent
+                    </span>
+                    <ArrowRight className="h-3 w-3 opacity-60" />
+                  </Link>
+                </div>
+              </motion.aside>
+            </>
+          )}
+        </AnimatePresence>
 
         {/* HISTORY DRAWER */}
         <AnimatePresence>
@@ -859,7 +1033,6 @@ export function AppShell() {
       </div>
 
       <ByokModal open={byokOpen} onOpenChange={setByokOpen} initial={keyState} onSaved={setKeyState} />
-      <Onboarding onOpenByok={() => setByokOpen(true)} />
       <GuidedOnboarding />
     </div>
   );
@@ -950,7 +1123,155 @@ function EmptyState({ onPick }: { onPick: (goal: string) => void }) {
   );
 }
 
-function SaveActions() {
+/** Slugify a goal into a filename-safe token. Trims to 40 chars. */
+function slugifyGoal(goal: string): string {
+  const slug = goal
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, '-')
+    .replace(/^-+|-+$/g, '')
+    .slice(0, 40);
+  return slug || 'run';
+}
+
+/** Render a single pane's events as a markdown transcript. */
+function paneToMarkdown(pane: PaneState, goal: string): string {
+  const a = AGENTS.find((x) => x.name === pane.agent);
+  const lines: string[] = [];
+  lines.push(`# ${a?.label || pane.agent}`);
+  lines.push('');
+  lines.push(`- goal: ${goal}`);
+  lines.push(`- status: ${pane.status}`);
+  lines.push(`- mode: ${pane.mode}`);
+  lines.push(`- events: ${pane.events.length}`);
+  lines.push('');
+  lines.push('---');
+  lines.push('');
+  for (const e of pane.events) {
+    switch (e.type) {
+      case 'thinking':
+        lines.push(`*thinking* ${e.text}`);
+        break;
+      case 'tool_call':
+        lines.push(`**tool_call** \`${e.tool}\``);
+        lines.push('```json');
+        lines.push(JSON.stringify(e.input, null, 2));
+        lines.push('```');
+        break;
+      case 'tool_result':
+        lines.push(`**tool_result** \`${e.tool}\``);
+        lines.push('```');
+        lines.push(e.result);
+        lines.push('```');
+        break;
+      case 'text':
+        lines.push(e.text);
+        break;
+      case 'delegate':
+        lines.push(`**delegate** -> ${e.to}: ${e.task}`);
+        break;
+      case 'usage':
+        lines.push(`*usage* in=${e.in} out=${e.out}${e.cost_usd ? ` cost=$${e.cost_usd.toFixed(4)}` : ''}`);
+        break;
+      case 'retry':
+        lines.push(`*retry attempt ${e.attempt}*: ${e.reason} (wait ${e.wait_ms}ms)`);
+        break;
+      case 'rate_limit':
+        lines.push(`*rate_limit*: reset in ${e.reset_in_seconds ?? '?'}s`);
+        break;
+      case 'error':
+        lines.push(`**error (${e.kind})**: ${e.message}`);
+        break;
+      case 'done':
+        lines.push('');
+        lines.push(`**done**: ${e.summary}`);
+        break;
+    }
+    lines.push('');
+  }
+  return lines.join('\n');
+}
+
+function SaveActions({
+  goal,
+  panes,
+  allEvents,
+}: {
+  goal: string;
+  panes: PaneState[];
+  allEvents: SimEvent[];
+}) {
+  // Lazy-load jszip so the dashboard's initial JS payload stays small. Only
+  // users who actually click "Download .zip" pay the cost.
+  async function downloadZip() {
+    try {
+      const { default: JSZip } = await import('jszip');
+      const zip = new JSZip();
+      const slug = slugifyGoal(goal);
+      const ts = new Date().toISOString().replace(/[:.]/g, '-');
+      const fileName = `brocco-run-${slug}-${ts}.zip`;
+
+      // README header with the goal + run metadata.
+      zip.file(
+        'README.md',
+        [
+          `# Brocco run · ${new Date().toLocaleString()}`,
+          '',
+          `**Goal:** ${goal}`,
+          '',
+          `**Agents:** ${panes.map((p) => p.agent).join(', ')}`,
+          '',
+          `**Panes:** ${panes.length}`,
+          '',
+        ].join('\n'),
+      );
+
+      // One markdown file per pane plus a raw assistant_text dump for quick
+      // copy-paste. Tool-result blobs land in tool-results/<pane>-<n>.txt so
+      // anything large stays out of the main transcript.
+      for (const p of panes) {
+        const a = AGENTS.find((x) => x.name === p.agent);
+        const baseName = `${(a?.label || p.agent).toLowerCase().replace(/\s+/g, '-')}-${p.id}`;
+        zip.file(`agents/${baseName}.md`, paneToMarkdown(p, goal));
+
+        const assistantText = p.events
+          .filter((e) => e.type === 'text')
+          .map((e) => (e as Extract<SimEvent, { type: 'text' }>).text)
+          .join('\n\n');
+        if (assistantText.trim().length > 0) {
+          zip.file(`agents/${baseName}.assistant.txt`, assistantText);
+        }
+
+        const toolResults = p.events.filter((e) => e.type === 'tool_result') as Array<
+          Extract<SimEvent, { type: 'tool_result' }>
+        >;
+        toolResults.forEach((tr, i) => {
+          zip.file(`tool-results/${baseName}-${i + 1}-${tr.tool}.txt`, tr.result);
+        });
+      }
+
+      // Raw event stream as JSONL (one event per line). Matches the shape
+      // produced by the unified JsonlLog right rail.
+      const jsonl = allEvents.map((e) => JSON.stringify(e)).join('\n');
+      zip.file('events.jsonl', jsonl);
+
+      const blob = await zip.generateAsync({ type: 'blob' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = fileName;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+
+      toast.success('Run exported', { description: fileName });
+    } catch (err) {
+      toast.error('Could not build zip', {
+        description: err instanceof Error ? err.message : String(err),
+      });
+    }
+  }
+
   // v3.0: real OAuth integrations ship in PR4-6. For now, three primary
   // destinations only (notion, slack, linear). Email/drive/webhook deferred.
   return (
@@ -967,6 +1288,14 @@ function SaveActions() {
           {dest}
         </button>
       ))}
+      <button
+        type="button"
+        onClick={downloadZip}
+        className="ml-auto inline-flex items-center gap-1.5 rounded-full border border-white/[0.14] bg-white/[0.06] px-3 py-1 text-[12px] font-medium text-ink hover:bg-white/[0.10] hover:text-white"
+        title="package this run as a .zip (markdown + raw events)"
+      >
+        Download .zip
+      </button>
     </div>
   );
 }

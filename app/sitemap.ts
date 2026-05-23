@@ -6,7 +6,9 @@ import { TOOL_PROFILES } from '@/lib/tool-profiles';
 import { RECIPE_PROFILES } from '@/lib/recipe-profiles';
 import { INTEGRATION_PROFILES } from '@/lib/integration-profiles';
 
-const SITE = 'https://brocco-site.vercel.app';
+// 2026-05-22: was hardcoded to the Vercel preview domain. Now uses the public
+// base URL so Google indexes the real domain and not the staging URL.
+const SITE = process.env.NEXT_PUBLIC_BASE_URL || 'https://brocco.dev';
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

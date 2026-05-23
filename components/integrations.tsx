@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import {
   AnthropicIcon,
   OpenAIIcon,
@@ -92,10 +92,51 @@ function nodePosition(i: number, total: number, radius: number) {
   };
 }
 
+// Initial positions are deterministic (even ring around 50%, 50%). Once the
+// user drags a node we track its custom { left, top } here.
+const INITIAL_NODE_POSITIONS = ITEMS.map((_, i) => nodePosition(i, ITEMS.length, 38));
+const INITIAL_HUB_POSITION = { left: 50, top: 50 };
+
 export function Integrations() {
   const reduce = useReducedMotion();
   const [active, setActive] = useState<number | null>(null);
   const activeItem = active === null ? null : ITEMS[active];
+
+  const stageRef = useRef<HTMLDivElement>(null);
+  const [nodePositions, setNodePositions] = useState(INITIAL_NODE_POSITIONS);
+  const [hubPosition, setHubPosition] = useState(INITIAL_HUB_POSITION);
+  // dragIdx: number for spoke node, 'hub' for the center, null for idle.
+  const [dragTarget, setDragTarget] = useState<number | 'hub' | null>(null);
+
+  function toStagePercent(clientX: number, clientY: number) {
+    const rect = stageRef.current?.getBoundingClientRect();
+    if (!rect) return null;
+    return {
+      left: Math.min(96, Math.max(4, ((clientX - rect.left) / rect.width) * 100)),
+      top: Math.min(94, Math.max(6, ((clientY - rect.top) / rect.height) * 100)),
+    };
+  }
+
+  function onStagePointerMove(e: React.PointerEvent<HTMLDivElement>) {
+    if (dragTarget === null) return;
+    const pt = toStagePercent(e.clientX, e.clientY);
+    if (!pt) return;
+    if (dragTarget === 'hub') {
+      setHubPosition(pt);
+    } else {
+      const idx = dragTarget;
+      setNodePositions((curr) => curr.map((p, i) => (i === idx ? pt : p)));
+    }
+  }
+
+  function onStagePointerUp() {
+    setDragTarget(null);
+  }
+
+  function resetLayout() {
+    setNodePositions(INITIAL_NODE_POSITIONS);
+    setHubPosition(INITIAL_HUB_POSITION);
+  }
 
   return (
     <section id="integrations" className="relative py-24 md:py-32">
@@ -110,10 +151,29 @@ export function Integrations() {
             brocco is the runtime, not a walled garden. eight first-class integrations on day one,
             plus a tool factory so your custom stack ships next.
           </p>
+          <p className="mt-2 font-mono text-[11px] uppercase tracking-[0.18em] text-ink-faint">
+            grab the hub or any spoke and drag.{' '}
+            <button
+              type="button"
+              onClick={resetLayout}
+              className="rounded-full border border-white/[0.10] bg-white/[0.04] px-2 py-0.5 normal-case tracking-normal text-ink-dim transition-colors hover:bg-white/[0.08] hover:text-white"
+            >
+              reset
+            </button>
+          </p>
         </div>
 
-        {/* Radial hub diagram */}
-        <div className="relative mt-14 mx-auto aspect-square w-full max-w-[560px]">
+        {/* Radial hub diagram — fully draggable since 2026-05-22 */}
+        <div
+          ref={stageRef}
+          onPointerMove={onStagePointerMove}
+          onPointerUp={onStagePointerUp}
+          onPointerLeave={onStagePointerUp}
+          className={
+            'relative mt-14 mx-auto aspect-square w-full max-w-[560px] touch-none select-none ' +
+            (dragTarget !== null ? 'cursor-grabbing' : '')
+          }
+        >
           {/* Concentric ring */}
           <svg
             aria-hidden
@@ -137,31 +197,37 @@ export function Integrations() {
             <circle cx="50" cy="50" r="36" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="0.4" strokeDasharray="0.6 1.4" />
             {/* hub glow */}
             <circle cx="50" cy="50" r="24" fill="url(#hubGlow)" />
-            {/* spokes */}
+            {/* spokes — connect the live hub position to each live node position */}
             {ITEMS.map((_, i) => {
-              const { left, top } = nodePosition(i, ITEMS.length, 36);
+              const node = nodePositions[i];
               return (
-                <motion.line
+                <line
                   key={i}
-                  x1="50"
-                  y1="50"
-                  x2={left}
-                  y2={top}
+                  x1={hubPosition.left}
+                  y1={hubPosition.top}
+                  x2={node.left}
+                  y2={node.top}
                   stroke="url(#spokeStroke)"
-                  strokeWidth="0.18"
-                  initial={{ pathLength: 0, opacity: 0 }}
-                  whileInView={{ pathLength: 1, opacity: 1 }}
-                  viewport={{ once: true, margin: '-80px' }}
-                  transition={{ duration: 0.8, delay: 0.15 + i * 0.06, ease: [0.16, 1, 0.3, 1] }}
+                  strokeWidth="0.22"
+                  opacity={0.85}
                 />
               );
             })}
           </svg>
 
-          {/* Hub center */}
+          {/* Hub center — draggable */}
           <motion.div
-            className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
-            animate={reduce ? undefined : { scale: [1, 1.03, 1] }}
+            className="absolute -translate-x-1/2 -translate-y-1/2"
+            style={{
+              left: `${hubPosition.left}%`,
+              top: `${hubPosition.top}%`,
+              cursor: dragTarget === 'hub' ? 'grabbing' : 'grab',
+            }}
+            onPointerDown={(e) => {
+              e.stopPropagation();
+              setDragTarget('hub');
+            }}
+            animate={reduce || dragTarget === 'hub' ? undefined : { scale: [1, 1.03, 1] }}
             transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
           >
             <div className="rounded-full bg-gradient-to-br from-brand/30 to-cyan/20 p-[1px] shadow-[0_0_40px_-6px_rgba(167,139,250,0.55)]">
@@ -178,11 +244,12 @@ export function Integrations() {
             </div>
           </motion.div>
 
-          {/* Nodes */}
+          {/* Nodes — draggable */}
           {ITEMS.map((it, i) => {
-            const { left, top } = nodePosition(i, ITEMS.length, 38);
+            const { left, top } = nodePositions[i];
             const Icon = it.Icon;
             const isActive = active === i;
+            const isDragging = dragTarget === i;
             return (
               <motion.button
                 key={it.name}
@@ -191,21 +258,30 @@ export function Integrations() {
                 onMouseLeave={() => setActive((curr) => (curr === i ? null : curr))}
                 onFocus={() => setActive(i)}
                 onBlur={() => setActive((curr) => (curr === i ? null : curr))}
+                onPointerDown={(e) => {
+                  e.stopPropagation();
+                  setDragTarget(i);
+                  setActive(i);
+                }}
                 onClick={() => setActive((curr) => (curr === i ? null : i))}
-                aria-label={`${it.name} integration via ${it.via}`}
+                aria-label={`${it.name} integration via ${it.via}. drag to reposition.`}
                 aria-expanded={isActive}
                 className="absolute -translate-x-1/2 -translate-y-1/2 outline-none"
-                style={{ left: `${left}%`, top: `${top}%` }}
+                style={{
+                  left: `${left}%`,
+                  top: `${top}%`,
+                  cursor: isDragging ? 'grabbing' : 'grab',
+                }}
                 initial={{ opacity: 0, scale: 0.6 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true, margin: '-80px' }}
                 transition={{ duration: 0.5, delay: 0.4 + i * 0.06, ease: [0.16, 1, 0.3, 1] }}
-                whileHover={{ scale: 1.08 }}
+                whileHover={isDragging ? undefined : { scale: 1.08 }}
               >
                 <div
                   className={
                     'flex h-11 w-11 items-center justify-center rounded-xl bg-gradient-to-br from-white/[0.08] to-white/[0.02] ring-1 transition-all duration-300 md:h-14 md:w-14 ' +
-                    (isActive
+                    (isActive || isDragging
                       ? 'ring-brand/60 shadow-[0_0_24px_-4px_rgba(167,139,250,0.7)]'
                       : 'ring-white/[0.10] hover:ring-white/[0.22]')
                   }

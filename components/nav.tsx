@@ -205,19 +205,17 @@ export function Nav() {
               <kbd className="kbd">K</kbd>
             </span>
           </button>
-          <a
-            href="https://calendly.com/brockpivec/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.10] bg-white/[0.04] px-3.5 py-2 text-[13px] font-medium text-ink-dim transition-colors hover:bg-white/[0.07] hover:text-white"
-          >
-            book a demo
-          </a>
           <Link
-            href="/app"
+            href="/login"
+            className="inline-flex items-center rounded-full px-2.5 py-2 text-[13px] font-medium text-ink-dim transition-colors hover:text-white"
+          >
+            sign in
+          </Link>
+          <Link
+            href="/checkout/solo"
             className="group inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-brand to-cyan px-4 py-2 text-[13px] font-semibold text-white shadow-glow2 transition-all hover:shadow-glow"
           >
-            open app
+            start trial
             <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
           </Link>
         </div>
@@ -325,21 +323,19 @@ export function Nav() {
               </Link>
             ))}
             <div className="mt-2 grid grid-cols-2 gap-2">
-              <a
-                href="https://calendly.com/brockpivec/"
-                target="_blank"
-                rel="noopener noreferrer"
+              <Link
+                href="/login"
                 onClick={() => setOpen(false)}
                 className="inline-flex items-center justify-center gap-1.5 rounded-full border border-white/[0.10] bg-white/[0.04] px-4 py-2.5 text-sm font-medium text-ink-dim hover:bg-white/[0.07] hover:text-white"
               >
-                book a demo
-              </a>
+                sign in
+              </Link>
               <Link
                 href="/app"
                 onClick={() => setOpen(false)}
                 className="inline-flex items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-brand to-cyan px-4 py-2.5 text-sm font-semibold text-white"
               >
-                open app <ArrowRight className="h-3.5 w-3.5" />
+                start free <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </div>
           </div>

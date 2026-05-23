@@ -20,7 +20,7 @@
  * Mobile: single column stack.
  */
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
@@ -187,7 +187,7 @@ function HeadlineTile() {
           transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
           className="text-grad block text-[clamp(3.4rem,6.5vw,6rem)] font-[750]"
         >
-          your AI team.
+          an AI startup.
         </motion.span>
         <motion.span
           initial={{ opacity: 0, y: 24, filter: 'blur(8px)' }}
@@ -195,7 +195,7 @@ function HeadlineTile() {
           transition={{ duration: 0.9, delay: 0.18, ease: [0.16, 1, 0.3, 1] }}
           className="text-grad-brand block font-serif text-[clamp(3.4rem,6.5vw,6rem)] font-normal italic"
         >
-          on autopilot.
+          in a tab.
         </motion.span>
       </h1>
 
@@ -203,31 +203,27 @@ function HeadlineTile() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.4 }}
-        className="relative mt-7 max-w-[460px] text-[17px] leading-[1.55] text-ink-dim"
+        className="relative mt-7 max-w-[500px] text-[17px] leading-[1.55] text-ink-dim"
       >
-        your AI team. one prompt. they investigate competing hypotheses, divide cross-layer work,
-        and brief you every morning. <span className="text-white">byok</span> on free, hosted on paid.
-        the agent-team pattern, productized.
+        Nine specialists. One prompt. They split the goal, run in parallel, and brief you back with a
+        sourced research drop, a launch plan, and a stack of outreach drafts. Ship before your coffee
+        cools. <span className="text-white">100 free runs every month</span>, no card.
       </motion.p>
 
-      {/* CTAs */}
+      {/* CTAs. Two primary paths: start a paid trial via Stripe Checkout (the
+          one-click revenue path that works without magic-link), or open the
+          free demo dashboard. Both should be the same visual weight so a
+          visitor who wants to try-before-buy isn't pushed away. */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.55 }}
         className="relative mt-9 flex flex-wrap items-center gap-3"
       >
-        <MagneticLink href="/app" className="btn-primary group text-[15px] px-6 py-3.5">
-          <span>open the dashboard</span>
+        <HeroSubscribeButton />
+        <MagneticLink href="/app" className="btn-ghost group text-[15px] px-6 py-3.5" strength={10}>
+          <span>try the demo, no card</span>
           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-        </MagneticLink>
-        <MagneticLink
-          href="/download#mcp-setup"
-          className="btn-ghost group text-[15px] px-6 py-3.5"
-          strength={10}
-        >
-          <TerminalSquare className="h-4 w-4" />
-          <span>install mcp server</span>
         </MagneticLink>
       </motion.div>
 
@@ -247,136 +243,31 @@ function HeadlineTile() {
         <span>11 min to first run</span>
       </motion.div>
 
-      {/* Conveyor emerge — one-ended belt where new specialists are
-          spawned from a glowing portal on the left and walk across the
-          tile. Replaces the static brocco mascot the hero used to lean
-          on. Each croc head is rendered from /assets/cast-v7/. */}
-      <SpawnConveyor reduce={!!reduce} />
+      {/* SpawnConveyor removed 2026-05-22. The CSS conveyor was decorative
+          theater. The real factory belongs in the Higgsfield Kling 3.0 video
+          (rendered in components/brocco-factory.tsx) so the hero stays focused
+          on the headline and the install CTA. */}
     </Tile>
   );
 }
 
-// -----------------------------------------------------------------------------
-// SpawnConveyor — bottom-right of the headline tile. A glowing hex portal
-// on the left, a belt running to the right edge, agent croc faces emerge
-// one at a time and walk off the right side. Mobile drops to a single
-// static "specialists incoming" badge so we don't run 6 animations on
-// touch devices.
-// -----------------------------------------------------------------------------
-const CONVEYOR_AGENTS: Array<{ slug: string; accent: string }> = [
-  { slug: 'researcher', accent: '#67E8F9' },
-  { slug: 'planner', accent: '#FB7185' },
-  { slug: 'outreach', accent: '#FBBF24' },
-  { slug: 'designer', accent: '#F472B6' },
-  { slug: 'analyst', accent: '#A78BFA' },
-  { slug: 'coder', accent: '#4ADE80' },
-  { slug: 'supervisor', accent: '#22C55E' },
-];
+// SpawnConveyor + CONVEYOR_AGENTS deleted 2026-05-22. The real factory animation
+// is the Higgsfield Kling 3.0 video in components/brocco-factory.tsx. The hero
+// no longer needs a decorative CSS conveyor.
 
-function SpawnConveyor({ reduce }: { reduce: boolean }) {
+// HeroSubscribeButton - routes to the /checkout/solo upsell page, which then
+// posts to /api/checkout (Stripe) on confirm. Lets us anchor value and offer
+// the annual upgrade + community add-on before Stripe collects card details.
+function HeroSubscribeButton() {
   return (
-    <div
-      aria-hidden
-      className="pointer-events-none absolute bottom-4 right-4 hidden h-[120px] w-[320px] sm:block sm:bottom-6 sm:right-6 sm:h-[140px] sm:w-[360px] md:h-[160px] md:w-[440px] lg:h-[180px] lg:w-[520px]"
+    <Link
+      href="/checkout/solo"
+      className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-brand to-cyan px-6 py-3.5 text-[15px] font-semibold text-white shadow-glow2 transition-all hover:shadow-glow"
     >
-      {/* Belt — horizontal track + animated roller dashes */}
-      <div className="absolute inset-x-0 bottom-[26%] h-[3px] rounded-full bg-gradient-to-r from-violet-500/50 via-white/30 to-transparent" />
-      {!reduce && (
-        <motion.div
-          className="absolute inset-x-0 bottom-[27%] flex h-[8px] items-center gap-2 overflow-hidden"
-          animate={{ x: ['0%', '-50%'] }}
-          transition={{ duration: 3.2, repeat: Infinity, ease: 'linear' }}
-          style={{ width: '200%' }}
-        >
-          {Array.from({ length: 40 }).map((_, i) => (
-            <span key={i} className="h-1 w-3 shrink-0 rounded-full bg-white/30" />
-          ))}
-        </motion.div>
-      )}
-
-      {/* Spawn portal — left end of the belt */}
-      <div className="absolute left-0 top-[6%] h-[64%] w-[60px] sm:w-[72px] md:w-[88px]">
-        <motion.div
-          className="absolute inset-0 rounded-2xl border border-violet-400/40 bg-gradient-to-br from-violet-500/30 via-fuchsia-500/15 to-cyan-500/20"
-          style={{ boxShadow: '0 0 32px rgba(167,139,250,0.45), inset 0 0 24px rgba(34,211,238,0.18)' }}
-          animate={reduce ? undefined : { opacity: [0.85, 1, 0.85] }}
-          transition={{ duration: 2.2, repeat: Infinity, ease: 'easeInOut' }}
-        />
-        {/* portal mouth — open square cut */}
-        <div className="absolute inset-y-[18%] right-[-6%] w-[20%] rounded-l-md bg-bg-0/95 shadow-[inset_0_0_18px_rgba(167,139,250,0.55)]" />
-        {/* portal sparkles */}
-        {!reduce && Array.from({ length: 3 }).map((_, i) => (
-          <motion.span
-            key={i}
-            className="absolute h-1 w-1 rounded-full bg-white"
-            style={{
-              left: `${20 + i * 15}%`,
-              top: `${25 + i * 18}%`,
-              boxShadow: '0 0 8px rgba(255,255,255,0.9)',
-            }}
-            animate={{ opacity: [0, 1, 0], scale: [0.5, 1.4, 0.5] }}
-            transition={{ duration: 1.6, repeat: Infinity, delay: i * 0.5, ease: 'easeInOut' }}
-          />
-        ))}
-        <span className="absolute -top-5 left-0 font-mono text-[9px] uppercase tracking-[0.22em] text-violet-300/70">
-          spawn
-        </span>
-      </div>
-
-      {/* Walking agents — staggered, emerge from portal and exit right */}
-      {!reduce && CONVEYOR_AGENTS.map((a, i) => (
-        <motion.div
-          key={a.slug}
-          className="absolute bottom-[30%] left-[60px] sm:left-[72px] md:left-[88px] h-[56px] w-[56px] sm:h-[64px] sm:w-[64px] md:h-[72px] md:w-[72px]"
-          style={{
-            originY: 1,
-            filter: `drop-shadow(0 6px 16px ${a.accent}55)`,
-          }}
-          initial={{ x: -20, opacity: 0, scale: 0.7 }}
-          animate={{
-            x: ['0%', '0%', '420%'],
-            opacity: [0, 1, 1, 0],
-            scale: [0.6, 1, 1, 0.9],
-            y: [0, -2, 0, -2, 0],
-          }}
-          transition={{
-            duration: 8,
-            times: [0, 0.1, 0.9, 1],
-            ease: 'linear',
-            repeat: Infinity,
-            delay: i * (8 / CONVEYOR_AGENTS.length),
-          }}
-        >
-          <div
-            className="relative h-full w-full overflow-hidden rounded-xl border bg-bg-0"
-            style={{
-              borderColor: `${a.accent}55`,
-              boxShadow: `inset 0 0 0 1px ${a.accent}33`,
-            }}
-          >
-            <Image
-              src={`/assets/cast-v7/${a.slug}.png`}
-              alt=""
-              fill
-              sizes="72px"
-              className="object-cover"
-            />
-            <span
-              className="absolute inset-x-0 bottom-0 px-1 pb-0.5 text-center font-mono text-[8px] uppercase tracking-[0.16em]"
-              style={{ color: a.accent, background: 'linear-gradient(transparent, rgba(0,0,0,0.85))' }}
-            >
-              {a.slug}
-            </span>
-          </div>
-        </motion.div>
-      ))}
-
-      {/* End-of-belt fade so agents trail off rather than pop */}
-      <div className="absolute right-0 bottom-0 top-0 w-[20%] bg-gradient-to-l from-bg-0 to-transparent" />
-      <span className="absolute -bottom-5 right-1 font-mono text-[9px] uppercase tracking-[0.22em] text-emerald-300/70">
-        ready
-      </span>
-    </div>
+      <Sparkles className="h-4 w-4" />
+      <span>start 7-day trial . $49/mo</span>
+      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+    </Link>
   );
 }
 
@@ -427,35 +318,35 @@ function MetricsTile() {
         </span>
       </header>
 
-      <div className="mt-5 grid flex-1 grid-cols-3 gap-4">
-        <div>
-          <p className="font-mono text-[18px] font-semibold tabular-nums">
-            <AnimatedNumber value={runs} format={(v) => Math.round(v).toLocaleString()} />
-          </p>
-          <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint">
-            runs
-          </p>
-        </div>
-        <div>
-          <p className="font-mono text-[18px] font-semibold tabular-nums text-cyan-glow">
-            <AnimatedNumber value={tokens} format={(v) => `${v.toFixed(1)}M`} />
-          </p>
-          <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint">
-            tokens
-          </p>
-        </div>
-        <div>
-          <p className="font-mono text-[18px] font-semibold tabular-nums text-violet-300">
-            <AnimatedNumber value={cost} format={(v) => `$${v.toFixed(2)}`} />
-          </p>
-          <p className="mt-1 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint">
-            byok cost
-          </p>
-        </div>
+      {/* Three rich metric cards. Each cell has the big number plus its own
+          mini-sparkline + delta so the panel reads as a control surface, not
+          three lonely digits. */}
+      <div className="mt-4 grid grid-cols-3 gap-3">
+        <MetricCard
+          label="runs"
+          value={runs}
+          format={(v) => Math.round(v).toLocaleString()}
+          delta="+12"
+          accent="#22C55E"
+        />
+        <MetricCard
+          label="tokens"
+          value={tokens}
+          format={(v) => `${v.toFixed(1)}M`}
+          delta="+0.4M"
+          accent="#67E8F9"
+        />
+        <MetricCard
+          label="byok cost"
+          value={cost}
+          format={(v) => `$${v.toFixed(2)}`}
+          delta="+$0.18"
+          accent="#A78BFA"
+        />
       </div>
 
-      {/* Sparkline */}
-      <div className="mt-5 flex h-12 items-end gap-1">
+      {/* Main sparkline */}
+      <div className="mt-4 flex h-10 items-end gap-1">
         {bars.map((b, i) => (
           <motion.span
             key={i}
@@ -473,9 +364,58 @@ function MetricsTile() {
         ))}
       </div>
 
-      {/* Live activity stream — never-empty filler under the metrics */}
+      {/* Live activity stream */}
       <LiveActivityStream />
     </Tile>
+  );
+}
+
+// MetricCard - one cell of the Metrics tile. Big number + mini-sparkline +
+// delta so each cell reads as its own micro-panel rather than a lonely digit.
+function MetricCard({
+  label,
+  value,
+  format,
+  delta,
+  accent,
+}: {
+  label: string;
+  value: number;
+  format: (v: number) => string;
+  delta: string;
+  accent: string;
+}) {
+  // Each card gets its own mini-sparkline that ticks independently. The values
+  // are stochastic but bounded so the spark always looks alive.
+  const [spark, setSpark] = useState<number[]>(() =>
+    Array.from({ length: 10 }, () => 0.3 + Math.random() * 0.65),
+  );
+  useEffect(() => {
+    const id = setInterval(() => {
+      setSpark((curr) => [...curr.slice(1), 0.3 + Math.random() * 0.65]);
+    }, 750);
+    return () => clearInterval(id);
+  }, []);
+
+  return (
+    <div className="rounded-lg border border-white/[0.06] bg-white/[0.015] px-2.5 py-2 transition-colors hover:border-white/[0.12] hover:bg-white/[0.04]">
+      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint">{label}</p>
+      <p className="mt-1 font-mono text-[17px] font-semibold tabular-nums" style={{ color: accent }}>
+        <AnimatedNumber value={value} format={format} />
+      </p>
+      <div className="mt-1 flex h-3.5 items-end gap-[2px]">
+        {spark.map((s, i) => (
+          <span
+            key={i}
+            className="flex-1 rounded-[1px]"
+            style={{ height: `${Math.round(s * 100)}%`, background: `${accent}55` }}
+          />
+        ))}
+      </div>
+      <p className="mt-1 font-mono text-[9.5px] tabular-nums text-emerald-400/90">
+        <span className="inline-block translate-y-[-0.5px]">▲</span> {delta}
+      </p>
+    </div>
   );
 }
 
@@ -868,7 +808,7 @@ export function HeroBento() {
             Visualizes the running fleet as connected nodes pulsing with
             activity. Replaces the prior empty space between the bento
             grid and the wired-into row. */}
-        <FullWidthLiveNetwork />
+        {/* CosmicTeamShowcase removed 2026-05-22 per user feedback "live network web doesn't fit". */}
 
         {/* Sub-marquee strip below the bento */}
         <motion.div
@@ -921,37 +861,257 @@ const tileVariants = {
 };
 
 // -----------------------------------------------------------------------------
-// FullWidthLiveNetwork — sits between the bento and the wired-into strip.
-// Renders the fleet as a horizontal mesh: ~14 agent nodes, animated
-// pulse lines between them, and a scrolling activity strip beneath.
-// Full bleed across the container, gives the hero a "running newsroom"
-// feel without competing with the headline bento.
+// CosmicTeamShowcase — replaces the old draggable Live Network (user feedback:
+// "stagnant and tactile, may need to be scrapped"). New approach: full-bleed
+// Higgsfield Kling 3.0 video of the crocs floating in nebula space, with
+// floating agent name labels + a live activity ticker overlaid. Cinematic,
+// not interactive, but reads as truly alive.
 // -----------------------------------------------------------------------------
+function CosmicTeamShowcase() {
+  const reduce = useReducedMotion();
+  const [activity, setActivity] = useState<Array<{ id: number; slug: string; accent: string; verb: string }>>(
+    () => [
+      { id: 1, slug: 'researcher', accent: '#67E8F9', verb: 'scanning 18 sources' },
+      { id: 2, slug: 'planner', accent: '#FB7185', verb: 'mapping 7 phases' },
+      { id: 3, slug: 'coder', accent: '#4ADE80', verb: 'shipping route handler' },
+      { id: 4, slug: 'outreach', accent: '#FBBF24', verb: 'drafting 12 emails' },
+    ],
+  );
+  const SHOWCASE_AGENTS = [
+    { slug: 'supervisor', accent: '#22C55E', label: 'supervisor' },
+    { slug: 'researcher', accent: '#67E8F9', label: 'researcher' },
+    { slug: 'planner', accent: '#FB7185', label: 'planner' },
+    { slug: 'outreach', accent: '#FBBF24', label: 'outreach' },
+    { slug: 'coder', accent: '#4ADE80', label: 'coder' },
+    { slug: 'designer', accent: '#F472B6', label: 'designer' },
+    { slug: 'analyst', accent: '#A78BFA', label: 'analyst' },
+    { slug: 'browser', accent: '#22D3EE', label: 'browser' },
+    { slug: 'app_builder', accent: '#A78BFA', label: 'app builder' },
+  ];
+  const SHOWCASE_VERBS: Record<string, string[]> = {
+    researcher: ['scanning 18 sources', 'cross-checking citations', 'flagging a pricing diff'],
+    planner: ['mapping 7 phases', 'estimating cycle time', 'reordering tomorrow'],
+    outreach: ['drafting 12 emails', 'A/B testing subjects', 'flagging 3 hot replies'],
+    designer: ['iterating on the hero', 'building a moodboard', 'testing 4 palettes'],
+    analyst: ['noticing reply rate drift', 'proposing 3 A/B fixes', 'sizing the impact'],
+    coder: ['writing route handler', 'fixing 11 type errors', 'shipping a PR'],
+    supervisor: ['delegating to 5 panes', 'synthesizing team report', 'rebalancing the queue'],
+    browser: ['diffing a pricing page', 'screenshotting a competitor', 'archiving evidence'],
+    app_builder: ['ships the fix', 'rewires the worker', 'patches the deploy'],
+  };
+
+  useEffect(() => {
+    if (reduce) return;
+    let counter = activity.length;
+    const t = setInterval(() => {
+      counter += 1;
+      const a = SHOWCASE_AGENTS[Math.floor(Math.random() * SHOWCASE_AGENTS.length)];
+      const verbs = SHOWCASE_VERBS[a.slug] ?? ['working'];
+      const verb = verbs[Math.floor(Math.random() * verbs.length)];
+      setActivity((curr) => [{ id: counter, slug: a.slug, accent: a.accent, verb }, ...curr].slice(0, 4));
+    }, 1500);
+    return () => clearInterval(t);
+  }, [reduce]);
+
+  // Gate the video to viewport so the 16 MB MP4 doesn't ship to first-visitors.
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [videoVisible, setVideoVisible] = useState(false);
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') {
+      setVideoVisible(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            setVideoVisible(true);
+            io.disconnect();
+            break;
+          }
+        }
+      },
+      { rootMargin: '300px' },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <motion.div
+      ref={wrapRef}
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.8, delay: 0.5 }}
+      className="mt-6 overflow-hidden rounded-2xl border border-white/[0.08] bg-bg-0/60 backdrop-blur"
+    >
+      {/* Header strip */}
+      <div className="flex flex-wrap items-center justify-between gap-2 border-b border-white/[0.05] px-5 py-2.5">
+        <span className="inline-flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.22em] text-emerald-300">
+          <span className="relative flex h-1.5 w-1.5">
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
+            <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
+          </span>
+          your AI team. live.
+        </span>
+        <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink-faint">
+          9 specialists. parallel runs. one prompt.
+        </span>
+      </div>
+
+      {/* Full-bleed Kling 3.0 video of the crocs drifting in nebula space.
+          Audio off so the page stays silent. Activity ticker floats on top. */}
+      <div className="relative h-[280px] w-full overflow-hidden md:h-[360px]">
+        {videoVisible ? (
+          <video
+            src="/assets/video/space-crocs.mp4"
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="auto"
+            className="absolute inset-0 h-full w-full object-cover"
+            poster="/assets/video-src/space-crocs-startframe.png"
+          />
+        ) : (
+          <div
+            aria-hidden
+            className="absolute inset-0 bg-gradient-to-br from-violet-950/60 via-bg-1 to-cyan-950/40"
+          />
+        )}
+
+        {/* Subtle vignette so overlays read on top */}
+        <div
+          aria-hidden
+          className="pointer-events-none absolute inset-0"
+          style={{
+            background:
+              'radial-gradient(ellipse at center, transparent 0%, transparent 50%, rgba(5,4,16,0.55) 100%)',
+          }}
+        />
+
+        {/* Floating agent name pills drift across the video. They name the
+            crocs the visitor sees on screen so the metaphor lands. */}
+        {!reduce &&
+          SHOWCASE_AGENTS.map((a, i) => {
+            const startY = 8 + (i / SHOWCASE_AGENTS.length) * 78;
+            return (
+              <motion.div
+                key={a.slug}
+                aria-hidden
+                className="pointer-events-none absolute"
+                style={{ top: `${startY}%`, left: '-25%' }}
+                initial={{ x: 0, opacity: 0 }}
+                animate={{ x: '160%', opacity: [0, 0.95, 0.95, 0] }}
+                transition={{
+                  duration: 14 + (i % 3),
+                  delay: i * 1.6,
+                  repeat: Infinity,
+                  ease: 'linear',
+                  times: [0, 0.15, 0.85, 1],
+                }}
+              >
+                <span
+                  className="inline-flex items-center gap-1.5 rounded-full border bg-bg-0/60 px-2.5 py-1 font-mono text-[10px] uppercase tracking-[0.18em] backdrop-blur"
+                  style={{ borderColor: `${a.accent}55`, color: a.accent }}
+                >
+                  <span
+                    className="h-1 w-1 rounded-full"
+                    style={{ background: a.accent, boxShadow: `0 0 8px ${a.accent}` }}
+                  />
+                  {a.label}
+                </span>
+              </motion.div>
+            );
+          })}
+
+        {/* Centered pitch overlay */}
+        <div className="pointer-events-none absolute inset-x-0 bottom-7 flex flex-col items-center text-center">
+          <p className="font-serif text-[20px] italic text-white drop-shadow-[0_4px_18px_rgba(0,0,0,0.65)] md:text-[26px]">
+            nine specialists. one prompt.
+          </p>
+          <p className="mt-1 font-mono text-[10.5px] uppercase tracking-[0.22em] text-ink-dim">
+            drifting through your goal in parallel.
+          </p>
+        </div>
+      </div>
+
+      {/* Bottom activity strip. Same content as before, now reads as the */}
+      {/* live status of the team you just saw. */}
+      <div className="flex flex-wrap items-center gap-x-6 gap-y-1 border-t border-white/[0.05] px-5 py-2 font-mono text-[11px]">
+        <span className="text-ink-faint">activity</span>
+        {activity.map((row) => (
+          <motion.span
+            key={row.id}
+            initial={{ opacity: 0, x: -8 }}
+            animate={{ opacity: 1, x: 0 }}
+            className="inline-flex items-center gap-1.5"
+          >
+            <span
+              className="h-1 w-1 rounded-full"
+              style={{ backgroundColor: row.accent, boxShadow: `0 0 6px ${row.accent}` }}
+            />
+            <span className="uppercase tracking-[0.18em]" style={{ color: row.accent }}>
+              {row.slug.replace('_', ' ')}
+            </span>
+            <span className="text-ink-dim">{row.verb}</span>
+          </motion.span>
+        ))}
+      </div>
+    </motion.div>
+  );
+}
+
+// -----------------------------------------------------------------------------
+// LEGACY FullWidthLiveNetwork — kept for reference, no longer rendered. The
+// CosmicTeamShowcase above replaces it. Delete when confident no flag flips
+// us back. See marketing/audit/critic-*-2026-05-22.md for rationale.
+// -----------------------------------------------------------------------------
+// Nine mesh nodes - one per agent-nano PNG. Using the cute white-croc set so
+// each node shows the actual character, not just a colored dot.
 const MESH_AGENTS = [
-  { slug: 'researcher', accent: '#67E8F9' },
-  { slug: 'planner', accent: '#FB7185' },
-  { slug: 'outreach', accent: '#FBBF24' },
-  { slug: 'designer', accent: '#F472B6' },
-  { slug: 'analyst', accent: '#A78BFA' },
-  { slug: 'coder', accent: '#4ADE80' },
-  { slug: 'supervisor', accent: '#22C55E' },
-  { slug: 'browser', accent: '#67E8F9' },
-  { slug: 'ops', accent: '#22D3EE' },
-  { slug: 'qa', accent: '#4ADE80' },
-  { slug: 'recruiter', accent: '#A78BFA' },
-  { slug: 'cs', accent: '#22C55E' },
-  { slug: 'finance', accent: '#FB7185' },
-  { slug: 'social', accent: '#F472B6' },
+  { slug: 'supervisor', accent: '#22C55E', label: 'supervisor' },
+  { slug: 'researcher', accent: '#67E8F9', label: 'researcher' },
+  { slug: 'planner', accent: '#FB7185', label: 'planner' },
+  { slug: 'outreach', accent: '#FBBF24', label: 'outreach' },
+  { slug: 'analyst', accent: '#A78BFA', label: 'analyst' },
+  { slug: 'coder', accent: '#4ADE80', label: 'coder' },
+  { slug: 'designer', accent: '#F472B6', label: 'designer' },
+  { slug: 'browser', accent: '#22D3EE', label: 'browser' },
+  { slug: 'app_builder', accent: '#A78BFA', label: 'app builder' },
 ];
 
+// Hub-and-spoke topology with supervisor at center (index 0). Every other
+// agent connects to the supervisor + a few peer links for visual richness.
 const MESH_EDGES: Array<[number, number]> = [
-  [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7],
-  [0, 6], [2, 6], [4, 6], [6, 8], [6, 9], [6, 10],
-  [10, 11], [11, 12], [12, 13], [9, 13],
+  [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [0, 6], [0, 7], [0, 8],
+  [1, 2], [3, 4], [5, 6], [7, 8],
+  [1, 6], [3, 7], [2, 5],
 ];
+
+// Default layout: supervisor centered, the other 8 arranged in a ring around
+// the hub. Positions are stored as percentages of the container (0 to 100 on
+// both axes) so they translate cleanly to absolute-positioned HTML nodes.
+const DEFAULT_POSITIONS = MESH_AGENTS.map((a, i) => {
+  if (i === 0) {
+    // Supervisor sits at center.
+    return { x: 50, y: 50, ...a };
+  }
+  // Place the 8 peers evenly around the hub on an ellipse.
+  const angle = ((i - 1) / 8) * Math.PI * 2 - Math.PI / 2;
+  const rx = 38; // x-radius as a percentage of container width
+  const ry = 32; // y-radius as a percentage of container height
+  return { x: 50 + Math.cos(angle) * rx, y: 50 + Math.sin(angle) * ry, ...a };
+});
 
 function FullWidthLiveNetwork() {
   const reduce = useReducedMotion();
+  const stageRef = useRef<HTMLDivElement>(null);
+  const [positions, setPositions] = useState(DEFAULT_POSITIONS);
+  const [dragIdx, setDragIdx] = useState<number | null>(null);
+  const [pulseIdx, setPulseIdx] = useState<number | null>(null);
+
   const [activity, setActivity] = useState<Array<{ id: number; slug: string; accent: string; verb: string }>>(
     () => [
       { id: 1, slug: 'researcher', accent: '#67E8F9', verb: 'scanning 18 sources' },
@@ -969,12 +1129,7 @@ function FullWidthLiveNetwork() {
     coder: ['writing route handler', 'fixing 11 type errors', 'shipping a PR'],
     supervisor: ['delegating to 5 panes', 'synthesizing team report', 'rebalancing the queue'],
     browser: ['diffing a pricing page', 'screenshotting a competitor', 'archiving evidence'],
-    ops: ['shredding 412 docs', 'rotating credentials', 'rebuilding the index'],
-    qa: ['auditing every output', 'flagging the dumbest mistake', 'verifying tomorrow'],
-    recruiter: ['sourcing 10 candidates', 'screening on hard criteria', 'drafting outreach'],
-    cs: ['spotting churn signals', 'drafting save-plays', 'sending a five-star reply'],
-    finance: ['modeling unit economics', 'closing the books', 'flagging a runway risk'],
-    social: ['cutting nine-second clips', 'queuing tomorrow', 'A/B testing hooks'],
+    app_builder: ['ships the fix', 'rewires the worker', 'patches the deploy'],
   };
   useEffect(() => {
     if (reduce) return;
@@ -989,13 +1144,42 @@ function FullWidthLiveNetwork() {
     return () => clearInterval(t);
   }, [reduce]);
 
-  // Node positions — even spread along the horizontal axis with a sine
-  // wave Y offset so the mesh has shape.
-  const positions = MESH_AGENTS.map((a, i) => ({
-    x: (i / (MESH_AGENTS.length - 1)) * 100,
-    y: 50 + Math.sin((i / (MESH_AGENTS.length - 1)) * Math.PI * 2) * 22,
-    ...a,
-  }));
+  // Convert pointer client coords to percentage-of-container coordinates so
+  // node positions stay correct on any container width.
+  function toStagePercent(clientX: number, clientY: number) {
+    const rect = stageRef.current?.getBoundingClientRect();
+    if (!rect) return null;
+    return {
+      x: Math.min(96, Math.max(4, ((clientX - rect.left) / rect.width) * 100)),
+      y: Math.min(94, Math.max(6, ((clientY - rect.top) / rect.height) * 100)),
+    };
+  }
+
+  function onPointerMove(e: React.PointerEvent<HTMLDivElement>) {
+    if (dragIdx === null) return;
+    const pt = toStagePercent(e.clientX, e.clientY);
+    if (!pt) return;
+    setPositions((curr) => curr.map((p, i) => (i === dragIdx ? { ...p, x: pt.x, y: pt.y } : p)));
+  }
+
+  function onPointerUp() {
+    setDragIdx(null);
+  }
+
+  function shuffle() {
+    setPositions((curr) =>
+      curr.map((p, i) => {
+        // Keep supervisor near the center even on shuffle so the hub-and-spoke
+        // mental model survives a chaotic rearrangement.
+        if (i === 0) return { ...p, x: 40 + Math.random() * 20, y: 40 + Math.random() * 20 };
+        return { ...p, x: 8 + Math.random() * 84, y: 14 + Math.random() * 72 };
+      }),
+    );
+  }
+
+  function reset() {
+    setPositions(DEFAULT_POSITIONS);
+  }
 
   return (
     <motion.div
@@ -1011,17 +1195,50 @@ function FullWidthLiveNetwork() {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
             <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
           </span>
-          live network · your team online
+          live network. drag the crocs.
         </span>
-        <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-ink-faint">
-          mesh · streaming
+        <span className="inline-flex items-center gap-2">
+          <button
+            onClick={shuffle}
+            className="rounded-full border border-white/[0.10] bg-white/[0.04] px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-dim transition-colors hover:bg-white/[0.08] hover:text-white"
+            type="button"
+          >
+            shuffle
+          </button>
+          <button
+            onClick={reset}
+            className="rounded-full border border-white/[0.10] bg-white/[0.04] px-2.5 py-0.5 font-mono text-[10px] uppercase tracking-[0.18em] text-ink-dim transition-colors hover:bg-white/[0.08] hover:text-white"
+            type="button"
+          >
+            reset
+          </button>
         </span>
       </div>
 
-      {/* Mesh visualization — SVG over a fixed-height band */}
-      <div className="relative h-[180px] w-full overflow-hidden md:h-[200px]">
-        <svg viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 h-full w-full">
-          {/* Edges */}
+      {/* Stage. HTML divs for the croc icon nodes, SVG layer for the edge lines.
+          Lines stretch fine; images render at their natural aspect. */}
+      <div
+        ref={stageRef}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+        onPointerLeave={onPointerUp}
+        className={cn(
+          'relative h-[280px] w-full overflow-hidden md:h-[340px] touch-none select-none',
+          dragIdx !== null ? 'cursor-grabbing' : 'cursor-default',
+        )}
+      >
+        {/* Edge layer */}
+        <svg
+          viewBox="0 0 100 100"
+          preserveAspectRatio="none"
+          className="pointer-events-none absolute inset-0 h-full w-full"
+        >
+          <defs>
+            <linearGradient id="liveNetEdge" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stopColor="rgba(34,197,94,0.5)" />
+              <stop offset="100%" stopColor="rgba(167,139,250,0.5)" />
+            </linearGradient>
+          </defs>
           {MESH_EDGES.map(([a, b], i) => {
             const A = positions[a];
             const B = positions[b];
@@ -1032,12 +1249,13 @@ function FullWidthLiveNetwork() {
                   y1={A.y}
                   x2={B.x}
                   y2={B.y}
-                  stroke="rgba(167,139,250,0.25)"
-                  strokeWidth="0.18"
+                  stroke="url(#liveNetEdge)"
+                  strokeWidth="0.3"
+                  opacity={0.7}
                 />
                 {!reduce && (
                   <motion.circle
-                    r="0.6"
+                    r="0.7"
                     fill={A.accent}
                     initial={{ opacity: 0 }}
                     animate={{
@@ -1046,55 +1264,89 @@ function FullWidthLiveNetwork() {
                       cy: [A.y, B.y],
                     }}
                     transition={{
-                      duration: 2.8,
+                      duration: 2.6,
                       delay: (i * 0.18) % 4,
                       repeat: Infinity,
                       repeatDelay: 2 + (i % 3),
                       ease: 'easeInOut',
                     }}
-                    style={{ filter: `drop-shadow(0 0 1px ${A.accent})` }}
+                    style={{ filter: `drop-shadow(0 0 1.5px ${A.accent})` }}
                   />
                 )}
               </g>
             );
           })}
-          {/* Nodes */}
-          {positions.map((p, i) => (
-            <g key={p.slug + i}>
-              <motion.circle
-                cx={p.x}
-                cy={p.y}
-                r="1.6"
-                fill={p.accent}
-                style={{ filter: `drop-shadow(0 0 1.5px ${p.accent})` }}
-                animate={reduce ? undefined : { r: [1.4, 2, 1.4], opacity: [0.7, 1, 0.7] }}
-                transition={{ duration: 2 + (i % 3), repeat: Infinity, ease: 'easeInOut' }}
-              />
-              <text
-                x={p.x}
-                y={p.y - 4}
-                textAnchor="middle"
-                style={{
-                  font: '600 2.2px ui-monospace, monospace',
-                  fill: p.accent,
-                  letterSpacing: '0.08em',
-                  textTransform: 'uppercase',
-                  opacity: 0.85,
-                }}
-              >
-                {p.slug}
-              </text>
-            </g>
-          ))}
         </svg>
 
-        {/* Soft vignette so the mesh fades into bg at the edges */}
+        {/* Croc icon nodes. Each one is an HTML div so the PNG renders at its
+            natural aspect ratio (no SVG-stretch distortion). */}
+        {positions.map((p, i) => {
+          const isDragging = dragIdx === i;
+          const isPulsing = pulseIdx === i;
+          const isSupervisor = i === 0;
+          const size = isSupervisor ? 'h-16 w-16 md:h-20 md:w-20' : 'h-12 w-12 md:h-14 md:w-14';
+          return (
+            <motion.div
+              key={p.slug + i}
+              className={cn(
+                'absolute -translate-x-1/2 -translate-y-1/2',
+                isDragging ? 'cursor-grabbing z-20' : 'cursor-grab z-10',
+              )}
+              style={{
+                left: `${p.x}%`,
+                top: `${p.y}%`,
+                filter: `drop-shadow(0 0 ${isDragging || isPulsing ? '18px' : '10px'} ${p.accent}aa) drop-shadow(0 4px 10px ${p.accent}55)`,
+              }}
+              animate={
+                reduce || isDragging
+                  ? { scale: isDragging ? 1.12 : 1 }
+                  : { y: isPulsing ? [0, -8, 0] : [0, -2.5, 0] }
+              }
+              transition={{
+                duration: isPulsing ? 0.5 : 4 + (i % 3),
+                repeat: isPulsing ? 0 : Infinity,
+                ease: 'easeInOut',
+              }}
+              onPointerDown={(e) => {
+                e.stopPropagation();
+                setDragIdx(i);
+                setPulseIdx(i);
+                setTimeout(() => setPulseIdx((curr) => (curr === i ? null : curr)), 500);
+              }}
+            >
+              <div className={cn('relative flex items-end justify-center', size)}>
+                <Image
+                  src={`/assets/agents-nano/${p.slug}.png`}
+                  alt={`${p.label} agent`}
+                  fill
+                  sizes={isSupervisor ? '80px' : '56px'}
+                  className="object-contain"
+                  draggable={false}
+                />
+                {/* Soft accent ring under the croc */}
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute -bottom-1 left-1/2 h-1.5 w-10 -translate-x-1/2 rounded-full opacity-70 blur-md"
+                  style={{ background: p.accent }}
+                />
+              </div>
+              <span
+                className="pointer-events-none absolute left-1/2 top-full mt-0.5 -translate-x-1/2 whitespace-nowrap font-mono text-[9px] uppercase tracking-[0.18em]"
+                style={{ color: p.accent, textShadow: `0 0 6px ${p.accent}55` }}
+              >
+                {p.label}
+              </span>
+            </motion.div>
+          );
+        })}
+
+        {/* Soft cosmic vignette */}
         <div
           aria-hidden
           className="pointer-events-none absolute inset-0"
           style={{
             background:
-              'radial-gradient(ellipse at center, transparent 0%, transparent 55%, rgba(5,4,16,0.65) 100%)',
+              'radial-gradient(ellipse at center, transparent 0%, transparent 65%, rgba(5,4,16,0.55) 100%)',
           }}
         />
       </div>
@@ -1111,7 +1363,7 @@ function FullWidthLiveNetwork() {
           >
             <span className="h-1 w-1 rounded-full" style={{ backgroundColor: row.accent, boxShadow: `0 0 6px ${row.accent}` }} />
             <span className="uppercase tracking-[0.18em]" style={{ color: row.accent }}>
-              {row.slug}
+              {row.slug.replace('_', ' ')}
             </span>
             <span className="text-ink-dim">{row.verb}</span>
           </motion.span>

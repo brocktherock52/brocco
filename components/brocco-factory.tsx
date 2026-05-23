@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Sparkles } from 'lucide-react';
 
 // BroccoFactory — multi-station conveyor that visibly assembles agents.
@@ -22,7 +22,7 @@ import { ArrowRight, Sparkles } from 'lucide-react';
 // drop the path into FACTORY_VIDEO_PATH and the component will swap to
 // the video while preserving captions/CTAs.
 
-const FACTORY_VIDEO_PATH: string | null = '/assets/video/factory.mp4'; // Higgsfield Seedance 2.0 job 83562331-a8df-4756-ab46-4e0a23489ac4 (2026-05-13 rev2)
+const FACTORY_VIDEO_PATH: string | null = '/assets/video/factory.mp4'; // Higgsfield Kling 3.0 (pro) job 9d236581-2549-4ca2-bba3-a0a5e3f7c584 (2026-05-22, white-croc rebrand). Backup of 2026-05-13 Seedance cut at factory.backup-20260522.mp4.
 
 const LINE: Array<{ slug: string; accent: string }> = [
   { slug: 'researcher', accent: '#67E8F9' },
@@ -43,6 +43,63 @@ const STATIONS = [
   { xPct: 50, label: 'tools', accent: '#67E8F9' },
   { xPct: 74, label: 'brief', accent: '#FBBF24' },
 ];
+
+// LazyFactoryVideo. The Kling 3.0 mp4 is 25 MB. Don't ship it to every visitor.
+// Gate playback on the video actually scrolling into view, and skip download
+// entirely until then. Saves ~25 MB of bandwidth and ~1.5s of LCP on the
+// landing page.
+function LazyFactoryVideo({ path }: { path: string }) {
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    if (typeof IntersectionObserver === 'undefined') {
+      setVisible(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setVisible(true);
+            io.disconnect();
+            break;
+          }
+        }
+      },
+      { rootMargin: '200px' },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <div ref={wrapRef} className="absolute inset-0">
+      {visible ? (
+        <video
+          src={path}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="auto"
+          className="absolute inset-0 h-full w-full object-cover"
+        />
+      ) : (
+        <div
+          aria-hidden
+          className="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-bg-1 to-bg-0"
+        >
+          <span className="font-mono text-[11px] uppercase tracking-[0.2em] text-ink-faint">
+            factory loading on scroll
+          </span>
+        </div>
+      )}
+    </div>
+  );
+}
 
 export function BroccoFactory() {
   const [counter, setCounter] = useState(2854);
@@ -82,14 +139,7 @@ export function BroccoFactory() {
         >
           <div className="relative aspect-[16/9] w-full overflow-hidden">
             {FACTORY_VIDEO_PATH ? (
-              <video
-                src={FACTORY_VIDEO_PATH}
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="absolute inset-0 h-full w-full object-cover"
-              />
+              <LazyFactoryVideo path={FACTORY_VIDEO_PATH} />
             ) : (
               <CssFactory counter={counter} />
             )}

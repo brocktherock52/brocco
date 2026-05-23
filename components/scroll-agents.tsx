@@ -221,25 +221,23 @@ function Walker({ walker }: { walker: Walker }) {
       transition={{ duration: walker.dur, ease: 'linear', times: [0, 0.05, 0.5, 0.95, 1] }}
     >
       <motion.div
-        animate={{ y: [-2, 2, -2], rotate: walker.direction === 'lr' ? [-3, 3, -3] : [3, -3, 3] }}
-        transition={{ duration: 0.5, repeat: Infinity, ease: 'easeInOut' }}
+        animate={{ y: [-2, 1.5, -2] }}
+        transition={{ duration: 2.4, repeat: Infinity, ease: 'easeInOut' }}
         className="relative"
+        style={{
+          filter: `drop-shadow(0 0 14px ${walker.agent.accent}55) drop-shadow(0 4px 8px ${walker.agent.accent}33)`,
+        }}
       >
-        <div
-          className="relative h-9 w-9 overflow-hidden rounded-lg bg-black"
+        <Image
+          src={`/assets/agents-nano/${walker.agent.slug}.png`}
+          alt=""
+          width={56}
+          height={56}
+          sizes="56px"
           style={{
-            boxShadow: `inset 0 0 0 1px ${walker.agent.accent}55, 0 0 14px ${walker.agent.accent}33`,
             transform: walker.direction === 'rl' ? 'scaleX(-1)' : 'none',
           }}
-        >
-          <Image
-            src={`/assets/cast-v7/${walker.agent.slug}.png`}
-            alt=""
-            fill
-            sizes="36px"
-            className="object-cover"
-          />
-        </div>
+        />
       </motion.div>
     </motion.div>
   );

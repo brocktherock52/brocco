@@ -34,7 +34,8 @@ const TIERS = [
     desc: 'For founders running ops with agents.',
     monthly: 49,
     annual: 41,
-    cta: { label: 'Subscribe Solo', tier: 'solo' as const, primary: false },
+    popular: true,
+    cta: { label: 'start solo trial', tier: 'solo' as const, primary: true },
     features: [
       '2,000 runs / month (we cover tokens)',
       '5 agents in parallel',
@@ -49,8 +50,7 @@ const TIERS = [
     desc: 'For ops teams replacing entire workflows.',
     monthly: 199,
     annual: 166,
-    popular: true,
-    cta: { label: 'Subscribe Team', tier: 'team' as const, primary: true },
+    cta: { label: 'join the team plan', tier: 'team' as const, primary: false },
     features: [
       '10,000 runs / month (we cover tokens)',
       'Unlimited agents',
@@ -85,6 +85,9 @@ export function Pricing({ standalone = false }: { standalone?: boolean }) {
   const [loading, setLoading] = useState<string | null>(null);
 
   async function checkout(tier: 'solo' | 'team') {
+    // Send the visitor through the /checkout/[tier] upsell page instead of
+    // straight to Stripe. The upsell page offers the annual upgrade + the
+    // community add-on, then posts to /api/checkout on confirm.
     setLoading(tier);
     const value =
       tier === 'team'
@@ -101,25 +104,7 @@ export function Pricing({ standalone = false }: { standalone?: boolean }) {
       value,
     });
     trackEvent('initiate_checkout', { tier, interval, value, currency: 'USD' });
-    try {
-      const r = await fetch('/api/checkout', {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ tier, interval }),
-      });
-      const data = await r.json();
-      if (data.url) {
-        window.location.href = data.url;
-        return;
-      }
-      toast.error('Checkout offline', {
-        description: data.detail || 'Email help@brocco.dev to start a paid plan.',
-      });
-    } catch (_) {
-      toast.error('Could not reach checkout. Try again in a moment.');
-    } finally {
-      setLoading(null);
-    }
+    window.location.href = `/checkout/${tier}`;
   }
 
   return (
@@ -289,6 +274,48 @@ export function Pricing({ standalone = false }: { standalone?: boolean }) {
           <Trust>99.9% uptime SLA</Trust>
           <Trust>Encrypted at rest and in transit</Trust>
         </div>
+
+        {/* Community tier via Whop. Hidden until NEXT_PUBLIC_WHOP_URL is set
+            so paying visitors don't land on a placeholder /404. */}
+        {process.env.NEXT_PUBLIC_WHOP_URL ? (
+          <div className="mt-16">
+            <div className="mx-auto max-w-3xl overflow-hidden rounded-3xl border border-white/[0.08] bg-gradient-to-br from-violet-500/[0.08] via-bg-1/40 to-cyan/[0.06] p-1">
+              <div className="rounded-[22px] bg-bg-0/80 p-7 backdrop-blur md:p-9">
+                <p className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-violet-300">
+                  community tier. powered by whop.
+                </p>
+                <h3 className="mt-3 text-[26px] font-semibold tracking-tight md:text-[32px]">
+                  Join the brocco builder server.
+                </h3>
+                <p className="mt-3 max-w-xl text-[14.5px] leading-relaxed text-ink-dim">
+                  Same nine agents, plus a private Discord with the brocco team,
+                  weekly office hours, recipe drops, and first dibs on every new
+                  feature. Whop handles the checkout, the community, and the
+                  Discord roles in one click.
+                </p>
+                <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                  <Trust>discord access + roles</Trust>
+                  <Trust>weekly office hours</Trust>
+                  <Trust>recipe drops first</Trust>
+                </div>
+                <div className="mt-7 flex flex-wrap items-center gap-3">
+                  <a
+                    href={process.env.NEXT_PUBLIC_WHOP_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-violet-500 to-cyan-400 px-5 py-2.5 text-[14px] font-semibold text-white shadow-glow2 transition-all hover:shadow-glow"
+                  >
+                    <Sparkles className="h-4 w-4" />
+                    join via whop
+                  </a>
+                  <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-faint">
+                    one click. discord invite by email. no waiting.
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        ) : null}
       </div>
     </section>
   );

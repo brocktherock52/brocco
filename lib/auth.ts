@@ -32,10 +32,21 @@ const BASE_URL =
 async function sendMagicLinkEmail(email: string, url: string) {
   const resendKey = process.env.RESEND_API_KEY;
   const from = process.env.EMAIL_FROM || 'Brocco <login@brocco.dev>';
+  const isProd = process.env.VERCEL_ENV === 'production' || process.env.NODE_ENV === 'production';
 
   if (!resendKey) {
+    if (isProd) {
+      // Don't silently swallow in prod. The UI was showing "check your inbox"
+      // while the email was never sent. Surface this as a real error so the
+      // login form can render an actionable message.
+      // eslint-disable-next-line no-console
+      console.error('[auth] RESEND_API_KEY missing in production. Magic link NOT sent.');
+      throw new Error(
+        'Email transport is not configured. Please contact help@brocco.dev or set RESEND_API_KEY in Vercel project settings.',
+      );
+    }
     // eslint-disable-next-line no-console
-    console.log(`[auth] magic link for ${email}: ${url}`);
+    console.log(`[auth] (dev fallback) magic link for ${email}: ${url}`);
     return;
   }
 
@@ -61,8 +72,10 @@ async function sendMagicLinkEmail(email: string, url: string) {
   });
 
   if (!res.ok) {
+    const body = await res.text();
     // eslint-disable-next-line no-console
-    console.error('[auth] resend send failed', await res.text());
+    console.error('[auth] resend send failed', body);
+    throw new Error('Could not send the sign-in email. Please try again or contact help@brocco.dev.');
   }
 }
 

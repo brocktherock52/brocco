@@ -93,6 +93,30 @@ export function LoginForm({ mode }: Props) {
           </p>
         </div>
 
+        {/* Setup warning. Until DATABASE_URL + RESEND_API_KEY are configured on
+            Vercel, the magic-link send will fail. Offer the Stripe-direct path
+            as a real alternative so a paying visitor isn't stuck. */}
+        <div className="mb-5 rounded-2xl border border-amber-400/30 bg-amber-400/[0.05] p-4 text-[12.5px] leading-relaxed text-amber-200/90">
+          <p className="font-semibold text-amber-200">heads up</p>
+          <p className="mt-1">
+            email sign-in is finishing setup. for instant access today,{' '}
+            <Link
+              href="/pricing"
+              className="font-semibold underline-offset-4 hover:underline"
+            >
+              start a paid plan
+            </Link>{' '}
+            (stripe handles checkout + account creation in one step). or{' '}
+            <Link
+              href="/app"
+              className="font-semibold underline-offset-4 hover:underline"
+            >
+              try the demo
+            </Link>{' '}
+            with no card.
+          </p>
+        </div>
+
         <div className="relative">
           <div
             aria-hidden

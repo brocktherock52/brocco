@@ -63,6 +63,21 @@ export async function POST(req: Request): Promise<Response> {
   form.set('billing_address_collection', 'auto');
   if (email) form.set('customer_email', email);
 
+  // 7-day free trial on every checkout. Without this Stripe charges
+  // immediately even though the UI promises a trial. `cancel` end-behavior
+  // means if the user doesn't add a payment method during the trial, the
+  // subscription auto-cancels rather than failing the first invoice.
+  // (User can still subscribe today by adding a card in Checkout.)
+  const trialDays = Number(process.env.STRIPE_TRIAL_DAYS || 7);
+  if (trialDays > 0) {
+    form.set('subscription_data[trial_period_days]', String(trialDays));
+    form.set('subscription_data[trial_settings][end_behavior][missing_payment_method]', 'cancel');
+    // Stripe requires a payment method during checkout for trials unless we
+    // explicitly opt out. We REQUIRE one so the conversion at trial end is
+    // automatic (no card update friction).
+    form.set('payment_method_collection', 'always');
+  }
+
   const resp = await fetch(`${STRIPE_API}/checkout/sessions`, {
     method: 'POST',
     headers: {

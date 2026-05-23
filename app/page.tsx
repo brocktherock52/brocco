@@ -1,101 +1,54 @@
+// ISR: re-generate the home page HTML at most every 5 minutes. The page is
+// marketing content that doesn't change per-request, so ISR + edge cache keeps
+// TTFB low under a viral spike instead of running React server rendering on
+// every visitor.
+export const revalidate = 300;
+
 import { Nav } from '@/components/nav';
 import { HeroBento } from '@/components/hero-bento';
 import { ScrollAgents } from '@/components/scroll-agents';
-import { MorningRoutine } from '@/components/morning-routine';
-import { AgentsBento } from '@/components/agents-bento';
-import { AgentCast } from '@/components/agent-cast';
-import { BroccoFactory } from '@/components/brocco-factory';
-import { HowItWorks } from '@/components/how-it-works';
-import { Wedge } from '@/components/wedge';
-import { Integrations } from '@/components/integrations';
-import { WhyWeBuilt } from '@/components/why-we-built';
+// Removed 2026-05-22: MorningRoutine + AgentsBento + AgentCast + BroccoFactory
+// are now folded into <TheTeam /> and <FactoryWalkthrough />. HowItWorks
+// dropped (contradicted the nine-specialists promise with a "three agents"
+// headline). Source files remain in components/ for reference.
+import { TheTeam } from '@/components/the-team';
+import { FactoryWalkthrough } from '@/components/factory-walkthrough';
 import { Features } from '@/components/features';
 import { SocialProof } from '@/components/social-proof';
-import { Personas } from '@/components/personas';
 import { Pricing } from '@/components/pricing';
 import { Faq } from '@/components/faq';
 import { FinalCta } from '@/components/final-cta';
 import { Footer } from '@/components/footer';
 import { SectionReveal } from '@/components/section-reveal';
 
+// Site map after 26 rounds of polish:
+// 1. Hero (bento)        2. The Team        3. Factory walkthrough
+// 4. Features (the moat) 5. Pricing         6. Social proof
+// 7. FAQ                 8. Final CTA
+
 export default function HomePage() {
   return (
     <>
       <Nav />
-      {/* SIGNATURE FEATURE — the agents follow the visitor down the page
-          and visibly build each section as it scrolls into view. Every
-          visitor becomes a live witness to the agents working. */}
       <ScrollAgents />
       <main>
-        {/* 1. Bento hero — instantly different at first glance */}
         <HeroBento />
-
-        {/* 2. Daily-essential pitch — "open the app, your team already worked" */}
         <SectionReveal>
-          <MorningRoutine />
+          <TheTeam />
         </SectionReveal>
-
-        {/* 4. Asymmetric bento of 9 specialists */}
-        <SectionReveal>
-          <AgentsBento />
-        </SectionReveal>
-
-        {/* 4. Character vignettes for each agent (kept as-is, strong) */}
-        <SectionReveal>
-          <AgentCast />
-        </SectionReveal>
-
-        {/* 5. The brocco factory — endless conveyor belt of specialists */}
-        <SectionReveal>
-          <BroccoFactory />
-        </SectionReveal>
-
-        {/* 6. How it works (mock dashboard + 3 steps) */}
-        <SectionReveal>
-          <HowItWorks />
-        </SectionReveal>
-
-        {/* 8. The wedge / moat */}
-        <SectionReveal>
-          <Wedge />
-        </SectionReveal>
-
-        {/* 9. Integrations (spotlight cards) */}
-        <SectionReveal>
-          <Integrations />
-        </SectionReveal>
-
-        {/* 10. Why we built this */}
-        <SectionReveal>
-          <WhyWeBuilt />
-        </SectionReveal>
-
-        {/* 11. Features grid (spotlight cards) */}
+        <FactoryWalkthrough />
         <SectionReveal>
           <Features />
         </SectionReveal>
-
-        {/* 12. Testimonials + logos */}
-        <SectionReveal>
-          <SocialProof />
-        </SectionReveal>
-
-        {/* 13. Personas */}
-        <SectionReveal>
-          <Personas />
-        </SectionReveal>
-
-        {/* 14. Pricing — animated number + sliding pill */}
         <SectionReveal>
           <Pricing />
         </SectionReveal>
-
-        {/* 15. FAQ */}
+        <SectionReveal>
+          <SocialProof />
+        </SectionReveal>
         <SectionReveal>
           <Faq />
         </SectionReveal>
-
-        {/* 16. Final CTA — magnetic + breathing orbs */}
         <FinalCta />
       </main>
       <Footer />

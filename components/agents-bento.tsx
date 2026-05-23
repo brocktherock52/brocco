@@ -175,8 +175,9 @@ export function AgentsBento() {
               <span className="text-grad-brand">one prompt.</span>
             </h2>
             <p className="mt-4 max-w-xl text-[16px] text-ink-dim">
-              each agent is a markdown spec with its own tool list. broadcast a goal and they fan
-              out in parallel.
+              each agent is a real role with its own tools. broadcast a goal once and the team
+              splits the work between them. researcher reads. planner schedules. outreach writes.
+              you stay in one tab.
             </p>
           </div>
           <Link
@@ -206,7 +207,7 @@ export function AgentsBento() {
 
         <div className="mt-10 flex flex-wrap items-center justify-between gap-3">
           <p className="font-mono text-[12px] text-ink-faint">
-            13 tools in the registry · drop-in custom tools via the python factory pattern
+            13 built-in tools · bring your own integrations via custom factories
           </p>
           <Link
             href="/app"

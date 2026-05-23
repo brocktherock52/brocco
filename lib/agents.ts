@@ -20,6 +20,10 @@ export interface Agent {
   tools: string[];
   emoji?: string;
   sample: string; // sample goal that pre-fills the input
+  // Character handles from the Brocco show universe. See [[brocco-episodic-bible]]
+  // and the rendered episodes in public/assets/episodes/.
+  personaName?: string;
+  personaBio?: string;
 }
 
 export const AGENTS: Agent[] = [
@@ -32,6 +36,8 @@ export const AGENTS: Agent[] = [
     tools: ['delegate', 'memory_get', 'memory_put', 'done'],
     emoji: '👑',
     sample: 'Run a launch sprint: research, draft tweets, write a landing hero, plan day-1 outreach.',
+    personaName: 'Sully',
+    personaBio: 'The boss croc. Crown, beige cardigan, claps once before he says nothing important.',
   },
   {
     name: 'researcher',
@@ -42,6 +48,8 @@ export const AGENTS: Agent[] = [
     tools: ['search_web', 'http_get', 'memory_put', 'file_save', 'done'],
     emoji: '🔍',
     sample: 'Brief me on the agentic AI market in 2026: top 3 platforms, wedge, pricing, weaknesses.',
+    personaName: 'Reggie',
+    personaBio: 'The footnote freak. Wire-frame glasses, clipboard. Asks "source?" before he asks your name.',
   },
   {
     name: 'analyst',
@@ -52,6 +60,8 @@ export const AGENTS: Agent[] = [
     tools: ['search_web', 'http_get', 'memory_put', 'file_save', 'done'],
     emoji: '📊',
     sample: 'Compare Claude Opus 4.7 vs Sonnet 4.6 on cost, latency, and tool-use accuracy.',
+    personaName: 'Ana',
+    personaBio: 'The dashboard girl. Two violet monitors. Will sigh once before she answers your question.',
   },
   {
     name: 'outreach',
@@ -62,6 +72,8 @@ export const AGENTS: Agent[] = [
     tools: ['search_web', 'memory_put', 'file_save', 'done'],
     emoji: '💬',
     sample: 'Draft 3 cold emails to YC founders launching agentic workflow tools this quarter.',
+    personaName: 'Olly',
+    personaBio: 'The handshake. Headset, oversized mug, draft folder of 412 unfinished emails.',
   },
   {
     name: 'coder',
@@ -72,6 +84,8 @@ export const AGENTS: Agent[] = [
     tools: ['search_web', 'http_get', 'file_save', 'done'],
     emoji: '⌨️',
     sample: 'Write a TypeScript debounce function with tests. ESM-only, no deps.',
+    personaName: 'Cody',
+    personaBio: 'The lone wolf. Hood up, Monster can, has not blinked since onboarding. Says "pushed."',
   },
   {
     name: 'browser',
@@ -82,6 +96,8 @@ export const AGENTS: Agent[] = [
     tools: ['search_web', 'http_get', 'memory_put', 'file_save', 'done'],
     emoji: '🌐',
     sample: 'Find the pricing pages of Cursor, Devin and Replit Agent and extract the tiers as a table.',
+    personaName: 'Briar',
+    personaBio: 'The lurker. Fedora, pinstripe vest, 847 tabs open. Saw your post in 2019. Remembers.',
   },
   {
     name: 'designer',
@@ -92,6 +108,8 @@ export const AGENTS: Agent[] = [
     tools: ['search_web', 'image_gen', 'file_save', 'done'],
     emoji: '🎨',
     sample: 'Three logo concepts for a calm, trustworthy fintech for solo traders. Dark theme.',
+    personaName: 'Daisy',
+    personaBio: 'The colorist. Pink beret, paint-splattered apron, currently designing a logo that is one circle.',
   },
   {
     name: 'planner',
@@ -102,6 +120,8 @@ export const AGENTS: Agent[] = [
     tools: ['search_web', 'memory_put', 'file_save', 'done'],
     emoji: '🗂️',
     sample: 'Plan a 7-day launch for a $49/mo SaaS with 0 audience and a $200 budget.',
+    personaName: 'Penny',
+    personaBio: 'The mother hen. Sticky note on her forehead, two clipboards (one for the other clipboard).',
   },
   {
     name: 'app_builder',
@@ -112,6 +132,8 @@ export const AGENTS: Agent[] = [
     tools: ['search_web', 'file_save', 'done'],
     emoji: '🔧',
     sample: 'Build a single-file pomodoro timer with keyboard shortcuts and dark mode.',
+    personaName: 'Abby',
+    personaBio: 'The sniper. Wrench behind one ear. Two words max. Already shipped your fix.',
   },
 ];
 

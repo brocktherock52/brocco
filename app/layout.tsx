@@ -5,14 +5,13 @@ import { Suspense } from 'react';
 import { Toaster } from 'sonner';
 import { PwaRegister } from '@/components/pwa-register';
 import { BgDecor } from '@/components/bg-decor';
-import { BreathingBg } from '@/components/breathing-bg';
 import { MetaPixel } from '@/components/meta-pixel';
 import { CookieConsent } from '@/components/cookie-consent';
 import { PostHogProvider } from '@/components/posthog-provider';
 import { SupportChat } from '@/components/support-chat';
 import { CommandPalette } from '@/components/command-palette';
-import { CosmicBg } from '@/components/cosmic-bg';
 import { ScrollProgress } from '@/components/ui/scroll-progress';
+import { LenisProvider } from '@/components/lenis-provider';
 // MascotMount intentionally unmounted — Next.js 16 + framer-motion drag is throwing
 // "Element type is invalid. Received a promise that resolves to: undefined."
 // even via dynamic({ssr:false}) wrapper. Files preserved in components/mascot-*.tsx
@@ -136,18 +135,18 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <ScrollProgress />
+        {/* One background layer at a time. BgDecor + BreathingBg + CosmicBg
+            were all stacked previously, ~290 framer-motion props at idle.
+            BgDecor stays as the lightest static gradient + grid. The other
+            two are still in components/ for reference. */}
         <BgDecor />
-        <BreathingBg />
-        {/* Cartoony cosmic overlay — stars, planets, galaxies, shooting
-            stars in white + soft purple, low opacity, behind content. */}
-        <CosmicBg />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:top-3 focus:left-3 focus:z-[100] focus:rounded-md focus:bg-brand focus:px-3 focus:py-2 focus:text-white"
         >
           Skip to content
         </a>
-        {children}
+        <LenisProvider>{children}</LenisProvider>
         <Toaster
           theme="dark"
           richColors

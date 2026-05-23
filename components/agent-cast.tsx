@@ -52,6 +52,32 @@ function CastCard({ member, index }: { member: typeof AGENT_CAST[number]; index:
   const hasImage = !!member.imagePath;
   const cardRef = useRef<HTMLDivElement | null>(null);
 
+  // Lazy-load the cast video: don't fetch the .mp4 until the card is near the
+  // viewport. Saves ~8.5 MB on initial page load (9 cast videos x ~1 MB each).
+  const [videoVisible, setVideoVisible] = useState(false);
+  useEffect(() => {
+    if (!hasVideo) return;
+    const el = cardRef.current;
+    if (!el || typeof IntersectionObserver === 'undefined') {
+      setVideoVisible(true);
+      return;
+    }
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (entry.isIntersecting) {
+            setVideoVisible(true);
+            io.disconnect();
+            break;
+          }
+        }
+      },
+      { rootMargin: '300px' },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, [hasVideo]);
+
   // Mouse-tracked 3D tilt — desktop+fine-pointer only. Disabling on touch
   // killed the mobile scroll-jank where every touchmove was triggering tilt.
   const [tiltEnabled, setTiltEnabled] = useState(false);
@@ -122,16 +148,28 @@ function CastCard({ member, index }: { member: typeof AGENT_CAST[number]; index:
               animate={{ scale: [1, 1.02, 1], y: [0, -4, 0] }}
               transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
             >
-              <video
-                src={member.videoPath as string}
-                poster={member.posterPath ?? member.imagePath ?? undefined}
-                autoPlay
-                muted
-                loop
-                playsInline
-                preload="metadata"
-                className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
-              />
+              {videoVisible ? (
+                <video
+                  src={member.videoPath as string}
+                  poster={member.posterPath ?? member.imagePath ?? undefined}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  preload="auto"
+                  className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-[1.04]"
+                />
+              ) : member.posterPath || member.imagePath ? (
+                <Image
+                  src={(member.posterPath ?? member.imagePath) as string}
+                  alt={`${member.name} poster`}
+                  fill
+                  sizes="(min-width: 1024px) 33vw, (min-width: 640px) 50vw, 100vw"
+                  className="object-cover"
+                />
+              ) : (
+                <div className="absolute inset-0 bg-gradient-to-br from-bg-1 to-bg-0" />
+              )}
             </motion.div>
           ) : hasImage ? (
             <motion.div
@@ -339,8 +377,8 @@ function CastPlaceholder({ accent, slug, index }: { accent: string; slug: string
           to overlay separate prop icons. */}
       <motion.div
         className="absolute inset-x-0 top-0 z-10 flex justify-center"
-        animate={{ y: [0, -5, 0, 3, 0], rotate: index % 2 === 0 ? [-1, 1, -1] : [1, -1, 1] }}
-        transition={{ duration: 6 + (index % 3) * 0.5, repeat: Infinity, ease: 'easeInOut' }}
+        animate={{ y: [0, -1.5, 0] }}
+        transition={{ duration: 9 + (index % 3) * 0.6, repeat: Infinity, ease: 'easeInOut' }}
         style={{
           filter: `drop-shadow(0 10px 24px ${accent}55) drop-shadow(0 0 22px ${accent}33)`,
         }}

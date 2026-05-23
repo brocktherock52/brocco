@@ -77,8 +77,8 @@ export function FinalCta() {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="mt-9 flex flex-wrap items-center justify-center gap-3"
             >
-              <MagneticLink href="/app" className="btn-primary group text-base px-7 py-3.5">
-                <span>start free</span>
+              <MagneticLink href="/checkout/solo" className="btn-primary group text-base px-7 py-3.5">
+                <span>start 7-day trial . $49/mo</span>
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </MagneticLink>
               <MagneticLink
