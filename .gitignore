@@ -7,3 +7,18 @@ node_modules/
 .vercel
 .next/
 tsconfig.tsbuildinfo
+
+# --- Internal / proprietary: kept local, NEVER published to the public repo ---
+# Business strategy, handoffs, the content/marketing automation machine, raw
+# session transcripts, and competitor/acquisition research are the company's
+# operational moat. The public repo ships the platform + marketing site only.
+docs/internal/
+marketing/
+scripts/
+research/
+session_logs/
+sessions/
+.claude-handoffs/
+DAILY-ESSENTIAL-FEATURES.md
+__pycache__/
+*.pyc
