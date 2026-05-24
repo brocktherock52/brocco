@@ -89,6 +89,7 @@ const MEGAS: MegaSpec[] = [
 ];
 
 const SIMPLE = [
+  { href: '/consulting', label: 'consulting' },
   { href: '/pricing', label: 'pricing' },
   { href: '/blog', label: 'blog' },
 ];

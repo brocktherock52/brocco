@@ -6,6 +6,7 @@ export const revalidate = 300;
 
 import { Nav } from '@/components/nav';
 import { HeroBento } from '@/components/hero-bento';
+import { BroadcastConsole } from '@/components/hero-demo';
 import { ScrollAgents } from '@/components/scroll-agents';
 // Removed 2026-05-22: MorningRoutine + AgentsBento + AgentCast + BroccoFactory
 // are now folded into <TheTeam /> and <FactoryWalkthrough />. HowItWorks
@@ -33,6 +34,7 @@ export default function HomePage() {
       <ScrollAgents />
       <main>
         <HeroBento />
+        <BroadcastConsole />
         <SectionReveal>
           <TheTeam />
         </SectionReveal>
