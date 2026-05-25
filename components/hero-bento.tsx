@@ -205,24 +205,31 @@ function HeadlineTile() {
         transition={{ duration: 0.7, delay: 0.4 }}
         className="relative mt-7 max-w-[500px] text-[17px] leading-[1.55] text-ink-dim"
       >
-        Nine specialists. One prompt. They split the goal, run in parallel, and brief you back with a
-        sourced research drop, a launch plan, and a stack of outreach drafts. Ship before your coffee
-        cools. <span className="text-white">100 free runs every month</span>, no card.
+        One prompt in. Your AI team splits the goal, runs in parallel, and hands you back a sourced
+        research drop, a launch plan, and a stack of outreach drafts. Ship before your coffee cools.{' '}
+        <span className="text-white">100 free runs every month</span>, no card.
       </motion.p>
 
-      {/* CTAs. Two primary paths: start a paid trial via Stripe Checkout (the
-          one-click revenue path that works without magic-link), or open the
-          free demo dashboard. Both should be the same visual weight so a
-          visitor who wants to try-before-buy isn't pushed away. */}
+      {/* CTAs. Free-first: the north-star is free-tier signups, so the primary
+          path claims 100 free runs (-> /signup capture -> demo dashboard). The
+          paid 7-day trial lives on /pricing and in the nav; the live demo is the
+          secondary, equal-friction option. */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.55 }}
         className="relative mt-9 flex flex-wrap items-center gap-3"
       >
-        <HeroSubscribeButton />
+        <Link
+          href="/signup"
+          className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-brand to-cyan px-6 py-3.5 text-[15px] font-semibold text-white shadow-glow2 transition-all hover:shadow-glow"
+        >
+          <Sparkles className="h-4 w-4" />
+          <span>start free . 100 runs</span>
+          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+        </Link>
         <MagneticLink href="/app" className="btn-ghost group text-[15px] px-6 py-3.5" strength={10}>
-          <span>try the demo, no card</span>
+          <span>try the live demo</span>
           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
         </MagneticLink>
       </motion.div>
@@ -255,21 +262,8 @@ function HeadlineTile() {
 // is the Higgsfield Kling 3.0 video in components/brocco-factory.tsx. The hero
 // no longer needs a decorative CSS conveyor.
 
-// HeroSubscribeButton - routes to the /checkout/solo upsell page, which then
-// posts to /api/checkout (Stripe) on confirm. Lets us anchor value and offer
-// the annual upgrade + community add-on before Stripe collects card details.
-function HeroSubscribeButton() {
-  return (
-    <Link
-      href="/checkout/solo"
-      className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-brand to-cyan px-6 py-3.5 text-[15px] font-semibold text-white shadow-glow2 transition-all hover:shadow-glow"
-    >
-      <Sparkles className="h-4 w-4" />
-      <span>start 7-day trial . $49/mo</span>
-      <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-    </Link>
-  );
-}
+// (HeroSubscribeButton removed 2026-05-25: hero is now free-first. The paid
+// 7-day trial lives on /pricing and in the nav.)
 
 // -----------------------------------------------------------------------------
 // METRICS TILE — animated counters with a pulsing micro-sparkline
