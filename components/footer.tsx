@@ -1,6 +1,17 @@
 import Link from 'next/link';
 import { Logomark } from './logo';
 
+// Social handles. TikTok/Instagram/X confirmed live; LinkedIn/Threads/YouTube
+// to be confirmed by the founder (update URLs if the vanity slugs differ).
+const SOCIALS = [
+  { label: 'TikTok', href: 'https://www.tiktok.com/@brocco.dev' },
+  { label: 'Instagram', href: 'https://www.instagram.com/brocco.dev' },
+  { label: 'X', href: 'https://x.com/broccoai' },
+  { label: 'LinkedIn', href: 'https://www.linkedin.com/company/brocco-dev' },
+  { label: 'Threads', href: 'https://www.threads.net/@broccoai' },
+  { label: 'YouTube', href: 'https://www.youtube.com/@broccodev' },
+];
+
 export function Footer() {
   return (
     <footer className="border-t border-white/[0.06] bg-bg-1/40 py-14">
@@ -43,7 +54,23 @@ export function Footer() {
           ]} />
         </div>
 
-        <div className="mt-10 flex flex-col items-start justify-between gap-3 border-t border-white/[0.06] pt-6 text-[12.5px] text-ink-faint md:flex-row md:items-center">
+        {/* Social row */}
+        <div className="mt-10 flex flex-wrap items-center gap-x-5 gap-y-2 border-t border-white/[0.06] pt-6">
+          <span className="text-[12px] font-semibold uppercase tracking-[0.16em] text-ink-faint">follow</span>
+          {SOCIALS.map((s) => (
+            <a
+              key={s.label}
+              href={s.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-[13.5px] text-ink-dim transition-colors hover:text-white"
+            >
+              {s.label}
+            </a>
+          ))}
+        </div>
+
+        <div className="mt-6 flex flex-col items-start justify-between gap-3 text-[12.5px] text-ink-faint md:flex-row md:items-center">
           <span>© 2026 brocco.dev · a bdp consulting product</span>
           <span className="font-mono text-[11px]">made with claude</span>
         </div>
