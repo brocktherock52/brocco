@@ -393,7 +393,7 @@ export async function POST(req: Request): Promise<Response> {
       'X-Accel-Buffering': 'no',
       'X-Brocco-Request-Id': requestId,
       Connection: 'keep-alive',
-      'Set-Cookie': 'brocco_demo_used=1; Max-Age=86400; Path=/; SameSite=Lax',
+      'Set-Cookie': 'brocco_demo_used=1; Max-Age=86400; Path=/; SameSite=Lax; HttpOnly; Secure',
     },
   });
 }

@@ -1,12 +1,31 @@
-/* POST /api/portal - Stripe Customer Portal session. Body: { customer_id } */
+/* POST /api/portal - Stripe Customer Portal session. Body: { customer_id }
 
-export const runtime = 'edge';
+   SECURITY: auth-gated. An anonymous caller must NOT be able to open a billing
+   portal for an arbitrary customer id (that would be an IDOR letting anyone
+   manage someone else's subscription). We require a valid session here. When the
+   user<->stripe-customer mapping is persisted, also verify the requested
+   customer belongs to the session user (see TODO below). */
+
+export const runtime = 'nodejs';
+
+import { auth } from '@/lib/auth';
 
 const STRIPE_API = 'https://api.stripe.com/v1';
 
 export async function POST(req: Request): Promise<Response> {
   const apiKey = process.env.STRIPE_API_KEY;
   if (!apiKey) return Response.json({ error: 'STRIPE_API_KEY not configured' }, { status: 503 });
+
+  // Require an authenticated session. Closes the anonymous IDOR.
+  let session: Awaited<ReturnType<typeof auth.api.getSession>> = null;
+  try {
+    session = await auth.api.getSession({ headers: req.headers });
+  } catch {
+    session = null;
+  }
+  if (!session?.user) {
+    return Response.json({ error: 'unauthorized' }, { status: 401 });
+  }
 
   let body: { customer_id?: unknown };
   try {
@@ -19,6 +38,8 @@ export async function POST(req: Request): Promise<Response> {
   if (!customer.startsWith('cus_')) {
     return Response.json({ error: 'customer_id required' }, { status: 400 });
   }
+  // TODO(billing): once the user<->customer mapping is stored, assert that
+  // `customer` belongs to session.user before opening the portal.
 
   const appUrl = process.env.APP_URL || `https://${req.headers.get('host')}`;
   const form = new URLSearchParams();

@@ -13,6 +13,7 @@ tsconfig.tsbuildinfo
 # session transcripts, and competitor/acquisition research are the company's
 # operational moat. The public repo ships the platform + marketing site only.
 docs/internal/
+docs/investor/
 marketing/
 scripts/
 research/
