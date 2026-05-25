@@ -168,11 +168,11 @@ export function AppShell() {
   );
   const running = panes.some((p) => p.status === 'running');
 
-  // v3.0: Tier-based parallel pane cap. Free users see one pane at a time so
-  // the broadcast metaphor still works without burning the trial. Solo upgrades
-  // to 5. Team (and BYOK live mode) gets unbounded parallel runs. The tier
-  // lookup intentionally lives on the client only until a real billing layer
-  // ships. See marketing/audit/app-audit-2026-05-22.md Finding 2c.
+  // Tier-based parallel pane cap. Free is BYOK (the user's own tokens), so we
+  // let free/demo users actually FEEL the parallel-team superpower with 3 panes
+  // at once instead of 1. Solo gets 8, Team (and BYOK live mode) is unbounded.
+  // The tier lookup intentionally lives on the client only until a real billing
+  // layer ships. See marketing/audit/app-audit-2026-05-22.md Finding 2c.
   type Tier = 'free' | 'solo' | 'team';
   const tier: Tier = useMemo(() => {
     if (keyState) return 'team';
@@ -180,7 +180,7 @@ export function AppShell() {
     const t = (localStorage.getItem('brocco:tier') || 'free').toLowerCase();
     return t === 'team' ? 'team' : t === 'solo' ? 'solo' : 'free';
   }, [keyState]);
-  const paneCap = tier === 'team' ? Infinity : tier === 'solo' ? 5 : 1;
+  const paneCap = tier === 'team' ? Infinity : tier === 'solo' ? 8 : 3;
   const activePaneCount = panes.filter((p) => p.status === 'running' || p.status === 'pending').length;
 
   // Map a CustomAgent.template -> a built-in AgentName archetype.
@@ -246,8 +246,8 @@ export function AppShell() {
     if (headroom === 0 && tier !== 'team') {
       toast.error('Parallel run limit reached', {
         description: tier === 'free'
-          ? 'Free tier runs one pane at a time. Stop the current run or upgrade for 5+ in parallel.'
-          : 'Solo tier runs 5 panes at a time. Wait for one to finish or upgrade to Team for unlimited.',
+          ? 'Free tier runs 3 panes at a time. Stop a run or upgrade for 8+ in parallel.'
+          : 'Solo tier runs 8 panes at a time. Wait for one to finish or upgrade to Team for unlimited.',
         action: { label: 'Upgrade', onClick: () => (window.location.href = '/pricing') },
       });
       return;

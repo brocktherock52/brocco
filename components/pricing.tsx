@@ -23,7 +23,7 @@ const TIERS = [
     cta: { label: 'Open the app', href: '/app', primary: false },
     features: [
       '100 agent runs / month (BYOK, your tokens)',
-      '1 agent at a time',
+      '3 agents in parallel',
       'All built-in tools',
       'Community support',
     ],
@@ -38,7 +38,7 @@ const TIERS = [
     cta: { label: 'start solo trial', tier: 'solo' as const, primary: true },
     features: [
       '2,000 runs / month (we cover tokens)',
-      '5 agents in parallel',
+      '8 agents in parallel',
       'All integrations',
       'Custom tools (Python factories)',
       'Email support',

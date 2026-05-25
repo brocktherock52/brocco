@@ -116,14 +116,18 @@ function StageBlock({ stage, index }: { stage: Stage; index: number }) {
         {/* Video panel */}
         <motion.div
           className={[
-            'relative aspect-[9/16] w-full overflow-hidden rounded-[28px] border border-white/10 shadow-[0_30px_120px_-30px_rgba(0,0,0,0.8)]',
+            'relative aspect-[9/16] w-full overflow-hidden rounded-[28px] border border-white/10 bg-[#06080f] shadow-[0_30px_120px_-30px_rgba(0,0,0,0.8)]',
             index % 2 === 0 ? 'md:order-1' : 'md:order-2',
           ].join(' ')}
           style={{ scale: videoScale }}
         >
+          {/* Dark placeholder so the panel is never white before the poster /
+              first video frame paints (fixes the white-flash on load + any
+              missing-poster 404 on deploy). */}
+          <div aria-hidden className="absolute inset-0 bg-[#06080f]" />
           <video
             ref={videoRef}
-            className="absolute inset-0 h-full w-full object-cover"
+            className="absolute inset-0 h-full w-full bg-[#06080f] object-cover"
             src={stage.video}
             poster={stage.poster}
             muted
