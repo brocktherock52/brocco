@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<!-- Base path so relative assets resolve under /mission-control (Vercel strips the trailing slash). -->
+<base href="/mission-control/" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Mission Control - the operating system for founders who run too many things</title>
+<meta name="description" content="One screen for every venture, every dollar, every meeting. An hourly pulse and a Jarvis you can talk to. Bring your own data or start blank." />
+<meta property="og:title" content="Mission Control - your whole company on one screen" />
+<meta property="og:description" content="See every venture as a living constellation. Track revenue + meetings. Talk to a built-in Jarvis. Free to start." />
+<meta property="og:image" content="assets/key-art.png" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700;12..96,800&family=Hanken+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+<style>
+  :root { --bg:#05070b; --panel:rgba(17,22,31,0.6); --border:rgba(150,170,200,0.12); --bb:rgba(120,210,205,0.3);
+    --text:#eef2f8; --muted:#97a4b6; --faint:#5c6878; --a:#3ee0c6; --b:#62b8ff; --green:#46e29a;
+    --fd:'Bricolage Grotesque',sans-serif; --fb:'Hanken Grotesk',sans-serif; --fm:'JetBrains Mono',monospace; }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  body { font-family:var(--fb); background:var(--bg); color:var(--text); -webkit-font-smoothing:antialiased; letter-spacing:-0.01em; }
+  .wrap { max-width:1100px; margin:0 auto; padding:0 24px; }
+  a { color:inherit; }
+  .btn { display:inline-block; font-weight:700; border-radius:12px; padding:14px 26px; text-decoration:none; font-size:15px; transition:.18s; cursor:pointer; border:none; }
+  .btn-primary { background:linear-gradient(135deg,var(--a),var(--b)); color:#06080c; box-shadow:0 12px 34px -10px rgba(62,224,198,.55); }
+  .btn-primary:hover { transform:translateY(-2px); }
+  .btn-ghost { border:1px solid var(--bb); color:var(--text); }
+  .kicker { font-family:var(--fm); font-size:11px; letter-spacing:.28em; text-transform:uppercase; color:var(--a); }
+
+  /* hero */
+  .hero { position:relative; min-height:92vh; display:flex; align-items:center; overflow:hidden; border-bottom:1px solid var(--border); }
+  .hero-bg { position:absolute; inset:0; background:#04060a url("assets/key-art.png") center/cover; }
+  .hero-bg::after { content:''; position:absolute; inset:0; background:linear-gradient(90deg, rgba(5,7,11,.92) 35%, rgba(5,7,11,.35)); }
+  .hero-in { position:relative; z-index:2; }
+  .hero h1 { font-family:var(--fd); font-weight:800; font-size:clamp(40px,6.4vw,82px); line-height:.96; letter-spacing:-.03em; margin:18px 0; max-width:16ch; }
+  .hero h1 .acc { background:linear-gradient(120deg,var(--a),var(--b)); -webkit-background-clip:text; background-clip:text; -webkit-text-fill-color:transparent; }
+  .hero p { font-size:clamp(15px,1.6vw,19px); color:var(--muted); max-width:54ch; line-height:1.6; margin-bottom:30px; }
+  .cta-row { display:flex; gap:14px; flex-wrap:wrap; align-items:center; }
+  .cta-row .note { font-family:var(--fm); font-size:12px; color:var(--faint); }
+
+  section { padding:90px 0; border-bottom:1px solid var(--border); }
+  .sec-h { font-family:var(--fd); font-weight:700; font-size:clamp(28px,3.4vw,42px); letter-spacing:-.02em; margin:10px 0 16px; }
+  .sub { color:var(--muted); font-size:16px; max-width:60ch; line-height:1.6; }
+
+  .feats { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; margin-top:44px; }
+  .feat { background:var(--panel); border:1px solid var(--border); border-radius:16px; padding:24px; }
+  .feat .ic { font-size:24px; }
+  .feat h3 { font-family:var(--fd); font-size:18px; margin:14px 0 8px; }
+  .feat p { color:var(--muted); font-size:13.5px; line-height:1.6; }
+
+  .pricing { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-top:44px; }
+  .plan { background:var(--panel); border:1px solid var(--border); border-radius:18px; padding:26px 22px; display:flex; flex-direction:column; }
+  .plan.feat-plan { border-color:var(--bb); box-shadow:0 18px 60px -24px rgba(62,224,198,.4); }
+  .plan .pn { font-family:var(--fm); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); }
+  .plan .pp { font-family:var(--fd); font-size:34px; font-weight:800; margin:10px 0 2px; letter-spacing:-.03em; }
+  .plan .pp small { font-size:14px; color:var(--faint); font-weight:500; }
+  .plan ul { list-style:none; margin:18px 0; flex:1; }
+  .plan li { font-size:13px; color:var(--muted); padding:7px 0 7px 22px; position:relative; line-height:1.4; }
+  .plan li::before { content:'+'; position:absolute; left:0; color:var(--a); font-weight:700; }
+  .plan .badge { font-family:var(--fm); font-size:9.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--green); background:rgba(70,226,154,.14); padding:3px 8px; border-radius:6px; align-self:flex-start; margin-bottom:10px; }
+
+  footer { padding:70px 0; text-align:center; }
+  footer h2 { font-family:var(--fd); font-size:clamp(26px,3.4vw,40px); letter-spacing:-.02em; margin-bottom:22px; }
+  .fnote { color:var(--faint); font-family:var(--fm); font-size:12px; margin-top:40px; }
+  @media (max-width:860px){ .feats,.pricing{ grid-template-columns:1fr 1fr; } }
+  @media (max-width:560px){ .feats,.pricing{ grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+  <div class="hero">
+    <div class="hero-bg"></div>
+    <div class="wrap hero-in">
+      <div class="kicker">Mission Control</div>
+      <h1>Run your <span class="acc">whole company</span> from one screen.</h1>
+      <p>Every venture as a living constellation. Track every dollar and meeting, get an hourly pulse on your numbers, and talk to a built-in Jarvis that answers from your real data. Bring your own data or start blank.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="./app/">Try the live demo</a>
+        <a class="btn btn-ghost" href="#pricing">Get the $29 starter</a>
+        <span class="note">no card to start</span>
+      </div>
+    </div>
+  </div>
+
+  <section>
+    <div class="wrap">
+      <div class="kicker">Why operators love it</div>
+      <div class="sec-h">It is the dashboard you actually want to open.</div>
+      <p class="sub">Built for people who run too many things and lost track of which ones make money.</p>
+      <div class="feats">
+        <div class="feat"><div class="ic">&#127756;</div><h3>Your ventures, as a galaxy</h3><p>Every project is a star, colored by lane, sized by how alive it is. Click one and fly straight to it. It boots like a spaceship, on purpose.</p></div>
+        <div class="feat"><div class="ic">&#128176;</div><h3>Every dollar, logged</h3><p>A revenue ledger, meeting tracker, and an hourly metrics pulse with its own RSS feed. Plus a monetization angle on every venture.</p></div>
+        <div class="feat"><div class="ic">&#129504;</div><h3>Talk to your company</h3><p>A built-in Jarvis answers "what should I focus on", logs revenue, and opens projects. By voice or text. It runs on your real data.</p></div>
+        <div class="feat"><div class="ic">&#128229;</div><h3>Bring your own data</h3><p>Import a file or start a blank business in seconds. Your numbers, your company, your cockpit.</p></div>
+        <div class="feat"><div class="ic">&#128218;</div><h3>Syncs to Notion</h3><p>One click mirrors your ventures, revenue, and meetings into Notion databases. Read and edit from anywhere.</p></div>
+        <div class="feat"><div class="ic">&#128274;</div><h3>Private by default</h3><p>Run it locally so your data never leaves your machine, or use the hosted version behind your own password.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="pricing">
+    <div class="wrap">
+      <div class="kicker">Pricing</div>
+      <div class="sec-h">Start free. Upgrade when it runs your day.</div>
+      <div class="pricing">
+        <div class="plan">
+          <div class="pn">Free</div>
+          <div class="pp">$0</div>
+          <ul><li>1 workspace</li><li>Up to 10 ventures</li><li>Revenue + meetings</li><li>Jarvis (text)</li><li>Manual refresh</li></ul>
+          <a class="btn btn-ghost" href="./app/">Try the demo</a>
+        </div>
+        <div class="plan feat-plan">
+          <div class="badge">Most popular</div>
+          <div class="pn">Pro</div>
+          <div class="pp">$29<small>/mo</small></div>
+          <ul><li>Unlimited ventures</li><li>Hourly pulse + RSS</li><li>Notion sync</li><li>Jarvis voice + actions</li><li>All themes</li></ul>
+          <a class="btn btn-primary" href="#">Go Pro</a>
+        </div>
+        <div class="plan">
+          <div class="pn">Self-host</div>
+          <div class="pp">$79<small> once</small></div>
+          <ul><li>Run it on your machine</li><li>Data never leaves</li><li>Full control backend</li><li>All features</li><li>Lifetime updates</li></ul>
+          <a class="btn btn-ghost" href="#">Download</a>
+        </div>
+        <div class="plan">
+          <div class="pn">Done-for-you</div>
+          <div class="pp">$497</div>
+          <ul><li>We set it up</li><li>We import your data</li><li>Your monetization map</li><li>1:1 walkthrough</li><li>30 days of tweaks</li></ul>
+          <a class="btn btn-ghost" href="#">Book setup</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div class="wrap">
+      <div class="kicker">Mission Control</div>
+      <h2>Stop flying blind.</h2>
+      <a class="btn btn-primary" href="#pricing">Build your command center</a>
+      <div class="fnote">Made for operators who run too many things.</div>
+    </div>
+  </footer>
+</body>
+</html>
