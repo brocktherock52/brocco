@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import { Nav } from '@/components/nav';
 import { Footer } from '@/components/footer';
@@ -41,6 +42,31 @@ export default function CapabilitiesIndex() {
               brocco is an AI team in a tab. each capability below is a real pipeline the team runs
               end to end, with you in the approval loop.
             </p>
+          </div>
+        </section>
+
+        {/* Hero showcase: the Brocco croc orchestrating every kind of work. */}
+        <section className="pb-12">
+          <div className="container-x">
+            <div className="relative mx-auto max-w-3xl overflow-hidden rounded-3xl border border-white/[0.08] bg-bg-1/40 shadow-glow2">
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 top-0 h-px"
+                style={{
+                  background:
+                    'linear-gradient(90deg, transparent, rgba(34,211,238,0.5), rgba(167,139,250,0.4), transparent)',
+                }}
+              />
+              <Image
+                src="/assets/home/capabilities-croc.png"
+                alt="The Brocco croc orchestrating websites, content, outreach, research, and code at once"
+                width={1200}
+                height={896}
+                priority
+                sizes="(max-width: 768px) 100vw, 768px"
+                className="h-auto w-full"
+              />
+            </div>
           </div>
         </section>
 

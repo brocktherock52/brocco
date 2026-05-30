@@ -23,7 +23,7 @@ const PHASES = [
     n: '02',
     name: 'Build',
     icon: Hammer,
-    body: 'We configure the nine specialist agents to your processes: custom tools, your data sources, your guardrails. Each agent owns a slice of the work and reports its own audit trail.',
+    body: 'We configure the specialist agents to your processes: custom tools, your data sources, your guardrails. Each agent owns a slice of the work and reports its own audit trail.',
   },
   {
     n: '03',
@@ -58,7 +58,7 @@ export function Methodology() {
           </h2>
           <p className="mt-4 max-w-xl text-[16px] text-ink-dim">
             A four-phase engagement run on the same agent team we ship as
-            software. The nine agents are the delivery engine: parallel
+            software. The agent team is the delivery engine: parallel
             research, competing approaches, and cross-layer coordination on
             every project.
           </p>

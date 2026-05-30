@@ -11,7 +11,7 @@ import { IntakeForm } from '@/components/consulting/intake-form';
 
 const TITLE = 'Brocco Studio - custom AI automation for your business';
 const DESCRIPTION =
-  'A high-touch AI consulting arm: we map the manual work draining your team, then build and run a coordinated team of nine specialist agents to do it. Discover, Build, Deploy, Govern. Book an AI audit.';
+  'A high-touch AI consulting arm: we map the manual work draining your team, then build and run a coordinated team of specialist AI agents to do it. Discover, Build, Deploy, Govern. Book an AI audit.';
 
 export const metadata: Metadata = {
   title: TITLE,

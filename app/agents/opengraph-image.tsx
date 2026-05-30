@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
-export const alt = 'brocco.dev, nine specialists, one prompt';
+export const alt = 'brocco.dev, your AI team, one prompt';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -43,7 +43,7 @@ export default function AgentsOg() {
               color: 'transparent',
             }}
           >
-            Nine specialists. One prompt.
+            Your AI team. One prompt.
           </h1>
         </div>
 

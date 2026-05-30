@@ -47,7 +47,7 @@ export function ConsultingHero() {
             className="mt-6 max-w-xl text-[17px] leading-relaxed text-ink-dim"
           >
             We map the repetitive work draining your team, then build and run a
-            coordinated team of nine specialist agents to do it. The same
+            coordinated team of specialist AI agents to do it. The same
             reviewable platform we ship as software, delivered as a high-touch
             engagement for your business.
           </motion.p>
