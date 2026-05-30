@@ -7,7 +7,7 @@ import { cn } from '@/lib/utils';
 /**
  * Cursor-following spotlight overlay. Wraps any child and gives it a soft
  * radial highlight that tracks the pointer. Pairs well with `card` and
- * `card-hover` utility classes — the spotlight reads as a depth signal
+ * `card-hover` utility classes, the spotlight reads as a depth signal
  * without animating the card itself.
  *
  * Use `tilt` to add a subtle 3D rotation tied to cursor position.

@@ -5,7 +5,7 @@
 // every day, or every-other day if they have an unused weekly skip.
 //
 // Storage is localStorage-only for now (no auth yet). Once auth lands,
-// mirror to the server so the streak is portable across devices — but
+// mirror to the server so the streak is portable across devices, but
 // keep the local cache as the fast path so the chip renders without a
 // network round-trip.
 

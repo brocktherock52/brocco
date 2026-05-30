@@ -11,7 +11,7 @@ import {
 } from '@/lib/suggestions';
 import type { AgentName } from '@/lib/agents';
 
-// SuggestionSlot — top-of-dashboard slot that surfaces 0-1 proactive nudge
+// SuggestionSlot, top-of-dashboard slot that surfaces 0-1 proactive nudge
 // at a time. Reads from `pickSuggestion()` which is purely localStorage-
 // driven for now. The slot is intentionally calm: one row, two actions
 // (accept, snooze/dismiss). It disappears entirely when there's nothing
@@ -33,7 +33,7 @@ export function SuggestionSlot({ onAccept }: SuggestionSlotProps) {
 
   function accept(sug: Suggestion) {
     onAccept?.(sug.accept.goal, sug.accept.agents);
-    // Treat acceptance as a long snooze — we don't want to re-prompt the
+    // Treat acceptance as a long snooze, we don't want to re-prompt the
     // same pattern for a while
     snoozeSuggestion(sug.id, 14);
     setS(pickSuggestion());

@@ -9,7 +9,6 @@
 // `crocBase` slug telling the icon composer which built-in croc to
 // remix.
 
-import type { AgentName } from '@/lib/agents';
 import type { AccessoryId } from '@/components/custom-croc';
 
 export type CustomCrocBase =

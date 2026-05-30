@@ -5,6 +5,7 @@ import { VERTICALS } from '@/lib/verticals';
 import { TOOL_PROFILES } from '@/lib/tool-profiles';
 import { RECIPE_PROFILES } from '@/lib/recipe-profiles';
 import { INTEGRATION_PROFILES } from '@/lib/integration-profiles';
+import { capabilities as CAPABILITIES } from '@/lib/capabilities-data';
 
 // 2026-05-22: was hardcoded to the Vercel preview domain. Now uses the public
 // base URL so Google indexes the real domain and not the staging URL.
@@ -48,13 +49,23 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: 'monthly' as const,
     priority: 0.75,
   }));
+  const capabilities = CAPABILITIES.map((c) => ({
+    url: `${SITE}/capabilities/${c.slug}`,
+    lastModified: now,
+    changeFrequency: 'monthly' as const,
+    priority: 0.85,
+  }));
   return [
     { url: `${SITE}/`, lastModified: now, changeFrequency: 'weekly', priority: 1 },
-    { url: `${SITE}/app`, lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
+    { url: `${SITE}/real-estate`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
+    // /app is noindexed + disallowed in robots.ts, so it must not be in the
+    // sitemap (a submitted-but-blocked URL is a Search Console error).
     { url: `${SITE}/agents`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${SITE}/tools`, lastModified: now, changeFrequency: 'weekly', priority: 0.85 },
     { url: `${SITE}/recipes`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
     { url: `${SITE}/integrations`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
+    { url: `${SITE}/capabilities`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
+    { url: `${SITE}/consulting`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${SITE}/pricing`, lastModified: now, changeFrequency: 'monthly', priority: 0.9 },
     { url: `${SITE}/security`, lastModified: now, changeFrequency: 'monthly', priority: 0.7 },
     { url: `${SITE}/docs`, lastModified: now, changeFrequency: 'weekly', priority: 0.8 },
@@ -68,13 +79,14 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${SITE}/vs/crewai`, lastModified: now, changeFrequency: 'monthly', priority: 0.8 },
     { url: `${SITE}/privacy`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
     { url: `${SITE}/terms`, lastModified: now, changeFrequency: 'yearly', priority: 0.3 },
-    { url: `${SITE}/billing/success`, lastModified: now, changeFrequency: 'yearly', priority: 0.2 },
+    // /billing/success is disallowed in robots.ts; omitted from the sitemap.
     { url: `${SITE}/blog`, lastModified: now, changeFrequency: 'weekly', priority: 0.75 },
     ...agents,
     ...tools,
     ...recipes,
     ...verticals,
     ...integrations,
+    ...capabilities,
     ...blog,
   ];
 }

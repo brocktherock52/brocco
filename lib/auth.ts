@@ -29,6 +29,15 @@ const BASE_URL =
   process.env.BETTER_AUTH_URL ||
   'http://localhost:3000';
 
+// True when we're serving over HTTPS (prod). We pin the secure-cookie decision
+// off this rather than letting better-auth sniff the per-request protocol:
+// behind Vercel's proxy the internal hop can look like http, which made
+// better-auth SET a non-secure cookie name (better-auth.session_token) on some
+// requests and look for the secure name (__Secure-better-auth.session_token)
+// on others. That set/read prefix mismatch is why the session "did not stick."
+// Pinning it to the public base URL's protocol makes the name deterministic.
+const IS_HTTPS = BASE_URL.startsWith('https://');
+
 async function sendMagicLinkEmail(email: string, url: string) {
   const resendKey = process.env.RESEND_API_KEY;
   const from = process.env.EMAIL_FROM || 'Brocco <login@brocco.dev>';
@@ -103,6 +112,40 @@ export const auth = betterAuth({
   session: {
     expiresIn: 60 * 60 * 24 * 30, // 30 days
     updateAge: 60 * 60 * 24, // refresh once a day
+    // Cache the session in a short-lived signed cookie so getSession resolves
+    // immediately after the magic-link callback without a race on the DB read.
+    cookieCache: {
+      enabled: true,
+      maxAge: 5 * 60, // 5 minutes
+    },
+  },
+  advanced: {
+    // Generate UUIDs for primary keys IN APP CODE. CRITICAL for two reasons:
+    //   1. users.id / threads.id are Postgres `uuid` columns, but better-auth's
+    //      default id generator returns a base32 string, which Postgres rejects
+    //      on a uuid column ("invalid input syntax for type uuid").
+    //   2. sessions.id / accounts.id / verifications.id are `text` PKs with NO
+    //      DB default. The string form `generateId: "uuid"` makes better-auth
+    //      insert `default` for the id and rely on the DB to fill it, which
+    //      null-violates those text columns.
+    // A FUNCTION (not the string "uuid") makes better-auth generate and SUPPLY a
+    // real uuid string for EVERY table's id, which satisfies both the uuid
+    // columns and the text columns. Without this, the magic-link verify step
+    // 500'd on createUser/createSession and NO user could finish signing in.
+    database: {
+      generateId: () => crypto.randomUUID(),
+    },
+    // Deterministic secure-cookie decision (see IS_HTTPS note above). Without
+    // this, the proxy protocol sniff could disagree between set and read and
+    // the browser would never present the cookie back, so the session looked
+    // like it never persisted.
+    useSecureCookies: IS_HTTPS,
+    defaultCookieAttributes: {
+      sameSite: 'lax', // same-site magic-link callback, lax is correct + sticky
+      secure: IS_HTTPS,
+      httpOnly: true,
+      path: '/',
+    },
   },
   plugins: [
     magicLink({

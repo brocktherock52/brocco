@@ -6,7 +6,7 @@ import { ReactNode } from 'react';
 /**
  * Wrap a section to give it a fluid scroll-reveal: content fades + lifts
  * as it enters the viewport, with a subtle stagger for child blocks.
- * Use sparingly — too many of these and the page feels jittery.
+ * Use sparingly, too many of these and the page feels jittery.
  */
 export function SectionReveal({
   children,

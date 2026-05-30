@@ -98,6 +98,20 @@ export function ComparePage(props: ComparePageProps) {
             >
               {hero.subtitle}
             </motion.p>
+            <motion.div
+              initial={{ opacity: 0, y: 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.28 }}
+              className="mt-8 flex flex-wrap items-center justify-center gap-3"
+            >
+              <Link href="/signup" className="btn-primary group">
+                <span>start free · 100 runs</span>
+                <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+              </Link>
+              <Link href="/pricing" className="btn-ghost">
+                <span>see pricing</span>
+              </Link>
+            </motion.div>
           </div>
         </section>
 

@@ -7,7 +7,7 @@ import Image from 'next/image';
 import { getCastMember } from '@/lib/agent-cast';
 import type { AgentName } from '@/lib/agents';
 
-// EveningWindDown — the second half of the daily-ritual mandate.
+// EveningWindDown, the second half of the daily-ritual mandate.
 //
 // Where MorningBriefing answers "what did brocco do while I slept,"
 // EveningWindDown answers "what does brocco want to run tonight."
@@ -47,7 +47,7 @@ const FIXTURES: WindDownItem[] = [
     slug: 'browser',
     agent: 'browser',
     accent: '#67E8F9',
-    message: 'monitoring competitor pricing page. last diff was 09:14 today — nothing new since.',
+    message: 'monitoring competitor pricing page. last diff was 09:14 today. nothing new since.',
     meta: 'monitoring · 4h since last change',
     acceptLabel: 'view watch list',
   },
@@ -63,7 +63,7 @@ const FIXTURES: WindDownItem[] = [
 
 interface EveningWindDownProps {
   onAct?: (item: WindDownItem) => void;
-  /** force render regardless of clock — for testing or dev */
+  /** force render regardless of clock, for testing or dev */
   alwaysShow?: boolean;
 }
 

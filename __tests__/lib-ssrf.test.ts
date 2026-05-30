@@ -32,7 +32,7 @@ describe('lib/ssrf', () => {
   });
 
   it('blocks IPv6 private ranges (fc00::/7)', () => {
-    // ULA (unique local addresses) — IPv6 equivalent of RFC1918
+    // ULA (unique local addresses), IPv6 equivalent of RFC1918
     expect(checkUrl('http://[fc00::1]/').ok).toBe(false);
     expect(checkUrl('http://[fd00::1]/').ok).toBe(false);
   });
@@ -49,7 +49,7 @@ describe('lib/ssrf', () => {
     expect(checkUrl('http://172.31.0.1/').ok).toBe(false);
   });
 
-  it('does NOT block public 172.32.x — that is not RFC1918', () => {
+  it('does NOT block public 172.32.x, that is not RFC1918', () => {
     expect(checkUrl('http://172.32.0.1/').ok).toBe(true);
     expect(checkUrl('http://172.15.0.1/').ok).toBe(true);
   });

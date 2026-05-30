@@ -1,4 +1,4 @@
-# BYOK — Bring Your Own Key
+# BYOK, Bring Your Own Key
 
 Brocco's default mode is BYOK. You paste your Anthropic API key into the `/app` dashboard once, it stays in your browser's `localStorage`, and every Claude call streams from your browser directly to Anthropic.
 

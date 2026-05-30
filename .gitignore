@@ -23,3 +23,15 @@ sessions/
 DAILY-ESSENTIAL-FEATURES.md
 __pycache__/
 *.pyc
+
+# --- BDP secure-cleanup hardening (2026-05-29) ---
+.env.*
+*.secrets
+*.pem
+*-key*
+*.local
+bot-token.txt
+leads*.csv
+
+# dated snapshot copies, never commit (huge)
+backups/

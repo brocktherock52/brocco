@@ -1,6 +1,6 @@
 # Contributing to Brocco
 
-Thanks for considering a contribution. Brocco is solo-maintained, so please file an issue before opening a non-trivial PR — it saves both of us time.
+Thanks for considering a contribution. Brocco is solo-maintained, so please file an issue before opening a non-trivial PR, it saves both of us time.
 
 ## Filing an issue
 
@@ -39,7 +39,7 @@ PRs without passing tests + typecheck will not be merged. CI runs these on every
 ## Writing a PR
 
 1. Fork the repo, branch off `main`.
-2. Make your change. Keep the diff focused — one logical change per PR.
+2. Make your change. Keep the diff focused, one logical change per PR.
 3. If you're adding a new feature, write a test for it. If you're fixing a bug, write a regression test first that fails, then make it pass.
 4. Update `CHANGELOG.md` under the `[Unreleased]` section.
 5. Push to your fork and open a PR against `main`.
@@ -47,7 +47,7 @@ PRs without passing tests + typecheck will not be merged. CI runs these on every
 ## Code style
 
 - TypeScript strict mode is on. No `any` unless commented why.
-- Edge runtime everywhere in `app/api/` — no Node-only APIs (`fs`, `Buffer`, etc).
+- Edge runtime everywhere in `app/api/`, no Node-only APIs (`fs`, `Buffer`, etc).
 - Prefer named exports over default exports.
 - Error handling: every error caught should either retry, surface a structured error envelope (see `lib/errors.ts`), or re-throw with added context. Don't swallow errors silently.
 - Tailwind classes are sorted by [Tailwind Prettier plugin](https://github.com/tailwindlabs/prettier-plugin-tailwindcss) order.

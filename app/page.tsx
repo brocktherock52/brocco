@@ -15,6 +15,7 @@ import { ScrollAgents } from '@/components/scroll-agents';
 import { TheTeam } from '@/components/the-team';
 import { FactoryWalkthrough } from '@/components/factory-walkthrough';
 import { Features } from '@/components/features';
+import { Capabilities } from '@/components/capabilities';
 import { SocialProof } from '@/components/social-proof';
 import { Pricing } from '@/components/pricing';
 import { Faq } from '@/components/faq';
@@ -41,6 +42,9 @@ export default function HomePage() {
         <FactoryWalkthrough />
         <SectionReveal>
           <Features />
+        </SectionReveal>
+        <SectionReveal>
+          <Capabilities />
         </SectionReveal>
         <SectionReveal>
           <Pricing />

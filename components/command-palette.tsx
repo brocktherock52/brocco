@@ -29,7 +29,7 @@ import { VERTICALS } from '@/lib/verticals';
 import { INTEGRATION_PROFILES } from '@/lib/integration-profiles';
 
 /**
- * CommandPalette — Linear/Raycast-style cmd+k overlay.
+ * CommandPalette, Linear/Raycast-style cmd+k overlay.
  * Searchable across agents (9), tools (13), recipes (11), verticals (9),
  * integrations (8), and primary nav routes. Keyboard-first: cmd+k or
  * ctrl+k anywhere opens it; arrow keys + enter navigate.

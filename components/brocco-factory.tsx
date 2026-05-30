@@ -6,7 +6,7 @@ import { motion } from 'framer-motion';
 import { useEffect, useRef, useState } from 'react';
 import { ArrowRight, Sparkles } from 'lucide-react';
 
-// BroccoFactory — multi-station conveyor that visibly assembles agents.
+// BroccoFactory, multi-station conveyor that visibly assembles agents.
 //
 // 2026-05-13 rebuild. Old version was a flat backdrop + emoji runners.
 // New version layers:
@@ -227,7 +227,7 @@ function CssFactory({ counter }: { counter: number }) {
         </motion.div>
       </div>
 
-      {/* SPAWN portal — left end */}
+      {/* SPAWN portal, left end */}
       <div className="absolute left-[3%] bottom-[22%] flex h-[24%] w-[110px] items-center justify-center">
         <motion.div
           className="absolute inset-0 rounded-2xl border border-violet-400/40"
@@ -265,7 +265,7 @@ function CssFactory({ counter }: { counter: number }) {
         </span>
       </div>
 
-      {/* Status overlays — top corners */}
+      {/* Status overlays, top corners */}
       <div className="absolute left-[3%] top-[6%] rounded-md border border-violet-400/30 bg-bg-0/70 px-2 py-1 font-mono text-[10px] uppercase tracking-[0.22em] text-violet-200 backdrop-blur">
         line · live
       </div>

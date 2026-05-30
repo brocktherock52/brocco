@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { Nav } from '@/components/nav';
 import { Footer } from '@/components/footer';
 import { ConsultingHero } from '@/components/consulting/consulting-hero';
+import { ClientWall } from '@/components/consulting/client-wall';
 import { Methodology } from '@/components/consulting/methodology';
 import { CaseStudies } from '@/components/consulting/case-studies';
 import { RoiCalculator } from '@/components/consulting/roi-calculator';
@@ -35,6 +36,7 @@ export default function ConsultingPage() {
       <Nav />
       <main>
         <ConsultingHero />
+        <ClientWall />
         <Methodology />
         <CaseStudies />
         <RoiCalculator />

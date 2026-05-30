@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { ComparePage } from '@/components/compare-page';
 
 export const metadata: Metadata = {
-  title: 'brocco vs CrewAI — dashboard vs framework',
+  title: 'brocco vs CrewAI - dashboard vs framework',
   description:
     'CrewAI is a Python framework for building multi-agent systems. Brocco is a hosted dashboard with the framework already built. Compare on time-to-first-run, BYOK, audit, and pricing.',
   alternates: { canonical: '/vs/crewai' },
@@ -70,7 +70,7 @@ export default function VsCrewAiPage() {
         },
         {
           q: 'Are the agent specs portable?',
-          a: 'Sort of. Brocco agents are markdown + YAML with a tool list — easy to translate to a CrewAI Agent + Task pair. The reverse is also reasonable. Both ecosystems converge on "system prompt + allowed tools + decomposition."',
+          a: 'Sort of. Brocco agents are markdown + YAML with a tool list, easy to translate to a CrewAI Agent + Task pair. The reverse is also reasonable. Both ecosystems converge on "system prompt + allowed tools + decomposition."',
         },
         {
           q: 'Pricing reality?',

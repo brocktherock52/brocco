@@ -7,7 +7,7 @@ const SITE = process.env.NEXT_PUBLIC_BASE_URL || 'https://brocco.dev';
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
-      { userAgent: '*', allow: '/', disallow: ['/app', '/billing/'] },
+      { userAgent: '*', allow: '/', disallow: ['/app', '/billing/', '/account', '/api/'] },
     ],
     sitemap: `${SITE}/sitemap.xml`,
   };

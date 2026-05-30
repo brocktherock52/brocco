@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * SurfacesFilmstrip — completely reimagined "surfaces" section.
+ * SurfacesFilmstrip, completely reimagined "surfaces" section.
  *
  * Desktop (lg+): scroll-tied horizontal filmstrip. A 400vh tall section
  * pins a viewport-height container while the 6 surface cards translate

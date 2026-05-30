@@ -4,7 +4,7 @@ import { motion } from 'framer-motion';
 import { CustomCroc } from '@/components/custom-croc';
 import type { AccessoryId } from '@/components/custom-croc';
 
-// MagicalPipe — agent-creation reveal animation. When the wizard saves a
+// MagicalPipe, agent-creation reveal animation. When the wizard saves a
 // new agent, full-screen overlay shows a glowing pipe descending from
 // the top of the screen and a new croc dropping out with sparkles, then
 // settling into place. Used as a celebratory transition before the

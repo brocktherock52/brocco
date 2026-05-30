@@ -14,7 +14,7 @@ import {
 } from './brand-icons';
 
 /**
- * Integrations — was an 8-spotlight-card grid; now a hub-and-spoke radial
+ * Integrations, was an 8-spotlight-card grid; now a hub-and-spoke radial
  * diagram. brocco runtime sits at the center, eight integrations orbit on
  * a circle. Hover (or tap on mobile via the fallback list) any node to pop
  * a tooltip with mechanism + body copy. The hub gently breathes; the spokes
@@ -163,7 +163,7 @@ export function Integrations() {
           </p>
         </div>
 
-        {/* Radial hub diagram — fully draggable since 2026-05-22 */}
+        {/* Radial hub diagram, fully draggable since 2026-05-22 */}
         <div
           ref={stageRef}
           onPointerMove={onStagePointerMove}
@@ -197,7 +197,7 @@ export function Integrations() {
             <circle cx="50" cy="50" r="36" fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="0.4" strokeDasharray="0.6 1.4" />
             {/* hub glow */}
             <circle cx="50" cy="50" r="24" fill="url(#hubGlow)" />
-            {/* spokes — connect the live hub position to each live node position */}
+            {/* spokes, connect the live hub position to each live node position */}
             {ITEMS.map((_, i) => {
               const node = nodePositions[i];
               return (
@@ -215,7 +215,7 @@ export function Integrations() {
             })}
           </svg>
 
-          {/* Hub center — draggable */}
+          {/* Hub center, draggable */}
           <motion.div
             className="absolute -translate-x-1/2 -translate-y-1/2"
             style={{
@@ -244,7 +244,7 @@ export function Integrations() {
             </div>
           </motion.div>
 
-          {/* Nodes — draggable */}
+          {/* Nodes, draggable */}
           {ITEMS.map((it, i) => {
             const { left, top } = nodePositions[i];
             const Icon = it.Icon;

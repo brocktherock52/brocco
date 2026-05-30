@@ -4,12 +4,12 @@ import { Footer } from '@/components/footer';
 import { ThreadsFeed } from '@/components/threads-feed';
 
 export const metadata: Metadata = {
-  title: 'threads — brocco.dev',
+  title: 'threads - brocco.dev',
   description:
     'What the brocco team is shipping, learning, and posting. Daily updates on building a multi-agent platform in public.',
   openGraph: {
-    title: 'threads — brocco.dev',
-    description: 'Daily updates from building brocco — the multi-agent platform that runs N AI agents in parallel.',
+    title: 'threads - brocco.dev',
+    description: 'Daily updates from building brocco, the multi-agent platform that runs N AI agents in parallel.',
   },
 };
 
@@ -41,7 +41,7 @@ export default function ThreadsPage() {
           </div>
         </section>
 
-        {/* Feed of pinned posts — editorialized "thread" style */}
+        {/* Feed of pinned posts, editorialized "thread" style */}
         <ThreadsFeed />
       </main>
       <Footer />

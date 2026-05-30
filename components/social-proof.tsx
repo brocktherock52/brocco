@@ -29,7 +29,7 @@ const LOGOS = ['Anthropic', 'OpenAI', 'Stripe', 'Vercel', 'Tavily', 'Ollama', 'P
 
 export function SocialProof() {
   return (
-    <section className="relative py-20">
+    <section className="relative py-24 md:py-32">
       <div className="container-x">
         <p className="text-center font-mono text-[11px] uppercase tracking-[0.2em] text-ink-faint">
           Built on infrastructure your security team already approved

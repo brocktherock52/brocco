@@ -1,4 +1,4 @@
-// Tool registry pages — /tools and /tools/<slug>. Mined from v12 build.
+// Tool registry pages: /tools and /tools/<slug>. Mined from v12 build.
 
 export interface ToolFaq { q: string; a: string }
 
@@ -99,7 +99,7 @@ export const TOOL_PROFILES: ToolProfile[] = [
     security: 'Allowlisted hosts only. Tokens come from your env-vars or memory store, never sent in plaintext logs. Audit log captures URL + status, not bodies.',
     usedBy: ['outreach', 'ops', 'coder'],
     gotchas: [
-      'Side-effecting calls — wrap in confirmation flow if you do not want auto-send.',
+      'Side-effecting calls: wrap in confirmation flow if you do not want auto-send.',
       'Rate limits hit you, not us. Add backoff if you broadcast bulk POSTs.',
     ],
     keywords: ['ai api call tool', 'post requests agent', 'agent http'],
@@ -128,7 +128,7 @@ export const TOOL_PROFILES: ToolProfile[] = [
     usedBy: ['analyst', 'coder', 'designer'],
     gotchas: [
       '1 MB default cap. Pass max_bytes for larger files.',
-      'Run scratch is wiped after run completes — file_read does not work across runs.',
+      'Run scratch is wiped after run completes. file_read does not work across runs.',
     ],
     keywords: ['agent file read', 'sandbox filesystem ai'],
   },
@@ -327,7 +327,7 @@ export const TOOL_PROFILES: ToolProfile[] = [
     "required": ["query"]
   }
 }`,
-    security: 'Read-only by default — INSERT/UPDATE/DELETE rejected unless you opt in. Connections via your URI; we never store credentials in plaintext.',
+    security: 'Read-only by default. INSERT/UPDATE/DELETE rejected unless you opt in. Connections via your URI; we never store credentials in plaintext.',
     usedBy: ['analyst', 'ops'],
     gotchas: [
       'EXPLAIN before queries on tables >100M rows; missing indexes will time out.',

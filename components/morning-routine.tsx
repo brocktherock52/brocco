@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { getCastMember } from '@/lib/agent-cast';
 
-// MorningRoutine — marketing-page section that previews the daily-essential
+// MorningRoutine, marketing-page section that previews the daily-essential
 // loop. Renders 4 "while you slept" cards as a peek into the dashboard's
 // morning briefing. Lives on the landing page above the agent cast so the
 // daily-habit positioning hits before specs.

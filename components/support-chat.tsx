@@ -62,7 +62,7 @@ export function SupportChat() {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 8, scale: 0.96 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed bottom-20 right-5 z-50 w-[320px] overflow-hidden rounded-2xl border border-white/[0.10] bg-bg-1/95 shadow-glow backdrop-blur-2xl md:bottom-24 md:right-6"
+            className="fixed bottom-20 right-5 z-50 w-[min(320px,calc(100vw-2.5rem))] overflow-hidden rounded-2xl border border-white/[0.10] bg-bg-1/95 shadow-glow backdrop-blur-2xl md:bottom-24 md:right-6"
             role="dialog"
             aria-label="support"
           >

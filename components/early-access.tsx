@@ -1,15 +1,15 @@
 'use client';
 
 /**
- * EarlyAccess — the free-tier signup capture the social content machine drives
+ * EarlyAccess, the free-tier signup capture the social content machine drives
  * to ("100 free runs -> brocco.dev"). One email field, one button. On submit it
  * POSTs to /api/early-access (graceful-degrade capture) and then drops the
  * visitor straight into the working demo at /app, so the free experience starts
  * immediately even before account auth is fully wired.
  *
  * Variants:
- *   "inline"  — hero/section use, transparent, sits in existing layout.
- *   "card"    — standalone boxed version (used on /signup).
+ *   "inline"  : hero/section use, transparent, sits in existing layout.
+ *   "card"    : standalone boxed version (used on /signup).
  */
 import { useState } from 'react';
 import Link from 'next/link';

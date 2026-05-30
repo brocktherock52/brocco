@@ -1,4 +1,4 @@
-// Integration pages — /integrations and /integrations/<slug>.
+// Integration pages: /integrations and /integrations/<slug>.
 
 export interface IntegrationProfile {
   slug: string;
@@ -40,7 +40,7 @@ OPENAI_MODEL=gpt-5  // or gpt-4.1, o3, o3-mini`,
     usedBy: ['supervisor', 'researcher', 'analyst', 'coder'],
     notes: [
       'Useful for cross-model broadcast: same prompt, two models, compare answers.',
-      'Tool use shape differs slightly — brocco normalizes.',
+      'Tool use shape differs slightly, brocco normalizes.',
     ],
     keywords: ['openai integration', 'gpt agent', 'multi-model agent'],
   },
@@ -58,7 +58,7 @@ ollama pull llama3.3:70b
     usedBy: ['supervisor', 'researcher', 'planner', 'outreach', 'designer', 'analyst', 'coder', 'ops'],
     notes: [
       'Tool use depends on model; llama3.3, qwen2.5-coder are best.',
-      'Latency is the cost — local 70B is 5-15x slower than hosted.',
+      'Latency is the cost: local 70B is 5-15x slower than hosted.',
     ],
     keywords: ['ollama integration', 'local llm agent', 'self-hosted ai'],
   },

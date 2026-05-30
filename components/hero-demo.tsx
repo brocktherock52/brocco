@@ -1,13 +1,13 @@
 'use client';
 
 /**
- * BroadcastConsole — the interactive hero centerpiece.
+ * BroadcastConsole, the interactive hero centerpiece.
  *
  * The old hero DESCRIBED the product (canned terminal scenes, fake telemetry).
  * This DEMONSTRATES it: the visitor picks or types a goal, hits Broadcast, and
  * watches all nine specialists fan out in PARALLEL, each streaming its own work,
  * then converge into a stack of finished deliverable files. The whole point of
- * Brocco — one prompt, nine agents at once, real output — is now something you
+ * Brocco, one prompt, nine agents at once, real output, is now something you
  * feel in five seconds instead of read about.
  *
  * Honest framing: this is a scripted preview (no key required, runs client-side).
@@ -144,7 +144,7 @@ export function BroadcastConsole() {
     intervals.current.push(elapsedTick);
 
     order.forEach((name, i) => {
-      // All nine kick off near-simultaneously — that parallelism IS the pitch.
+      // All nine kick off near-simultaneously, that parallelism IS the pitch.
       const startDelay = reduce ? 0 : 120 + i * 60;
       const duration = reduce ? 0 : 1700 + Math.random() * 2600;
       const actions = ACTIONS[name];

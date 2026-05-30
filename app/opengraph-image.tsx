@@ -5,7 +5,10 @@ export const alt = 'brocco.dev - agents that do the work';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
-const SITE = process.env.NEXT_PUBLIC_SITE_URL || 'https://brocco-site.vercel.app';
+// Standardize on NEXT_PUBLIC_BASE_URL (matches robots.ts + sitemap.ts) and
+// fall back to the production apex, not a staging domain. A wrong host here
+// silently 404s the mark on every social share.
+const SITE = process.env.NEXT_PUBLIC_BASE_URL || 'https://brocco.dev';
 
 export default async function OpengraphImage() {
   // Fetch the brand mark so it embeds inside the rendered OG.

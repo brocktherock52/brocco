@@ -1,6 +1,6 @@
 # Brocco API Reference
 
-All endpoints are under `/api/v1/`. This surface is stable — breaking changes will be released under `/api/v2/`.
+All endpoints are under `/api/v1/`. This surface is stable, breaking changes will be released under `/api/v2/`.
 
 Base URL (production): `https://brocco.dev`
 
@@ -9,7 +9,7 @@ Base URL (production): `https://brocco.dev`
 Two modes:
 
 1. **Public demo (default).** No auth required. Cookie-rate-limited to 1 run per browser per 24 hours.
-2. **BYOK passthrough (planned).** `Authorization: Bearer sk-ant-...` — your Anthropic key is used directly, bypassing the public-demo quota. Your key never leaves the request lifecycle and is never logged.
+2. **BYOK passthrough (planned).** `Authorization: Bearer sk-ant-...`, your Anthropic key is used directly, bypassing the public-demo quota. Your key never leaves the request lifecycle and is never logged.
 
 ## Endpoints
 
@@ -149,9 +149,9 @@ The `/api/v1/*` namespace is the stable surface. Specifically:
 
 The following endpoints exist but are not part of the public API:
 
-- `/api/checkout` — Stripe Checkout session creation
-- `/api/portal` — Stripe Customer Portal session creation
-- `/api/proxy` — read-only HTTP proxy used by the in-app browser tool
-- `/api/stripe-webhook` — signed Stripe webhook receiver
+- `/api/checkout`, Stripe Checkout session creation
+- `/api/portal`, Stripe Customer Portal session creation
+- `/api/proxy`, read-only HTTP proxy used by the in-app browser tool
+- `/api/stripe-webhook`, signed Stripe webhook receiver
 
 Treat these as implementation details. They may change without notice.

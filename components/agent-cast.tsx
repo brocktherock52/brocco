@@ -11,7 +11,7 @@ import type { AgentName } from '@/lib/agents';
 import { CAST_CROCS } from '@/components/cast-croc-characters';
 
 /**
- * AgentCast — the brocco-croc playing every role in the office.
+ * AgentCast, the brocco-croc playing every role in the office.
  * Renders a kinetic gallery of vignette cards. Each card lifts +
  * tilts on hover (mouse-tracked rotation), revealing the agent's
  * costume + scene caption.
@@ -78,7 +78,7 @@ function CastCard({ member, index }: { member: typeof AGENT_CAST[number]; index:
     return () => io.disconnect();
   }, [hasVideo]);
 
-  // Mouse-tracked 3D tilt — desktop+fine-pointer only. Disabling on touch
+  // Mouse-tracked 3D tilt, desktop+fine-pointer only. Disabling on touch
   // killed the mobile scroll-jank where every touchmove was triggering tilt.
   const [tiltEnabled, setTiltEnabled] = useState(false);
   useEffect(() => {
@@ -229,7 +229,7 @@ function CastCard({ member, index }: { member: typeof AGENT_CAST[number]; index:
             </span>
           </div>
 
-          {/* Persona croc SVG — top-right badge. Pairs the photographic
+          {/* Persona croc SVG, top-right badge. Pairs the photographic
               croc-character with our 2-bit codey iconography so the
               brand language is consistent across raster + vector. */}
           <div className="absolute right-3 top-3">
@@ -266,7 +266,7 @@ function CastCard({ member, index }: { member: typeof AGENT_CAST[number]; index:
 }
 
 /*
- * SCENE_BG — per-agent dramatic backdrop scene. Each card gets a
+ * SCENE_BG, per-agent dramatic backdrop scene. Each card gets a
  * radically different visual context: terminal-text lines for coder,
  * blueprint grid for planner, vinyl record rings for designer, etc.
  *
@@ -284,7 +284,7 @@ const SCENE_BG: Record<string, React.CSSProperties> = {
     `,
   },
   planner: {
-    // Blueprint grid — pink on dark
+    // Blueprint grid, pink on dark
     backgroundImage: `
       radial-gradient(circle at 30% 30%, rgba(251,113,133,0.22) 0%, transparent 60%),
       linear-gradient(rgba(251,113,133,0.08) 1px, transparent 1px),
@@ -302,7 +302,7 @@ const SCENE_BG: Record<string, React.CSSProperties> = {
     `,
   },
   designer: {
-    // Color-swatch grid — pinks/purples
+    // Color-swatch grid, pinks/purples
     backgroundImage: `
       radial-gradient(circle at 50% 40%, rgba(244,114,182,0.20) 0%, transparent 65%),
       conic-gradient(from 0deg at 50% 50%, rgba(244,114,182,0.10), rgba(251,113,133,0.05), rgba(167,139,250,0.10), rgba(244,114,182,0.10)),
@@ -310,7 +310,7 @@ const SCENE_BG: Record<string, React.CSSProperties> = {
     `,
   },
   analyst: {
-    // Monitor glow — dual columns of violet
+    // Monitor glow, dual columns of violet
     backgroundImage: `
       linear-gradient(90deg, transparent 0%, rgba(167,139,250,0.18) 8%, transparent 22%, transparent 78%, rgba(167,139,250,0.18) 92%, transparent 100%),
       repeating-linear-gradient(0deg, transparent 0px, transparent 6px, rgba(167,139,250,0.04) 7px, rgba(167,139,250,0.04) 8px),
@@ -318,7 +318,7 @@ const SCENE_BG: Record<string, React.CSSProperties> = {
     `,
   },
   coder: {
-    // CRT terminal — emerald rows + scanlines
+    // CRT terminal, emerald rows + scanlines
     backgroundImage: `
       radial-gradient(ellipse at 50% 50%, rgba(74,222,128,0.20) 0%, transparent 65%),
       repeating-linear-gradient(0deg, transparent 0px, transparent 3px, rgba(74,222,128,0.06) 4px, rgba(74,222,128,0.06) 5px),
@@ -334,7 +334,7 @@ const SCENE_BG: Record<string, React.CSSProperties> = {
     `,
   },
   supervisor: {
-    // Command center — 8 small glow points around the center
+    // Command center, 8 small glow points around the center
     backgroundImage: `
       radial-gradient(circle at 20% 25%, rgba(34,197,94,0.18) 0%, transparent 18%),
       radial-gradient(circle at 80% 25%, rgba(34,197,94,0.12) 0%, transparent 18%),
@@ -345,7 +345,7 @@ const SCENE_BG: Record<string, React.CSSProperties> = {
     `,
   },
   browser: {
-    // Detective noir — green banker's lamp + smoke wisps
+    // Detective noir, green banker's lamp + smoke wisps
     backgroundImage: `
       radial-gradient(ellipse at 30% 20%, rgba(103,232,249,0.28) 0%, transparent 45%),
       radial-gradient(ellipse at 70% 90%, rgba(34,42,55,0.7) 0%, transparent 60%),
@@ -359,19 +359,19 @@ function CastPlaceholder({ accent, slug, index }: { accent: string; slug: string
   const CrocCharacter = CAST_CROCS[slug] ?? CAST_CROCS.researcher;
   return (
     <div className="relative h-full w-full overflow-hidden">
-      {/* Per-agent dramatic backdrop — radically different per slug */}
+      {/* Per-agent dramatic backdrop, radically different per slug */}
       <div aria-hidden className="absolute inset-0" style={bgStyle} />
       {/* faint dot grid layered on top of the backdrop for texture */}
       <div className="grid-bg pointer-events-none absolute inset-0 opacity-[0.10]" />
 
-      {/* Soft halo behind the croc — pulls eye to the bespoke character */}
+      {/* Soft halo behind the croc, pulls eye to the bespoke character */}
       <div
         aria-hidden
         className="absolute left-1/2 top-[18%] h-[60%] w-[70%] -translate-x-1/2 rounded-full blur-3xl opacity-50"
         style={{ background: `radial-gradient(circle, ${accent}40 0%, transparent 70%)` }}
       />
 
-      {/* The bespoke per-agent croc — each one is a distinct illustration
+      {/* The bespoke per-agent croc, each one is a distinct illustration
           (researcher at his desk, planner at the whiteboard, browser in his
           leather chair, etc.). The whole scene IS the SVG so we don't need
           to overlay separate prop icons. */}
@@ -390,7 +390,7 @@ function CastPlaceholder({ accent, slug, index }: { accent: string; slug: string
         />
       </motion.div>
 
-      {/* Subtle accent vignette in the upper-right corner — pulls the eye
+      {/* Subtle accent vignette in the upper-right corner, pulls the eye
           to the badge area without competing with the character. */}
       <motion.div
         aria-hidden

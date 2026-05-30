@@ -73,7 +73,7 @@ export function MascotDraggable() {
     return () => window.removeEventListener('beforeunload', persist);
   }, [x, y]);
 
-  // Idle float — gentle sinusoidal bob when not being dragged.
+  // Idle float, gentle sinusoidal bob when not being dragged.
   // Disabled when reduce-motion is set.
   useEffect(() => {
     if (reduceMotion) return;
@@ -113,7 +113,7 @@ export function MascotDraggable() {
         }
       }}
       className="cursor-grab active:cursor-grabbing select-none"
-      aria-label="Brocco mascot — drag me"
+      aria-label="Brocco mascot, drag me"
       role="img"
     >
       <motion.div style={{ y: floatY }} className="relative h-24 w-24">

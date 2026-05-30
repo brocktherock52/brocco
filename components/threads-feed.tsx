@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * ThreadsFeed — vertical scrolling feed of "thread" cards.
+ * ThreadsFeed, vertical scrolling feed of "thread" cards.
  *
  * Visual reference: Threads / Mastodon / Bluesky single-column feed.
  * Each post is a card with author handle + timestamp + body + tags.
@@ -62,7 +62,7 @@ const POSTS: ThreadPost[] = [
   {
     id: 't-005',
     ago: '2d ago',
-    body: 'building brocco solo. 4 months in. 18 repos. 70 routes live. real stripe ($49 / $199 monthly). zero paying users (yet — launch is in 14 days). applying to YC. wish me luck.',
+    body: 'building brocco solo. 4 months in. 18 repos. 70 routes live. real stripe ($49 / $199 monthly). zero paying users (yet, launch is in 14 days). applying to YC. wish me luck.',
     tags: ['#yc', '#solofounder'],
     stats: { likes: 156, replies: 23, reposts: 31 },
   },
@@ -111,7 +111,7 @@ export function ThreadsFeed() {
           </p>
           <div className="mt-6 flex flex-wrap items-center justify-center gap-3">
             <a
-              href="https://threads.net/@brockpivec"
+              href="https://www.threads.com/@brocco.dev"
               target="_blank"
               rel="noreferrer noopener"
               className="btn-primary inline-flex items-center gap-2 px-5 py-2.5 text-[14px]"
@@ -119,7 +119,7 @@ export function ThreadsFeed() {
               follow on threads
             </a>
             <a
-              href="https://x.com/brockpivec"
+              href="https://x.com/broccoai"
               target="_blank"
               rel="noreferrer noopener"
               className="btn-ghost inline-flex items-center gap-2 px-5 py-2.5 text-[14px]"

@@ -1,6 +1,5 @@
 'use client';
 
-import Link from 'next/link';
 import Image from 'next/image';
 import { motion, useScroll, useTransform, useMotionValue, useSpring, useReducedMotion } from 'framer-motion';
 import { useEffect, useMemo, useRef } from 'react';
@@ -9,16 +8,16 @@ import { HeroTerminal } from './hero-terminal';
 import { MagneticLink } from './ui/magnetic';
 
 /**
- * HeroAnimated — fully kinetic hero. Replaces the static spinning
+ * HeroAnimated, fully kinetic hero. Replaces the static spinning
  * jpeg approach. Layered motion:
  *   1. Particle field (40 cyan dots drifting upward, parallax with mouse)
  *   2. Orbital agent ring: 9 specialist dots orbiting the mascot at
  *      different radii / speeds, each pulsing with a delay so the
  *      whole ring feels alive. Connector lines draw from each dot to
  *      the mascot with stroke-dasharray animation.
- *   3. Mascot in center: layered transform — scroll-driven scale + rotation,
+ *   3. Mascot in center: layered transform, scroll-driven scale + rotation,
  *      mouse-driven tilt, idle breathing loop, blink animation.
- *   4. Two streaming JSONL panels with real typewriter effect — text
+ *   4. Two streaming JSONL panels with real typewriter effect, text
  *      types character by character, then erases, then re-types
  *      a different message.
  *   5. Title + CTAs that lift away on scroll.
@@ -263,7 +262,7 @@ export function HeroAnimated() {
                 <OrbitDot key={agent.name} index={i} total={AGENTS.length} agent={agent} />
               ))}
 
-              {/* Mascot center — restored. z-30 so it sits ABOVE the streaming panels. */}
+              {/* Mascot center, restored. z-30 so it sits ABOVE the streaming panels. */}
               <motion.div
                 className="absolute left-1/2 top-1/2 z-30 h-[58%] w-[58%] -translate-x-1/2 -translate-y-1/2"
                 animate={{
@@ -293,7 +292,7 @@ export function HeroAnimated() {
             </motion.div>
           </div>
 
-          {/* Live activity rail — sits below the orbital, fills the column */}
+          {/* Live activity rail, sits below the orbital, fills the column */}
           <motion.div
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}

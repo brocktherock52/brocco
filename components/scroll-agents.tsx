@@ -4,7 +4,7 @@ import { useEffect, useRef, useState } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence, useScroll, useMotionValueEvent } from 'framer-motion';
 
-// ScrollAgents — SIGNATURE FEATURE v2.
+// ScrollAgents, SIGNATURE FEATURE v2.
 //
 // The crocs are no longer pinned to a dock. They WALK across the page
 // at random viewport positions as the visitor scrolls, and they
@@ -180,7 +180,7 @@ export function ScrollAgents() {
         </p>
       </div>
 
-      {/* Walking-agents layer — BACKGROUND z (behind content), low opacity.
+      {/* Walking-agents layer, BACKGROUND z (behind content), low opacity.
           The crocs sweep across the screen like cute shooting stars; the
           bento "task drops" follow the same path. Never competes with
           the hero or cards. */}
@@ -206,7 +206,7 @@ export function ScrollAgents() {
 
 function Walker({ walker }: { walker: Walker }) {
   // Small croc that drifts across the background like a shooting star.
-  // No tooltip — the BentoComet does the narration. Smaller scale +
+  // No tooltip, the BentoComet does the narration. Smaller scale +
   // gentle bob so it reads as ambient motion, never as a UI element.
   const viewportW = typeof window !== 'undefined' ? window.innerWidth : 1440;
   const startX = walker.direction === 'lr' ? -80 : viewportW + 80;
@@ -243,7 +243,7 @@ function Walker({ walker }: { walker: Walker }) {
   );
 }
 
-// BentoComet — a "task drop" that streaks across the background like a
+// BentoComet, a "task drop" that streaks across the background like a
 // shooting star. Random direction, ~9s arc, no sticky stack. Reads as
 // ambient evidence the agents keep producing work.
 function BentoComet({ bento }: { bento: Bento }) {

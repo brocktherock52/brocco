@@ -9,7 +9,7 @@ import { getCastMember } from '@/lib/agent-cast';
 import { getStreak } from '@/lib/streak';
 import type { AgentName } from '@/lib/agents';
 
-// WeeklyRecap — the second high-frequency surface besides the morning
+// WeeklyRecap, the second high-frequency surface besides the morning
 // briefing. Anchored at Sunday 18:00 user-local (the component itself
 // just renders the past 7 days whenever it's loaded; the "what to look
 // at" framing is the cron job's job once we have one).
@@ -137,7 +137,7 @@ export function WeeklyRecap() {
               <span className="text-[14px] text-ink-dim">day{streakCount === 1 ? '' : 's'}</span>
             </div>
             <p className="mt-1 text-[12.5px] text-ink-dim">
-              {streakCount === 0 ? 'open /app to start one' : streakCount < 7 ? 'keep it going — 7 days unlocks fuchsia mode' : streakCount < 30 ? 'in fuchsia. 30 days = gold.' : 'gold streak. legend.'}
+              {streakCount === 0 ? 'open /app to start one' : streakCount < 7 ? 'keep it going. 7 days unlocks fuchsia mode' : streakCount < 30 ? 'in fuchsia. 30 days = gold.' : 'gold streak. legend.'}
             </p>
             {streakCount > 0 && (
               <div className="mt-5">

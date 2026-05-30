@@ -18,7 +18,7 @@
 
 # Brocco
 
-Multi-agent broadcast dashboard for AI agents. Type one goal, fan out to N agents in parallel, each with its own streaming pane and tools. **Bring your own Anthropic key — zero data retention.**
+Multi-agent broadcast dashboard for AI agents. Type one goal, fan out to N agents in parallel, each with its own streaming pane and tools. **Bring your own Anthropic key, zero data retention.**
 
 > Live: [brocco.dev](https://brocco.dev) · Source: [brocktherock52/brocco](https://github.com/brocktherock52/brocco)
 
@@ -50,10 +50,10 @@ ANTHROPIC_API_KEY=sk-ant-... npm run dev
 ## What you get
 
 - **9 built-in agents** with distinct personas (researcher, coder, browser, analyst, designer, planner, outreach, supervisor, app_builder) and declared tool permissions
-- **11 pre-filled recipes** that pre-populate goal + agent set (market-research, customer-deep-dive, launch-day, comp-teardown, etc.) — time-to-first-value under 60 seconds
+- **11 pre-filled recipes** that pre-populate goal + agent set (market-research, customer-deep-dive, launch-day, comp-teardown, etc.), time-to-first-value under 60 seconds
 - **Real Claude streaming** via Server-Sent Events with retry+backoff, AbortSignal propagation, per-token cost ticker, and structured error events
-- **BYOK by default** — tokens go from your browser straight to Anthropic, never through our server. Hosted mode available for users who don't want to manage keys.
-- **Free demo mode** — try the dashboard without an API key (templated streaming)
+- **BYOK by default**, tokens go from your browser straight to Anthropic, never through our server. Hosted mode available for users who don't want to manage keys.
+- **Free demo mode**, try the dashboard without an API key (templated streaming)
 - **PWA installable**
 
 ## Stack
@@ -104,7 +104,7 @@ HTTP status codes: 400 (validation/invalid_json), 401 (auth), 403 (ssrf_blocked)
 
 Full reference: [`docs/api.md`](docs/api.md).
 
-GET `/api/v1/agents` — list of available agents and their tool permissions.
+GET `/api/v1/agents`, list of available agents and their tool permissions.
 
 ## Stability commitment
 
@@ -135,13 +135,13 @@ public/
 
 ## Documentation
 
-- [`docs/api.md`](docs/api.md) — full API reference
-- [`docs/self-host.md`](docs/self-host.md) — environment variables, Stripe setup, deployment
-- [`docs/byok.md`](docs/byok.md) — BYOK flow, data handling, key revocation
-- [`docs/examples/curl-quickstart.md`](docs/examples/curl-quickstart.md) — copy-paste curl recipes
-- [`CHANGELOG.md`](CHANGELOG.md) — version history
-- [`CONTRIBUTING.md`](CONTRIBUTING.md) — how to file issues and PRs
-- [`DESIGN.md`](DESIGN.md) — visual design system
+- [`docs/api.md`](docs/api.md), full API reference
+- [`docs/self-host.md`](docs/self-host.md), environment variables, Stripe setup, deployment
+- [`docs/byok.md`](docs/byok.md), BYOK flow, data handling, key revocation
+- [`docs/examples/curl-quickstart.md`](docs/examples/curl-quickstart.md), copy-paste curl recipes
+- [`CHANGELOG.md`](CHANGELOG.md), version history
+- [`CONTRIBUTING.md`](CONTRIBUTING.md), how to file issues and PRs
+- [`DESIGN.md`](DESIGN.md), visual design system
 
 ## Pricing (when you outgrow the free demo)
 

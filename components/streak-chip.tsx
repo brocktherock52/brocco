@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Flame } from 'lucide-react';
 import { getStreak, type StreakState } from '@/lib/streak';
 
-// StreakChip — small "🔥 7 day streak" chip rendered in the nav.
+// StreakChip, small "🔥 7 day streak" chip rendered in the nav.
 //
 // Only renders when count >= 1 so brand-new visitors don't see an empty
 // "0 day streak" stub. The chip reads localStorage on mount and re-reads
@@ -48,7 +48,7 @@ export function StreakChip() {
         exit={{ opacity: 0, scale: 0.92 }}
         transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
         title={state.usedSkipThisWeek ? `${state.count}-day streak (skip used this week)` : `${state.count}-day streak`}
-        className="hidden items-center gap-1.5 rounded-full border bg-white/[0.03] px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.14em] backdrop-blur-md md:inline-flex"
+        className="hidden items-center gap-1.5 rounded-full border bg-white/[0.03] px-2.5 py-1 font-mono text-[11px] uppercase tracking-[0.14em] backdrop-blur-md lg:inline-flex"
         style={{ color: palette.text, borderColor: palette.border, boxShadow: `inset 0 0 0 1px ${palette.glow}15` }}
       >
         <motion.span

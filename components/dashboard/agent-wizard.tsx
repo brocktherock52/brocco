@@ -20,7 +20,7 @@ import { CAST_CROCS } from '@/components/cast-croc-characters';
 import { CustomCroc, ACCESSORIES, type AccessoryId } from '@/components/custom-croc';
 import { MagicalPipe } from '@/components/dashboard/magical-pipe';
 
-// AgentWizard — 4 step flow for forking an agent template into a custom
+// AgentWizard, 4 step flow for forking an agent template into a custom
 // agent saved to the user's team.
 //
 // Steps:
@@ -190,7 +190,7 @@ export function AgentWizard() {
                     className="block w-full rounded-lg border border-white/[0.08] bg-white/[0.02] px-3 py-2.5 text-[14px] text-ink outline-none transition-colors focus:border-white/[0.2] focus:bg-white/[0.04]"
                   />
                 </Field>
-                <Field label="topic / focus area" hint="injected into the system prompt — be specific.">
+                <Field label="topic / focus area" hint="injected into the system prompt, be specific.">
                   <input
                     value={topic}
                     onChange={(e) => setTopic(e.target.value)}
@@ -266,7 +266,7 @@ export function AgentWizard() {
                   </div>
 
                   <div className="mt-6">
-                    <Field label="accessory" hint="layered on the croc — drives the icon composer.">
+                    <Field label="accessory" hint="layered on the croc, drives the icon composer.">
                       <div className="flex flex-wrap gap-2">
                         {ACCESSORIES.map((a) => (
                           <button
@@ -391,7 +391,7 @@ export function AgentWizard() {
         </div>
       </div>
 
-      {/* Agent-creation reveal — pipe drops the new croc from the sky */}
+      {/* Agent-creation reveal, pipe drops the new croc from the sky */}
       <AnimatePresence>
         {showPipe && (
           <MagicalPipe accent={accent} accessory={accessory} label={label || name || tpl?.label || 'new agent'} />

@@ -1,6 +1,6 @@
 # Brocco Design System
 
-Status: **v0.1 — extracted from existing code, not yet rationalized.** This document is the canonical visual reference. When an implementer makes a UI change that contradicts it, either update this doc with reasoning OR change the implementation to match. Don't ship visual changes that contradict the system silently.
+Status: **v0.1, extracted from existing code, not yet rationalized.** This document is the canonical visual reference. When an implementer makes a UI change that contradicts it, either update this doc with reasoning OR change the implementation to match. Don't ship visual changes that contradict the system silently.
 
 Source of truth for tokens: `tailwind.config.ts`. This document describes intent.
 
@@ -8,7 +8,7 @@ Source of truth for tokens: `tailwind.config.ts`. This document describes intent
 
 ## ⚠️ Known issue: AI-slop palette risk
 
-The current brand palette uses **violet `#7C3AED` + cyan `#22D3EE`** — exactly the "dark glassmorphism + neon purple/blue gradient" aesthetic that defined every AI-agent startup landing page shipped in 2025-2026. We're saturated into this look.
+The current brand palette uses **violet `#7C3AED` + cyan `#22D3EE`**, exactly the "dark glassmorphism + neon purple/blue gradient" aesthetic that defined every AI-agent startup landing page shipped in 2025-2026. We're saturated into this look.
 
 The design review (2026-05-11) recommended switching to an editorial / warm-tone palette to differentiate. The codebase has not been rebranded.
 
@@ -17,7 +17,7 @@ The design review (2026-05-11) recommended switching to an editorial / warm-tone
 - **Path A (recommended by design review):** Switch the brand color to coral `#FF6B5B` or warm amber `#F5A623`, drop the cyan secondary, keep the editorial serif typography. Anti-slop posture. Estimated change: one config file (`tailwind.config.ts`) + a sweep of components that hardcode the old colors. Visible everywhere.
 - **Path B (current state):** Keep violet + cyan. Compensate with strong editorial typography, sparse use of the palette, and one (not three) atmospheric layers. Less differentiation, no rebrand work.
 
-The founder has not yet made this call. Both are defensible. New components added to the codebase should NOT hardcode hex values — reference the Tailwind tokens so a future rebrand is a one-line change.
+The founder has not yet made this call. Both are defensible. New components added to the codebase should NOT hardcode hex values, reference the Tailwind tokens so a future rebrand is a one-line change.
 
 ---
 
@@ -36,16 +36,16 @@ Defined in `tailwind.config.ts → theme.extend.colors`.
 | `ink-faint` | `#6B7280` | Tertiary / metadata |
 | `border` | `rgba(255,255,255,0.08)` | Default border |
 | `border-strong` | `rgba(255,255,255,0.14)` | Emphasized border |
-| **`brand`** | `#7C3AED` | **Primary brand (violet) — slop-risk** |
+| **`brand`** | `#7C3AED` | **Primary brand (violet), slop-risk** |
 | `brand-glow` | `#A78BFA` | Brand light/glow |
 | `brand-deep` | `#4C1D95` | Brand dark/shadow |
-| **`cyan`** | `#22D3EE` | **Secondary accent (cyan) — slop-risk** |
+| **`cyan`** | `#22D3EE` | **Secondary accent (cyan), slop-risk** |
 | `cyan-glow` | `#67E8F9` | Cyan light |
 | `accent-gold` | `#FBBF24` | Highlight / warning |
 | `accent-rose` | `#FB7185` | Destructive / urgent |
 | `accent-green` | `#22C55E` | Success / live indicator |
 
-**Accessibility:** all body text uses `ink` (`#E9EEF1`) on a `bg-0`/`bg-1` background. Contrast ratio is well above WCAG AA (4.5:1) — verified at ~16:1.
+**Accessibility:** all body text uses `ink` (`#E9EEF1`) on a `bg-0`/`bg-1` background. Contrast ratio is well above WCAG AA (4.5:1), verified at ~16:1.
 
 **Banned in new code:** Don't introduce additional brand colors. Use `accent-gold` / `accent-rose` / `accent-green` for utility colors, or open a PR to discuss a new token.
 
@@ -69,7 +69,7 @@ Defined in `tailwind.config.ts → theme.extend.fontFamily`.
 | `display-xl` | `clamp(2.5rem, 5.5vw, 4.5rem)` | Page hero |
 | `display-lg` | `clamp(2rem, 4vw, 3.25rem)` | Section heading |
 
-**Standard sizes**: use Tailwind's default `text-{sm,base,lg,xl,2xl,3xl,4xl}` scale. Body text minimum is `text-base` (16px) — never smaller.
+**Standard sizes**: use Tailwind's default `text-{sm,base,lg,xl,2xl,3xl,4xl}` scale. Body text minimum is `text-base` (16px), never smaller.
 
 **Banned in new code:**
 - `font-family: system-ui` or `font-family: -apple-system` as the PRIMARY display font for any user-visible surface. Always go through the `sans` / `serif` / `mono` tokens. (System fonts are fine as the final fallback, which is how the current stack is configured.)
@@ -105,7 +105,7 @@ Tailwind defaults. Explicit allowed subset for production components:
 
 Framer Motion 11 (Motion v12). Library is `framer-motion@^11.11.17` in `package.json`.
 
-**Durations** (informal — codify into Tailwind theme.extend.transitionDuration if used widely):
+**Durations** (informal, codify into Tailwind theme.extend.transitionDuration if used widely):
 
 | Purpose | Duration |
 |---|---|
@@ -119,10 +119,10 @@ Framer Motion 11 (Motion v12). Library is `framer-motion@^11.11.17` in `package.
 
 Existing animation keyframes (defined in `tailwind.config.ts`):
 
-- `fade-up` (0.6s ease-out) — entrance for content blocks
-- `pulse-slow` (3s) — low-frequency pulse for "live" indicators
-- `shine` (2.5s) — sweep effect for premium elements
-- `float` (6s) — gentle vertical drift for atmospheric elements
+- `fade-up` (0.6s ease-out), entrance for content blocks
+- `pulse-slow` (3s), low-frequency pulse for "live" indicators
+- `shine` (2.5s), sweep effect for premium elements
+- `float` (6s), gentle vertical drift for atmospheric elements
 
 ---
 
@@ -149,7 +149,7 @@ Existing animation keyframes (defined in `tailwind.config.ts`):
 | Old hero | `components/hero.tsx` | Pre-v4.6. Should be moved to `legacy/` or deleted once bento merges. |
 | Animated hero | `components/hero-animated.tsx` | Same as above. |
 | Terminal hero | `components/hero-terminal.tsx` | Same. |
-| Particle field | `components/particle-field.tsx` | Atmospheric overload — flagged by design review as AI-slop signal. Recommend removal. |
+| Particle field | `components/particle-field.tsx` | Atmospheric overload, flagged by design review as AI-slop signal. Recommend removal. |
 | Background decoration | `components/bg-decor.tsx` | Likely overlap with `breathing-bg.tsx`. Audit and consolidate. |
 | Animated grid | `components/animated-grid.tsx` | Atmospheric overload. Recommend removal if not load-bearing. |
 | AgentsGrid | `components/agents-grid.tsx` | v3.0 spec marked for deletion. If kept, demote to footer. |
@@ -189,11 +189,11 @@ These have NOT been deleted in this changeset. Removal requires a sweep to confi
 
 The design review enumerated 10 patterns that flag a UI as AI-generated. Brocco must avoid them all. Repeated here so they're enforceable at PR review:
 
-1. **No purple/violet/indigo gradient backgrounds** *(see "Known issue" above — current state is in violation; new components should not extend the pattern)*
+1. **No purple/violet/indigo gradient backgrounds** *(see "Known issue" above, current state is in violation; new components should not extend the pattern)*
 2. **No 3-column feature grid** (icon-in-circle + bold title + 2-line description × 3, symmetric)
 3. **No icons inside colored circles** as section decoration
 4. **No centered-everything** (`text-align: center` on every heading, description, and card)
-5. **No uniform bubbly border-radius** on every element (see "Border radius" — sharp is intentional)
+5. **No uniform bubbly border-radius** on every element (see "Border radius", sharp is intentional)
 6. **No decorative blobs, floating circles, wavy SVG dividers** beyond the ONE breathing-bg atmospheric layer
 7. **No emoji as design elements** (rockets in headings, emoji as bullet points)
 8. **No colored left-border on cards** (`border-left: 3px solid <accent>`)

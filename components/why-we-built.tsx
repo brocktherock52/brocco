@@ -3,7 +3,7 @@
 import { motion } from 'framer-motion';
 
 /**
- * WhyWeBuilt — magazine-style editorial. No cards, no rounded boxes, no
+ * WhyWeBuilt, magazine-style editorial. No cards, no rounded boxes, no
  * spotlight. The page already has too many card grids. This section now
  * reads like a print spread: oversized numeric drop caps, vertical column
  * rules, sans body, serif italic closers. The voice is "broadsheet of one".

@@ -49,7 +49,7 @@ export default async function BlogPostPage({ params }: PageProps) {
     publisher: {
       '@type': 'Organization',
       name: 'brocco.dev',
-      logo: { '@type': 'ImageObject', url: 'https://brocco-site.vercel.app/icon.png' },
+      logo: { '@type': 'ImageObject', url: 'https://brocco.dev/icon.png' },
     },
   };
 

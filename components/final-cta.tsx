@@ -78,7 +78,7 @@ export function FinalCta() {
               className="mt-9 flex flex-wrap items-center justify-center gap-3"
             >
               <MagneticLink href="/signup" className="btn-primary group text-base px-7 py-3.5">
-                <span>start free . 100 runs</span>
+                <span>start free · 100 runs</span>
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </MagneticLink>
               <MagneticLink href="/pricing" className="btn-ghost text-base px-7 py-3.5">

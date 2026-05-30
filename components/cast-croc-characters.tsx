@@ -1,5 +1,5 @@
 /**
- * Cast croc characters — 9 emoji-style icons that all share the SAME
+ * Cast croc characters, 9 emoji-style icons that all share the SAME
  * brocco logomark body and only swap accessories per role.
  *
  * Architecture (and why the previous version was wrong):
@@ -60,14 +60,14 @@ const SNOUT_TOP_Y = 152;
 const HEAD_TOP_X = 100;
 const HEAD_TOP_Y = 158;
 
-// Shared logo body — the EXACT path from public/assets/logomark.svg
+// Shared logo body, the EXACT path from public/assets/logomark.svg
 // rendered once, then accessories layer on top.
 function LogoBody({ accent, mouthCurl = 0 }: { accent: string; mouthCurl?: number }) {
   return (
     <g transform={LOGO_TRANSFORM}>
-      {/* shadow under the croc — soft drop */}
+      {/* shadow under the croc, soft drop */}
       <ellipse cx="32" cy="32" rx="28" ry="1.5" fill={C.ink} opacity="0.15" />
-      {/* main silhouette — the actual brocco logomark path */}
+      {/* main silhouette, the actual brocco logomark path */}
       <path
         d="M 2 22 L 4 24 Q 1 28 5 28 L 10 26 L 16 25 L 20 25 L 20 30 L 18 30 L 18 24.5 L 26 24 L 32 24 L 32 30 L 30 30 L 30 24 L 36 24 L 42 24.5 L 48 25.5 L 56 26.5 L 62 27 L 62 25 L 58 25 L 58 23 L 62 23 L 62 21 L 56 19 L 50 18 L 46 17 L 40 16 L 38 13 L 36 16 L 32 16 L 30 12 L 28 16 L 24 16 L 22 13 L 20 16 L 16 17 L 12 19 L 8 20 Z"
         fill={C.body}
@@ -75,14 +75,14 @@ function LogoBody({ accent, mouthCurl = 0 }: { accent: string; mouthCurl?: numbe
         strokeWidth="0.8"
         strokeLinejoin="round"
       />
-      {/* cheek blush — cute emoji touch on the cheek behind the snout */}
+      {/* cheek blush, cute emoji touch on the cheek behind the snout */}
       <ellipse cx="46" cy="22" rx="2.2" ry="1.2" fill={C.blush} opacity="0.85" />
-      {/* eye — round, with iris dot + sparkle exactly like the logo */}
+      {/* eye, round, with iris dot + sparkle exactly like the logo */}
       <circle cx="52" cy="19" r="1.5" fill={C.ink} />
       <circle cx="52.4" cy="18.5" r="0.5" fill={C.eyeWhite} />
-      {/* tooth — preserved from logo */}
+      {/* tooth, preserved from logo */}
       <path d="M 59 24 L 60 24.7 L 61 24 Z" fill={C.eyeWhite} stroke={C.ink} strokeWidth="0.3" />
-      {/* tiny smile curl below the eye — adds emoji warmth */}
+      {/* tiny smile curl below the eye, adds emoji warmth */}
       {mouthCurl !== 0 && (
         <path
           d={`M 55 23 Q ${55 + mouthCurl * 0.5} ${23 + mouthCurl * 0.3} ${55 + mouthCurl} 23`}
@@ -96,7 +96,7 @@ function LogoBody({ accent, mouthCurl = 0 }: { accent: string; mouthCurl?: numbe
   );
 }
 
-// Glow halo behind the croc — colored by accent so each card has its own ambience
+// Glow halo behind the croc, colored by accent so each card has its own ambience
 function Halo({ accent }: { accent: string }) {
   return (
     <defs>
@@ -109,7 +109,7 @@ function Halo({ accent }: { accent: string }) {
 }
 
 // =============================================================================
-// 1. RESEARCHER — wire glasses on the snout, paper floating, books behind
+// 1. RESEARCHER: wire glasses on the snout, paper floating, books behind
 // =============================================================================
 export function ResearcherCroc({ accent = '#67E8F9', className, style }: CrocProps) {
   return (
@@ -128,7 +128,7 @@ export function ResearcherCroc({ accent = '#67E8F9', className, style }: CrocPro
 
       <LogoBody accent={accent} />
 
-      {/* wire-frame glasses positioned on the snout — covering the eye */}
+      {/* wire-frame glasses positioned on the snout, covering the eye */}
       <g stroke={C.ink} strokeWidth="2.5" fill="none" strokeLinecap="round">
         <circle cx={EYE_CX} cy={EYE_CY} r="11" />
         <circle cx={EYE_CX + 22} cy={EYE_CY} r="11" />
@@ -143,7 +143,7 @@ export function ResearcherCroc({ accent = '#67E8F9', className, style }: CrocPro
 }
 
 // =============================================================================
-// 2. PLANNER — sticky-note crown + marker beside head
+// 2. PLANNER: sticky-note crown + marker beside head
 // =============================================================================
 export function PlannerCroc({ accent = '#FB7185', className, style }: CrocProps) {
   return (
@@ -183,7 +183,7 @@ export function PlannerCroc({ accent = '#FB7185', className, style }: CrocProps)
 }
 
 // =============================================================================
-// 3. OUTREACH — headset over head + speech bubble
+// 3. OUTREACH: headset over head + speech bubble
 // =============================================================================
 export function OutreachCroc({ accent = '#FBBF24', className, style }: CrocProps) {
   return (
@@ -199,7 +199,7 @@ export function OutreachCroc({ accent = '#FBBF24', className, style }: CrocProps
 
       <LogoBody accent={accent} mouthCurl={4} />
 
-      {/* HEADSET — band over the head, cup over the side */}
+      {/* HEADSET: band over the head, cup over the side */}
       <g>
         <path d={`M ${HEAD_TOP_X - 20} ${HEAD_TOP_Y - 5} Q ${HEAD_TOP_X + 5} ${HEAD_TOP_Y - 24} ${HEAD_TOP_X + 30} ${HEAD_TOP_Y - 5}`} fill="none" stroke={C.ink} strokeWidth="4" strokeLinecap="round" />
         {/* left cup */}
@@ -214,7 +214,7 @@ export function OutreachCroc({ accent = '#FBBF24', className, style }: CrocProps
 }
 
 // =============================================================================
-// 4. DESIGNER — beret + paintbrush + color swatches
+// 4. DESIGNER: beret + paintbrush + color swatches
 // =============================================================================
 export function DesignerCroc({ accent = '#F472B6', className, style }: CrocProps) {
   return (
@@ -262,7 +262,7 @@ export function DesignerCroc({ accent = '#F472B6', className, style }: CrocProps
 }
 
 // =============================================================================
-// 5. ANALYST — rectangle glasses + bar chart behind
+// 5. ANALYST: rectangle glasses + bar chart behind
 // =============================================================================
 export function AnalystCroc({ accent = '#A78BFA', className, style }: CrocProps) {
   return (
@@ -297,7 +297,7 @@ export function AnalystCroc({ accent = '#A78BFA', className, style }: CrocProps)
 }
 
 // =============================================================================
-// 6. CODER — big circle hipster glasses + terminal behind
+// 6. CODER: big circle hipster glasses + terminal behind
 // =============================================================================
 export function CoderCroc({ accent = '#4ADE80', className, style }: CrocProps) {
   return (
@@ -337,7 +337,7 @@ export function CoderCroc({ accent = '#4ADE80', className, style }: CrocProps) {
 }
 
 // =============================================================================
-// 7. OPS — tiny necktie + clipboard
+// 7. OPS: tiny necktie + clipboard
 // =============================================================================
 export function OpsCroc({ accent = '#22D3EE', className, style }: CrocProps) {
   return (
@@ -372,7 +372,7 @@ export function OpsCroc({ accent = '#22D3EE', className, style }: CrocProps) {
 }
 
 // =============================================================================
-// 8. SUPERVISOR — crown/halo + tiny baton
+// 8. SUPERVISOR: crown/halo + tiny baton
 // =============================================================================
 export function SupervisorCroc({ accent = '#22C55E', className, style }: CrocProps) {
   return (
@@ -397,7 +397,7 @@ export function SupervisorCroc({ accent = '#22C55E', className, style }: CrocPro
 
       <LogoBody accent={accent} mouthCurl={2} />
 
-      {/* CROWN on top of the head — 3 points */}
+      {/* CROWN on top of the head, 3 points */}
       <g>
         <path
           d={`M ${HEAD_TOP_X - 14} ${HEAD_TOP_Y - 4}
@@ -423,7 +423,7 @@ export function SupervisorCroc({ accent = '#22C55E', className, style }: CrocPro
 }
 
 // =============================================================================
-// 9. BROWSER — fedora + magnifying glass over the snout
+// 9. BROWSER: fedora + magnifying glass over the snout
 // =============================================================================
 export function BrowserCroc({ accent = '#67E8F9', className, style }: CrocProps) {
   return (

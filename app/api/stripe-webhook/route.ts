@@ -3,9 +3,11 @@
    idempotency scaffold + full subscription lifecycle.
    Edge runtime, no Stripe SDK. */
 
+import { recordPaidCheckout } from '@/lib/billing-claim';
+
 export const runtime = 'edge';
 
-const MAX_AGE_SECONDS = 300; // 5 minutes — Stripe official recommendation
+const MAX_AGE_SECONDS = 300; // 5 minutes, Stripe official recommendation
 
 async function verifySignature(
   payload: string,
@@ -61,7 +63,7 @@ interface StripeEvent {
    Idempotency scaffold.
    TODO(brocco-persistence): replace this in-memory Set with Vercel KV
    or Upstash Redis with TTL = 7d (Stripe retries for ~3d).
-   Today, this is best-effort — a cold-started Edge function will not
+   Today, this is best-effort. A cold-started Edge function will not
    share state across regions and retries may double-fire CAPI.
    ----------------------------------------------------------------------- */
 const SEEN_EVENT_IDS = new Set<string>();
@@ -139,13 +141,13 @@ async function metaCapi(eventName: string, payload: {
 }
 
 /* -----------------------------------------------------------------------
-   Event handler — branches on event.type, persists full event for audit.
+   Event handler: branches on event.type, persists full event for audit.
    TODO(brocco-persistence): write the full `event` object to KV under
    `event:${event.id}` (TTL 7d). Today: console.log only.
    ----------------------------------------------------------------------- */
 async function handleEvent(event: StripeEvent): Promise<void> {
   const obj = event.data.object as Record<string, unknown>;
-  // Persistence placeholder — log the entire event, not just a summary,
+  // Persistence placeholder: log the entire event, not just a summary,
   // so a future migration to a real store can replay history.
   console.log('[stripe-webhook]', JSON.stringify({ id: event.id, type: event.type, data: event.data }));
 
@@ -162,7 +164,17 @@ async function handleEvent(event: StripeEvent): Promise<void> {
         currency: typeof obj.currency === 'string' ? obj.currency.toUpperCase() : 'USD',
         transactionId,
       });
-      // TODO(brocco-persistence): upsert customer row, mark active.
+      // Durable backstop for the sign-in flow: create/upsert the paying user
+      // with the right plan even if they closed the tab before /billing/success
+      // ran the claim. Idempotent with the success-page claim (both upsert by
+      // email). We re-fetch the session by id to read the plan price authoritatively.
+      if (transactionId) {
+        try {
+          await recordPaidCheckout(transactionId);
+        } catch (e) {
+          console.error('[stripe-webhook] recordPaidCheckout failed', e);
+        }
+      }
       break;
     }
     case 'invoice.payment_succeeded': {
@@ -203,7 +215,7 @@ async function handleEvent(event: StripeEvent): Promise<void> {
       break;
     }
     default:
-      // Unknown event type — log and acknowledge so Stripe doesn't retry.
+      // Unknown event type, log and acknowledge so Stripe doesn't retry.
       console.log('[stripe-webhook] unhandled type', event.type);
   }
 }
@@ -240,7 +252,7 @@ export async function POST(req: Request): Promise<Response> {
     await handleEvent(event);
   } catch (e) {
     console.error('[stripe-webhook] handler error', e);
-    // Returning 500 will cause Stripe to retry. That's intentional —
+    // Returning 500 will cause Stripe to retry. That's intentional:
     // if our handler crashed, we want the chance to process again.
     return new Response('handler error', { status: 500 });
   }

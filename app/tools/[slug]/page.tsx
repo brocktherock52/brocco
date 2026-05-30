@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const t = getToolProfile(slug);
   if (!t) return { title: 'Not found' };
   return {
-    title: `${t.name} — brocco tool`,
+    title: `${t.name} - brocco tool`,
     description: t.tagline.slice(0, 160),
     alternates: { canonical: `/tools/${t.slug}` },
     keywords: t.keywords,

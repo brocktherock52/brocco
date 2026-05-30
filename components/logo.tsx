@@ -2,7 +2,7 @@ import Image from 'next/image';
 import { cn } from '@/lib/utils';
 
 /**
- * brocco mark — uses the user's official brand image (white cartoon
+ * brocco mark, uses the user's official brand image (white cartoon
  * crocodile, side view, friendly face, scaled tail). Source asset at
  * /assets/brocco-mark.png. Loaded via Next/Image for proper srcset +
  * AVIF/WEBP optimization. Square aspect.

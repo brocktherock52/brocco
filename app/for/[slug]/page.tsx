@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const v = getVertical(slug);
   if (!v) return { title: 'Not found' };
   return {
-    title: `brocco for ${v.audience} — multi-agent AI`,
+    title: `brocco for ${v.audience} - multi-agent AI`,
     description: v.lead.slice(0, 160),
     alternates: { canonical: `/for/${v.slug}` },
     keywords: v.keywords,

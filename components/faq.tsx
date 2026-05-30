@@ -9,6 +9,10 @@ const QA = [
     a: 'Brocco runs multiple AI agents in parallel from a single prompt. Pick agents on the left, type a goal, hit Run, and watch each agent work in its own pane with live tool calls and streaming output. The recipes gallery has 11 ready-to-run workflows: market research, launch day, customer deep dive, content sprint, and more.',
   },
   {
+    q: 'Why not just use my Claude subscription?',
+    a: 'You can, for one task, in one thread, that you babysit prompt by prompt. Brocco is what you reach for when that gets old. One prompt fans out to a whole team running in parallel, so research, a plan, and outreach drafts land at once instead of one after another. Every run exports as a polished, branded PDF, a deliverable you can hand a client, not a wall of chat. And the projects you save keep watching themselves: brocco flags when a project\'s findings have gone stale and re-runs them, so you are not re-asking the same questions every week. Same models you already trust (bring your own key), minus the copy-paste and the babysitting.',
+  },
+  {
     q: 'Do I need an API key to start?',
     a: 'Free tier: yes, you bring your own key (Anthropic, OpenAI, or any OpenAI-compatible endpoint like Ollama running locally). It is stored in your browser only, never on our servers. Paid tiers: we cover the tokens; you just pay per run.',
   },

@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 
-// Vercel Cron handler — fires every hour and emits a briefing row for
+// Vercel Cron handler, fires every hour and emits a briefing row for
 // any recurring run whose `nextRun` has elapsed.
 //
 // vercel.json registers this at `/api/cron/morning-briefing` on the

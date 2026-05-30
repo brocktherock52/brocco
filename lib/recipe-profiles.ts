@@ -1,4 +1,4 @@
-// Recipe pages — /recipes and /recipes/<slug>. Pre-built broadcast
+// Recipe pages: /recipes and /recipes/<slug>. Pre-built broadcast
 // patterns. Mined from v12 build.
 
 export interface RecipeProfile {
@@ -204,6 +204,112 @@ export const RECIPE_PROFILES: RecipeProfile[] = [
     expectedOutput: `weekly-brief.md (one section per competitor + synthesis).`,
     cost: { time: '15 to 22 minutes', price: '$0.55 - $0.95 BYOK' },
     keywords: ['competitive monitoring ai', 'weekly competitor brief', 'product intelligence ai'],
+  },
+
+  // --- Real estate / wholesaling recipes. Generic, public-safe prompt patterns.
+  // No private deal data, lists, or contacts: the user supplies their own inputs
+  // at run time with their own model key. ---
+  {
+    slug: 'motivated-seller-leads',
+    name: 'Motivated-seller lead pull',
+    tagline: 'Turn public distress signals into a ranked call list.',
+    audience: 'Real estate wholesalers, investors, acquisitions reps.',
+    whatYouGet: [
+      'A deduped list of candidate properties in your target area and price band.',
+      'A distress-signal score per lead (tax-delinquent, absentee, vacancy, code, pre-foreclosure cues).',
+      'Owner-type and equity-likelihood tags to prioritize who to call first.',
+      'A clean CSV you can drop straight into your dialer or CRM.',
+    ],
+    agents: ['browser', 'researcher', 'analyst'],
+    prompt: `Build a motivated-seller lead list for [county/zip] in the [price band] range. Pull from public records and listing sources, tag each with distress signals (tax-delinquent, absentee owner, long days-on-market, vacancy, code cues), score and rank by likely motivation, dedupe, and export as leads.csv. Cite each source field.`,
+    expectedOutput: `leads.csv (address, owner-type, distress tags, score) + a one-page "who to call first" summary.`,
+    cost: { time: '15 to 30 minutes', price: '$0.60 - $1.20 BYOK' },
+    keywords: ['motivated seller leads ai', 'wholesaling lead list', 'distressed property finder', 'real estate lead generation'],
+  },
+  {
+    slug: 'skip-trace-and-outreach',
+    name: 'Skip trace and outreach sequence',
+    tagline: 'From a raw address list to ready-to-send seller touches.',
+    audience: 'Wholesalers, land investors, acquisitions teams.',
+    whatYouGet: [
+      'A structured contact sheet from the addresses you provide.',
+      'A 5-touch outreach sequence: cold-call opener, two SMS, a letter, and a voicemail script.',
+      'Objection-handling lines tuned to motivated-seller conversations.',
+      'A follow-up cadence so no lead goes cold.',
+    ],
+    agents: ['researcher', 'outreach', 'ops'],
+    prompt: `Here is my address list [paste]. Organize it into a contact sheet, then draft a 5-touch motivated-seller sequence (call opener, 2 SMS, 1 letter, 1 voicemail) plus objection responses and a 21-day follow-up cadence. Keep it compliant and human, not spammy.`,
+    expectedOutput: `contacts.csv + outreach-sequence.md (every touch written and ready) + a cadence calendar.`,
+    cost: { time: '8 to 15 minutes', price: '$0.30 - $0.70 BYOK' },
+    keywords: ['skip tracing ai', 'cold call script wholesaling', 'seller outreach automation', 'real estate sms sequence'],
+  },
+  {
+    slug: 'comp-analysis-arv',
+    name: 'Comp analysis and offer math',
+    tagline: 'ARV, repair band, and a defensible max offer in minutes.',
+    audience: 'Wholesalers, flippers, buy-and-hold investors.',
+    whatYouGet: [
+      'A comp set for the subject property with adjustments explained.',
+      'An ARV range with the reasoning, not just a number.',
+      'A repair-cost band by scope tier (light, medium, heavy).',
+      'A max-allowable-offer calculation you can show a seller or a buyer.',
+    ],
+    agents: ['researcher', 'analyst'],
+    prompt: `Subject property: [address + beds/baths/sqft + condition notes]. Pull recent comparable sales, adjust for size/condition/location, give an ARV range with reasoning, estimate repairs by scope tier, and compute MAO at a [70%] rule with my [assignment fee]. Show the math.`,
+    expectedOutput: `deal-analysis.md (comp table, ARV range, repair band, MAO) ready to paste into an offer.`,
+    cost: { time: '6 to 12 minutes', price: '$0.25 - $0.55 BYOK' },
+    keywords: ['arv calculator ai', 'real estate comps ai', 'max allowable offer', 'deal analysis wholesaling'],
+  },
+  {
+    slug: 'cash-buyer-dispo',
+    name: 'Cash-buyer match and dispo blast',
+    tagline: 'Package the deal, find the buyers, write the blast.',
+    audience: 'Wholesalers running disposition.',
+    whatYouGet: [
+      'A clean deal one-sheet (numbers, photos placeholder, terms).',
+      'A buyer-match shortlist by criteria you define (area, asset type, price).',
+      'Channel-ready dispo copy for groups, email, and SMS.',
+      'A simple first-come framework so you can move it fast.',
+    ],
+    agents: ['researcher', 'outreach', 'ops'],
+    prompt: `Deal: [address, ARV, repairs, asking, terms]. Build a buyer one-sheet, draft a disposition blast for [FB groups / email list / SMS], and outline a buyer-match shortlist by [criteria]. Keep claims accurate and include a clear next step to lock it.`,
+    expectedOutput: `deal-onesheet.md + dispo-blast variants (group/email/SMS) + a buyer-match checklist.`,
+    cost: { time: '8 to 15 minutes', price: '$0.30 - $0.70 BYOK' },
+    keywords: ['cash buyers list ai', 'dispo wholesaling', 'sell wholesale contract', 'real estate buyer matching'],
+  },
+  {
+    slug: 'deal-follow-up-engine',
+    name: 'Aged-lead follow-up engine',
+    tagline: 'Revive the leads you already paid for.',
+    audience: 'Wholesalers, agents, acquisitions teams sitting on a dead pipeline.',
+    whatYouGet: [
+      'A re-engagement sequence for cold/aged leads that does not feel like spam.',
+      'Segment-specific angles (no-answer, soft-no, price-gap, ghosted).',
+      'A scheduled multi-week cadence with the exact message per touch.',
+      'A short script for what to do when they reply.',
+    ],
+    agents: ['outreach', 'ops', 'analyst'],
+    prompt: `I have [N] aged seller leads with these statuses [paste/segment]. Build a 30-day re-engagement cadence with a tailored angle per segment (no-answer, soft-no, price-gap, ghosted), write every touch, and give me a reply playbook. Keep it warm and compliant.`,
+    expectedOutput: `followup-cadence.md (per-segment sequences + reply playbook + a send calendar).`,
+    cost: { time: '6 to 12 minutes', price: '$0.25 - $0.55 BYOK' },
+    keywords: ['lead follow up automation', 'real estate crm ai', 'reactivate old leads', 'wholesaling follow up'],
+  },
+  {
+    slug: 'loi-and-contract-draft',
+    name: 'LOI and assignable contract draft',
+    tagline: 'Paperwork drafted with the blanks ready, not the weekend gone.',
+    audience: 'Wholesalers and investors. Not legal advice; have counsel review.',
+    whatYouGet: [
+      'A letter of intent tailored to the deal terms you provide.',
+      'An assignable purchase agreement draft with property-specific blanks.',
+      'A plain-English summary of the key terms for the seller.',
+      'A checklist of what to confirm before you sign.',
+    ],
+    agents: ['coder', 'analyst'],
+    prompt: `Draft an LOI and an assignable purchase agreement for [property + price + terms + close timeline]. Fill what I gave you, leave clear blanks for the rest, add a plain-English term summary for the seller, and a pre-signature checklist. Note where a licensed attorney should review.`,
+    expectedOutput: `loi.md + assignment-contract.md (with blanks) + seller-summary + a review checklist.`,
+    cost: { time: '5 to 10 minutes', price: '$0.20 - $0.50 BYOK' },
+    keywords: ['real estate loi generator', 'assignable contract ai', 'wholesaling contract', 'purchase agreement draft'],
   },
 ];
 

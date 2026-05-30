@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { ComparePage } from '@/components/compare-page';
 
 export const metadata: Metadata = {
-  title: 'brocco vs Cursor — agentic dashboard vs IDE',
+  title: 'brocco vs Cursor - agentic dashboard vs IDE',
   description:
     'Cursor is the best AI-native code editor. Brocco is the multi-agent dashboard for ops, research, and content workflows. Compare on parallel agents, BYOK, audit trails, and pricing.',
   alternates: { canonical: '/vs/cursor' },

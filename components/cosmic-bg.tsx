@@ -3,23 +3,45 @@
 import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 
-// CosmicBg — site-wide cartoony space overlay (revamped 2026-05-13).
+// CosmicBg, site-wide retro-futuristic space backdrop (revamped 2026-05-27).
+//
+// Direction: Cowboy Bebop x cyberpunk. Deep navy-black void, warm-noir +
+// neon. Cool teal/cyan dominates, with sparing magenta and amber pops (the
+// Bebop signature: moody blues, jazzy neon accents). Layered nebula clouds,
+// a distant ringed gas giant, a red-giant ember sun, neon meteor streaks,
+// fine film grain, and faint CRT scanlines for the analog-future feel.
+//
+// Palette (chosen, see docs/internal/VISUAL_REVAMP_2026-05-27.md):
+//   void     #06070F / #0A0A14   base navy-black
+//   teal     #22D3EE / #2DD4BF   primary neon (cool)
+//   cyan-lt  #67E8F9             star highlights
+//   magenta  #E0457B / #FB7185   accent pop
+//   amber    #FBBF24             ember / warm pop
+//   ice      #C7D2FE             cool star tint
 //
 // Layers (back to front):
-//   1. Deep-space gradient + diagonal milky-way wash
-//   2. ~280 starfield (auto-thinned on mobile + reduced-motion)
-//   3. 4 named constellations with connecting lines (orion, dipper,
-//      cassiopeia, lyra) — gives the sky landmarks
-//   4. Drifting planets + ringed gas giant
-//   5. Shooting-star streaks (more frequent now), slow comets
-//   6. Desert-horizon silhouette at the bottom edge
+//   1. Deep-space gradient wash (navy + faint teal/magenta vignettes)
+//   2. Soft neon nebula clouds (teal, magenta, amber), slow drift
+//   3. Starfield, ~280 (auto-thinned on mobile + reduced-motion), tinted
+//   4. Distant ringed gas giant + red-giant ember sun
+//   5. Neon meteor streaks + a couple of slow comets
+//   6. Fine grain + faint horizontal scanlines (CRT/film-noir grade)
 //
-// Opacity bumped from 0.55 -> 0.85 per user direction "make the galaxy
-// background more prominent". Star count throttled on narrow viewports
-// because heavy framer-motion fields were causing mobile scroll judder.
+// Performance: starfield thins to 90 on narrow viewports; when the user
+// prefers reduced motion we drop animated streaks/twinkle and render a
+// calm static field. Stays behind content (z-0, pointer-events none).
 
-const PURPLE = ['#A78BFA', '#C4B5FD', '#DDD6FE'];
-const WHITE = '#FFFFFF';
+// Cool-leaning star tints with rare warm/magenta pops (Bebop ratio).
+const STAR_TINTS = [
+  '#FFFFFF',
+  '#FFFFFF',
+  '#FFFFFF',
+  '#C7D2FE', // ice
+  '#67E8F9', // cyan
+  '#22D3EE', // teal
+  '#FBBF24', // amber pop
+  '#FB7185', // magenta pop
+];
 
 interface Dot {
   id: number;
@@ -31,106 +53,55 @@ interface Dot {
   color: string;
 }
 
-interface PlanetData {
+// Soft neon nebula cloud (radial gradient blob, slow parallax drift).
+interface Nebula {
   id: number;
   xPct: number;
   yPct: number;
   size: number;
-  ring: boolean;
   color: string;
+  driftX: number;
+  driftY: number;
+  dur: number;
 }
 
-// Constellations defined as relative coord lists (0-100 in each frame).
-// Rendered as svg lines + slightly larger glowing nodes at each point.
-interface Constellation {
-  name: string;
-  cxPct: number; // viewport-x of the constellation center
-  cyPct: number; // viewport-y of the constellation center
-  scale: number; // pixel size of the framing box
-  nodes: Array<[number, number]>; // 0..100 in local frame
-  edges: Array<[number, number]>; // node-index pairs
-}
-
-const CONSTELLATIONS: Constellation[] = [
-  {
-    // Orion — belt + shoulders + feet
-    name: 'orion',
-    cxPct: 76,
-    cyPct: 24,
-    scale: 180,
-    nodes: [
-      [50, 8],   // 0 betelgeuse
-      [22, 28],  // 1 bellatrix
-      [40, 50],  // 2 belt-l
-      [50, 52],  // 3 belt-c
-      [60, 54],  // 4 belt-r
-      [22, 80],  // 5 saiph
-      [78, 76],  // 6 rigel
-      [62, 30],  // 7 meissa-ish
-    ],
-    edges: [
-      [0, 7], [7, 1], [1, 2], [2, 3], [3, 4], [4, 0],
-      [2, 5], [4, 6],
-    ],
-  },
-  {
-    // Big Dipper — handle + bowl
-    name: 'dipper',
-    cxPct: 14,
-    cyPct: 32,
-    scale: 200,
-    nodes: [
-      [6, 24],   // alkaid
-      [22, 18],  // mizar
-      [40, 18],  // alioth
-      [58, 24],  // megrez
-      [64, 50],  // phecda
-      [50, 60],  // merak
-      [38, 50],  // dubhe
-    ],
-    edges: [
-      [0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 3],
-    ],
-  },
-  {
-    // Cassiopeia — the W
-    name: 'cassiopeia',
-    cxPct: 56,
-    cyPct: 12,
-    scale: 160,
-    nodes: [
-      [6, 50], [28, 12], [50, 60], [72, 12], [94, 50],
-    ],
-    edges: [[0, 1], [1, 2], [2, 3], [3, 4]],
-  },
-  {
-    // Lyra (mini diamond + Vega above)
-    name: 'lyra',
-    cxPct: 88,
-    cyPct: 68,
-    scale: 120,
-    nodes: [[50, 0], [10, 50], [50, 100], [90, 50]],
-    edges: [[0, 1], [1, 2], [2, 3], [3, 0]],
-  },
+const NEBULAE: Nebula[] = [
+  { id: 0, xPct: 18, yPct: 22, size: 560, color: 'rgba(34,211,238,0.16)', driftX: 24, driftY: -14, dur: 38 },
+  { id: 1, xPct: 82, yPct: 28, size: 520, color: 'rgba(224,69,123,0.13)', driftX: -22, driftY: 16, dur: 44 },
+  { id: 2, xPct: 64, yPct: 74, size: 640, color: 'rgba(45,212,191,0.12)', driftX: 18, driftY: 18, dur: 52 },
+  { id: 3, xPct: 30, yPct: 82, size: 460, color: 'rgba(251,191,36,0.08)', driftX: -16, driftY: -12, dur: 48 },
+  { id: 4, xPct: 50, yPct: 4, size: 720, color: 'rgba(124,58,237,0.10)', driftX: 12, driftY: 10, dur: 60 },
 ];
 
 export function CosmicBg() {
   const [stars, setStars] = useState<Dot[]>([]);
-  const [planets, setPlanets] = useState<PlanetData[]>([]);
   const [isMobile, setIsMobile] = useState(false);
+  const [reduced, setReduced] = useState(false);
+  // On phones we render the whole field calm + static. The infinite per-star
+  // twinkle (90 framer-motion RAF loops), the drifting nebulae/meteors, and the
+  // two full-screen mix-blend-mode layers each force the browser to recomposite
+  // the fixed backdrop on every scroll frame, which is what made scrolling
+  // glitch on mobile. Freezing them keeps the look while killing the jank.
+  const calm = reduced || isMobile;
 
   useEffect(() => {
     const mobile = typeof window !== 'undefined' && window.innerWidth < 768;
+    const prefersReduced =
+      typeof window !== 'undefined' &&
+      window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     setIsMobile(mobile);
-    const STAR_COUNT = mobile ? 90 : 280;
+    setReduced(prefersReduced);
 
+    const STAR_COUNT = mobile ? 90 : 280;
     const sList: Dot[] = [];
     for (let i = 0; i < STAR_COUNT; i++) {
       const x = Math.random() * 100;
       let y: number;
-      if (Math.random() < 0.7) {
-        const bandY = 20 + (x / 100) * 60;
-        const jitter = (Math.random() - 0.5) * 30;
+      // ~65% of stars hug a soft diagonal "milky way" band for depth.
+      if (Math.random() < 0.65) {
+        const bandY = 18 + (x / 100) * 64;
+        const jitter = (Math.random() - 0.5) * 34;
         y = Math.max(0, Math.min(100, bandY + jitter));
       } else {
         y = Math.random() * 100;
@@ -139,22 +110,13 @@ export function CosmicBg() {
         id: i,
         xPct: x,
         yPct: y,
-        size: Math.random() * 1.8 + 0.6,
-        dur: 2 + Math.random() * 5,
-        delay: Math.random() * 5,
-        color: Math.random() < 0.18 ? PURPLE[Math.floor(Math.random() * PURPLE.length)] : WHITE,
+        size: Math.random() * 1.7 + 0.5,
+        dur: 2.4 + Math.random() * 5,
+        delay: Math.random() * 6,
+        color: STAR_TINTS[Math.floor(Math.random() * STAR_TINTS.length)],
       });
     }
     setStars(sList);
-
-    setPlanets([
-      { id: 0, xPct: 8, yPct: 18, size: 80, ring: true, color: PURPLE[0] },
-      { id: 1, xPct: 92, yPct: 30, size: 50, ring: false, color: WHITE },
-      { id: 2, xPct: 14, yPct: 72, size: 38, ring: false, color: PURPLE[2] },
-      { id: 3, xPct: 88, yPct: 80, size: 96, ring: true, color: PURPLE[1] },
-      { id: 4, xPct: 50, yPct: 6, size: 34, ring: false, color: WHITE },
-      { id: 5, xPct: 60, yPct: 92, size: 56, ring: false, color: PURPLE[0] },
-    ]);
   }, []);
 
   return (
@@ -162,113 +124,242 @@ export function CosmicBg() {
       aria-hidden
       className="pointer-events-none fixed inset-0 z-0 overflow-hidden"
       style={{
+        // Navy-black void with cool/warm neon vignettes. Sits on top of
+        // BgDecor's opaque #0A0A0F base, so we keep this mostly translucent.
         background:
-          'linear-gradient(135deg, rgba(196,181,253,0.04) 22%, transparent 52%, rgba(167,139,250,0.035) 70%, transparent 90%), radial-gradient(ellipse at 80% 20%, rgba(167,139,250,0.06) 0%, transparent 50%), radial-gradient(ellipse at 20% 80%, rgba(196,181,253,0.045) 0%, transparent 55%)',
-        opacity: 0.85,
+          'radial-gradient(120% 90% at 50% -10%, rgba(34,211,238,0.05) 0%, transparent 45%), ' +
+          'radial-gradient(90% 70% at 85% 18%, rgba(224,69,123,0.05) 0%, transparent 55%), ' +
+          'radial-gradient(110% 80% at 15% 85%, rgba(45,212,191,0.05) 0%, transparent 55%), ' +
+          'linear-gradient(180deg, rgba(6,7,15,0.55) 0%, rgba(6,7,15,0.15) 35%, rgba(6,7,15,0.55) 100%)',
+        opacity: 0.92,
       }}
     >
-      {/* Starfield */}
+      {/* Neon nebula clouds, soft and slow. On reduced-motion / mobile they
+          stay put. */}
+      {NEBULAE.map((n) => (
+        <NebulaCloud key={n.id} n={n} reduced={calm} />
+      ))}
+
+      {/* Starfield. Static (no twinkle) on reduced-motion + mobile. */}
       {stars.map((s) => (
-        <motion.span
-          key={s.id}
-          aria-hidden
-          className="absolute rounded-full"
-          style={{
-            left: `${s.xPct}%`,
-            top: `${s.yPct}%`,
-            width: s.size,
-            height: s.size,
-            background: s.color,
-            boxShadow: `0 0 ${s.size * 2.5}px ${s.color}99`,
-            opacity: 0.75,
-          }}
-          animate={{ opacity: [0.2, 0.9, 0.2] }}
-          transition={{ duration: s.dur, delay: s.delay, repeat: Infinity, ease: 'easeInOut' }}
-        />
+        <Star key={s.id} s={s} reduced={calm} />
       ))}
 
-      {/* Constellations — only on viewports wide enough not to crowd */}
-      {!isMobile && CONSTELLATIONS.map((c) => (
-        <ConstellationGroup key={c.name} c={c} />
-      ))}
+      {/* Distant ringed gas giant (cool) + red-giant ember sun (warm pop) */}
+      <GasGiant />
+      <EmberSun />
 
-      {/* Galaxy swirls in the corners */}
-      <CornerGalaxy x="6%" y="6%" size={120} />
-      <CornerGalaxy x="94%" y="50%" size={80} delay={2} />
-      <CornerGalaxy x="50%" y="95%" size={100} delay={4} />
+      {/* Neon meteors + slow comets, only when motion is allowed and not on a
+          phone (moving elements behind the fixed bar trigger reblur on scroll). */}
+      {!calm && (
+        <>
+          <Meteor delay={0} top="12%" angle={-12} color="#67E8F9" len={150} />
+          <Meteor delay={5} top="34%" angle={-8} color="#FB7185" len={120} />
+          <Meteor delay={9} top="56%" angle={-15} color="#FBBF24" len={135} />
+          <Meteor delay={13} top="72%" angle={-6} color="#67E8F9" len={110} />
+          {!isMobile && <Meteor delay={17} top="86%" angle={-18} color="#2DD4BF" len={160} />}
+          <SlowComet delay={3} startTop="14%" endTop="40%" color="#67E8F9" />
+          {!isMobile && <SlowComet delay={20} startTop="68%" endTop="34%" color="#E0457B" />}
+        </>
+      )}
 
-      {/* Planets */}
-      {planets.map((p) => (
-        <Planet key={p.id} planet={p} />
-      ))}
-
-      {/* Shooting stars — bumped to 5 streaks at varied angles */}
-      <ShootingStar delay={0} top="14%" angle={-12} />
-      <ShootingStar delay={4} top="38%" angle={-8} />
-      <ShootingStar delay={8} top="58%" angle={-15} />
-      <ShootingStar delay={12} top="74%" angle={-6} />
-      <ShootingStar delay={16} top="86%" angle={-18} />
-
-      {/* Slow drifting comets */}
-      <SlowComet delay={3} startTop="12%" endTop="40%" />
-      <SlowComet delay={20} startTop="68%" endTop="34%" />
-
-      {/* Desert horizon silhouette */}
-      <div className="absolute inset-x-0 bottom-0 h-[28%] opacity-30">
-        <svg viewBox="0 0 1200 200" preserveAspectRatio="none" className="h-full w-full">
-          <path
-            d="M 0 200 L 0 140 Q 80 130 140 138 L 220 110 L 280 122 L 360 90 L 440 105 L 540 78 L 640 98 L 760 85 L 860 112 L 960 95 L 1080 118 L 1200 100 L 1200 200 Z"
-            fill="#08060f"
-            stroke="#A78BFA"
-            strokeWidth="0.5"
-            strokeOpacity="0.3"
+      {/* Faint CRT scanlines + film grain, retro-future grade. Both use
+          full-screen mix-blend-mode, which is cheap to paint once but forces a
+          recomposite of the fixed backdrop on every scroll frame. That is a
+          major scroll-jank source on phones, so we skip both on mobile. */}
+      {!isMobile && (
+        <>
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage:
+                'repeating-linear-gradient(0deg, rgba(255,255,255,0.025) 0px, rgba(255,255,255,0.025) 1px, transparent 1px, transparent 3px)',
+              mixBlendMode: 'overlay',
+              opacity: 0.4,
+            }}
           />
-        </svg>
-      </div>
+          <div
+            className="absolute inset-0"
+            style={{
+              backgroundImage:
+                "url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.5'/%3E%3C/svg%3E\")",
+              opacity: 0.05,
+              mixBlendMode: 'soft-light',
+            }}
+          />
+        </>
+      )}
+
+      {/* Horizon haze at the very bottom, teal-noir glow */}
+      <div
+        className="absolute inset-x-0 bottom-0 h-[26%]"
+        style={{
+          background:
+            'linear-gradient(180deg, transparent 0%, rgba(34,211,238,0.05) 60%, rgba(224,69,123,0.05) 100%)',
+        }}
+      />
     </div>
   );
 }
 
-function ConstellationGroup({ c }: { c: Constellation }) {
-  const size = c.scale;
+function Star({ s, reduced }: { s: Dot; reduced: boolean }) {
+  const base = {
+    left: `${s.xPct}%`,
+    top: `${s.yPct}%`,
+    width: s.size,
+    height: s.size,
+    background: s.color,
+    boxShadow: `0 0 ${s.size * 2.6}px ${s.color}aa`,
+  } as const;
+  if (reduced) {
+    return <span aria-hidden className="absolute rounded-full" style={{ ...base, opacity: 0.6 }} />;
+  }
+  return (
+    <motion.span
+      aria-hidden
+      className="absolute rounded-full"
+      style={{ ...base, opacity: 0.75 }}
+      animate={{ opacity: [0.18, 0.95, 0.18] }}
+      transition={{ duration: s.dur, delay: s.delay, repeat: Infinity, ease: 'easeInOut' }}
+    />
+  );
+}
+
+function NebulaCloud({ n, reduced }: { n: Nebula; reduced: boolean }) {
+  const style = {
+    left: `${n.xPct}%`,
+    top: `${n.yPct}%`,
+    width: n.size,
+    height: n.size,
+    transform: 'translate(-50%, -50%)',
+    background: `radial-gradient(circle at 50% 50%, ${n.color} 0%, transparent 68%)`,
+    filter: 'blur(26px)',
+  } as const;
+  if (reduced) {
+    return <div aria-hidden className="absolute" style={{ ...style, opacity: 0.7 }} />;
+  }
   return (
     <motion.div
+      aria-hidden
       className="absolute"
-      style={{
-        left: `${c.cxPct}%`,
-        top: `${c.cyPct}%`,
-        width: size,
-        height: size,
-        transform: 'translate(-50%, -50%)',
-        opacity: 0.55,
-      }}
-      animate={{ opacity: [0.35, 0.7, 0.35] }}
+      style={style}
+      animate={{ x: [0, n.driftX, 0], y: [0, n.driftY, 0], opacity: [0.55, 0.85, 0.55] }}
+      transition={{ duration: n.dur, repeat: Infinity, ease: 'easeInOut' }}
+    />
+  );
+}
+
+// Distant ringed gas giant. Cool teal-lit crescent, sits upper-left.
+// The outer ring (rx=13, rotated -20deg) extends past the planet's body, so the
+// viewBox + container are sized with padding around the body so the ring isn't
+// clipped at either end. Old viewBox "-2 -2 24 24" cut the rings off; the wider
+// box gives ~4 units of clearance on each side, and the container bumps up
+// proportionally so the planet looks the same size.
+function GasGiant() {
+  return (
+    <motion.div
+      aria-hidden
+      className="absolute"
+      style={{ left: '9%', top: '20%', width: 180, height: 180, transform: 'translate(-50%, -50%)', opacity: 0.5 }}
+      animate={{ y: [-5, 5, -5] }}
+      transition={{ duration: 16, repeat: Infinity, ease: 'easeInOut' }}
+    >
+      <svg viewBox="-4 -4 28 28" className="h-full w-full" overflow="visible">
+        <defs>
+          <radialGradient id="gg-body" cx="34%" cy="32%" r="72%">
+            <stop offset="0%" stopColor="#67E8F9" stopOpacity="0.55" />
+            <stop offset="55%" stopColor="#22D3EE" stopOpacity="0.22" />
+            <stop offset="100%" stopColor="#0A0A14" stopOpacity="0.85" />
+          </radialGradient>
+        </defs>
+        <circle cx="10" cy="10" r="8.4" fill="url(#gg-body)" stroke="#67E8F9" strokeWidth="0.4" strokeOpacity="0.5" />
+        {/* banding */}
+        <ellipse cx="10" cy="9" rx="8" ry="1" fill="#22D3EE" opacity="0.12" />
+        <ellipse cx="10" cy="11.4" rx="7.4" ry="0.8" fill="#0A0A14" opacity="0.28" />
+        {/* ring */}
+        <ellipse
+          cx="10"
+          cy="10"
+          rx="13"
+          ry="2.6"
+          fill="none"
+          stroke="#67E8F9"
+          strokeWidth="0.5"
+          strokeOpacity="0.7"
+          transform="rotate(-20 10 10)"
+        />
+        <ellipse
+          cx="10"
+          cy="10"
+          rx="11"
+          ry="2.1"
+          fill="none"
+          stroke="#FB7185"
+          strokeWidth="0.3"
+          strokeOpacity="0.4"
+          transform="rotate(-20 10 10)"
+        />
+      </svg>
+    </motion.div>
+  );
+}
+
+// Red-giant ember sun, the warm Bebop pop. Lower-right, soft pulse.
+function EmberSun() {
+  return (
+    <motion.div
+      aria-hidden
+      className="absolute"
+      style={{ left: '88%', top: '78%', width: 120, height: 120, transform: 'translate(-50%, -50%)' }}
+      animate={{ opacity: [0.4, 0.62, 0.4] }}
       transition={{ duration: 9, repeat: Infinity, ease: 'easeInOut' }}
     >
-      <svg viewBox="0 0 100 100" className="h-full w-full">
-        {c.edges.map(([a, b], i) => (
-          <line
-            key={i}
-            x1={c.nodes[a][0]}
-            y1={c.nodes[a][1]}
-            x2={c.nodes[b][0]}
-            y2={c.nodes[b][1]}
-            stroke="#C4B5FD"
-            strokeWidth="0.4"
-            strokeOpacity="0.55"
-            strokeDasharray="0.6 1.2"
-          />
-        ))}
-        {c.nodes.map(([x, y], i) => (
-          <g key={i}>
-            <circle cx={x} cy={y} r="1.6" fill="#FFFFFF" opacity="0.95" />
-            <circle cx={x} cy={y} r="3.2" fill="none" stroke="#FFFFFF" strokeOpacity="0.25" />
-          </g>
-        ))}
-      </svg>
-      <span className="absolute -bottom-3 left-1/2 -translate-x-1/2 font-mono text-[9px] uppercase tracking-[0.22em] text-violet-200/40">
-        {c.name}
-      </span>
+      <div
+        className="h-full w-full rounded-full"
+        style={{
+          background:
+            'radial-gradient(circle at 50% 50%, rgba(251,191,36,0.55) 0%, rgba(224,69,123,0.22) 42%, transparent 70%)',
+          filter: 'blur(4px)',
+        }}
+      />
+    </motion.div>
+  );
+}
+
+function Meteor({
+  delay,
+  top,
+  angle,
+  color,
+  len,
+}: {
+  delay: number;
+  top: string;
+  angle: number;
+  color: string;
+  len: number;
+}) {
+  return (
+    <motion.div
+      className="absolute -left-[20%]"
+      style={{ top, transform: `rotate(${angle}deg)`, opacity: 0.7 }}
+      animate={{ x: ['0vw', '142vw'] }}
+      transition={{ duration: 3, delay, repeat: Infinity, repeatDelay: 8.5, ease: 'easeOut' }}
+    >
+      <div className="flex items-center">
+        <div
+          className="h-px"
+          style={{
+            width: len,
+            background: `linear-gradient(90deg, transparent, ${color}88, ${color})`,
+            boxShadow: `0 0 8px ${color}88`,
+          }}
+        />
+        <div
+          className="h-[3px] w-[3px] rounded-full"
+          style={{ background: '#fff', boxShadow: `0 0 10px #fff, 0 0 20px ${color}` }}
+        />
+      </div>
     </motion.div>
   );
 }
@@ -277,158 +368,32 @@ function SlowComet({
   delay,
   startTop,
   endTop,
+  color,
 }: {
   delay: number;
   startTop: string;
   endTop: string;
+  color: string;
 }) {
   return (
     <motion.div
       className="absolute"
-      style={{ left: '-20%', top: startTop, opacity: 0.55 }}
+      style={{ left: '-20%', top: startTop, opacity: 0.5 }}
       animate={{ x: ['0vw', '130vw'], top: [startTop, endTop] }}
-      transition={{ duration: 22, delay, repeat: Infinity, repeatDelay: 14, ease: 'linear' }}
+      transition={{ duration: 24, delay, repeat: Infinity, repeatDelay: 16, ease: 'linear' }}
     >
       <div className="flex items-center">
         <div
           className="h-px"
           style={{
-            width: 220,
-            background:
-              'linear-gradient(90deg, transparent, rgba(196,181,253,0.55), rgba(255,255,255,0.9))',
-            boxShadow: '0 0 12px rgba(196,181,253,0.5)',
+            width: 240,
+            background: `linear-gradient(90deg, transparent, ${color}88, rgba(255,255,255,0.9))`,
+            boxShadow: `0 0 12px ${color}77`,
           }}
         />
         <div
           className="h-1.5 w-1.5 rounded-full bg-white"
-          style={{ boxShadow: '0 0 14px rgba(255,255,255,0.85), 0 0 28px rgba(196,181,253,0.6)' }}
-        />
-      </div>
-    </motion.div>
-  );
-}
-
-function CornerGalaxy({
-  x,
-  y,
-  size,
-  delay = 0,
-}: {
-  x: string;
-  y: string;
-  size: number;
-  delay?: number;
-}) {
-  return (
-    <motion.div
-      className="absolute"
-      style={{
-        left: x,
-        top: y,
-        width: size,
-        height: size,
-        transform: 'translate(-50%, -50%)',
-        opacity: 0.32,
-      }}
-      animate={{ rotate: 360 }}
-      transition={{ duration: 90, repeat: Infinity, ease: 'linear', delay }}
-    >
-      <svg viewBox="-50 -50 100 100" className="h-full w-full">
-        <circle r="3" fill="#FFFFFF" opacity="0.7" />
-        <ellipse rx="42" ry="6" fill="none" stroke="#FFFFFF" strokeWidth="0.6" opacity="0.5" />
-        <ellipse
-          rx="36"
-          ry="4"
-          fill="none"
-          stroke="#A78BFA"
-          strokeWidth="0.5"
-          opacity="0.55"
-          transform="rotate(30)"
-        />
-        <ellipse
-          rx="28"
-          ry="3"
-          fill="none"
-          stroke="#FFFFFF"
-          strokeWidth="0.5"
-          opacity="0.6"
-          transform="rotate(60)"
-        />
-        {Array.from({ length: 10 }).map((_, i) => {
-          const a = (i / 10) * Math.PI * 2;
-          return (
-            <circle
-              key={i}
-              cx={Math.cos(a) * 38}
-              cy={Math.sin(a) * 5}
-              r="0.8"
-              fill="#FFFFFF"
-              opacity="0.7"
-            />
-          );
-        })}
-      </svg>
-    </motion.div>
-  );
-}
-
-function Planet({ planet }: { planet: PlanetData }) {
-  return (
-    <motion.div
-      className="absolute"
-      style={{
-        left: `${planet.xPct}%`,
-        top: `${planet.yPct}%`,
-        width: planet.size,
-        height: planet.size,
-        transform: 'translate(-50%, -50%)',
-        opacity: 0.28,
-      }}
-      animate={{ y: [-5, 5, -5] }}
-      transition={{ duration: 8 + planet.id, repeat: Infinity, ease: 'easeInOut' }}
-    >
-      <svg viewBox="-2 -2 24 24" className="h-full w-full">
-        <defs>
-          <radialGradient id={`pl-${planet.id}`} cx="35%" cy="35%" r="65%">
-            <stop offset="0%" stopColor={planet.color} stopOpacity="0.45" />
-            <stop offset="100%" stopColor={planet.color} stopOpacity="0.05" />
-          </radialGradient>
-        </defs>
-        <circle cx="10" cy="10" r="9" fill={`url(#pl-${planet.id})`} stroke={planet.color} strokeWidth="0.6" />
-        <circle cx="7" cy="8" r="0.8" fill={planet.color} opacity="0.65" />
-        <circle cx="12" cy="11" r="0.5" fill={planet.color} opacity="0.55" />
-        <circle cx="10" cy="13" r="0.6" fill={planet.color} opacity="0.55" />
-        {planet.ring && (
-          <ellipse
-            cx="10"
-            cy="10"
-            rx="12"
-            ry="2.5"
-            fill="none"
-            stroke={planet.color}
-            strokeWidth="0.5"
-            transform="rotate(-18 10 10)"
-            opacity="0.8"
-          />
-        )}
-      </svg>
-    </motion.div>
-  );
-}
-
-function ShootingStar({ delay, top, angle }: { delay: number; top: string; angle: number }) {
-  return (
-    <motion.div
-      className="absolute -left-[20%]"
-      style={{ top, transform: `rotate(${angle}deg)`, opacity: 0.65 }}
-      animate={{ x: ['0vw', '140vw'] }}
-      transition={{ duration: 3.2, delay, repeat: Infinity, repeatDelay: 9, ease: 'easeOut' }}
-    >
-      <div className="flex items-center">
-        <div className="h-px w-[140px] bg-gradient-to-r from-transparent via-white/70 to-white" />
-        <div
-          className="h-1.5 w-1.5 rounded-full bg-white"
-          style={{ boxShadow: '0 0 14px rgba(255,255,255,0.9), 0 0 28px rgba(196,181,253,0.55)' }}
+          style={{ boxShadow: `0 0 14px rgba(255,255,255,0.85), 0 0 28px ${color}99` }}
         />
       </div>
     </motion.div>

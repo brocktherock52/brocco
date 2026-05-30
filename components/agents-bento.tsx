@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * AgentsBento — completely reimagined "9 specialists" section.
+ * AgentsBento, completely reimagined "9 specialists" section.
  *
  * 9 agents arranged as an asymmetric bento grid (12-col), with supervisor
  * as the hero tile (col-span-6, row-span-2). Each tile glows in the agent's
@@ -63,7 +63,7 @@ function AgentTile({ a, hero = false }: { a: Agent; hero?: boolean }) {
           style={{ backgroundColor: a.color }}
         />
 
-        {/* row header — persona croc + name + tool count */}
+        {/* row header: persona croc + name + tool count */}
         <div className="flex items-center gap-2.5">
           <span
             className={cn(
@@ -109,7 +109,7 @@ function AgentTile({ a, hero = false }: { a: Agent; hero?: boolean }) {
           {a.description}
         </p>
 
-        {/* sample prompt — italic editorial pull */}
+        {/* sample prompt, italic editorial pull */}
         <p
           className={cn(
             'border-l-2 pl-3 font-serif italic leading-snug',
@@ -150,7 +150,7 @@ function AgentTile({ a, hero = false }: { a: Agent; hero?: boolean }) {
 }
 
 export function AgentsBento() {
-  // Order matters here — drives the bento layout
+  // Order matters here, drives the bento layout
   const order = [
     'supervisor',
     'researcher',

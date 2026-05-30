@@ -1,0 +1,22 @@
+# Keep the deploy payload small so builds do not time out uploading files.
+# None of these are imported by the Next.js build or served by the live site.
+# (The website reads lib/ + app/ + components/; assets it actually uses stay.)
+
+# Content factory + renders (2.4GB) — used by local content tooling, not the site
+marketing/
+render/
+
+# Internal / non-build dirs
+backups/
+research/
+sessions/
+session_logs/
+docs/
+__tests__/
+tests/
+
+# Heavy public media the website does not reference
+# (kept: agents-nano, cast-v7-video, factory, video, episodes-for-posting, icons)
+public/assets/_bg_backup/
+public/assets/personal/
+public/assets/video-src/

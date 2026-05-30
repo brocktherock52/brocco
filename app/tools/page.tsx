@@ -7,7 +7,7 @@ import { FinalCta } from '@/components/final-cta';
 import { TOOL_PROFILES } from '@/lib/tool-profiles';
 
 export const metadata: Metadata = {
-  title: 'Tools — brocco.dev',
+  title: 'Tools - brocco.dev',
   description:
     'The 13 built-in tools brocco agents call: search_web, http_get, http_post, file_read, file_write, memory_get, memory_put, shell_exec, image_gen, voice_tts, postgres, stripe, delegate.',
   alternates: { canonical: '/tools' },
@@ -30,7 +30,7 @@ export default function ToolsIndex() {
               <span className="font-serif italic font-normal text-grad-brand">Real interfaces.</span>
             </h1>
             <p className="mx-auto mt-5 max-w-xl text-[16px] text-ink-dim">
-              Every brocco agent calls a focused list of tools with typed inputs, audit logs, and a sandbox. No "smart tool routing" — just functions agents invoke.
+              Every brocco agent calls a focused list of tools with typed inputs, audit logs, and a sandbox. No "smart tool routing", just functions agents invoke.
             </p>
           </div>
         </section>

@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * TheTeam — single consolidated section that replaces three earlier ones
+ * TheTeam, single consolidated section that replaces three earlier ones
  * (MorningRoutine + AgentsBento + AgentCast). Less repetition, one
  * scrollable beat instead of three.
  *

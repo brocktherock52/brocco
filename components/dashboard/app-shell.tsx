@@ -1,12 +1,13 @@
 'use client';
 
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
   ArrowRight,
   ChevronDown,
   Cpu,
+  FileText,
   History,
   KeyRound,
   Play,
@@ -21,24 +22,32 @@ import { Logomark } from '@/components/logo';
 import { AGENTS, type AgentName } from '@/lib/agents';
 import { runAgent, type SimEvent } from '@/lib/simulator';
 import { runClaudeLive, SYSTEM_PROMPTS, type LiveEvent } from '@/lib/claude';
-import { recordRun, freeTierExceeded, remainingFreeRuns, getUsage, FREE_LIMIT } from '@/lib/usage';
+import { recordRun, freeTierExceeded, remainingFreeRuns, getUsage } from '@/lib/usage';
 import { uid } from '@/lib/utils';
 import { AgentCard } from './agent-card';
-import { StreamPane } from './stream-pane';
+import { AgentOffice } from './agent-office';
 import { JsonlLog } from './jsonl-log';
 import { ByokModal, getKey } from './byok-modal';
-// Duplicate `Onboarding` modal deleted 2026-05-22 — collided with `GuidedOnboarding`.
+// Duplicate `Onboarding` modal deleted 2026-05-22, collided with `GuidedOnboarding`.
 import { MorningBriefing } from './morning-briefing';
 import { EveningWindDown } from './evening-windown';
 import { SuggestionSlot } from './suggestion-slot';
 import { recordStreakTouch } from '@/lib/streak';
-import { getCustomAgents, TEMPLATES, deleteCustomAgent, type CustomAgent } from '@/lib/custom-agents';
+import { getCustomAgents, deleteCustomAgent, type CustomAgent } from '@/lib/custom-agents';
 import { CustomCroc } from '@/components/custom-croc';
 import { RecurringToggle } from './recurring-toggle';
 import { ConstructionCrew } from './construction-crew';
 import { GuidedOnboarding } from './guided-onboarding';
-import { listThreads, createThread, type ClientThread } from '@/lib/threads-client';
+import { UpsellModal } from './upsell-modal';
+import { listThreads, createThread, appendBrain, type ClientThread } from '@/lib/threads-client';
 import { useSession, signOut } from '@/lib/auth-client';
+import { exportRunToPdf, type PdfPane } from '@/lib/pdf-export';
+import { getProfile, PROFILE_CHANGED_EVENT, type BroccoProfile } from '@/lib/profile';
+import { needsRefresh } from '@/lib/freshness';
+import { AlertsBell } from './alerts-bell';
+import { ProjectCard, type ProjectCardEntry } from './project-card';
+import { seedDemoProjectIfNeeded } from '@/lib/demo-projects';
+import { trackEvent, identifyUser, resetUser } from '@/components/posthog-provider';
 
 const MODELS = [
   { id: 'claude-sonnet-4-6', label: 'Claude Sonnet 4.6', tag: 'default' },
@@ -81,6 +90,9 @@ export function AppShell() {
   const [model, setModel] = useState(MODELS[0].id);
   const [modelOpen, setModelOpen] = useState(false);
   const [byokOpen, setByokOpen] = useState(false);
+  const [upsellOpen, setUpsellOpen] = useState(false);
+  // Where the upsell was triggered from, for the PostHog upsell funnel.
+  const [upsellSource, setUpsellSource] = useState('run_limit');
   const [keyState, setKeyState] = useState<string | null>(null);
   const [panes, setPanes] = useState<PaneState[]>([]);
   const [history, setHistory] = useState<RunHistoryEntry[]>([]);
@@ -91,6 +103,8 @@ export function AppShell() {
   const [showTeamSheet, setShowTeamSheet] = useState(false);
   const [serverThreads, setServerThreads] = useState<ClientThread[]>([]);
   const [serverOffline, setServerOffline] = useState(true);
+  // Bumped after a refresh files a changes_found alert so the bell re-fetches.
+  const [alertsSignal, setAlertsSignal] = useState(0);
   const session = useSession();
   const [usage, setUsage] = useState(getUsage());
   const [tokens, setTokens] = useState({ in: 0, out: 0, cost: 0 });
@@ -101,13 +115,17 @@ export function AppShell() {
   useEffect(() => {
     setKeyState(getKey());
     setUsage(getUsage());
-    // Tick the daily-streak counter — opening /app counts as the day's touch.
+    // Tick the daily-streak counter, opening /app counts as the day's touch.
     recordStreakTouch();
     // Hydrate custom agents from localStorage + re-read on change.
     setCustomAgents(getCustomAgents());
     const onCustomChange = () => setCustomAgents(getCustomAgents());
     window.addEventListener('brocco:custom-agents-changed', onCustomChange);
     // cleanup attached via the same useEffect's main return below
+    // Seed the no-login demo project (stale, with a pending alert + starter
+    // brain) so the full watch -> refresh -> what's-new -> brain flow is
+    // demoable without auth or a paid plan. Idempotent.
+    seedDemoProjectIfNeeded();
     try {
       const raw = localStorage.getItem('brocco:history');
       if (raw) setHistory(JSON.parse(raw));
@@ -155,6 +173,19 @@ export function AppShell() {
     };
   }, []);
 
+  // Identify the user to PostHog once the session resolves so the journey map
+  // (Braden's ask: see where users drop after signup) follows one person across
+  // signup -> onboarding -> first run -> upgrade. No-op without a key/consent.
+  useEffect(() => {
+    const u = session?.data?.user;
+    if (u?.id) {
+      identifyUser(u.id, {
+        email: u.email,
+        plan: (u as { plan?: string }).plan ?? 'free',
+      });
+    }
+  }, [session?.data?.user]);
+
   // sync history
   useEffect(() => {
     try {
@@ -167,6 +198,17 @@ export function AppShell() {
     [panes],
   );
   const running = panes.some((p) => p.status === 'running');
+
+  // Project freshness ("watching out for you"). Count unique saved projects
+  // whose findings have aged past the fresh window so we can badge the bell.
+  const staleProjects = useMemo(() => {
+    const seen = new Set<string>();
+    return history.filter((h) => {
+      if (seen.has(h.goal)) return false;
+      seen.add(h.goal);
+      return needsRefresh(h.ts);
+    });
+  }, [history]);
 
   // Tier-based parallel pane cap. Free is BYOK (the user's own tokens), so we
   // let free/demo users actually FEEL the parallel-team superpower with 3 panes
@@ -231,10 +273,11 @@ export function AppShell() {
 
     const live = !!keyState;
     if (!live && freeTierExceeded(usage)) {
-      toast.error('Free tier limit reached', {
-        description: `You used your 100 free runs this month. Add an Anthropic key (BYOK) for unlimited runs on your tokens, or upgrade.`,
-        action: { label: 'Upgrade', onClick: () => (window.location.href = '/pricing') },
-      });
+      // Braeden's monetization lever: don't hard-stop, present the choice
+      // (BYOK free vs upgrade to Solo) in a modal and track which they pick.
+      trackEvent('run_limit_reached');
+      setUpsellSource('run_limit');
+      setUpsellOpen(true);
       return;
     }
 
@@ -275,12 +318,34 @@ export function AppShell() {
       [{ id: uid('r'), goal: goal, agents: runAgents, ts: Date.now() }, ...h].slice(0, 25),
     );
     // Persist as a thread on the server (no-op for anonymous users beyond
-    // the localStorage write-through cache inside threads-client).
-    createThread({ title: goal.slice(0, 200), agents: runAgents as string[] })
+    // the localStorage write-through cache inside threads-client). Capture the
+    // created id so the run can seed the project "brain" (iteration 1) once it
+    // finishes, kicking off the self-improving loop.
+    const goalSnapshot = goal;
+    const createdThread = createThread({ title: goal.slice(0, 200), agents: runAgents as string[] })
       .then((t) => {
         if (t) setServerThreads((curr) => [t, ...curr.filter((x) => x.id !== t.id)].slice(0, 50));
+        return t;
       })
-      .catch(() => {});
+      .catch(() => null);
+
+    // first_run: the single most important activation event in the funnel.
+    // Fires once per browser (persisted) so the journey map can measure
+    // signup -> first_run drop-off. Guarded so re-runs do not re-fire it.
+    try {
+      if (typeof window !== 'undefined' && !localStorage.getItem('brocco:first-run-fired')) {
+        localStorage.setItem('brocco:first-run-fired', '1');
+        trackEvent('first_run', { mode: live ? 'live' : 'demo', agent_count: allowedAgents.length, tier });
+      }
+    } catch {}
+
+    trackEvent('run_started', {
+      mode: live ? 'live' : 'demo',
+      agent_count: allowedAgents.length,
+      agents: allowedAgents,
+      model,
+      tier,
+    });
 
     if (live) {
       toast.message('Live mode', {
@@ -292,6 +357,10 @@ export function AppShell() {
       });
     }
 
+    // Each live pane emits *cumulative* usage events (running totals for that
+    // pane). Track the latest usage per paneId and SUM across panes so the cost
+    // chip reflects the whole parallel run, not just whichever pane emitted last.
+    const usageByPane = new Map<string, { in: number; out: number; cost: number }>();
     let totalIn = 0;
     let totalOut = 0;
     let totalCost = 0;
@@ -307,9 +376,20 @@ export function AppShell() {
           const ev = norm ?? ({ ...(e as LiveEvent), ts: Date.now(), step: 0, agent: pane.agent } as SimEvent);
           if ((ev as any).type === 'usage') {
             const u = ev as unknown as { in: number; out: number; cost_usd?: number };
-            totalIn = u.in;
-            totalOut = u.out;
-            if (typeof u.cost_usd === 'number') totalCost = u.cost_usd;
+            // Store this pane's latest cumulative usage, then re-sum every pane.
+            usageByPane.set(paneId, {
+              in: u.in,
+              out: u.out,
+              cost: typeof u.cost_usd === 'number' ? u.cost_usd : 0,
+            });
+            totalIn = 0;
+            totalOut = 0;
+            totalCost = 0;
+            for (const pu of usageByPane.values()) {
+              totalIn += pu.in;
+              totalOut += pu.out;
+              totalCost += pu.cost;
+            }
             setTokens({ in: totalIn, out: totalOut, cost: totalCost });
             // fall through so the event is also pushed onto the pane log
           }
@@ -380,6 +460,27 @@ export function AppShell() {
 
     const u = recordRun({ in: totalIn, out: totalOut });
     setUsage(u);
+    trackEvent('run_completed', {
+      mode: live ? 'live' : 'demo',
+      agent_count: next.length,
+      tokens_in: totalIn,
+      tokens_out: totalOut,
+      cost_usd: totalCost,
+    });
+
+    // Seed the project "brain" with this run so the self-improving loop starts
+    // from iteration 1. Subsequent refreshes (lib/refresh.ts) read this back in
+    // and append what changed. BYOK-safe: brain lives in the DB (or localStorage
+    // in demo) and is never the server's job to compute.
+    void createdThread.then((t) => {
+      const tid = t?.id ?? null;
+      if (!tid) return; // anonymous / offline: refresh path keeps a local brain
+      appendBrain(tid, {
+        did: `First run of ${runAgents.join(', ')} on "${goalSnapshot.slice(0, 100)}".`,
+        learned: 'Baseline captured.',
+        changed: 'Initial baseline. Future refreshes show what changed.',
+      }).catch(() => {});
+    });
     if (live) {
       const dollars = (totalCost > 0 ? totalCost : (totalIn * 3 + totalOut * 15) / 1_000_000).toFixed(4);
       toast.success('All agents finished.', {
@@ -530,11 +631,18 @@ export function AppShell() {
   return (
     <div className="flex h-screen flex-col bg-bg-0 text-ink">
       {/* TOP BAR */}
-      <header className="flex h-14 shrink-0 items-center gap-3 border-b border-white/[0.06] bg-bg-1/70 px-4 backdrop-blur-xl">
+      {/* relative z-30: the header's backdrop-blur makes it its own stacking
+          context, so its absolutely-positioned dropdowns (model picker) were
+          being painted OVER by the main app body below (a later sibling in the
+          same parent context). Lifting the whole header above the body fixes
+          that. Fixed overlays (sheets/panels/modals at z-40+) still sit on top. */}
+      <header className="relative z-30 flex h-14 shrink-0 items-center gap-3 border-b border-white/[0.06] bg-bg-1/70 px-4 backdrop-blur-xl">
         <Link href="/" className="inline-flex items-center gap-2 text-[14px] font-semibold tracking-tight">
           <Logomark className="h-6 w-6" />
           brocco<span className="text-ink-faint">.app</span>
         </Link>
+
+        <WorkspaceBadge />
 
         <ModeBadge live={!!keyState} />
 
@@ -608,14 +716,16 @@ export function AppShell() {
         </button>
 
         <div className="ml-auto flex items-center gap-2">
-          {/* Session pill — signed-in email + sign out, or a sign-in link. */}
+          {/* Session pill, signed-in email + sign out, or a sign-in link. */}
           {session?.data?.user ? (
             <span className="hidden md:inline-flex items-center gap-1.5 rounded-full border border-white/[0.10] bg-white/[0.04] px-2.5 py-1 font-mono text-[11px] text-ink-dim">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-              {session.data.user.email}
+              <Link href="/account" className="hover:text-white" title="account settings">
+                {session.data.user.email}
+              </Link>
               <button
                 type="button"
-                onClick={() => signOut({ fetchOptions: { onSuccess: () => { window.location.href = '/login'; } } })}
+                onClick={() => signOut({ fetchOptions: { onSuccess: () => { resetUser(); window.location.href = '/login'; } } })}
                 className="ml-2 text-ink-faint hover:text-white"
               >
                 sign out
@@ -651,15 +761,34 @@ export function AppShell() {
             onClick={shareLastRun}
             className="hidden sm:inline-flex rounded-full border border-white/[0.10] bg-white/[0.04] p-2 text-ink-dim hover:bg-white/[0.07] hover:text-white"
             title="Share this run"
+            aria-label="share this run"
           >
             <Share2 className="h-3.5 w-3.5" />
           </button>
+          <AlertsBell
+            refreshSignal={alertsSignal}
+            onOpenProject={(threadId) => {
+              setShowHistory(true);
+              const t = serverThreads.find((x) => x.id === threadId);
+              if (t) setGoal(t.title);
+            }}
+          />
           <button
             onClick={() => setShowHistory((v) => !v)}
-            className="rounded-full border border-white/[0.10] bg-white/[0.04] p-2 text-ink-dim hover:bg-white/[0.07] hover:text-white"
-            title="History"
+            className="relative rounded-full border border-white/[0.10] bg-white/[0.04] p-2 text-ink-dim hover:bg-white/[0.07] hover:text-white"
+            aria-label="projects and history"
+            title={
+              staleProjects.length
+                ? `${staleProjects.length} project${staleProjects.length === 1 ? '' : 's'} may have new info`
+                : 'Projects & history'
+            }
           >
             <History className="h-3.5 w-3.5" />
+            {staleProjects.length > 0 && (
+              <span className="absolute -right-0.5 -top-0.5 flex h-3.5 min-w-3.5 items-center justify-center rounded-full bg-amber-400 px-1 text-[9px] font-bold text-black">
+                {staleProjects.length}
+              </span>
+            )}
           </button>
           {running ? (
             <button onClick={stopAll} className="btn-ghost text-[12.5px] px-3 py-1.5">
@@ -673,100 +802,13 @@ export function AppShell() {
         </div>
       </header>
 
-      {/* MAIN */}
+      {/* MAIN, v3.1 office layout. The cramped left sidebar + smushed panes are
+          gone. Hiring/release happens on the office floor itself; the JSONL
+          audit lives in a roomy right rail. */}
       <div className="flex min-h-0 flex-1">
-        {/* SIDEBAR — v3.0: agents only, broadcast always on, no recipe browser */}
-        <aside className="hidden w-[260px] shrink-0 overflow-y-auto border-r border-white/[0.06] bg-bg-1/30 md:block">
-          <div className="p-4">
-            <p className="px-1 font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-faint">
-              specialists · {selected.length} selected
-            </p>
-            <p className="mt-1.5 px-1 text-[11.5px] leading-snug text-ink-dim">
-              broadcast is always on. one prompt fans out to every selected agent in parallel.
-            </p>
-            <div className="mt-4 space-y-2">
-              {AGENTS.map((a) => (
-                <AgentCard
-                  key={a.name}
-                  agent={a}
-                  selected={selected.includes(a.name)}
-                  onToggle={() => toggleAgent(a.name)}
-                />
-              ))}
-            </div>
-
-            {/* Custom agents list — renders below the built-ins. Clicking
-                "use" routes the agent through its template archetype's
-                runtime stream. Full system-prompt override is a follow-up
-                once the live Claude wrapper accepts custom prompts. */}
-            {customAgents.length > 0 && (
-              <div className="mt-5">
-                <p className="px-1 font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-faint">
-                  your agents · {customAgents.length}
-                </p>
-                <ul className="mt-2 space-y-1.5">
-                  {customAgents.map((ca) => (
-                    <li
-                      key={ca.id}
-                      className="group flex items-center gap-2 rounded-lg border border-white/[0.06] bg-white/[0.02] p-2 transition-colors hover:border-white/[0.14] hover:bg-white/[0.04]"
-                    >
-                      <span
-                        className="relative h-9 w-9 shrink-0 overflow-hidden rounded-md bg-black"
-                        style={{ boxShadow: `inset 0 0 0 1px ${ca.accent}33` }}
-                      >
-                        <CustomCroc
-                          accent={ca.accent}
-                          accessory={ca.accessory ?? 'none'}
-                          className="absolute inset-0 h-full w-full"
-                        />
-                      </span>
-                      <div className="min-w-0 flex-1">
-                        <p className="truncate text-[12px] font-medium text-ink">{ca.label}</p>
-                        <p className="truncate font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint">
-                          {ca.template}
-                        </p>
-                      </div>
-                      <button
-                        type="button"
-                        onClick={() => useCustomAgent(ca)}
-                        className="rounded-md border border-white/[0.08] bg-white/[0.02] px-2 py-1 text-[10.5px] text-ink-dim transition hover:border-white/[0.18] hover:text-white"
-                      >
-                        use
-                      </button>
-                      <button
-                        type="button"
-                        onClick={() => {
-                          if (confirm(`Delete ${ca.label}?`)) deleteCustomAgent(ca.id);
-                        }}
-                        className="rounded-md p-1 text-ink-faint opacity-0 transition group-hover:opacity-100 hover:text-red-300"
-                        aria-label={`delete ${ca.label}`}
-                      >
-                        <Trash2 className="h-3 w-3" />
-                      </button>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            {/* Create-your-own-agent entry point — feeds the lib/custom-agents
-                store via the wizard at /app/agents/new. */}
-            <Link
-              href="/app/agents/new"
-              className="group mt-4 flex items-center justify-between gap-2 rounded-lg border border-dashed border-white/[0.10] bg-white/[0.02] px-3 py-2.5 text-[12.5px] text-ink-dim transition-colors hover:border-white/[0.22] hover:bg-white/[0.04] hover:text-white"
-            >
-              <span className="inline-flex items-center gap-2">
-                <Sparkles className="h-3.5 w-3.5 text-brand-glow" />
-                create your own agent
-              </span>
-              <ArrowRight className="h-3 w-3 opacity-60 transition-transform group-hover:translate-x-0.5" />
-            </Link>
-          </div>
-        </aside>
-
         {/* CENTER */}
         <main className="flex min-w-0 flex-1 flex-col">
-          {/* Chat-first goal input — prominent, centered, ChatGPT-style.
+          {/* Chat-first goal input, prominent, centered, ChatGPT-style.
               Bigger pill, glowing border, larger placeholder, primary CTA. */}
           <div className="relative border-b border-white/[0.06] bg-bg-0 px-4 py-6">
             <div className="mx-auto w-full max-w-3xl">
@@ -824,7 +866,7 @@ export function AppShell() {
             </div>
           </div>
 
-          {/* Proactive nudge slot — appears above panes when there's an
+          {/* Proactive nudge slot, appears above panes when there's an
               active suggestion, invisible otherwise. */}
           <SuggestionSlot
             onAccept={(g, ags) => {
@@ -833,33 +875,93 @@ export function AppShell() {
             }}
           />
 
-          {/* panes + log */}
-          <div className="grid min-h-0 flex-1 grid-cols-1 gap-3 overflow-hidden p-3 lg:grid-cols-[1fr_360px]">
-            {/* panes */}
+          {/* office + log */}
+          <div className="grid min-h-0 flex-1 grid-cols-1 gap-4 overflow-hidden p-4 sm:p-6 lg:grid-cols-[1fr_340px]">
+            {/* office floor */}
             <div className="relative min-h-0 overflow-y-auto">
-              {/* Construction crew — walks across the pane area while runs
-                  are active. Adds visual life to the work-in-progress. */}
+              {/* Construction crew, walks across the floor while runs are
+                  active. Adds visual life to the work-in-progress. */}
               <ConstructionCrew active={running} />
-              {panes.length === 0 ? (
-                <EmptyState onPick={(g) => setGoal(g)} />
-              ) : (
-                <div
-                  className={`grid gap-3 ${panes.length === 1 ? 'grid-cols-1' : panes.length === 2 ? 'grid-cols-1 xl:grid-cols-2' : 'grid-cols-1 xl:grid-cols-2'}`}
-                >
-                  <AnimatePresence>
-                    {panes.map((p) => (
-                      <StreamPane
-                        key={p.id}
-                        agent={p.agent}
-                        events={p.events}
-                        status={p.status}
-                        onClose={() => setPanes((curr) => curr.filter((x) => x.id !== p.id))}
-                        onRetry={() => retryPane(p.id)}
-                      />
-                    ))}
-                  </AnimatePresence>
+
+              {/* The office is always present (desks for the team, plus
+                  available-to-hire desks). The daily ritual / try-these
+                  empty state shows above it only before the first run. */}
+              {panes.length === 0 && (
+                <div className="mb-8">
+                  <EmptyState onPick={(g) => setGoal(g)} />
                 </div>
               )}
+
+              <AgentOffice
+                selected={selected}
+                panes={panes}
+                onToggle={toggleAgent}
+                onRetry={(id) => retryPane(id)}
+                onClosePane={(id) => setPanes((curr) => curr.filter((x) => x.id !== id))}
+              />
+
+              {/* Custom agents + create-your-own, relocated from the old
+                  sidebar into a calm strip below the office floor. */}
+              <div className="mt-10 border-t border-white/[0.06] pt-6">
+                {customAgents.length > 0 && (
+                  <div className="mb-5">
+                    <p className="eyebrow mb-3">your custom agents · {customAgents.length}</p>
+                    <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-2 xl:grid-cols-3">
+                      {customAgents.map((ca) => (
+                        <div
+                          key={ca.id}
+                          className="group flex items-center gap-3 rounded-xl border border-white/[0.06] bg-white/[0.02] p-3 transition-colors hover:border-white/[0.14] hover:bg-white/[0.04]"
+                        >
+                          <span
+                            className="relative h-10 w-10 shrink-0 overflow-hidden rounded-lg bg-black"
+                            style={{ boxShadow: `inset 0 0 0 1px ${ca.accent}33` }}
+                          >
+                            <CustomCroc
+                              accent={ca.accent}
+                              accessory={ca.accessory ?? 'none'}
+                              className="absolute inset-0 h-full w-full"
+                            />
+                          </span>
+                          <div className="min-w-0 flex-1">
+                            <p className="truncate text-[13px] font-medium text-ink">{ca.label}</p>
+                            <p className="truncate font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint">
+                              {ca.template}
+                            </p>
+                          </div>
+                          <button
+                            type="button"
+                            onClick={() => useCustomAgent(ca)}
+                            className="rounded-md border border-white/[0.08] bg-white/[0.02] px-2.5 py-1 text-[11px] text-ink-dim transition hover:border-white/[0.18] hover:text-white"
+                          >
+                            hire
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              if (confirm(`Delete ${ca.label}?`)) deleteCustomAgent(ca.id);
+                            }}
+                            className="rounded-md p-1 text-ink-faint opacity-0 transition group-hover:opacity-100 hover:text-red-300"
+                            aria-label={`delete ${ca.label}`}
+                          >
+                            <Trash2 className="h-3 w-3" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                <Link
+                  href="/app/agents/new"
+                  className="group flex max-w-md items-center justify-between gap-2 rounded-xl border border-dashed border-white/[0.10] bg-white/[0.02] px-4 py-3 text-[13px] text-ink-dim transition-colors hover:border-white/[0.22] hover:bg-white/[0.04] hover:text-white"
+                >
+                  <span className="inline-flex items-center gap-2">
+                    <Sparkles className="h-4 w-4 text-brand-glow" />
+                    create your own agent
+                  </span>
+                  <ArrowRight className="h-3.5 w-3.5 opacity-60 transition-transform group-hover:translate-x-0.5" />
+                </Link>
+              </div>
 
               {panes.some((p) => p.status === 'done') && (
                 <>
@@ -1001,30 +1103,55 @@ export function AppShell() {
               className="fixed right-0 top-14 z-40 h-[calc(100vh-3.5rem)] w-[320px] border-l border-white/[0.06] bg-bg-1/95 backdrop-blur-xl"
             >
               <div className="flex items-center justify-between border-b border-white/[0.06] px-4 py-3">
-                <span className="font-mono text-[11px] uppercase tracking-wider text-ink-faint">History</span>
+                <span className="font-mono text-[11px] uppercase tracking-wider text-ink-faint">
+                  Projects
+                </span>
                 <button onClick={() => setShowHistory(false)} className="text-ink-faint hover:text-white">
                   ×
                 </button>
               </div>
+              {staleProjects.length > 0 && (
+                <div className="border-b border-white/[0.06] bg-amber-400/[0.06] px-4 py-2.5">
+                  <p className="text-[11.5px] leading-snug text-amber-200/90">
+                    <span className="font-semibold">{staleProjects.length}</span> project
+                    {staleProjects.length === 1 ? '' : 's'} may have new information since you last
+                    ran {staleProjects.length === 1 ? 'it' : 'them'}. Refresh to pull the latest.
+                  </p>
+                </div>
+              )}
               <div className="overflow-y-auto p-3">
                 {history.length === 0 ? (
-                  <p className="px-1 text-[12.5px] text-ink-faint">No runs yet. Type a goal and hit run.</p>
+                  <p className="px-1 text-[12.5px] text-ink-faint">
+                    No projects yet. Type a goal and hit run, and brocco then watches it for you.
+                  </p>
                 ) : (
-                  history.map((h) => (
-                    <button
-                      key={h.id}
-                      onClick={() => setGoal(h.goal)}
-                      className="mb-1.5 w-full rounded-lg border border-white/[0.06] bg-white/[0.02] p-2.5 text-left hover:border-white/[0.12] hover:bg-white/[0.04]"
-                    >
-                      <div className="line-clamp-2 text-[12.5px] font-medium text-ink">{h.goal}</div>
-                      <div className="mt-1 flex flex-wrap gap-1 font-mono text-[10.5px] text-ink-faint">
-                        {h.agents.map((a) => (
-                          <span key={a}>{a}</span>
-                        ))}
-                        <span className="ml-auto">{new Date(h.ts).toLocaleTimeString()}</span>
-                      </div>
-                    </button>
-                  ))
+                  history.map((h) => {
+                    const st = serverThreads.find((t) => t.id === h.id);
+                    const cardEntry: ProjectCardEntry = {
+                      id: h.id,
+                      goal: h.goal,
+                      agents: h.agents,
+                      ts: h.ts,
+                      threadId: st ? st.id : h.id.startsWith('local-') || h.id.startsWith('r-') ? null : h.id,
+                      watchEnabled: st?.watchEnabled,
+                      refreshCadenceHours: st?.refreshCadenceHours,
+                    };
+                    return (
+                      <ProjectCard
+                        key={h.id}
+                        entry={cardEntry}
+                        tier={tier}
+                        apiKey={keyState}
+                        modelId={model}
+                        onPickGoal={setGoal}
+                        onUpgrade={() => {
+                          setUpsellSource('watch_settings');
+                          setUpsellOpen(true);
+                        }}
+                        onRefreshed={() => setAlertsSignal((n) => n + 1)}
+                      />
+                    );
+                  })
                 )}
               </div>
             </motion.aside>
@@ -1033,8 +1160,49 @@ export function AppShell() {
       </div>
 
       <ByokModal open={byokOpen} onOpenChange={setByokOpen} initial={keyState} onSaved={setKeyState} />
+      <UpsellModal
+        open={upsellOpen}
+        source={upsellSource}
+        onClose={() => setUpsellOpen(false)}
+        onUseKey={() => {
+          setUpsellOpen(false);
+          setByokOpen(true);
+        }}
+      />
       <GuidedOnboarding />
     </div>
+  );
+}
+
+// WorkspaceBadge, shows the user's logo + business name in the top bar once
+// they've personalized (onboarding). Makes the workspace feel like theirs,
+// which is the retention hook Braeden flagged. Re-reads on profile change.
+function WorkspaceBadge() {
+  const [profile, setProfile] = useState<BroccoProfile | null>(null);
+  useEffect(() => {
+    const read = () => setProfile(getProfile());
+    read();
+    window.addEventListener(PROFILE_CHANGED_EVENT, read);
+    return () => window.removeEventListener(PROFILE_CHANGED_EVENT, read);
+  }, []);
+  const label = profile?.businessName?.trim() || profile?.name?.trim() || '';
+  if (!label && !profile?.logoDataUrl) return null;
+  return (
+    <span
+      className="hidden items-center gap-1.5 rounded-full border border-white/[0.10] bg-white/[0.04] py-1 pl-1.5 pr-2.5 sm:inline-flex"
+      title="your workspace"
+    >
+      {profile?.logoDataUrl ? (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img src={profile.logoDataUrl} alt="" className="h-4 w-4 rounded object-contain" />
+      ) : (
+        <span
+          className="h-2 w-2 rounded-full"
+          style={{ background: profile?.brandColor || '#7C3AED' }}
+        />
+      )}
+      {label && <span className="max-w-[140px] truncate text-[12px] text-ink-dim">{label}</span>}
+    </span>
   );
 }
 
@@ -1067,11 +1235,11 @@ const TRY_THESE = [
 
 function EmptyState({ onPick }: { onPick: (goal: string) => void }) {
   return (
-    <div className="flex h-full min-h-[480px] flex-col items-center px-4 py-8">
-      {/* The daily ritual — appears at the top of the empty dashboard. */}
+    <div className="flex flex-col items-center px-4 py-2">
+      {/* The daily ritual, appears at the top of the empty dashboard. */}
       <MorningBriefing onAct={(item) => onPick(`Follow up on the ${item.agent}'s overnight run: ${item.output}`)} />
 
-      {/* Evening wind-down — renders only after 7pm local. Below the morning
+      {/* Evening wind-down, renders only after 7pm local. Below the morning
           briefing so the day reads top-down chronologically. */}
       <div className="mt-8 w-full max-w-3xl">
         <EveningWindDown
@@ -1272,6 +1440,48 @@ function SaveActions({
     }
   }
 
+  // Polished single-file PDF. The headline deliverable from the 2026-05-26
+  // partner call, a branded, designed report (cover band + per-agent
+  // sections) rather than raw markdown. Brands the cover with the workspace
+  // profile (logo / business name / accent) captured in onboarding.
+  const [pdfBusy, setPdfBusy] = useState(false);
+  async function downloadPdf() {
+    setPdfBusy(true);
+    try {
+      const pdfPanes: PdfPane[] = panes
+        .filter((p) => p.status === 'done' || p.events.length > 0)
+        .map((p) => {
+          const a = AGENTS.find((x) => x.name === p.agent);
+          return {
+            agentLabel: a?.label || p.agent,
+            accent: a?.color || '#7C3AED',
+            status: p.status,
+            mode: p.mode,
+            events: p.events,
+          };
+        });
+      const prof = getProfile();
+      await exportRunToPdf({ goal, panes: pdfPanes, profile: prof });
+      // export_pdf is the canonical funnel name Braden listed; pdf_exported is
+      // kept for the existing dashboards. Both fire so neither breaks.
+      const pdfProps = {
+        agent_count: pdfPanes.length,
+        branded: !!(prof.businessName || prof.logoDataUrl),
+      };
+      trackEvent('export_pdf', pdfProps);
+      trackEvent('pdf_exported', pdfProps);
+      toast.success('PDF report ready', {
+        description: 'A branded, single-file report of this run just downloaded.',
+      });
+    } catch (err) {
+      toast.error('Could not build PDF', {
+        description: err instanceof Error ? err.message : String(err),
+      });
+    } finally {
+      setPdfBusy(false);
+    }
+  }
+
   // v3.0: real OAuth integrations ship in PR4-6. For now, three primary
   // destinations only (notion, slack, linear). Email/drive/webhook deferred.
   return (
@@ -1290,8 +1500,18 @@ function SaveActions({
       ))}
       <button
         type="button"
+        onClick={downloadPdf}
+        disabled={pdfBusy}
+        className="ml-auto inline-flex items-center gap-1.5 rounded-full bg-gradient-to-r from-brand to-cyan px-3.5 py-1 text-[12px] font-semibold text-white shadow-glow2 transition hover:shadow-glow disabled:opacity-60"
+        title="export this run as a polished, branded PDF report"
+      >
+        <FileText className="h-3.5 w-3.5" />
+        {pdfBusy ? 'building…' : 'Download PDF'}
+      </button>
+      <button
+        type="button"
         onClick={downloadZip}
-        className="ml-auto inline-flex items-center gap-1.5 rounded-full border border-white/[0.14] bg-white/[0.06] px-3 py-1 text-[12px] font-medium text-ink hover:bg-white/[0.10] hover:text-white"
+        className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.14] bg-white/[0.06] px-3 py-1 text-[12px] font-medium text-ink hover:bg-white/[0.10] hover:text-white"
         title="package this run as a .zip (markdown + raw events)"
       >
         Download .zip

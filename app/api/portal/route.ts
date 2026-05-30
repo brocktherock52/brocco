@@ -31,15 +31,36 @@ export async function POST(req: Request): Promise<Response> {
   try {
     body = await req.json();
   } catch {
-    return Response.json({ error: 'invalid json' }, { status: 400 });
+    body = {};
   }
 
-  const customer = String(body.customer_id || '');
+  let customer = String(body.customer_id || '');
+  // When the caller doesn't pass a customer id (the normal case from /account),
+  // resolve it from the signed-in user's email via Stripe. Avoids needing a
+  // stored user<->customer mapping. Because we look up by the SESSION email (not
+  // a client-supplied value), this can't open someone else's billing portal.
   if (!customer.startsWith('cus_')) {
-    return Response.json({ error: 'customer_id required' }, { status: 400 });
+    const email = session.user.email;
+    if (email) {
+      const lookup = await fetch(
+        `${STRIPE_API}/customers?email=${encodeURIComponent(email)}&limit=1`,
+        { headers: { Authorization: `Bearer ${apiKey}` } },
+      );
+      if (lookup.ok) {
+        const d = (await lookup.json()) as { data?: { id?: string }[] };
+        customer = d.data?.[0]?.id || '';
+      }
+    }
   }
-  // TODO(billing): once the user<->customer mapping is stored, assert that
-  // `customer` belongs to session.user before opening the portal.
+  if (!customer.startsWith('cus_')) {
+    return Response.json(
+      {
+        error: 'no_billing_account',
+        detail: 'No Stripe billing account is linked to your email yet. Start a plan first.',
+      },
+      { status: 404 },
+    );
+  }
 
   const appUrl = process.env.APP_URL || `https://${req.headers.get('host')}`;
   const form = new URLSearchParams();

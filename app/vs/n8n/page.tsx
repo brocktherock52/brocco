@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { ComparePage } from '@/components/compare-page';
 
 export const metadata: Metadata = {
-  title: 'brocco vs n8n — agents vs nodes',
+  title: 'brocco vs n8n - agents vs nodes',
   description:
     'n8n is open-source workflow automation with hundreds of nodes. Brocco is a multi-agent reasoning dashboard. Compare on host model, decision logic, BYOK, audit trail, and integration shape.',
   alternates: { canonical: '/vs/n8n' },
@@ -67,7 +67,7 @@ export default function VsN8nPage() {
         },
         {
           q: 'Does n8n already have AI agents?',
-          a: 'Yes — n8n ships AI Agent and LangChain nodes. They are great when you want one node in a graph to make a decision. If the entire workflow is the agent, brocco is the right tool.',
+          a: 'Yes. n8n ships AI Agent and LangChain nodes. They are great when you want one node in a graph to make a decision. If the entire workflow is the agent, brocco is the right tool.',
         },
         {
           q: 'Is brocco open source like n8n?',

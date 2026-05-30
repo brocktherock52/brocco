@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * HeroBento — completely reimagined hero.
+ * HeroBento, completely reimagined hero.
  *
  * A 5-tile asymmetric bento grid (signature 21st.dev / linear / vercel
  * pattern). Each tile is its own scene with its own choreography. Nothing
@@ -34,7 +34,6 @@ import {
   ArrowRight,
   Apple,
   ChevronRight,
-  Cpu,
   Download,
   KeySquare,
   Monitor,
@@ -57,7 +56,7 @@ import {
 } from './brand-icons';
 
 // -----------------------------------------------------------------------------
-// Tile shell — every bento tile uses the same skin so they read as one set.
+// Tile shell, every bento tile uses the same skin so they read as one set.
 // -----------------------------------------------------------------------------
 function Tile({
   className,
@@ -69,7 +68,7 @@ function Tile({
   hover?: boolean;
 }) {
   const reduce = useReducedMotion();
-  // Touch devices don't get 3D tilt — the mouseMove handler fires on every
+  // Touch devices don't get 3D tilt, the mouseMove handler fires on every
   // touchmove and causes scroll jank on mobile. `pointer: fine` is true for
   // mice/styluses, false for touch. Hover is also disabled on small viewports.
   const [pointerFine, setPointerFine] = useState(true);
@@ -130,7 +129,7 @@ function Tile({
 }
 
 // -----------------------------------------------------------------------------
-// HEADLINE TILE — display type, ambient gradient, dual CTAs
+// HEADLINE TILE: display type, ambient gradient, dual CTAs
 // -----------------------------------------------------------------------------
 function HeadlineTile() {
   const reduce = useReducedMotion();
@@ -175,12 +174,13 @@ function HeadlineTile() {
           <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
         </span>
         <span className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-dim">
-          live · v2.2 · jsonl audit
+          live · jsonl audit
         </span>
       </motion.div>
 
-      {/* Display headline */}
-      <h1 className="relative mt-7 leading-[0.92] tracking-[-0.045em]">
+      {/* Display headline. Tightened vertical rhythm so the brocco.run terminal
+          below sits closer to the headline instead of floating in dead space. */}
+      <h1 className="relative mt-5 leading-[0.92] tracking-[-0.045em]">
         <motion.span
           initial={{ opacity: 0, y: 24, filter: 'blur(8px)' }}
           animate={{ opacity: 1, y: 0, filter: 'blur(0px)' }}
@@ -203,10 +203,11 @@ function HeadlineTile() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.4 }}
-        className="relative mt-7 max-w-[500px] text-[17px] leading-[1.55] text-ink-dim"
+        className="relative mt-5 max-w-[500px] text-[17px] leading-[1.55] text-ink-dim"
       >
         One prompt in. Your AI team splits the goal, runs in parallel, and hands you back a sourced
-        research drop, a launch plan, and a stack of outreach drafts. Ship before your coffee cools.{' '}
+        research drop, a launch plan, and outreach drafts, exported as one polished, branded PDF.
+        Ship before your coffee cools.{' '}
         <span className="text-white">100 free runs every month</span>, no card.
       </motion.p>
 
@@ -218,14 +219,14 @@ function HeadlineTile() {
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.7, delay: 0.55 }}
-        className="relative mt-9 flex flex-wrap items-center gap-3"
+        className="relative mt-6 flex flex-wrap items-center gap-3"
       >
         <Link
           href="/signup"
           className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-brand to-cyan px-6 py-3.5 text-[15px] font-semibold text-white shadow-glow2 transition-all hover:shadow-glow"
         >
           <Sparkles className="h-4 w-4" />
-          <span>start free . 100 runs</span>
+          <span>start free · 100 runs</span>
           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
         </Link>
         <MagneticLink href="/app" className="btn-ghost group text-[15px] px-6 py-3.5" strength={10}>
@@ -266,36 +267,26 @@ function HeadlineTile() {
 // 7-day trial lives on /pricing and in the nav.)
 
 // -----------------------------------------------------------------------------
-// METRICS TILE — animated counters with a pulsing micro-sparkline
+// METRICS TILE: animated counters with a pulsing micro-sparkline
 // -----------------------------------------------------------------------------
 function MetricsTile() {
   const [runs, setRuns] = useState(2847);
   const [tokens, setTokens] = useState(9.2);
   const [cost, setCost] = useState(12.4);
-  const [bars, setBars] = useState<number[]>(() =>
-    Array.from({ length: 18 }, () => 0.35 + Math.random() * 0.65),
-  );
+  // playable telemetry: paused freezes the live tickers AND the loading bars
+  // so the panel feels like a real control surface you can scrub.
+  const [paused, setPaused] = useState(false);
 
   // Live-ish telemetry: tick the numbers fast so the panel is visibly busy
   useEffect(() => {
+    if (paused) return;
     const id = setInterval(() => {
       setRuns((r) => r + Math.floor(Math.random() * 8));
       setTokens((t) => +(t + Math.random() * 0.06).toFixed(2));
       setCost((c) => +(c + Math.random() * 0.12).toFixed(2));
     }, 700);
     return () => clearInterval(id);
-  }, []);
-
-  // Rotate sparkline values every 2s so the bars actually change shape
-  useEffect(() => {
-    const id = setInterval(() => {
-      setBars((curr) => [
-        ...curr.slice(1),
-        0.35 + Math.random() * 0.65,
-      ]);
-    }, 600);
-    return () => clearInterval(id);
-  }, []);
+  }, [paused]);
 
   return (
     <Tile className="flex h-full flex-col p-6">
@@ -339,23 +330,80 @@ function MetricsTile() {
         />
       </div>
 
-      {/* Main sparkline */}
-      <div className="mt-4 flex h-10 items-end gap-1">
-        {bars.map((b, i) => (
-          <motion.span
-            key={i}
-            className="flex-1 rounded-sm bg-gradient-to-t from-brand/50 to-cyan/50"
-            style={{ originY: 1 }}
-            initial={{ scaleY: 0 }}
-            animate={{ scaleY: [b * 0.6, b, b * 0.7, b * 0.95, b] }}
-            transition={{
-              duration: 3.5,
-              repeat: Infinity,
-              ease: 'easeInOut',
-              delay: i * 0.05,
-            }}
-          />
-        ))}
+      {/* Loading streams, three stacked progress bars filling left-to-right at
+          different speeds, one per agent stream. Reads as "your team is loading
+          work in parallel" and fills the whole chart area. Replaces the dense
+          histogram. Play/pause freezes them. */}
+      <div className="mt-4 flex min-h-0 flex-1 flex-col">
+        <div className="flex items-center justify-between">
+          <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint">
+            streaming · 3 agents
+          </span>
+          <button
+            type="button"
+            onClick={() => setPaused((p) => !p)}
+            aria-label={paused ? 'play telemetry' : 'pause telemetry'}
+            title={paused ? 'play' : 'pause'}
+            className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-white/[0.10] bg-white/[0.04] text-ink-dim transition-colors hover:border-cyan/40 hover:bg-white/[0.08] hover:text-white"
+          >
+            <span className="text-[9px] leading-none">{paused ? '▶' : '❚❚'}</span>
+          </button>
+        </div>
+        <div className="mt-2 min-h-0 flex-1 rounded-md border border-white/[0.05] bg-bg-0/40 p-3">
+          <div className="flex h-full flex-col justify-around gap-2.5">
+            {[
+              {
+                label: 'researcher',
+                value: `${runs.toLocaleString()} sources`,
+                duration: 7.5,
+                delay: 0,
+                gradient: 'linear-gradient(90deg,#67E8F9,#22D3EE)',
+                glow: 'rgba(103,232,249,0.55)',
+              },
+              {
+                label: 'coder',
+                value: `${tokens.toFixed(1)}M tokens`,
+                duration: 6,
+                delay: 0.6,
+                gradient: 'linear-gradient(90deg,#4ADE80,#22C55E)',
+                glow: 'rgba(74,222,128,0.55)',
+              },
+              {
+                label: 'outreach',
+                value: `$${cost.toFixed(2)} byok`,
+                duration: 8.5,
+                delay: 1.2,
+                gradient: 'linear-gradient(90deg,#A78BFA,#7C3AED)',
+                glow: 'rgba(167,139,250,0.55)',
+              },
+            ].map((s) => (
+              <div key={s.label}>
+                <div className="mb-1 flex items-center justify-between font-mono text-[9.5px] uppercase tracking-[0.16em] text-ink-faint">
+                  <span>{s.label}</span>
+                  <span className="tabular-nums text-ink-dim">{s.value}</span>
+                </div>
+                <div className="relative h-2 overflow-hidden rounded-full bg-white/[0.05]">
+                  <motion.div
+                    className="absolute inset-y-0 left-0 rounded-full"
+                    style={{ background: s.gradient, boxShadow: `0 0 8px ${s.glow}` }}
+                    initial={{ width: '0%' }}
+                    animate={paused ? { width: '62%' } : { width: ['0%', '100%'] }}
+                    transition={
+                      paused
+                        ? { duration: 0.4, ease: 'easeOut' }
+                        : {
+                            duration: s.duration,
+                            repeat: Infinity,
+                            ease: [0.16, 1, 0.3, 1],
+                            delay: s.delay,
+                          }
+                    }
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
       {/* Live activity stream */}
@@ -381,10 +429,13 @@ function MetricCard({
 }) {
   // Each card gets its own mini-sparkline that ticks independently. The values
   // are stochastic but bounded so the spark always looks alive.
-  const [spark, setSpark] = useState<number[]>(() =>
-    Array.from({ length: 10 }, () => 0.3 + Math.random() * 0.65),
-  );
+  // Seed deterministically so the server-rendered HTML and the first client
+  // render match (Math.random() in the initializer ran at both SSR and hydration
+  // and produced divergent arrays = a hydration mismatch). The random walk
+  // starts in an effect, client-only.
+  const [spark, setSpark] = useState<number[]>(() => Array.from({ length: 10 }, () => 0.5));
   useEffect(() => {
+    setSpark(Array.from({ length: 10 }, () => 0.3 + Math.random() * 0.65));
     const id = setInterval(() => {
       setSpark((curr) => [...curr.slice(1), 0.3 + Math.random() * 0.65]);
     }, 750);
@@ -413,7 +464,7 @@ function MetricCard({
   );
 }
 
-// LiveActivityStream — a tiny terminal-style feed of agent events. New
+// LiveActivityStream, a tiny terminal-style feed of agent events. New
 // row pushes in every ~900ms; oldest row falls off when the stack hits 5.
 // Fills what used to be empty space under the network metrics.
 function LiveActivityStream() {
@@ -467,7 +518,7 @@ function LiveActivityStream() {
 }
 
 // -----------------------------------------------------------------------------
-// AGENT STACK TILE — vertical list of running agents (live status colors)
+// AGENT STACK TILE: vertical list of running agents (live status colors)
 // -----------------------------------------------------------------------------
 function AgentStackTile() {
   // Show 5 representative agents so the panel reads as "broadcast in flight"
@@ -517,7 +568,7 @@ function AgentStackTile() {
 }
 
 // -----------------------------------------------------------------------------
-// TERMINAL TILE — cycling typewriter showing real tool-call JSONL
+// TERMINAL TILE: cycling typewriter showing real tool-call JSONL
 // -----------------------------------------------------------------------------
 const TERMINAL_SCENES = [
   {
@@ -656,7 +707,7 @@ function TerminalTile() {
 }
 
 // -----------------------------------------------------------------------------
-// INSTALL TILE — install paths (mac/win/mcp) as a compact selector card
+// INSTALL TILE: install paths (mac/win/mcp) as a compact selector card
 // -----------------------------------------------------------------------------
 const INSTALL_PATHS = [
   { id: 'mac', label: 'macOS', sub: 'Apple silicon / Intel', icon: Apple, href: '/download' },
@@ -769,36 +820,39 @@ export function HeroBento() {
           className="grid grid-cols-1 gap-4 md:gap-5 lg:grid-cols-12"
           style={{ perspective: 2000 }}
         >
-          {/* HEADLINE — desktop: 8 wide, 2 rows tall */}
-          <motion.div
-            variants={tileVariants}
-            className="lg:col-span-8 lg:row-span-2 lg:min-h-[540px]"
-          >
+          {/* Bento layout 2026-05-28, pulled TerminalTile up into row 2 so
+              brocco.run sits directly under the headline (was leaving ~90px of
+              dead space below HeadlineTile because row-span-2 stretched it).
+              Row 1: headline + metrics. Row 2: terminal + agent stack. Row 3:
+              install spans full width.
+
+              HEADLINE, row 1 left, 8 cols. */}
+          <motion.div variants={tileVariants} className="lg:col-span-8 lg:min-h-[440px]">
             <HeadlineTile />
           </motion.div>
 
-          {/* METRICS — desktop: 4 wide, 1 row */}
-          <motion.div variants={tileVariants} className="lg:col-span-4 lg:min-h-[260px]">
+          {/* METRICS, row 1 right, 4 cols */}
+          <motion.div variants={tileVariants} className="lg:col-span-4 lg:min-h-[440px]">
             <MetricsTile />
           </motion.div>
 
-          {/* AGENT STACK — desktop: 4 wide, 1 row */}
-          <motion.div variants={tileVariants} className="lg:col-span-4 lg:min-h-[260px]">
-            <AgentStackTile />
-          </motion.div>
-
-          {/* TERMINAL — desktop: 8 wide */}
+          {/* TERMINAL (brocco.run), row 2 left, 8 cols, sits directly under the headline */}
           <motion.div variants={tileVariants} className="lg:col-span-8 lg:min-h-[300px]">
             <TerminalTile />
           </motion.div>
 
-          {/* INSTALL — desktop: 4 wide */}
+          {/* AGENT STACK, row 2 right, 4 cols */}
           <motion.div variants={tileVariants} className="lg:col-span-4 lg:min-h-[300px]">
+            <AgentStackTile />
+          </motion.div>
+
+          {/* INSTALL, row 3 full width, gives the section a strong closer */}
+          <motion.div variants={tileVariants} className="lg:col-span-12 lg:min-h-[260px]">
             <InstallTile />
           </motion.div>
         </motion.div>
 
-        {/* Live network strip — full-bleed agent mesh under the bento.
+        {/* Live network strip, full-bleed agent mesh under the bento.
             Visualizes the running fleet as connected nodes pulsing with
             activity. Replaces the prior empty space between the bento
             grid and the wired-into row. */}
@@ -855,7 +909,7 @@ const tileVariants = {
 };
 
 // -----------------------------------------------------------------------------
-// CosmicTeamShowcase — replaces the old draggable Live Network (user feedback:
+// CosmicTeamShowcase, replaces the old draggable Live Network (user feedback:
 // "stagnant and tactile, may need to be scrapped"). New approach: full-bleed
 // Higgsfield Kling 3.0 video of the crocs floating in nebula space, with
 // floating agent name labels + a live activity ticker overlaid. Cinematic,
@@ -1058,7 +1112,7 @@ function CosmicTeamShowcase() {
 }
 
 // -----------------------------------------------------------------------------
-// LEGACY FullWidthLiveNetwork — kept for reference, no longer rendered. The
+// LEGACY FullWidthLiveNetwork, kept for reference, no longer rendered. The
 // CosmicTeamShowcase above replaces it. Delete when confident no flag flips
 // us back. See marketing/audit/critic-*-2026-05-22.md for rationale.
 // -----------------------------------------------------------------------------

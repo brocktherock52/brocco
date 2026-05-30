@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import { motion, AnimatePresence } from 'framer-motion';
 
-// ConstructionCrew — animated dashboard overlay shown while runs are
+// ConstructionCrew, animated dashboard overlay shown while runs are
 // active. Small construction crocs walk back and forth along the pane
-// edges carrying tools (wrenches, hammers, blueprints) — a visible
+// edges carrying tools (wrenches, hammers, blueprints), a visible
 // ensemble that makes the team feel like it's literally building the
 // work. Subtle, ambient, non-blocking.
 
@@ -31,7 +31,7 @@ const CREW: Array<{ slug: string; accent: string }> = [
 const TOOLS = ['🔧', '🔨', '📐', '✏️', '🪛', '📋', '⚙️', '🛠️'];
 
 interface ConstructionCrewProps {
-  /** Whether to render — only show while a run is active */
+  /** Whether to render, only show while a run is active */
   active: boolean;
 }
 
@@ -101,18 +101,20 @@ function Crew({ member }: { member: CrewMember }) {
         className="relative flex items-center gap-1"
       >
         <div
-          className="relative h-7 w-7 overflow-hidden rounded-md bg-black"
+          className="relative h-7 w-7"
           style={{
-            boxShadow: `inset 0 0 0 1px ${member.accent}55, 0 0 10px ${member.accent}22`,
+            // White croc, transparent PNG (agents-nano), no black frame. A soft
+            // accent glow keeps it readable over the dark pane.
             transform: member.direction === 'rl' ? 'scaleX(-1)' : 'none',
+            filter: `drop-shadow(0 0 6px ${member.accent}66)`,
           }}
         >
           <Image
-            src={`/assets/cast-v7/${member.slug}.png`}
+            src={`/assets/agents-nano/${member.slug}.png`}
             alt=""
             fill
             sizes="28px"
-            className="object-cover"
+            className="object-contain"
           />
         </div>
         {/* the tool the crocodile is carrying */}

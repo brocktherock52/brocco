@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
-import { ArrowRight, ShieldCheck, Zap, CheckCircle2 } from 'lucide-react';
+import { ArrowRight, ShieldCheck, CheckCircle2 } from 'lucide-react';
 import { Nav } from '@/components/nav';
 import { Footer } from '@/components/footer';
 import { InstallButton } from '@/components/install-button';
@@ -40,7 +40,7 @@ const PARTNERS = [
 ];
 
 const PROOFS = [
-  'BYOK on every plan — Anthropic / OpenAI / Ollama / Groq / vLLM / OpenRouter',
+  'BYOK on every plan: Anthropic / OpenAI / Ollama / Groq / vLLM / OpenRouter',
   'Same dashboard everywhere: web, native PWA, Claude Desktop tool, REST',
   'Audit-grade JSONL logs that your security team can sign off on',
   'Zero data retention by default. Your prompts never train a model.',

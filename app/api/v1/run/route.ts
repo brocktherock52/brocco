@@ -66,7 +66,7 @@ async function executeTool(name: string, input: Record<string, unknown>, signal:
     }
     if (name === 'http_get') {
       const check = checkUrl(String(input.url));
-      if (!check.ok) return `ERROR: ssrf_blocked — ${check.reason}`;
+      if (!check.ok) return `ERROR: ssrf_blocked: ${check.reason}`;
       const r = await fetch(check.url!.toString(), {
         headers: { 'User-Agent': 'Brocco-Demo/1.0' },
         signal,

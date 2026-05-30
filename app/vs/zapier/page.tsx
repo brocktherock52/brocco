@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { ComparePage } from '@/components/compare-page';
 
 export const metadata: Metadata = {
-  title: 'brocco vs Zapier — agents vs Zaps',
+  title: 'brocco vs Zapier - agents vs Zaps',
   description:
     'Zapier runs deterministic step chains. Brocco runs reasoning agents that pick the next tool dynamically. Compare on judgment, audit logs, BYOK, and per-run cost.',
   alternates: { canonical: '/vs/zapier' },
@@ -62,7 +62,7 @@ export default function VsZapierPage() {
       faq={[
         {
           q: 'Can brocco replace all my Zaps?',
-          a: 'Probably not. Zaps that are pure if-this-then-that are best in Zapier — fast to build, cheap, predictable. Zaps that break when input shape changes or that require reading + deciding are exactly where brocco shines.',
+          a: 'Probably not. Zaps that are pure if-this-then-that are best in Zapier: fast to build, cheap, predictable. Zaps that break when input shape changes or that require reading + deciding are exactly where brocco shines.',
         },
         {
           q: 'How do I trigger a brocco agent from a Zap?',
@@ -74,7 +74,7 @@ export default function VsZapierPage() {
         },
         {
           q: 'Do you have native Slack / Notion / Stripe integrations?',
-          a: 'Yes — Stripe, Slack, Discord, Postgres, Gmail, plus a tool factory pattern that lets you wire any HTTP API in ~30 lines of Python. We are not trying to match 6,000 integrations; we ship the ones agents actually need.',
+          a: 'Yes. Stripe, Slack, Discord, Postgres, Gmail, plus a tool factory pattern that lets you wire any HTTP API in ~30 lines of Python. We are not trying to match 6,000 integrations; we ship the ones agents actually need.',
         },
       ]}
     />

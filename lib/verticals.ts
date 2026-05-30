@@ -1,4 +1,4 @@
-// Vertical landing pages — /for/<slug>. Each entry is a use-case
+// Vertical landing pages: /for/<slug>. Each entry is a use-case
 // landing for a specific role or industry.
 
 export interface VerticalSeed {
@@ -65,7 +65,7 @@ export const VERTICALS: VerticalSeed[] = [
     slug: 'ops-leads',
     audience: 'ops leads',
     hero: 'The work that runs the business.',
-    lead: 'Brocco does the silent ops work — CRM hygiene, ticket triage, reminder scheduling, deduping — so your humans can do the work humans should do.',
+    lead: 'Brocco does the silent ops work, CRM hygiene, ticket triage, reminder scheduling, deduping, so your humans can do the work humans should do.',
     pains: [
       'CRM is 30% duplicate records and growing.',
       'Tickets pile up because nobody triages by priority.',
@@ -141,7 +141,7 @@ export const VERTICALS: VerticalSeed[] = [
     dayWith: [
       { time: 'Week 1', action: 'Researcher delivers a 40-page depth brief on the topic with 80+ sources.' },
       { time: 'Week 2', action: 'Designer outlines 8 modules with learning objectives and exercises.' },
-      { time: 'Week 3', action: 'Coder drafts companion assets — quizzes, code samples, worksheets.' },
+      { time: 'Week 3', action: 'Coder drafts companion assets: quizzes, code samples, worksheets.' },
       { time: 'Week 4', action: 'Outreach builds the launch sequence; supervisor coordinates send.' },
     ],
     recipes: ['content-sprint', 'launch-day', 'market-research'],
@@ -152,7 +152,7 @@ export const VERTICALS: VerticalSeed[] = [
   {
     slug: 'marketers',
     audience: 'marketers',
-    hero: 'Content, campaigns, comms — at the cadence the algorithm rewards.',
+    hero: 'Content, campaigns, comms, at the cadence the algorithm rewards.',
     lead: 'Brocco runs your content sprints, builds your campaign collateral, and drafts the comms. Six marketing roles, one license.',
     pains: [
       'Content cadence is impossible at agency rates.',
@@ -177,7 +177,7 @@ export const VERTICALS: VerticalSeed[] = [
     hero: 'Reduce churn before it shows up in the dashboard.',
     lead: 'Brocco watches usage signals, drafts proactive touches, and surfaces accounts that need attention. CS scales without scaling headcount.',
     pains: [
-      'CS is reactive — by the time tickets fire, churn risk is high.',
+      'CS is reactive. By the time tickets fire, churn risk is high.',
       'Proactive outreach is impossible at 1:200 ratios.',
       'QBR prep takes the whole week before each meeting.',
       'Renewal forecasting lives in a fragile spreadsheet.',
@@ -211,10 +211,76 @@ export const VERTICALS: VerticalSeed[] = [
       { time: '2:00pm', action: 'Researcher builds a buyer-match list per property based on the buyer DB.' },
       { time: '4:00pm', action: 'Coder drafts the assignable contract with property-specific blanks.' },
     ],
-    recipes: ['scrape-and-summarize', 'cold-outreach-batch', 'customer-deep-dive'],
+    recipes: ['motivated-seller-leads', 'skip-trace-and-outreach', 'comp-analysis-arv', 'cash-buyer-dispo', 'deal-follow-up-engine', 'loi-and-contract-draft'],
     agents: ['browser', 'researcher', 'outreach', 'coder', 'ops'],
     cta: 'Run the wholesale pipeline like a fund.',
-    keywords: ['real estate wholesale ai', 'wholesaling automation', 'motivated seller leads ai'],
+    keywords: ['real estate wholesale ai', 'wholesaling automation', 'motivated seller leads ai', 'ai for real estate wholesalers', 'wholesaling software'],
+  },
+  {
+    slug: 'land-investors',
+    audience: 'land flippers and investors',
+    hero: 'Buy dirt cheap. Sell it twice as fast.',
+    lead: 'Brocco runs the land grind: pull rural parcels, price the zone, send the offers, and field the replies. The volume game becomes a one-person operation.',
+    pains: [
+      'County parcel data lives in 50 different clunky portals.',
+      'Pricing a zone by hand means hours of comp-hunting per county.',
+      'Mail-merge offer campaigns are tedious and easy to fumble.',
+      'Inbound replies pile up faster than you can qualify them.',
+    ],
+    dayWith: [
+      { time: '8:00am', action: 'Browser pulls vacant-land parcels for the target county and price band.' },
+      { time: '10:00am', action: 'Analyst builds a price-per-acre zone map from recent sales.' },
+      { time: '1:00pm', action: 'Outreach drafts a blind-offer mail and SMS batch at your chosen percentage.' },
+      { time: '3:00pm', action: 'Researcher qualifies inbound replies and flags the live ones.' },
+    ],
+    recipes: ['motivated-seller-leads', 'comp-analysis-arv', 'skip-trace-and-outreach', 'loi-and-contract-draft'],
+    agents: ['browser', 'researcher', 'analyst', 'outreach'],
+    cta: 'Scale the land machine without a VA team.',
+    keywords: ['land wholesaling ai', 'vacant land investing software', 'land flipping automation', 'rural parcel finder ai'],
+  },
+  {
+    slug: 'creative-finance-investors',
+    audience: 'subject-to and seller-finance investors',
+    hero: 'Structure the deal nobody else can.',
+    lead: 'Brocco helps creative-finance investors find the right seller, model the terms, and write the pitch for subject-to, seller-finance, and wrap deals. The hard part becomes a prompt.',
+    pains: [
+      'Finding sellers who fit a creative structure is a needle in a haystack.',
+      'Modeling subject-to and seller-finance terms by hand is error-prone.',
+      'Explaining the structure to a nervous seller loses deals.',
+      'Every deal needs a different paper trail.',
+    ],
+    dayWith: [
+      { time: '9:00am', action: 'Researcher screens leads for equity, payment status, and motivation fit.' },
+      { time: '11:00am', action: 'Analyst models a subject-to and a seller-finance scenario side by side.' },
+      { time: '1:30pm', action: 'Outreach drafts the seller-facing pitch in plain, trust-building language.' },
+      { time: '3:30pm', action: 'Coder drafts the term sheet with the deal-specific blanks.' },
+    ],
+    recipes: ['motivated-seller-leads', 'comp-analysis-arv', 'loi-and-contract-draft', 'deal-follow-up-engine'],
+    agents: ['researcher', 'analyst', 'outreach', 'coder'],
+    cta: 'Close the creative deals other investors walk past.',
+    keywords: ['subject to real estate ai', 'seller finance deal analyzer', 'creative finance investing software', 'sub to deal structuring'],
+  },
+  {
+    slug: 'real-estate-agents',
+    audience: 'real estate agents and brokers',
+    hero: 'List more. Chase less.',
+    lead: 'Brocco does the unbillable hours: listing copy, CMAs, farm-area research, and inbox follow-up, so you stay in front of clients instead of behind a screen.',
+    pains: [
+      'Writing listing descriptions and CMAs eats your evenings.',
+      'Your farm area needs constant research you never have time for.',
+      'Leads go cold because follow-up is manual.',
+      'Open-house and listing collateral is a scramble every time.',
+    ],
+    dayWith: [
+      { time: '8:30am', action: 'Researcher builds a CMA for the new listing from recent comparable sales.' },
+      { time: '10:30am', action: 'Designer and outreach produce the listing description, social posts, and email blast.' },
+      { time: '1:00pm', action: 'Outreach drafts personalized follow-ups for every lead in the pipeline.' },
+      { time: '4:00pm', action: 'Analyst summarizes farm-area activity into a one-page market update.' },
+    ],
+    recipes: ['comp-analysis-arv', 'content-sprint', 'deal-follow-up-engine', 'market-research'],
+    agents: ['researcher', 'outreach', 'analyst', 'designer'],
+    cta: 'Spend your hours with clients, not paperwork.',
+    keywords: ['ai for real estate agents', 'listing description generator', 'cma ai', 'realtor automation software'],
   },
 ];
 

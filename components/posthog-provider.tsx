@@ -61,3 +61,33 @@ export function trackEvent(name: string, props?: Record<string, unknown>) {
     /* swallow */
   }
 }
+
+/**
+ * Tie subsequent events to a known user so the journey map can follow one
+ * person across signup -> onboarding -> first run -> upgrade. Braden's ask:
+ * "monitor the user-journey map after signup, see where users drop." Call this
+ * once the session resolves (see app-shell). Idempotent: PostHog de-dupes the
+ * same distinct_id, so re-calling on every mount is safe.
+ */
+export function identifyUser(id: string, props?: Record<string, unknown>) {
+  if (typeof window === 'undefined') return;
+  if (!process.env.NEXT_PUBLIC_POSTHOG_KEY) return;
+  if (!hasConsent('analytics')) return;
+  if (!id) return;
+  try {
+    posthog.identify(id, props ?? {});
+  } catch {
+    /* swallow */
+  }
+}
+
+/** Clear the identity on sign-out so the next anonymous session is fresh. */
+export function resetUser() {
+  if (typeof window === 'undefined') return;
+  if (!process.env.NEXT_PUBLIC_POSTHOG_KEY) return;
+  try {
+    posthog.reset();
+  } catch {
+    /* swallow */
+  }
+}

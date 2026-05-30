@@ -5,6 +5,7 @@ import { Suspense } from 'react';
 import { Toaster } from 'sonner';
 import { PwaRegister } from '@/components/pwa-register';
 import { BgDecor } from '@/components/bg-decor';
+import { CosmicBg } from '@/components/cosmic-bg';
 import { MetaPixel } from '@/components/meta-pixel';
 import { CookieConsent } from '@/components/cookie-consent';
 import { PostHogProvider } from '@/components/posthog-provider';
@@ -12,7 +13,7 @@ import { SupportChat } from '@/components/support-chat';
 import { CommandPalette } from '@/components/command-palette';
 import { ScrollProgress } from '@/components/ui/scroll-progress';
 import { LenisProvider } from '@/components/lenis-provider';
-// MascotMount intentionally unmounted — Next.js 16 + framer-motion drag is throwing
+// MascotMount intentionally unmounted. Next.js 16 + framer-motion drag is throwing
 // "Element type is invalid. Received a promise that resolves to: undefined."
 // even via dynamic({ssr:false}) wrapper. Files preserved in components/mascot-*.tsx
 // for later iteration once the Next 16 client-import root cause is identified.
@@ -40,9 +41,9 @@ export const metadata: Metadata = {
     'parallel agents',
     'agent orchestration',
   ],
-  authors: [{ name: 'BDP Consulting' }],
-  creator: 'BDP Consulting',
-  publisher: 'BDP Consulting',
+  authors: [{ name: 'BDP Industries' }],
+  creator: 'BDP Industries',
+  publisher: 'BDP Industries',
   alternates: { canonical: SITE_URL },
   openGraph: {
     title: 'brocco.dev - agents that do the work',
@@ -76,6 +77,13 @@ export const metadata: Metadata = {
     shortcut: ['/assets/brocco-mark-transparent.png'],
   },
   manifest: '/manifest.webmanifest',
+  // iOS standalone-PWA hints: launch fullscreen with a dark translucent status
+  // bar and a proper home-screen app title (added 2026-05-30).
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: 'black-translucent',
+    title: 'brocco',
+  },
 };
 
 export const viewport: Viewport = {
@@ -83,6 +91,9 @@ export const viewport: Viewport = {
   colorScheme: 'dark',
   width: 'device-width',
   initialScale: 1,
+  // viewport-fit=cover lets content extend under the iOS notch / home bar so we
+  // can pad with safe-area-inset where it matters (added 2026-05-30).
+  viewportFit: 'cover',
 };
 
 const ldJson = {
@@ -96,8 +107,25 @@ const ldJson = {
       logo: `${SITE_URL}/assets/logomark.svg`,
       description:
         'Multi-agent AI dashboard. Run multiple Claude or local LLM agents in parallel from one prompt.',
-      parentOrganization: { '@type': 'Organization', name: 'BDP Consulting' },
+      parentOrganization: { '@type': 'Organization', name: 'BDP Industries' },
       email: 'help@brocco.dev',
+      // sameAs feeds Google's knowledge graph + links the brand's socials.
+      // Verified 2026-05-27 against the live Ayrshare /user response so this
+      // matches the accounts we actually post to (and the footer).
+      sameAs: [
+        'https://www.tiktok.com/@brocco.dev',
+        'https://www.instagram.com/brocco.dev',
+        'https://x.com/broccoai',
+        'https://www.youtube.com/@brocco.dev',
+        'https://www.linkedin.com/company/brocco.dev',
+        'https://www.threads.com/@brocco.dev',
+        'https://www.facebook.com/Brocco.dev',
+        'https://www.pinterest.com/brocco.dev',
+        'https://www.reddit.com/user/broccoai',
+        'https://www.snapchat.com/add/brocco.dev',
+        'https://discord.gg/v5j37wwkjn',
+        'https://github.com/brocktherock52/brocco',
+      ],
     },
     {
       '@type': 'SoftwareApplication',
@@ -135,10 +163,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       </head>
       <body>
         <ScrollProgress />
-        {/* One background layer at a time. BgDecor + BreathingBg + CosmicBg
-            were all stacked previously, ~290 framer-motion props at idle.
-            BgDecor stays as the lightest static gradient + grid. The other
-            two are still in components/ for reference. */}
+        {/* Background stack: the cosmic galaxy (starfield, constellations,
+            planets, comets) sits furthest back for the signature space feel
+            the founder wanted restored; BgDecor's grid + gradient layers on
+            top of it. CosmicBg self-throttles its starfield on mobile and
+            respects reduced-motion via framer-motion. */}
+        <CosmicBg />
         <BgDecor />
         <a
           href="#main"

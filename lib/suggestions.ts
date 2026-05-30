@@ -2,7 +2,7 @@
 //
 // Looks at the user's localStorage history and emits at most one suggestion
 // at a time, with a snooze/dismiss state so the slot stays calm. Detector
-// runs synchronously in the browser — it is intentionally cheap so it can
+// runs synchronously in the browser. It is intentionally cheap so it can
 // fire on every dashboard mount.
 //
 // Pattern catalog (extend over time):
@@ -22,7 +22,7 @@ export interface Suggestion {
   id: string; // stable key so snooze persists across re-detections
   kind: 'recurring' | 'drought' | 'bias';
   message: string;
-  /** Accept action — what the user gets if they click the primary CTA */
+  /** Accept action: what the user gets if they click the primary CTA */
   accept: {
     label: string;
     goal?: string;
@@ -102,7 +102,7 @@ export function pickSuggestion(): Suggestion | null {
 
   if (history.length === 0) return null;
 
-  // 1. RECURRING CANDIDATE — same normalized goal run 3+ times in 14d
+  // 1. RECURRING CANDIDATE: same normalized goal run 3+ times in 14d
   const fourteenDaysAgo = Date.now() - 14 * 24 * 60 * 60 * 1000;
   const buckets = new Map<string, { count: number; latest: RunHistoryEntry }>();
   for (const h of history) {
@@ -134,7 +134,7 @@ export function pickSuggestion(): Suggestion | null {
     }
   }
 
-  // 2. BROADCAST DROUGHT — most recent run > 36h ago
+  // 2. BROADCAST DROUGHT: most recent run > 36h ago
   const mostRecent = history.reduce((latest, h) => (h.ts > latest.ts ? h : latest), history[0]);
   const hoursSince = (Date.now() - mostRecent.ts) / (60 * 60 * 1000);
   if (hoursSince >= 36) {
@@ -153,7 +153,7 @@ export function pickSuggestion(): Suggestion | null {
     }
   }
 
-  // 3. AGENT BIAS — one agent run >7x, another <2x in last 14d
+  // 3. AGENT BIAS: one agent run >7x, another <2x in last 14d
   const counts = new Map<AgentName, number>();
   for (const h of history) {
     if (h.ts < fourteenDaysAgo) continue;

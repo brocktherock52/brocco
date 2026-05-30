@@ -19,8 +19,11 @@ const config: Config = {
         },
         ink: {
           DEFAULT: '#E9EEF1',
-          dim: '#A8B0BC',
-          faint: '#6B7280',
+          // Contrast bump 2026-05-30 for WCAG AA on the dark bg. faint (#6B7280)
+          // failed AA at small sizes; dim nudged up to match. Both still read as
+          // clearly "dimmed" against ink.DEFAULT.
+          dim: '#B4BCC9',
+          faint: '#8A93A6',
         },
         border: {
           DEFAULT: 'rgba(255,255,255,0.08)',
@@ -103,7 +106,7 @@ const config: Config = {
         },
         float: {
           '0%, 100%': { transform: 'translateY(0px)' },
-          '50%': { transform: 'translateY(-6px)' },
+          '50%': { transform: 'translateY(-2px)' },
         },
       },
       animation: {

@@ -7,7 +7,7 @@ import { toast } from 'sonner';
 import { scheduleRecurring, type Cadence } from '@/lib/recurring';
 import type { AgentName } from '@/lib/agents';
 
-// RecurringToggle — appears next to every completed run.
+// RecurringToggle, appears next to every completed run.
 // Promotes a one-shot into a recurring run with one click + a cadence
 // selector. Persists via lib/recurring (localStorage today).
 
@@ -30,7 +30,7 @@ export function RecurringToggle({ goal, agents }: RecurringToggleProps) {
 
   function save() {
     if (!goal.trim()) {
-      toast.error('Nothing to schedule — the goal is empty.');
+      toast.error('Nothing to schedule, the goal is empty.');
       return;
     }
     scheduleRecurring({ goal, agents, cadence });

@@ -38,8 +38,7 @@
   ],
   "exclude": [
     "node_modules",
-    "legacy-static",
-    "legacy-api",
+    "_legacy",
     "scripts",
     "session_logs",
     "sessions",

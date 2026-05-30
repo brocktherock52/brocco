@@ -2,7 +2,7 @@
 
 import type { CSSProperties } from 'react';
 
-// CustomCroc — deterministic SVG composer for user-created agents.
+// CustomCroc, deterministic SVG composer for user-created agents.
 //
 // The wizard at /app/agents/new lets the user pick a croc base + an
 // accent color + an accessory slot. CustomCroc reads that descriptor

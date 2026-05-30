@@ -1,4 +1,4 @@
-// Blog post seeds — high-intent SEO targets. These render as full pages
+// Blog post seeds, high-intent SEO targets. These render as full pages
 // today; long-form copy gets filled in iteratively. Each entry is a
 // real, indexable URL with H1 + meta description + outline.
 

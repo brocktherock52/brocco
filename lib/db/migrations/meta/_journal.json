@@ -8,6 +8,13 @@
       "when": 1778651735687,
       "tag": "0000_gray_mach_iv",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1779907731683,
+      "tag": "0001_auto_refresh_watch",
+      "breakpoints": true
     }
   ]
 }

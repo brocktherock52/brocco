@@ -2,13 +2,13 @@
 
 Brocco is open source under MIT. You can deploy your own instance on Vercel (one-click), or wherever Next.js + Edge runtime is supported (Cloudflare Workers and Netlify Edge work with minor config tweaks).
 
-## Quick start — Vercel (recommended)
+## Quick start, Vercel (recommended)
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fbrocktherock52%2Fbrocco&env=ANTHROPIC_API_KEY&envDescription=Required%20to%20run%20live%20agents.%20Get%20one%20at%20console.anthropic.com.&envLink=https%3A%2F%2Fconsole.anthropic.com)
 
 The Vercel button clones the repo into your account, prompts for `ANTHROPIC_API_KEY`, and deploys. ~3 minutes end to end.
 
-## Quick start — local development
+## Quick start, local development
 
 ```bash
 git clone https://github.com/brocktherock52/brocco
@@ -33,7 +33,7 @@ ANTHROPIC_API_KEY=sk-ant-... npm run dev
 | `TAVILY_API_KEY` | Enables the `search_web` tool. Without it, search returns `ERROR: TAVILY_API_KEY not set`. Get one at [tavily.com](https://tavily.com). |
 | `APP_URL` | Canonical URL used in OG tags, Stripe redirects, and CAPI deduplication. Defaults to `https://brocco.dev`. |
 
-### Stripe billing (optional — only if you want paid plans)
+### Stripe billing (optional, only if you want paid plans)
 
 | Variable | Purpose |
 |---|---|
@@ -54,7 +54,7 @@ Configure your Stripe webhook to POST to `https://<your-domain>/api/stripe-webho
 
 The webhook verifies signatures via WebCrypto (no Stripe SDK) and rejects events with timestamps older than 5 minutes (replay protection).
 
-### Analytics (optional — funnel measurement)
+### Analytics (optional, funnel measurement)
 
 | Variable | Purpose |
 |---|---|
@@ -93,7 +93,7 @@ We don't currently maintain CI for non-Vercel deployments. If you ship Brocco on
 
 ## Database
 
-Brocco does **not** require a database for the free demo or BYOK mode. The Stripe webhook handler currently logs events to `console.log` only — there is no persistence layer. This is acceptable for first-customer scale; once you have real customers, you'll want to add Vercel KV / Neon / Supabase to persist subscription state.
+Brocco does **not** require a database for the free demo or BYOK mode. The Stripe webhook handler currently logs events to `console.log` only, there is no persistence layer. This is acceptable for first-customer scale; once you have real customers, you'll want to add Vercel KV / Neon / Supabase to persist subscription state.
 
 See [`docs/internal/HANDOFF_NEXT_SESSION.md`](internal/HANDOFF_NEXT_SESSION.md) for the planned persistence migration.
 

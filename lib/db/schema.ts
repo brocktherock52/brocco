@@ -13,7 +13,7 @@
  * drizzle adapter contract. The threads + messages tables match the
  * scaffold brief verbatim (users.id is a uuid foreign key target).
  */
-import { pgTable, text, timestamp, uuid, jsonb, boolean } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, uuid, jsonb, boolean, integer } from 'drizzle-orm/pg-core';
 
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -75,8 +75,51 @@ export const threads = pgTable('threads', {
   title: text('title').notNull(),
   agents: jsonb('agents').$type<string[]>().notNull(), // ['researcher','planner']
   isPublic: boolean('is_public').default(false).notNull(),
+  // "Watching out for you" cadence (Braeden's retention ask). The cron watcher
+  // checks watchEnabled projects every refreshCadenceHours and files an alert
+  // when one is due. The actual re-run is client-side BYOK (see lib/refresh.ts).
+  watchEnabled: boolean('watch_enabled').default(true).notNull(),
+  refreshCadenceHours: integer('refresh_cadence_hours').default(72).notNull(),
+  lastCheckedAt: timestamp('last_checked_at'), // when the watcher last evaluated this
+  lastRefreshedAt: timestamp('last_refreshed_at'), // when it was actually re-run
   createdAt: timestamp('created_at').defaultNow().notNull(),
   updatedAt: timestamp('updated_at').defaultNow().notNull(),
+});
+
+// Notifications surfaced in the dashboard bell. The watcher inserts
+// 'refresh_due' rows on a cadence; a client refresh inserts 'changes_found'
+// rows carrying the "what changed since last run" summary.
+export const projectAlerts = pgTable('project_alerts', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  threadId: uuid('thread_id')
+    .references(() => threads.id, { onDelete: 'cascade' })
+    .notNull(),
+  userId: uuid('user_id')
+    .references(() => users.id, { onDelete: 'cascade' })
+    .notNull(),
+  kind: text('kind').notNull(), // refresh_due | changes_found
+  summary: text('summary'),
+  status: text('status').default('unread').notNull(), // unread | read
+  createdAt: timestamp('created_at').defaultNow().notNull(),
+});
+
+// Per-project "brain". Each run/refresh appends a compact skill entry
+// (what we did / what we learned / what changed) so iteration N+1 builds on
+// iteration N. Read back into the run context on every run. Stays BYOK-safe:
+// the entries live in the DB, the client passes them into the run context.
+export const projectMemory = pgTable('project_memory', {
+  id: uuid('id').primaryKey().defaultRandom(),
+  threadId: uuid('thread_id')
+    .references(() => threads.id, { onDelete: 'cascade' })
+    .notNull(),
+  userId: uuid('user_id')
+    .references(() => users.id, { onDelete: 'cascade' })
+    .notNull(),
+  iteration: integer('iteration').default(1).notNull(),
+  did: text('did'), // what this iteration did
+  learned: text('learned'), // what it learned
+  changed: text('changed'), // what changed vs the prior iteration
+  createdAt: timestamp('created_at').defaultNow().notNull(),
 });
 
 export const messages = pgTable('messages', {
@@ -95,3 +138,5 @@ export type User = typeof users.$inferSelect;
 export type Session = typeof sessions.$inferSelect;
 export type Thread = typeof threads.$inferSelect;
 export type Message = typeof messages.$inferSelect;
+export type ProjectAlert = typeof projectAlerts.$inferSelect;
+export type ProjectMemory = typeof projectMemory.$inferSelect;

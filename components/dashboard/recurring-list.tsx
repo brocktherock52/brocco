@@ -11,7 +11,7 @@ import {
   type RecurringRun,
 } from '@/lib/recurring';
 
-// RecurringList — /app/recurring screen. Lists every recurring run, lets
+// RecurringList, /app/recurring screen. Lists every recurring run, lets
 // the user pause/resume or delete. localStorage source; mirrors to
 // server once auth + KV ship.
 
@@ -56,7 +56,7 @@ export function RecurringList() {
         </h1>
         <p className="mt-3 text-[14px] leading-relaxed text-ink-dim">
           every job runs at 06:00 your local time. nothing sends overnight
-          without your nod — drafts queue up for the morning briefing.
+          without your nod. Drafts queue up for the morning briefing.
         </p>
       </header>
 

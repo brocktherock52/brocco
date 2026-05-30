@@ -7,14 +7,42 @@
     color-scheme: dark;
   }
   html {
-    scroll-behavior: smooth;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+  }
+  /* Native smooth-scroll only on mouse/desktop. On touch devices it compounds
+     with momentum scrolling and reads as the page easing/jittering, so phones
+     get plain native scrolling. Desktop smoothness is handled by Lenis anyway. */
+  @media (hover: hover) and (pointer: fine) {
+    html {
+      scroll-behavior: smooth;
+    }
+  }
+  /* Lenis guard styles. v1.3 of the package no longer ships a stylesheet to
+     import, so we declare its required rules here. They only bite when Lenis
+     has added its classes to <html> (desktop only — the provider skips touch
+     devices), and they stop the native `scroll-behavior: smooth` above from
+     fighting Lenis's own interpolation, which causes scroll jitter. */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+  .lenis.lenis-smooth {
+    scroll-behavior: auto !important;
+  }
+  .lenis.lenis-smooth [data-lenis-prevent] {
+    overscroll-behavior: contain;
+  }
+  .lenis.lenis-stopped {
+    overflow: hidden;
+  }
+  .lenis.lenis-scrolling iframe {
+    pointer-events: none;
   }
   body {
     @apply bg-bg-0 text-ink font-sans antialiased;
     font-feature-settings: "ss01", "ss02", "cv11";
-    /* No background-attachment: fixed here — caused scroll repaint flicker on
+    /* No background-attachment: fixed here, caused scroll repaint flicker on
        Windows Chrome. The decorative gradients live in <BgDecor /> as a
        fixed-position layer with GPU compositing. */
   }
@@ -87,24 +115,9 @@
            transition-all duration-200
            hover:scale-[1.02] hover:shadow-glow active:scale-[0.99];
   }
-  .btn-primary::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: linear-gradient(
-      120deg,
-      transparent 0%,
-      rgba(255, 255, 255, 0.22) 40%,
-      rgba(255, 255, 255, 0.22) 60%,
-      transparent 100%
-    );
-    transform: translateX(-120%);
-    transition: transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
-    pointer-events: none;
-  }
-  .btn-primary:hover::before {
-    transform: translateX(120%);
-  }
+  /* Shine sweep removed 2026-05-30 per the calm-motion brand rule (it flashed
+     on every hover). The glow shadow + subtle scale on .btn-primary carry the
+     premium feel without the distracting sweep. */
   .btn-primary > * {
     position: relative;
     z-index: 1;
@@ -173,4 +186,34 @@
 .jsonl .str { color: #67E8F9; }
 .jsonl .num { color: #FBBF24; }
 .jsonl .bool { color: #FB7185; }
-.jsonl .dim { color: #6B7280; }
+.jsonl .dim { color: #8A93A6; }
+
+/* Accessibility: honor the OS "reduce motion" setting globally. Framer Motion
+   reads this per-component, but this CSS guard also tames the looping CSS
+   animations (hero shine, etc.) and any transition the user did not opt into.
+   Added 2026-05-30 as part of the a11y pass. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .hero-shine::before {
+    animation: none !important;
+  }
+}
+
+/* Mobile: use dynamic viewport height where supported so the dashboard sheets
+   and full-height panes do not get clipped under the iOS browser chrome /
+   keyboard. Components opt in via the .h-dvh / .min-h-dvh helpers. */
+.h-dvh {
+  height: 100vh;
+  height: 100dvh;
+}
+.min-h-dvh {
+  min-height: 100vh;
+  min-height: 100dvh;
+}

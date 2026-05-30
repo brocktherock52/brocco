@@ -2,7 +2,7 @@
 
 Copy-paste recipes for the `/api/v1/*` endpoints. Pair with [`docs/api.md`](../api.md) for the full reference.
 
-## One-liner — run a prompt, watch it stream
+## One-liner, run a prompt, watch it stream
 
 ```bash
 curl -N -X POST https://brocco.dev/api/v1/run \
@@ -45,7 +45,7 @@ curl -sN -i -X POST https://brocco.dev/api/v1/run \
   | grep -i 'X-Brocco-Request-Id'
 ```
 
-Every response — success or error — includes `X-Brocco-Request-Id`. Include it when filing an issue.
+Every response, success or error, includes `X-Brocco-Request-Id`. Include it when filing an issue.
 
 ## List available agents
 

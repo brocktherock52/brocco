@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { ComparePage } from '@/components/compare-page';
 
 export const metadata: Metadata = {
-  title: 'brocco vs Devin — multi-agent dashboard vs autonomous SWE',
+  title: 'brocco vs Devin - multi-agent dashboard vs autonomous SWE',
   description:
     'Devin is an autonomous AI software engineer. Brocco is a multi-agent dashboard for ops, research, content, and outreach. Compare on visibility, parallelism, BYOK, and price.',
   alternates: { canonical: '/vs/devin' },
@@ -66,11 +66,11 @@ export default function VsDevinPage() {
         },
         {
           q: 'Can brocco write code?',
-          a: 'Yes — brocco has a coder agent that plans, writes, and saves files. It is good for small surgical changes (utility functions, single-file scripts, prototypes). For multi-file refactors and shipping PRs, Devin or Cursor are stronger today.',
+          a: 'Yes. brocco has a coder agent that plans, writes, and saves files. It is good for small surgical changes (utility functions, single-file scripts, prototypes). For multi-file refactors and shipping PRs, Devin or Cursor are stronger today.',
         },
         {
           q: 'How transparent is each run?',
-          a: 'Brocco shows every tool call, every result, every token, in real time, in a separate pane per agent, exported as JSONL. Devin shows you a replayable activity log when it finishes. Both visible — different shapes.',
+          a: 'Brocco shows every tool call, every result, every token, in real time, in a separate pane per agent, exported as JSONL. Devin shows you a replayable activity log when it finishes. Both visible, different shapes.',
         },
         {
           q: 'Pricing comparison?',

@@ -69,7 +69,7 @@ function ComparisonTable() {
                       {v === true ? (
                         <span className="text-emerald-400">✓</span>
                       ) : v === false ? (
-                        <span className="text-ink-faint">—</span>
+                        <span className="text-ink-faint">-</span>
                       ) : (
                         <span>{v}</span>
                       )}

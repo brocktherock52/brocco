@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * LoginForm — magic-link entry shared by /login and /signup.
+ * LoginForm, magic-link entry shared by /login and /signup.
  *
  * Reuses the cosmic palette (gradient brand-to-cyan ring, glow halo,
  * mono labels) so the page feels like it belongs to /app rather than the
@@ -18,6 +18,7 @@ import { ArrowRight, Mail, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
 import { Logomark } from '@/components/logo';
 import { authClient } from '@/lib/auth-client';
+import { trackEvent } from '@/components/posthog-provider';
 
 interface Props {
   mode: 'login' | 'signup';
@@ -51,6 +52,10 @@ export function LoginForm({ mode }: Props) {
         return;
       }
       setSent(true);
+      // Funnel entry point. signup vs login_link_sent so the journey map can
+      // separate new-account starts from returning sign-ins. The user is still
+      // anonymous here (no session yet), the magic-link callback identifies them.
+      trackEvent(mode === 'signup' ? 'signup' : 'login_link_sent', { method: 'magic_link' });
       toast.success('check your inbox', {
         description: 'we sent a one-tap sign-in link. it expires in 5 minutes.',
       });
@@ -101,13 +106,13 @@ export function LoginForm({ mode }: Props) {
           <p className="mt-1">
             you don&apos;t need an account to start.{' '}
             <Link
-              href="/signup"
+              href="/app"
               className="font-semibold underline-offset-4 hover:underline"
             >
-              claim 100 free runs
-            </Link>{' '}
-            and your AI team opens instantly. no card. (passwordless email sign-in
-            is finishing setup for returning users.)
+              open your AI team now
+            </Link>
+            . 100 free runs, no card. (passwordless email sign-in below saves your
+            work across devices.)
           </p>
         </div>
 

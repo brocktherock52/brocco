@@ -7,10 +7,10 @@ import Image from 'next/image';
 import { getCastMember } from '@/lib/agent-cast';
 import type { AgentName } from '@/lib/agents';
 
-// MorningBriefing — the daily-essential home tab.
+// MorningBriefing, the daily-essential home tab.
 //
 // Goal: the first thing the user sees when they open the dashboard cold.
-// It simulates "what brocco did while you slept" — one row per agent, each
+// It simulates "what brocco did while you slept", one row per agent, each
 // with a real-looking output and a CTA to act on it.
 //
 // Data is local-stub for now. Replace `BRIEFING_FIXTURES` with the real
@@ -49,7 +49,7 @@ const BRIEFING_FIXTURES: BriefingItem[] = [
     slug: 'outreach',
     agent: 'outreach',
     accent: '#FBBF24',
-    output: '12 personalized cold emails drafted to design leads at YC W26 companies. 3 high-fit. None sent — waiting on your nod.',
+    output: '12 personalized cold emails drafted to design leads at YC W26 companies. 3 high-fit. None sent, waiting on your nod.',
     meta: 'ran at 06:02  ·  12 drafts  ·  3 flagged hot',
     cta: 'review drafts',
   },
@@ -89,7 +89,7 @@ export function MorningBriefing({ onAct }: MorningBriefingProps) {
   const [now, setNow] = useState<string>('');
 
   useEffect(() => {
-    // Local time string — only on client to avoid hydration mismatch.
+    // Local time string, only on client to avoid hydration mismatch.
     const fmt = () => {
       const d = new Date();
       return d.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' });
@@ -191,7 +191,7 @@ function BriefingRow({
       />
 
       <div className="flex items-start gap-3">
-        {/* Croc avatar — uses the AI emoji PNG with constant motion */}
+        {/* Croc avatar, uses the AI emoji PNG with constant motion */}
         <motion.div
           className="relative h-16 w-16 shrink-0 overflow-hidden rounded-lg bg-black ring-1"
           style={{ boxShadow: `inset 0 0 0 1px ${item.accent}33` }}

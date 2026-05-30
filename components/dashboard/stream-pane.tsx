@@ -4,6 +4,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { AlertTriangle, CheckCircle2, Loader2, RefreshCw, X } from 'lucide-react';
 import type { SimEvent } from '@/lib/simulator';
 import { findAgent } from '@/lib/simulator';
+import { renderMd } from './render-md';
 
 interface PaneProps {
   agent: string;
@@ -250,21 +251,6 @@ function truncate(s: string, n: number) {
   return s.length > n ? s.slice(0, n - 1) + '…' : s;
 }
 
-// crude markdown rendering for bold + headings + code (good enough for the demo)
-function renderMd(text: string) {
-  const lines = text.split('\n');
-  return lines.map((ln, i) => {
-    if (ln.startsWith('```')) return null;
-    if (ln.startsWith('|')) {
-      return (
-        <div key={i} className="my-0.5 font-mono text-[11.5px] text-ink-dim">
-          {ln}
-        </div>
-      );
-    }
-    const html = ln
-      .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
-      .replace(/`([^`]+)`/g, '<code class="font-mono text-[11.5px] bg-white/[0.06] px-1 py-0.5 rounded">$1</code>');
-    return <div key={i} dangerouslySetInnerHTML={{ __html: html || '&nbsp;' }} />;
-  });
-}
+// Markdown rendering moved to the shared, XSS-safe renderer in ./render-md.
+// Agent output is untrusted, so it must be HTML-escaped before our bold/code
+// transforms run. See components/dashboard/render-md.tsx.

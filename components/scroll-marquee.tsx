@@ -1,7 +1,7 @@
 'use client';
 
 /**
- * ScrollMarquee — full-bleed editorial display type that scrolls horizontally
+ * ScrollMarquee, full-bleed editorial display type that scrolls horizontally
  * driven by the page's vertical scroll position. Used as a section separator
  * between major blocks to give the page a magazine cadence.
  *
@@ -29,7 +29,7 @@ export function ScrollMarquee({
     target: ref,
     offset: ['start end', 'end start'],
   });
-  // pixels of translation — full strip width
+  // pixels of translation, full strip width
   const x = useTransform(scrollYProgress, [0, 1], reduce ? ['0%', '0%'] : ['10%', '-50%']);
 
   const phraseEl = (

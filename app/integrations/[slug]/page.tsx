@@ -21,7 +21,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
   const i = getIntegrationProfile(slug);
   if (!i) return { title: 'Not found' };
   return {
-    title: `${i.name} integration — brocco.dev`,
+    title: `${i.name} integration - brocco.dev`,
     description: i.tagline.slice(0, 160),
     alternates: { canonical: `/integrations/${i.slug}` },
     keywords: i.keywords,

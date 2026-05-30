@@ -4,7 +4,6 @@ import { useState } from 'react';
 import Link from 'next/link';
 import { AnimatePresence, motion } from 'framer-motion';
 import { Check, Sparkles } from 'lucide-react';
-import { toast } from 'sonner';
 import { trackPixel } from './meta-pixel';
 import { trackEvent } from './posthog-provider';
 import { cn } from '@/lib/utils';
