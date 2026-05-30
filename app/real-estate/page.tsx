@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import { ArrowRight } from 'lucide-react';
 import { Nav } from '@/components/nav';
 import { Footer } from '@/components/footer';
@@ -110,6 +111,31 @@ export default function RealEstateHub() {
             <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.18em] text-ink-faint">
               100 free runs / mo · no card · bring your own key · your data stays yours
             </p>
+          </div>
+        </section>
+
+        {/* Hero showcase: the Brocco croc building a house. Framed, on brand. */}
+        <section className="pb-14">
+          <div className="container-x">
+            <div className="relative mx-auto max-w-3xl overflow-hidden rounded-3xl border border-white/[0.08] bg-bg-1/40 shadow-glow2">
+              <span
+                aria-hidden
+                className="pointer-events-none absolute inset-x-0 top-0 h-px"
+                style={{
+                  background:
+                    'linear-gradient(90deg, transparent, rgba(34,211,238,0.5), rgba(224,69,123,0.4), transparent)',
+                }}
+              />
+              <Image
+                src="/assets/real-estate/croc-building-house.png"
+                alt="The Brocco croc, in a hard hat, building a house frame: your AI team doing the real estate work"
+                width={1200}
+                height={896}
+                priority
+                sizes="(max-width: 768px) 100vw, 768px"
+                className="h-auto w-full"
+              />
+            </div>
           </div>
         </section>
 

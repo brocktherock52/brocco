@@ -12,6 +12,8 @@ export interface VerticalSeed {
   agents: string[];
   cta: string;
   keywords: string[];
+  /** optional hero illustration (path under /public), e.g. a niche-specific croc */
+  image?: string;
 }
 
 export const VERTICALS: VerticalSeed[] = [
@@ -215,6 +217,7 @@ export const VERTICALS: VerticalSeed[] = [
     agents: ['browser', 'researcher', 'outreach', 'coder', 'ops'],
     cta: 'Run the wholesale pipeline like a fund.',
     keywords: ['real estate wholesale ai', 'wholesaling automation', 'motivated seller leads ai', 'ai for real estate wholesalers', 'wholesaling software'],
+    image: '/assets/real-estate/croc-building-house.png',
   },
   {
     slug: 'land-investors',
@@ -237,6 +240,7 @@ export const VERTICALS: VerticalSeed[] = [
     agents: ['browser', 'researcher', 'analyst', 'outreach'],
     cta: 'Scale the land machine without a VA team.',
     keywords: ['land wholesaling ai', 'vacant land investing software', 'land flipping automation', 'rural parcel finder ai'],
+    image: '/assets/real-estate/croc-land.png',
   },
   {
     slug: 'creative-finance-investors',
@@ -259,6 +263,7 @@ export const VERTICALS: VerticalSeed[] = [
     agents: ['researcher', 'analyst', 'outreach', 'coder'],
     cta: 'Close the creative deals other investors walk past.',
     keywords: ['subject to real estate ai', 'seller finance deal analyzer', 'creative finance investing software', 'sub to deal structuring'],
+    image: '/assets/real-estate/croc-creative-finance.png',
   },
   {
     slug: 'real-estate-agents',
@@ -281,6 +286,7 @@ export const VERTICALS: VerticalSeed[] = [
     agents: ['researcher', 'outreach', 'analyst', 'designer'],
     cta: 'Spend your hours with clients, not paperwork.',
     keywords: ['ai for real estate agents', 'listing description generator', 'cma ai', 'realtor automation software'],
+    image: '/assets/real-estate/croc-agent.png',
   },
 ];
 

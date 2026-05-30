@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import Link from 'next/link';
+import Image from 'next/image';
 import { notFound } from 'next/navigation';
 import { ArrowRight } from 'lucide-react';
 import { Nav } from '@/components/nav';
@@ -44,21 +45,44 @@ export default async function VerticalPage({ params }: PageProps) {
       <main>
         <section className="relative pt-32 pb-12 md:pt-40">
           <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[500px] bg-radial-glow" />
-          <div className="container-x">
-            <p className="eyebrow">Built for {v.audience}</p>
-            <h1 className="mt-3 text-display-xl">
-              <span className="text-grad">{v.hero.split('.')[0]}.</span>{' '}
-              <span className="font-serif italic font-normal text-grad-brand">{v.hero.split('.').slice(1).join('.').trim()}</span>
-            </h1>
-            <p className="mt-6 max-w-2xl text-[17px] leading-relaxed text-ink-dim">{v.lead}</p>
-            <div className="mt-7 flex flex-wrap gap-3">
-              <Link href="/app" className="btn-primary">
-                Open the app <ArrowRight className="h-3.5 w-3.5" />
-              </Link>
-              <Link href="/pricing" className="btn-ghost">
-                See pricing
-              </Link>
+          <div className={`container-x${v.image ? ' grid items-center gap-10 lg:grid-cols-[1.1fr_0.9fr]' : ''}`}>
+            <div>
+              <p className="eyebrow">Built for {v.audience}</p>
+              <h1 className="mt-3 text-display-xl">
+                <span className="text-grad">{v.hero.split('.')[0]}.</span>{' '}
+                <span className="font-serif italic font-normal text-grad-brand">{v.hero.split('.').slice(1).join('.').trim()}</span>
+              </h1>
+              <p className="mt-6 max-w-2xl text-[17px] leading-relaxed text-ink-dim">{v.lead}</p>
+              <div className="mt-7 flex flex-wrap gap-3">
+                <Link href="/signup" className="btn-primary">
+                  Start free <ArrowRight className="h-3.5 w-3.5" />
+                </Link>
+                <Link href="/pricing" className="btn-ghost">
+                  See pricing
+                </Link>
+              </div>
             </div>
+            {v.image && (
+              <div className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-bg-1/40 shadow-glow2">
+                <span
+                  aria-hidden
+                  className="pointer-events-none absolute inset-x-0 top-0 h-px"
+                  style={{
+                    background:
+                      'linear-gradient(90deg, transparent, rgba(34,211,238,0.5), rgba(224,69,123,0.4), transparent)',
+                  }}
+                />
+                <Image
+                  src={v.image}
+                  alt={`The Brocco croc working as your AI team for ${v.audience}`}
+                  width={1200}
+                  height={896}
+                  priority
+                  sizes="(max-width: 1024px) 100vw, 540px"
+                  className="h-auto w-full"
+                />
+              </div>
+            )}
           </div>
         </section>
 
