@@ -40,7 +40,7 @@ interface MegaItem {
 }
 
 const PRODUCT: MegaItem[] = [
-  { href: '/mission-control', label: 'mission control', desc: 'run every venture from one screen', Icon: Workflow, external: true },
+  { href: '/#mission-control', label: 'mission control', desc: 'the operator add-on, run every venture', Icon: Workflow },
   { href: '/app', label: 'dashboard', desc: 'multi-agent panes, broadcast mode', Icon: Boxes },
   { href: '/agents', label: 'the cast', desc: 'your AI team, one prompt', Icon: Cpu },
   { href: '/capabilities', label: 'capabilities', desc: 'sites, content, outreach, intel, ops', Icon: Sparkles },
@@ -99,7 +99,6 @@ const MEGAS: MegaSpec[] = [
 // surfacing them here too just bloated the center cluster until it overflowed
 // its track and overlapped the brand + actions. Keep the two unique pages.
 const SIMPLE = [
-  { href: '/real-estate', label: 'real estate' },
   { href: '/consulting', label: 'consulting' },
   { href: '/pricing', label: 'pricing' },
 ];
