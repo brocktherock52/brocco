@@ -206,6 +206,40 @@ export default function RealEstateHub() {
           </div>
         </section>
 
+        {/* Hands Free Wholesaling community: the coaching + community layer that
+            pairs with the AI tools. External Whop link (paid community). */}
+        <section className="pb-24">
+          <div className="container-x">
+            <a
+              href="https://whop.com/bdp-industries/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="card card-hover group relative block overflow-hidden p-7"
+            >
+              <div className="pointer-events-none absolute inset-0 bg-gradient-to-br from-brand/15 to-cyan/15 opacity-0 transition group-hover:opacity-100" />
+              <div className="relative flex flex-wrap items-center justify-between gap-4">
+                <div className="max-w-xl">
+                  <p className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-cyan-glow">
+                    community + coaching
+                  </p>
+                  <p className="mt-1 text-[19px] font-semibold text-white">
+                    Want the playbook and a room of wholesalers doing it?
+                  </p>
+                  <p className="mt-2 text-[14px] leading-relaxed text-ink-dim">
+                    Hands Free Wholesaling is the community and step-by-step training that pairs with
+                    these tools. The AI team does the work, the community shows you the moves. Join on
+                    Whop.
+                  </p>
+                </div>
+                <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full bg-gradient-to-r from-brand to-cyan px-5 py-2.5 text-[13px] font-semibold text-white">
+                  join on Whop{' '}
+                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
+                </span>
+              </div>
+            </a>
+          </div>
+        </section>
+
         <FinalCta />
       </main>
       <Footer />
