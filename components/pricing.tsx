@@ -287,7 +287,7 @@ export function Pricing({ standalone = false }: { standalone?: boolean }) {
                   Join the brocco builder server.
                 </h3>
                 <p className="mt-3 max-w-xl text-[14.5px] leading-relaxed text-ink-dim">
-                  Same nine agents, plus a private Discord with the brocco team,
+                  Same AI team and skills, plus a private Discord with the brocco team,
                   weekly office hours, recipe drops, and first dibs on every new
                   feature. Whop handles the checkout, the community, and the
                   Discord roles in one click.

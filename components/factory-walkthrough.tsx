@@ -45,14 +45,14 @@ const STAGES: Stage[] = [
     id: 'dispatch',
     num: '02',
     title: 'team dispatched',
-    copy: 'sully splits it into nine parallel tracks.',
+    copy: 'sully splits it into parallel tracks across the team.',
     video: '/assets/factory/stage-2.mp4',
     chip: { label: 'supervisor', color: '#22C55E' },
   },
   {
     id: 'execute',
     num: '03',
-    title: 'nine in parallel',
+    title: 'all in parallel',
     copy: 'research, plans, code, design. all at once.',
     video: '/assets/factory/stage-3.mp4',
     chip: { label: 'specialists', color: '#67E8F9' },
@@ -61,15 +61,15 @@ const STAGES: Stage[] = [
     id: 'deliver',
     num: '04',
     title: 'outputs land',
-    copy: 'nine finished artifacts hit your dashboard.',
+    copy: 'finished artifacts hit your dashboard.',
     video: '/assets/factory/stage-4.mp4',
-    chip: { label: '9 artifacts', color: '#A78BFA' },
+    chip: { label: 'artifacts', color: '#A78BFA' },
   },
   {
     id: 'ship',
     num: '05',
     title: 'you ship',
-    copy: 'one prompt, nine outputs, twenty seconds.',
+    copy: 'one prompt in, finished work out.',
     video: '/assets/factory/stage-5.mp4',
     chip: { label: 'shipped', color: '#22C55E' },
   },
@@ -206,7 +206,7 @@ export function FactoryWalkthrough() {
             <span className="text-grad-brand">the brocco factory.</span>
           </h2>
           <p className="mt-5 max-w-xl text-[17px] leading-relaxed text-ink-dim">
-            one prompt in, nine outputs out. here is the whole line, start to ship.
+            one prompt in, finished work out. here is the whole line, start to ship.
           </p>
         </div>
 

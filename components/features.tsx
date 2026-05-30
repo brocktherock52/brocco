@@ -81,7 +81,7 @@ export function Features() {
             <span className="text-grad-brand">yours.</span>
           </h2>
           <p className="mt-4 max-w-xl text-[16px] text-ink-dim">
-            nine capabilities side by side: how everyone else does it, how brocco does it. each row
+            the capabilities side by side: how everyone else does it, how brocco does it. each row
             is a thing we got tired of reinventing.
           </p>
         </div>
@@ -150,7 +150,7 @@ export function Features() {
 
         <div className="mt-10 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <p className="max-w-xl text-[13.5px] leading-relaxed text-ink-faint">
-            this is what we mean by &ldquo;production-grade.&rdquo; not a buzzword. nine concrete
+            this is what we mean by &ldquo;production-grade.&rdquo; not a buzzword. concrete
             decisions we already made on your behalf.
           </p>
           <Link
