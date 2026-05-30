@@ -11,9 +11,9 @@ import { AgentCardName } from '@/components/agent-shared';
 export const metadata: Metadata = {
   title: 'Agents - brocco.dev',
   description:
-    'Nine specialist agents you can broadcast to from one prompt. Researcher, planner, outreach, designer, analyst, coder, ops, supervisor, browser.',
+    'A core cast of specialist agents you broadcast to from one prompt, plus hundreds of skills you can add. Researcher, planner, outreach, designer, analyst, coder, ops, supervisor, browser, and more.',
   alternates: { canonical: '/agents' },
-  keywords: ['ai agents', 'multi-agent dashboard', 'agentic ai platform', 'parallel agents'],
+  keywords: ['ai agents', 'multi-agent dashboard', 'agentic ai platform', 'parallel agents', 'hundreds of ai skills'],
 };
 
 export default function AgentsIndex() {
@@ -26,11 +26,11 @@ export default function AgentsIndex() {
           <div className="container-x text-center">
             <p className="pill mx-auto">The team</p>
             <h1 className="mx-auto mt-5 max-w-3xl text-display-xl">
-              <span className="text-grad">Nine specialists.</span>{' '}
+              <span className="text-grad">Your AI team.</span>{' '}
               <span className="font-serif italic font-normal text-grad-brand">One prompt.</span>
             </h1>
             <p className="mx-auto mt-5 max-w-xl text-[16px] text-ink-dim">
-              Each agent has a focused tool list, a tight system prompt, and a job. Broadcast one goal and watch them work in parallel.
+              A core cast of specialists below, plus hundreds of skills you can spin up. Each agent has a focused tool list, a tight system prompt, and a job. Broadcast one goal and watch them work in parallel.
             </p>
           </div>
         </section>

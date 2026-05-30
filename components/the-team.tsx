@@ -123,8 +123,8 @@ export function TheTeam() {
             </span>
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-[15.5px] leading-relaxed text-ink-dim">
-            nine specialists. each with a costume, a desk, a job. they show up when you broadcast.
-            they ship while you sleep.
+            a core cast of specialists, plus hundreds of skills you can spin up. each with a job,
+            a tool list, a desk. they show up when you broadcast. they ship while you sleep.
           </p>
         </div>
 

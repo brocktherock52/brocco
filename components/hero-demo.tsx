@@ -205,7 +205,7 @@ export function BroadcastConsole() {
           </span>
           <h2 className="mt-4 text-display-lg">
             <span className="text-grad">Type one goal. </span>
-            <span className="text-grad-brand font-serif italic">Nine specialists run it in parallel.</span>
+            <span className="text-grad-brand font-serif italic">Your AI team runs it in parallel.</span>
           </h2>
           <p className="mt-3 max-w-[560px] text-[15.5px] leading-relaxed text-ink-dim">
             Pick a starting point, then hit Broadcast. Watch the team fan out and ship real files,

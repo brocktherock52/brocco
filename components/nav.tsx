@@ -40,6 +40,7 @@ interface MegaItem {
 }
 
 const PRODUCT: MegaItem[] = [
+  { href: '/mission-control', label: 'mission control', desc: 'run every venture from one screen', Icon: Workflow, external: true },
   { href: '/app', label: 'dashboard', desc: 'multi-agent panes, broadcast mode', Icon: Boxes },
   { href: '/agents', label: 'the cast', desc: 'your AI team, one prompt', Icon: Cpu },
   { href: '/capabilities', label: 'capabilities', desc: 'sites, content, outreach, intel, ops', Icon: Sparkles },
