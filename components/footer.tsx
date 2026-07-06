@@ -26,7 +26,7 @@ const SOCIALS = [
   { label: 'YouTube', href: 'https://www.youtube.com/@brocco.dev', Icon: YouTubeIcon },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/company/brocco.dev', Icon: LinkedInIcon },
   { label: 'Threads', href: 'https://www.threads.com/@brocco.dev', Icon: ThreadsIcon },
-  { label: 'Facebook', href: 'https://www.facebook.com/Brocco.dev', Icon: FacebookIcon },
+  { label: 'Facebook', href: 'https://www.facebook.com/brocco.dev', Icon: FacebookIcon },
   { label: 'Pinterest', href: 'https://www.pinterest.com/brocco.dev', Icon: PinterestIcon },
   { label: 'Reddit', href: 'https://www.reddit.com/user/broccoai', Icon: RedditIcon },
   { label: 'Snapchat', href: 'https://www.snapchat.com/add/brocco.dev', Icon: SnapchatIcon },

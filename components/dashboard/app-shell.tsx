@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useMemo, useState } from 'react';
+import { type ChangeEvent, useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'framer-motion';
 import {
@@ -9,19 +9,24 @@ import {
   Cpu,
   FileText,
   History,
+  Image as ImageIcon,
   KeyRound,
+  Loader2,
+  Paperclip,
   Play,
   Share2,
   Sparkles,
   Square,
   Trash2,
   Users,
+  X,
 } from 'lucide-react';
 import { toast } from 'sonner';
 import { Logomark } from '@/components/logo';
 import { AGENTS, type AgentName } from '@/lib/agents';
 import { runAgent, type SimEvent } from '@/lib/simulator';
-import { runClaudeLive, SYSTEM_PROMPTS, type LiveEvent } from '@/lib/claude';
+import { SYSTEM_PROMPTS, type ClaudeAttachment, type LiveEvent } from '@/lib/claude';
+import { runAgentLive } from '@/lib/run-live';
 import { recordRun, freeTierExceeded, remainingFreeRuns, getUsage } from '@/lib/usage';
 import { uid } from '@/lib/utils';
 import { AgentCard } from './agent-card';
@@ -48,15 +53,25 @@ import { AlertsBell } from './alerts-bell';
 import { ProjectCard, type ProjectCardEntry } from './project-card';
 import { seedDemoProjectIfNeeded } from '@/lib/demo-projects';
 import { trackEvent, identifyUser, resetUser } from '@/components/posthog-provider';
+import { isFounderEmail } from '@/lib/constants';
+import { resolvePreset } from '@/lib/app-presets';
 
 const MODELS = [
   { id: 'claude-sonnet-4-6', label: 'Claude Sonnet 4.6', tag: 'default' },
   { id: 'claude-opus-4-7', label: 'Claude Opus 4.7', tag: '1M ctx' },
   { id: 'claude-haiku-4-5', label: 'Claude Haiku 4.5', tag: 'fast' },
   { id: 'gpt-4o', label: 'GPT-4o', tag: 'OpenAI' },
-  { id: 'grok-2', label: 'Grok 2', tag: 'xAI' },
+  { id: 'grok-4.20-0309-non-reasoning', label: 'Grok 4.2 fast', tag: 'xAI · cheap' },
   { id: 'llama-3-local', label: 'Llama 3 (local)', tag: 'Ollama' },
 ];
+
+const MAX_ATTACHMENTS = 6;
+const MAX_ATTACHMENT_BYTES = 8 * 1024 * 1024;
+const MAX_TEXT_ATTACHMENT_CHARS = 40_000;
+
+type DashboardAttachment = ClaudeAttachment & {
+  previewUrl?: string;
+};
 
 interface PaneState {
   id: string;
@@ -74,6 +89,48 @@ interface RunHistoryEntry {
   ts: number;
 }
 
+// Ambient backdrop for the whole app surface. Layered auroras + a masked grid
+// + a soft floor glow give the dashboard depth instead of a flat dark page.
+// Static by design (the calm-motion brand rule), GPU-isolated so it never
+// repaints on scroll.
+function AppAmbient() {
+  return (
+    <div aria-hidden className="pointer-events-none absolute inset-0 z-0 overflow-hidden">
+      <div
+        className="absolute inset-0"
+        style={{
+          transform: 'translateZ(0)',
+          contain: 'paint',
+          backgroundImage: [
+            'radial-gradient(1100px 560px at 18% -160px, rgba(124,58,237,0.18), transparent 60%)',
+            'radial-gradient(900px 500px at 88% -120px, rgba(34,211,238,0.10), transparent 60%)',
+            'radial-gradient(1200px 760px at 50% 120%, rgba(124,58,237,0.08), transparent 70%)',
+          ].join(', '),
+        }}
+      />
+      {/* faint structural grid, masked to fade out toward the edges */}
+      <div
+        className="absolute inset-0 opacity-[0.5]"
+        style={{
+          backgroundImage:
+            'linear-gradient(rgba(255,255,255,0.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.035) 1px, transparent 1px)',
+          backgroundSize: '64px 64px',
+          maskImage: 'radial-gradient(80% 70% at 50% 0%, #000 0%, transparent 80%)',
+          WebkitMaskImage: 'radial-gradient(80% 70% at 50% 0%, #000 0%, transparent 80%)',
+        }}
+      />
+      {/* edge vignette to seat the content */}
+      <div
+        className="absolute inset-0"
+        style={{
+          background:
+            'radial-gradient(120% 120% at 50% 40%, transparent 55%, rgba(0,0,0,0.45) 100%)',
+        }}
+      />
+    </div>
+  );
+}
+
 export function AppShell() {
   // v3.0: broadcast is the product. Default to 3 specialists selected.
   const [selected, setSelected] = useState<AgentName[]>([
@@ -89,6 +146,11 @@ export function AppShell() {
   );
   const [model, setModel] = useState(MODELS[0].id);
   const [modelOpen, setModelOpen] = useState(false);
+  // Category workspace, set from a deep-link preset (?for=, ?recipe=, ?goal=).
+  // Drives the tailored empty-state examples + the "workspace" chip so RE users
+  // landing from /real-estate get an experience built for them, not the generic
+  // launch-sprint default.
+  const [workspace, setWorkspace] = useState<{ label: string; examples: string[] } | null>(null);
   const [byokOpen, setByokOpen] = useState(false);
   const [upsellOpen, setUpsellOpen] = useState(false);
   // Where the upsell was triggered from, for the PostHog upsell funnel.
@@ -110,6 +172,28 @@ export function AppShell() {
   const [tokens, setTokens] = useState({ in: 0, out: 0, cost: 0 });
   const [demoRunsThisSession, setDemoRunsThisSession] = useState(0);
   const [customAgents, setCustomAgents] = useState<CustomAgent[]>([]);
+  const [attachments, setAttachments] = useState<DashboardAttachment[]>([]);
+  const [uploadingAttachments, setUploadingAttachments] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+
+  // Deep-link preset: open /app pre-configured for a category/recipe. Read from
+  // window.location.search (not useSearchParams, so the page stays static and
+  // needs no Suspense boundary). Runs once on mount.
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const params = new URLSearchParams(window.location.search);
+    const preset = resolvePreset(params);
+    if (!preset) return;
+    if (preset.goal) setGoal(preset.goal);
+    if (preset.agents.length) setSelected(preset.agents);
+    setWorkspace({ label: preset.label, examples: preset.examples });
+    trackEvent('workspace_preset_opened', {
+      label: preset.label,
+      for: params.get('for'),
+      recipe: params.get('recipe'),
+      agent_count: preset.agents.length,
+    });
+  }, []);
 
   // hydrate
   useEffect(() => {
@@ -261,9 +345,92 @@ export function AppShell() {
     );
   }
 
+  async function handleAttachmentPick(e: ChangeEvent<HTMLInputElement>) {
+    const picked = Array.from(e.target.files ?? []);
+    e.target.value = '';
+    if (picked.length === 0) return;
+
+    const slots = Math.max(0, MAX_ATTACHMENTS - attachments.length);
+    if (slots === 0) {
+      toast.error('Attachment limit reached', {
+        description: `Remove a file first. Brocco accepts up to ${MAX_ATTACHMENTS} files per run.`,
+      });
+      return;
+    }
+
+    const accepted = picked.slice(0, slots);
+    if (picked.length > accepted.length) {
+      toast.message(`Added ${accepted.length} of ${picked.length} files`, {
+        description: `Brocco accepts up to ${MAX_ATTACHMENTS} attachments per run.`,
+      });
+    }
+
+    setUploadingAttachments(true);
+    const next: DashboardAttachment[] = [];
+    for (const file of accepted) {
+      if (file.size > MAX_ATTACHMENT_BYTES) {
+        toast.error(`${file.name} is too large`, {
+          description: `Max file size is ${formatBytes(MAX_ATTACHMENT_BYTES)}.`,
+        });
+        continue;
+      }
+
+      const mediaType = normalizeMediaType(file);
+      const kind = attachmentKind(file, mediaType);
+      if (!kind) {
+        toast.error(`${file.name} is not supported`, {
+          description: 'Use images, PDFs, or text files like .txt, .md, .csv, .json, and code.',
+        });
+        continue;
+      }
+
+      try {
+        if (kind === 'text') {
+          const raw = await file.text();
+          const truncated = raw.length > MAX_TEXT_ATTACHMENT_CHARS;
+          next.push({
+            id: uid('att'),
+            name: file.name,
+            mediaType,
+            size: file.size,
+            kind,
+            text: truncated
+              ? `${raw.slice(0, MAX_TEXT_ATTACHMENT_CHARS)}\n\n[truncated at ${MAX_TEXT_ATTACHMENT_CHARS.toLocaleString()} characters]`
+              : raw,
+          });
+          continue;
+        }
+
+        const data = await readFileAsBase64(file);
+        next.push({
+          id: uid('att'),
+          name: file.name,
+          mediaType,
+          size: file.size,
+          kind,
+          data,
+          previewUrl: kind === 'image' ? `data:${mediaType};base64,${data}` : undefined,
+        });
+      } catch (err) {
+        toast.error(`Could not read ${file.name}`, {
+          description: err instanceof Error ? err.message : String(err),
+        });
+      }
+    }
+    if (next.length) {
+      setAttachments((curr) => [...curr, ...next]);
+      toast.success(`Attached ${next.length} file${next.length === 1 ? '' : 's'}.`);
+    }
+    setUploadingAttachments(false);
+  }
+
+  function removeAttachment(id: string) {
+    setAttachments((curr) => curr.filter((file) => file.id !== id));
+  }
+
   async function run() {
-    if (!goal.trim()) {
-      toast.error('Type a goal first.');
+    if (!goal.trim() && attachments.length === 0) {
+      toast.error('Type a goal or attach a file first.');
       return;
     }
     if (selected.length === 0) {
@@ -314,15 +481,16 @@ export function AppShell() {
     // function idempotent if React re-invokes setState during strict-mode dev.
     setPanes((curr) => [...curr.filter((p) => !next.find((n) => n.id === p.id)), ...next]);
 
+    const goalSnapshot = goal.trim() || 'Analyze the attached files.';
+    const promptForRun = withAttachmentContext(goalSnapshot, attachments);
     setHistory((h) =>
-      [{ id: uid('r'), goal: goal, agents: runAgents, ts: Date.now() }, ...h].slice(0, 25),
+      [{ id: uid('r'), goal: goalSnapshot, agents: runAgents, ts: Date.now() }, ...h].slice(0, 25),
     );
     // Persist as a thread on the server (no-op for anonymous users beyond
     // the localStorage write-through cache inside threads-client). Capture the
     // created id so the run can seed the project "brain" (iteration 1) once it
     // finishes, kicking off the self-improving loop.
-    const goalSnapshot = goal;
-    const createdThread = createThread({ title: goal.slice(0, 200), agents: runAgents as string[] })
+    const createdThread = createThread({ title: goalSnapshot.slice(0, 200), agents: runAgents as string[] })
       .then((t) => {
         if (t) setServerThreads((curr) => [t, ...curr.filter((x) => x.id !== t.id)].slice(0, 50));
         return t;
@@ -343,17 +511,20 @@ export function AppShell() {
       mode: live ? 'live' : 'demo',
       agent_count: allowedAgents.length,
       agents: allowedAgents,
+      attachment_count: attachments.length,
       model,
       tier,
     });
 
     if (live) {
       toast.message('Live mode', {
-        description: `Calling Claude directly from your browser with your key.`,
+        description: `Calling Claude directly from your browser with your key${attachments.length ? ` and ${attachments.length} attachment${attachments.length === 1 ? '' : 's'}` : ''}.`,
       });
     } else {
       toast.message('Demo mode', {
-        description: 'Simulated run. Add an Anthropic key for live agents on your tokens.',
+        description: attachments.length
+          ? 'Simulated run with attachment context. Add an Anthropic key for live file/image analysis.'
+          : 'Simulated run. Add an Anthropic key for live agents on your tokens.',
       });
     }
 
@@ -402,11 +573,12 @@ export function AppShell() {
 
         if (live) {
           const sys = SYSTEM_PROMPTS[a.name] || SYSTEM_PROMPTS.researcher;
-          return runClaudeLive({
+          return runAgentLive({
             apiKey: keyState!,
             modelId: model,
             agent: a,
-            goal,
+            goal: goalSnapshot,
+            attachments,
             emit: (e) => emit(e),
             signal: pane.ctrl.signal,
             systemPrompt: sys,
@@ -441,7 +613,7 @@ export function AppShell() {
         // demo path: simulator
         return runAgent(
           a,
-          goal,
+          promptForRun,
           (e) => {
             setPanes((curr) =>
               curr.map((p) => (p.id === paneId ? { ...p, events: [...p.events, e] } : p)),
@@ -580,7 +752,7 @@ export function AppShell() {
     try {
       if (live) {
         const sys = SYSTEM_PROMPTS[a.name] || SYSTEM_PROMPTS.researcher;
-        await runClaudeLive({
+        await runAgentLive({
           apiKey: keyState!,
           modelId: model,
           agent: a,
@@ -629,7 +801,8 @@ export function AppShell() {
   }, [goal, selected, broadcast]);
 
   return (
-    <div className="flex h-screen flex-col bg-bg-0 text-ink">
+    <div className="relative flex h-screen flex-col bg-bg-0 text-ink">
+      <AppAmbient />
       {/* TOP BAR */}
       {/* relative z-30: the header's backdrop-blur makes it its own stacking
           context, so its absolutely-positioned dropdowns (model picker) were
@@ -716,6 +889,18 @@ export function AppShell() {
         </button>
 
         <div className="ml-auto flex items-center gap-2">
+          {/* Founder-only metrics link. Gated by email; the page + API enforce
+              the real server-side check, this just surfaces the entry point. */}
+          {isFounderEmail(session?.data?.user?.email) && (
+            <Link
+              href="/app/founder"
+              className="hidden md:inline-flex items-center gap-1.5 rounded-full border border-brand/30 bg-brand/[0.08] px-2.5 py-1 font-mono text-[11px] text-brand-glow hover:bg-brand/[0.14]"
+              title="Founder metrics (MRR + users)"
+            >
+              <Sparkles className="h-3 w-3" />
+              founder
+            </Link>
+          )}
           {/* Session pill, signed-in email + sign out, or a sign-in link. */}
           {session?.data?.user ? (
             <span className="hidden md:inline-flex items-center gap-1.5 rounded-full border border-white/[0.10] bg-white/[0.04] px-2.5 py-1 font-mono text-[11px] text-ink-dim">
@@ -805,12 +990,12 @@ export function AppShell() {
       {/* MAIN, v3.1 office layout. The cramped left sidebar + smushed panes are
           gone. Hiring/release happens on the office floor itself; the JSONL
           audit lives in a roomy right rail. */}
-      <div className="flex min-h-0 flex-1">
+      <div className="relative z-10 flex min-h-0 flex-1">
         {/* CENTER */}
         <main className="flex min-w-0 flex-1 flex-col">
           {/* Chat-first goal input, prominent, centered, ChatGPT-style.
               Bigger pill, glowing border, larger placeholder, primary CTA. */}
-          <div className="relative border-b border-white/[0.06] bg-bg-0 px-4 py-6">
+          <div className="relative border-b border-white/[0.06] bg-bg-0/30 px-4 py-7 backdrop-blur-sm">
             <div className="mx-auto w-full max-w-3xl">
               <div className="relative">
                 {/* glow halo behind the input */}
@@ -823,15 +1008,75 @@ export function AppShell() {
                   }}
                 />
                 <div className="relative rounded-3xl border border-white/[0.12] bg-bg-1/80 p-1.5 shadow-glow backdrop-blur-xl">
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    accept="image/png,image/jpeg,image/webp,image/gif,application/pdf,text/*,.csv,.json,.md,.markdown,.txt,.ts,.tsx,.js,.jsx,.py,.html,.css"
+                    className="hidden"
+                    onChange={handleAttachmentPick}
+                  />
                   <textarea
                     id="goal-input"
-                    placeholder="what should your AI team work on today?"
+                    placeholder="what should your AI team work on today? attach files or images if they need context."
                     value={goal}
                     onChange={(e) => setGoal(e.target.value)}
                     rows={3}
                     className="block w-full resize-none rounded-2xl bg-transparent px-5 py-4 text-[16px] leading-relaxed text-ink outline-none placeholder:text-ink-faint"
                   />
+                  {attachments.length > 0 && (
+                    <div className="grid gap-2 px-3 pb-3 sm:grid-cols-2">
+                      {attachments.map((file) => (
+                        <div
+                          key={file.id}
+                          className="group flex min-w-0 items-center gap-2 rounded-2xl border border-white/[0.08] bg-white/[0.04] p-2"
+                        >
+                          <span className="relative flex h-10 w-10 shrink-0 items-center justify-center overflow-hidden rounded-xl border border-white/[0.08] bg-black/35 text-cyan">
+                            {file.previewUrl ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img src={file.previewUrl} alt="" className="h-full w-full object-cover" />
+                            ) : file.kind === 'document' ? (
+                              <FileText className="h-4 w-4" />
+                            ) : (
+                              <ImageIcon className="h-4 w-4" />
+                            )}
+                          </span>
+                          <span className="min-w-0 flex-1">
+                            <span className="block truncate text-[12.5px] font-medium text-ink">{file.name}</span>
+                            <span className="block truncate font-mono text-[10.5px] text-ink-faint">
+                              {file.kind} · {formatBytes(file.size)}
+                            </span>
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => removeAttachment(file.id)}
+                            title={`Remove ${file.name}`}
+                            className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-ink-faint transition-colors hover:bg-white/[0.08] hover:text-ink"
+                          >
+                            <X className="h-4 w-4" />
+                          </button>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                   <div className="flex items-center gap-2 px-3 pb-2">
+                    <button
+                      type="button"
+                      onClick={() => fileInputRef.current?.click()}
+                      disabled={uploadingAttachments || attachments.length >= MAX_ATTACHMENTS}
+                      title="Attach files or images"
+                      className="inline-flex h-9 items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-3 text-[12px] font-medium text-ink-dim transition-colors hover:border-white/[0.16] hover:bg-white/[0.06] hover:text-ink disabled:cursor-not-allowed disabled:opacity-50"
+                    >
+                      {uploadingAttachments ? (
+                        <Loader2 className="h-3.5 w-3.5 animate-spin" />
+                      ) : (
+                        <Paperclip className="h-3.5 w-3.5" />
+                      )}
+                      attach
+                    </button>
+                    <span className="hidden text-[11.5px] text-ink-faint md:inline">
+                      images, PDFs, text · max {MAX_ATTACHMENTS}
+                    </span>
                     <span className="kbd">⌘</span>
                     <span className="kbd">Enter</span>
                     <span className="text-[11.5px] text-ink-faint">to run</span>
@@ -841,30 +1086,61 @@ export function AppShell() {
                       </span>
                       <button
                         onClick={run}
-                        title={running ? 'fire another batch in parallel' : 'broadcast to selected agents'}
+                        title={
+                          !keyState
+                            ? 'run a simulated demo (connect your key for real output)'
+                            : running
+                              ? 'fire another batch in parallel'
+                              : 'broadcast to selected agents'
+                        }
                         className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-brand to-cyan px-5 py-2.5 text-[13.5px] font-semibold text-white shadow-glow2 transition-all hover:shadow-glow disabled:opacity-60"
                       >
-                        {running ? (
-                          <span className="inline-flex items-center gap-1.5">
-                            <Play className="h-3.5 w-3.5 fill-current" /> run another
-                            <ArrowRight className="h-3.5 w-3.5" />
-                          </span>
-                        ) : (
-                          <span className="inline-flex items-center gap-1.5">
-                            <Play className="h-3.5 w-3.5 fill-current" /> broadcast
-                            <ArrowRight className="h-3.5 w-3.5" />
-                          </span>
-                        )}
+                        <span className="inline-flex items-center gap-1.5">
+                          <Play className="h-3.5 w-3.5 fill-current" />
+                          {running ? 'run another' : keyState ? 'broadcast' : 'run demo'}
+                          <ArrowRight className="h-3.5 w-3.5" />
+                        </span>
                       </button>
                     </div>
                   </div>
                 </div>
                 <p className="mt-3 text-center font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-faint">
-                  your AI team · {selected.length}/9 specialists · broadcast mode on
+                  {`${workspace?.label ? `${workspace.label.toLowerCase()} workspace` : 'your AI team'} · ${selected.length}/9 specialists · ${keyState ? 'live mode' : 'demo preview'}`}
                 </p>
               </div>
             </div>
           </div>
+
+          {/* Demo-mode banner. Non-technical users (e.g. real-estate folks) were
+              confused that runs returned simulated, code-looking output. Make it
+              unmistakable that demo output is a preview, with a one-click path to
+              connect their own key for real results. Hidden once a key is set. */}
+          {!keyState && (
+            <div className="border-b border-amber-400/20 bg-amber-400/[0.07] px-4 py-2.5">
+              <div className="mx-auto flex w-full max-w-3xl items-center gap-3">
+                <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-400/15 text-amber-300">
+                  <Sparkles className="h-3.5 w-3.5" />
+                </span>
+                <p className="flex-1 text-[12.5px] leading-snug text-amber-100/90">
+                  <span className="font-semibold">Demo mode.</span> Results below are a{' '}
+                  <span className="font-semibold">simulated preview</span>, not real AI output. Add your
+                  own Anthropic key (free to create, stays in your browser) to put your team to work for
+                  real.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    trackEvent('connect_key_clicked', { source: 'demo_banner' });
+                    setByokOpen(true);
+                  }}
+                  className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-amber-400/30 bg-amber-400/15 px-3 py-1.5 text-[12px] font-semibold text-amber-100 transition hover:bg-amber-400/25"
+                >
+                  <KeyRound className="h-3.5 w-3.5" />
+                  connect your key
+                </button>
+              </div>
+            </div>
+          )}
 
           {/* Proactive nudge slot, appears above panes when there's an
               active suggestion, invisible otherwise. */}
@@ -888,7 +1164,7 @@ export function AppShell() {
                   empty state shows above it only before the first run. */}
               {panes.length === 0 && (
                 <div className="mb-8">
-                  <EmptyState onPick={(g) => setGoal(g)} />
+                  <EmptyState onPick={(g) => setGoal(g)} workspace={workspace} />
                 </div>
               )}
 
@@ -1174,6 +1450,66 @@ export function AppShell() {
   );
 }
 
+function normalizeMediaType(file: File): string {
+  if (file.type) return file.type;
+  const name = file.name.toLowerCase();
+  if (name.endsWith('.md') || name.endsWith('.markdown')) return 'text/markdown';
+  if (name.endsWith('.json')) return 'application/json';
+  if (name.endsWith('.csv')) return 'text/csv';
+  if (name.endsWith('.pdf')) return 'application/pdf';
+  if (name.endsWith('.jpg') || name.endsWith('.jpeg')) return 'image/jpeg';
+  if (name.endsWith('.png')) return 'image/png';
+  if (name.endsWith('.webp')) return 'image/webp';
+  if (name.endsWith('.gif')) return 'image/gif';
+  return 'text/plain';
+}
+
+function attachmentKind(file: File, mediaType: string): DashboardAttachment['kind'] | null {
+  const lower = file.name.toLowerCase();
+  if (/^image\/(png|jpeg|webp|gif)$/.test(mediaType)) return 'image';
+  if (mediaType === 'application/pdf') return 'document';
+  if (
+    mediaType.startsWith('text/') ||
+    mediaType === 'application/json' ||
+    /\.(md|markdown|txt|csv|json|ts|tsx|js|jsx|py|html|css|xml|yaml|yml)$/i.test(lower)
+  ) {
+    return 'text';
+  }
+  return null;
+}
+
+function readFileAsBase64(file: File): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(reader.error ?? new Error('file read failed'));
+    reader.onload = () => {
+      const value = String(reader.result ?? '');
+      resolve(value.includes(',') ? value.split(',')[1] : value);
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+function withAttachmentContext(goal: string, attachments: DashboardAttachment[]): string {
+  if (attachments.length === 0) return goal;
+  const summary = attachments
+    .map((file) => `- ${file.name} (${file.kind}, ${file.mediaType}, ${formatBytes(file.size)})`)
+    .join('\n');
+  const textContext = attachments
+    .filter((file) => file.kind === 'text' && file.text)
+    .map((file) => `\n\n<attachment name="${file.name}">\n${file.text}\n</attachment>`)
+    .join('');
+  return `${goal}\n\nAttached files:\n${summary}${textContext}`;
+}
+
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  const kb = bytes / 1024;
+  if (kb < 1024) return `${kb.toFixed(kb >= 10 ? 0 : 1)} KB`;
+  const mb = kb / 1024;
+  return `${mb.toFixed(mb >= 10 ? 0 : 1)} MB`;
+}
+
 // WorkspaceBadge, shows the user's logo + business name in the top bar once
 // they've personalized (onboarding). Makes the workspace feel like theirs,
 // which is the retention hook Braeden flagged. Re-reads on profile change.
@@ -1233,7 +1569,17 @@ const TRY_THESE = [
   'review my landing-page copy, suggest 5 a/b test variants, and draft 3 launch tweets',
 ];
 
-function EmptyState({ onPick }: { onPick: (goal: string) => void }) {
+function EmptyState({
+  onPick,
+  workspace,
+}: {
+  onPick: (goal: string) => void;
+  workspace?: { label: string; examples: string[] } | null;
+}) {
+  // When the user arrived via a category deep-link, lead with that category's
+  // tailored examples and a clear "you're in the X workspace" header instead of
+  // the generic founder-flavored copy.
+  const examples = workspace?.examples?.length ? workspace.examples : TRY_THESE;
   return (
     <div className="flex flex-col items-center px-4 py-2">
       {/* The daily ritual, appears at the top of the empty dashboard. */}
@@ -1256,12 +1602,20 @@ function EmptyState({ onPick }: { onPick: (goal: string) => void }) {
 
       <div className="max-w-lg text-center">
         <Logomark className="mx-auto h-10 w-10 opacity-90" />
-        <h2 className="mt-4 text-[20px] font-semibold tracking-tight lowercase">
+        {workspace?.label ? (
+          <span className="mt-4 inline-flex items-center gap-1.5 rounded-full border border-brand/30 bg-brand/[0.08] px-3 py-1 font-mono text-[10.5px] uppercase tracking-[0.16em] text-brand-glow">
+            <Sparkles className="h-3 w-3" />
+            {workspace.label} workspace
+          </span>
+        ) : null}
+        <h2 className="mt-3 text-[20px] font-semibold tracking-tight lowercase">
           <span className="text-grad">type one goal.</span>{' '}
-          <span className="font-serif italic font-normal text-grad-brand">three agents work.</span>
+          <span className="font-serif italic font-normal text-grad-brand">your team works.</span>
         </h2>
         <p className="mt-2 text-[13.5px] leading-relaxed text-ink-dim">
-          broadcast is always on. each specialist runs in its own pane, in parallel.
+          {workspace?.label
+            ? 'these examples are tailored to your work. tweak one or write your own.'
+            : 'broadcast is always on. each specialist runs in its own pane, in parallel.'}
         </p>
         <p className="mt-4 inline-flex items-center gap-2 text-[12px] text-ink-faint">
           <span className="kbd">⌘</span>
@@ -1276,7 +1630,7 @@ function EmptyState({ onPick }: { onPick: (goal: string) => void }) {
           try one of these
         </p>
         <div className="mt-3 space-y-2 text-left">
-          {TRY_THESE.map((g, i) => (
+          {examples.map((g, i) => (
             <button
               key={i}
               onClick={() => onPick(g)}

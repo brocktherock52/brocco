@@ -119,7 +119,7 @@ const ldJson = {
         'https://www.youtube.com/@brocco.dev',
         'https://www.linkedin.com/company/brocco.dev',
         'https://www.threads.com/@brocco.dev',
-        'https://www.facebook.com/Brocco.dev',
+        'https://www.facebook.com/brocco.dev',
         'https://www.pinterest.com/brocco.dev',
         'https://www.reddit.com/user/broccoai',
         'https://www.snapchat.com/add/brocco.dev',

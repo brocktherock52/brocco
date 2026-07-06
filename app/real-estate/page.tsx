@@ -7,6 +7,7 @@ import { Footer } from '@/components/footer';
 import { FinalCta } from '@/components/final-cta';
 import { VERTICALS } from '@/lib/verticals';
 import { RECIPE_PROFILES } from '@/lib/recipe-profiles';
+import { RealEstateDemo } from '@/components/real-estate-demo';
 
 // Single shareable real-estate hub: /real-estate. The page people in
 // HoldMyHandWholesale (and other RE niches) get sent to. Aggregates the
@@ -88,24 +89,27 @@ export default function RealEstateHub() {
           <div className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[500px] bg-radial-glow" />
           <div className="container-x text-center">
             <p className="pill mx-auto">for real estate</p>
+            {/* Benefit-first hero (consultant note 2026-06-02): lead with the pain
+                removal, not the feature list. The "how" lives in the sections below
+                as objection-handling, which is the correct sell sequence. */}
             <h1 className="mx-auto mt-5 max-w-3xl text-display-xl lowercase">
-              <span className="text-grad">your real estate business,</span>{' '}
-              <span className="font-serif italic font-normal text-grad-brand">run by an AI team.</span>
+              <span className="text-grad">never chase another lead.</span>{' '}
+              <span className="font-serif italic font-normal text-grad-brand">your AI team does it for you.</span>
             </h1>
             <p className="mx-auto mt-5 max-w-2xl text-[16px] leading-relaxed text-ink-dim">
-              Pull motivated-seller leads, skip trace and write the outreach, run comps and your max
-              offer, match cash buyers, draft the contract, and chase the aged leads. One prompt in,
-              finished work back. Built for wholesalers, land and creative-finance investors, and agents.
+              You spend all day pulling lists, skip tracing, sending offers, and reviving dead leads.
+              You see leads in your sleep. brocco runs that whole grind for you, around the clock, so
+              you wake up to deals in the pipeline instead of a to-do list.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link href="/signup" className="btn-primary">
                 start free · 100 runs <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
-                href="#tools"
+                href="/auto-wholesale"
                 className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.12] bg-white/[0.04] px-5 py-3 text-sm font-medium text-ink-dim transition-colors hover:text-white"
               >
-                see the tools
+                see the a-to-z walkthrough
               </Link>
             </div>
             <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.18em] text-ink-faint">
@@ -138,6 +142,9 @@ export default function RealEstateHub() {
             </div>
           </div>
         </section>
+
+        {/* Interactive demo: show, don't tell (consultant + Ben's call note). */}
+        <RealEstateDemo />
 
         {/* Niches */}
         <section className="pb-8">
@@ -193,27 +200,11 @@ export default function RealEstateHub() {
           </div>
         </section>
 
-        {/* How it works */}
-        <section className="pb-8">
-          <div className="container-x">
-            <div className="border-t border-white/[0.06] pt-12">
-              <p className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-faint">how it works</p>
-              <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
-                {[
-                  { n: '01', t: 'say the job', b: 'Describe what you need in one sentence. Your county, your price band, your list.' },
-                  { n: '02', t: 'the team runs it', b: 'Specialist agents work in parallel: research, outreach, comps, contracts.' },
-                  { n: '03', t: 'get finished work', b: 'A call list, a comp sheet, a dispo blast, a contract. Ready to use, not a chat log.' },
-                ].map((s) => (
-                  <div key={s.n} className="card p-5">
-                    <p className="font-mono text-[12px] text-cyan-glow">{s.n}</p>
-                    <p className="mt-2 text-[15px] font-semibold text-white">{s.t}</p>
-                    <p className="mt-1.5 text-[13.5px] leading-relaxed text-ink-dim">{s.b}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
+        {/* "How it works" section removed 2026-06-02: the interactive
+            RealEstateDemo above now SHOWS the say-job -> team-runs-it ->
+            finished-work flow, so the static 3-step text was redundant. Cutting
+            it is part of the consultant's "the page is overwhelming, too much
+            going on" note. */}
 
         {/* FAQ */}
         <section className="pb-24">

@@ -50,9 +50,25 @@ const QA = [
   },
 ];
 
+// FAQPage structured data, built from the same QA source so it can never drift
+// from the visible copy. Eligible for the FAQ rich result in Google search.
+const faqLd = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: QA.map((item) => ({
+    '@type': 'Question',
+    name: item.q,
+    acceptedAnswer: { '@type': 'Answer', text: item.a },
+  })),
+};
+
 export function Faq() {
   return (
     <section id="faq" className="relative py-24 md:py-32">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqLd) }}
+      />
       <div className="container-x">
         <div className="mx-auto max-w-2xl text-center">
           <p className="pill mx-auto">faq</p>

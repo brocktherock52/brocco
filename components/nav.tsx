@@ -30,6 +30,7 @@ import {
 import { Logomark } from './logo';
 import { cn } from '@/lib/utils';
 import { useSession } from '@/lib/auth-client';
+import { SocialLinks, SocialRail, SOCIALS } from './social-links';
 
 interface MegaItem {
   href: string;
@@ -154,6 +155,8 @@ export function Nav() {
   const lifted = scrolled || openMega;
 
   return (
+    <>
+    <SocialRail />
     <motion.nav
       initial={{ y: -20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
@@ -380,16 +383,21 @@ export function Nav() {
               >
                 sign in
               </Link>
+              {/* Pricing CTA, deliberately RED + glowing so it is the hottest,
+                  most eye-drawing element in the nav (consultant 2026-06-02:
+                  "the heat map should be absolutely bright red where the button
+                  that takes them to pricing is"). Repointed to /pricing so it
+                  literally is that button. */}
               <Link
-                href="/checkout/solo"
-                className="group relative inline-flex shrink-0 items-center gap-1.5 overflow-hidden whitespace-nowrap rounded-full bg-gradient-to-r from-brand to-cyan px-4 py-2 text-[13px] font-semibold text-white shadow-glow2 outline-none transition-all hover:shadow-glow focus-visible:ring-2 focus-visible:ring-cyan/60"
+                href="/pricing"
+                className="group relative inline-flex shrink-0 items-center gap-1.5 overflow-hidden whitespace-nowrap rounded-full bg-gradient-to-r from-rose-500 to-orange-500 px-4 py-2 text-[13px] font-semibold text-white shadow-[0_0_22px_-2px_rgba(244,63,94,0.65)] outline-none transition-all hover:shadow-[0_0_32px_0_rgba(244,63,94,0.8)] focus-visible:ring-2 focus-visible:ring-rose-400/70"
               >
                 {/* sheen sweep on hover */}
                 <span
                   aria-hidden
                   className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-full"
                 />
-                <span className="relative">start free trial</span>
+                <span className="relative">see pricing</span>
                 <ArrowRight className="relative h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
               </Link>
             </>
@@ -476,16 +484,29 @@ export function Nav() {
                 {signedIn ? 'account' : 'sign in'}
               </Link>
               <Link
-                href={signedIn ? '/app' : '/checkout/solo'}
+                href={signedIn ? '/app' : '/pricing'}
                 onClick={() => setOpen(false)}
-                className="inline-flex items-center justify-center gap-1.5 rounded-full bg-gradient-to-r from-brand to-cyan px-4 py-2.5 text-sm font-semibold text-white shadow-glow2"
+                className={cn(
+                  'inline-flex items-center justify-center gap-1.5 rounded-full px-4 py-2.5 text-sm font-semibold text-white',
+                  signedIn
+                    ? 'bg-gradient-to-r from-brand to-cyan shadow-glow2'
+                    : 'bg-gradient-to-r from-rose-500 to-orange-500 shadow-[0_0_22px_-2px_rgba(244,63,94,0.65)]',
+                )}
               >
-                {signedIn ? 'open app' : 'start free trial'} <ArrowRight className="h-3.5 w-3.5" />
+                {signedIn ? 'open app' : 'see pricing'} <ArrowRight className="h-3.5 w-3.5" />
               </Link>
+            </div>
+            {/* Follow row, so social is visible in the mobile menu too. */}
+            <div className="mt-3 flex flex-col gap-2 border-t border-white/[0.06] pt-3">
+              <span className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-faint">
+                follow brocco
+              </span>
+              <SocialLinks items={SOCIALS} className="flex-wrap" />
             </div>
           </div>
         </motion.div>
       )}
     </motion.nav>
+    </>
   );
 }

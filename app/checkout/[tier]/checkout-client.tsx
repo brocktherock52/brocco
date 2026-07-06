@@ -5,19 +5,21 @@ import { motion } from 'framer-motion';
 import { ArrowRight, Check, Sparkles, Shield } from 'lucide-react';
 
 interface Props {
-  tier: 'solo' | 'team';
+  tier: 'solo' | 'team' | 'wholesaler';
   name: string;
   monthly: number;
   annual: number;
+  monthlyOnly?: boolean;
   perks: string[];
   bestFor: string;
   tagline: string;
 }
 
-export function CheckoutClient({ tier, name, monthly, annual, perks, bestFor, tagline }: Props) {
+export function CheckoutClient({ tier, name, monthly, annual, monthlyOnly, perks, bestFor, tagline }: Props) {
   // Default to annual (the better-value path that prepays). The upsell on this
-  // page is mostly "switch to annual and save."
-  const [interval, setInterval] = useState<'monthly' | 'annual'>('annual');
+  // page is mostly "switch to annual and save." Monthly-only plans (Wholesaler)
+  // pin to monthly and hide the annual upsell.
+  const [interval, setInterval] = useState<'monthly' | 'annual'>(monthlyOnly ? 'monthly' : 'annual');
   const [community, setCommunity] = useState(false);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -79,7 +81,9 @@ export function CheckoutClient({ tier, name, monthly, annual, perks, bestFor, ta
         <div className="mt-7 rounded-2xl border border-white/[0.08] bg-white/[0.02] p-4">
           <p className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-faint">add ons</p>
 
-          {/* Annual upgrade upsell. Inactive when already annual. */}
+          {/* Annual upgrade upsell. Inactive when already annual. Hidden for
+              monthly-only plans (Wholesaler), which have no annual price. */}
+          {!monthlyOnly && (
           <button
             type="button"
             onClick={() => setInterval((curr) => (curr === 'annual' ? 'monthly' : 'annual'))}
@@ -107,6 +111,7 @@ export function CheckoutClient({ tier, name, monthly, annual, perks, bestFor, ta
               </span>
             </span>
           </button>
+          )}
 
           {/* Community upsell. Adds the Brocco Builders Discord. */}
           <button

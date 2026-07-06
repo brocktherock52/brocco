@@ -379,7 +379,7 @@ function BeltCroc({
       >
         <Image
           src={`/assets/cast-v7/${agent.slug}.png`}
-          alt=""
+          alt={`${agent.slug} agent`}
           fill
           sizes="72px"
           className="object-cover"

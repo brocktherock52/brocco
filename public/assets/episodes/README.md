@@ -1,4 +1,4 @@
-# Brocco seed episodes — round 1
+# Brocco seed episodes, round 1
 
 Generated 2026-05-22 via Higgsfield Kling 3.0 pro mode, 5s each, 9:16 vertical, audio on. Start frames generated separately via Nano Banana 2.
 
@@ -12,7 +12,7 @@ Generated 2026-05-22 via Higgsfield Kling 3.0 pro mode, 5s each, 9:16 vertical, 
 
 ## Suggested captions (paste-ready, TikTok/IG/Shorts)
 
-### Ep 1 — Reply-All
+### Ep 1, Reply-All
 ```
 the moment Outreach hit reply-all on 1,200 people.
 wait for the face.
@@ -20,14 +20,14 @@ wait for the face.
 #startuptok #aiagents #brocco
 ```
 
-### Ep 6 — Logo Reveal
+### Ep 6, Logo Reveal
 ```
 day 47 of Designer designing the new logo.
 
 #designermemes #startuptok #brocco
 ```
 
-### Ep 7 — App Builder Ships
+### Ep 7, App Builder Ships
 ```
 no notes. no comments. no Slack message. just "Fixed."
 that's App Builder.
@@ -52,8 +52,8 @@ Credit spend: 3 stills (6 credits) + 3 videos (75 credits) = **81 credits**.
 ## Next-batch episodes to render
 
 From `marketing/content-factory/episodic-bible.md`, next strongest pitches for round 2:
-- Ep 3 — The Coder Wakes Up (Coder blinks, needle drop)
-- Ep 5 — The Sticky Note Migrates (Sticky on Supervisor's head all day)
-- Ep 8 — Standup Without the Supervisor (team smiling for once)
-- Ep 11 — Carl Goes Rogue (new agent outperforms everyone)
-- Ep 13 — Supervisor's "Quick Sync" (clap, no content)
+- Ep 3, The Coder Wakes Up (Coder blinks, needle drop)
+- Ep 5, The Sticky Note Migrates (Sticky on Supervisor's head all day)
+- Ep 8, Standup Without the Supervisor (team smiling for once)
+- Ep 11, Carl Goes Rogue (new agent outperforms everyone)
+- Ep 13, Supervisor's "Quick Sync" (clap, no content)

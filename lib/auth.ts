@@ -38,6 +38,42 @@ const BASE_URL =
 // Pinning it to the public base URL's protocol makes the name deterministic.
 const IS_HTTPS = BASE_URL.startsWith('https://');
 
+// Resend's shared, pre-verified sender. Any account can send from this to any
+// recipient with zero DNS setup. We use it ONLY as an automatic fallback when
+// the configured EMAIL_FROM domain isn't verified in Resend yet, so an
+// incomplete domain setup can never again silently break EVERY signup (the #1
+// production footgun: prod was 403ing on "brocco.dev domain is not verified"
+// and users just saw "could not send the sign-in email"). The fallback only
+// downgrades deliverability + branding until brocco.dev is verified.
+const RESEND_FALLBACK_FROM = 'Brocco <onboarding@resend.dev>';
+
+function magicLinkPayload(from: string, email: string, url: string) {
+  return JSON.stringify({
+    from,
+    to: email,
+    subject: 'Your brocco.dev sign-in link',
+    html: `
+        <div style="font-family:Inter,sans-serif;background:#0A0A0F;color:#e7e7ea;padding:32px;border-radius:12px;max-width:480px;margin:0 auto;">
+          <h2 style="margin:0 0 12px 0;font-weight:600;">sign in to brocco</h2>
+          <p style="color:#a1a1aa;line-height:1.6;">click the link below to log in. it expires in 5 minutes and is single-use.</p>
+          <p style="margin:28px 0;"><a href="${url}" style="display:inline-block;background:linear-gradient(90deg,#a78bfa,#67e8f9);color:#0A0A0F;font-weight:600;padding:12px 20px;border-radius:999px;text-decoration:none;">open brocco</a></p>
+          <p style="color:#71717a;font-size:12px;line-height:1.6;">if you didn't ask for this, ignore the email. nothing happens until you click.</p>
+        </div>
+      `,
+  });
+}
+
+function resendSend(resendKey: string, from: string, email: string, url: string) {
+  return fetch('https://api.resend.com/emails', {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${resendKey}`,
+      'Content-Type': 'application/json',
+    },
+    body: magicLinkPayload(from, email, url),
+  });
+}
+
 async function sendMagicLinkEmail(email: string, url: string) {
   const resendKey = process.env.RESEND_API_KEY;
   const from = process.env.EMAIL_FROM || 'Brocco <login@brocco.dev>';
@@ -59,33 +95,32 @@ async function sendMagicLinkEmail(email: string, url: string) {
     return;
   }
 
-  const res = await fetch('https://api.resend.com/emails', {
-    method: 'POST',
-    headers: {
-      Authorization: `Bearer ${resendKey}`,
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      from,
-      to: email,
-      subject: 'Your brocco.dev sign-in link',
-      html: `
-        <div style="font-family:Inter,sans-serif;background:#0A0A0F;color:#e7e7ea;padding:32px;border-radius:12px;max-width:480px;margin:0 auto;">
-          <h2 style="margin:0 0 12px 0;font-weight:600;">sign in to brocco</h2>
-          <p style="color:#a1a1aa;line-height:1.6;">click the link below to log in. it expires in 5 minutes and is single-use.</p>
-          <p style="margin:28px 0;"><a href="${url}" style="display:inline-block;background:linear-gradient(90deg,#a78bfa,#67e8f9);color:#0A0A0F;font-weight:600;padding:12px 20px;border-radius:999px;text-decoration:none;">open brocco</a></p>
-          <p style="color:#71717a;font-size:12px;line-height:1.6;">if you didn't ask for this, ignore the email. nothing happens until you click.</p>
-        </div>
-      `,
-    }),
-  });
+  let res = await resendSend(resendKey, from, email, url);
+  if (res.ok) return;
 
-  if (!res.ok) {
-    const body = await res.text();
+  const body = await res.text();
+
+  // Self-heal: if EMAIL_FROM points at a domain that isn't verified in Resend,
+  // retry once from the shared verified sender so the user still gets their
+  // link instead of a dead "could not send" error. Loud log so the real fix
+  // (verify brocco.dev at https://resend.com/domains) still gets done.
+  const domainUnverified = res.status === 403 && /not verified/i.test(body);
+  if (domainUnverified && !from.includes('resend.dev')) {
     // eslint-disable-next-line no-console
-    console.error('[auth] resend send failed', body);
+    console.error(
+      `[auth] EMAIL_FROM domain not verified in Resend (from="${from}"). Falling back to ${RESEND_FALLBACK_FROM}. Verify brocco.dev at https://resend.com/domains to restore branded sending.`,
+    );
+    res = await resendSend(resendKey, RESEND_FALLBACK_FROM, email, url);
+    if (res.ok) return;
+    const fbBody = await res.text();
+    // eslint-disable-next-line no-console
+    console.error('[auth] resend fallback send failed', fbBody);
     throw new Error('Could not send the sign-in email. Please try again or contact help@brocco.dev.');
   }
+
+  // eslint-disable-next-line no-console
+  console.error('[auth] resend send failed', body);
+  throw new Error('Could not send the sign-in email. Please try again or contact help@brocco.dev.');
 }
 
 export const auth = betterAuth({

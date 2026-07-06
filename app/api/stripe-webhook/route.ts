@@ -147,9 +147,11 @@ async function metaCapi(eventName: string, payload: {
    ----------------------------------------------------------------------- */
 async function handleEvent(event: StripeEvent): Promise<void> {
   const obj = event.data.object as Record<string, unknown>;
-  // Persistence placeholder: log the entire event, not just a summary,
-  // so a future migration to a real store can replay history.
-  console.log('[stripe-webhook]', JSON.stringify({ id: event.id, type: event.type, data: event.data }));
+  // Log only id + type. The full event payload carries customer PII (email,
+  // name, address, partial card data) and would leak it into Vercel's log
+  // store / any log drain. Replay history belongs in the KV persistence
+  // TODO above, not in stdout.
+  console.log('[stripe-webhook]', JSON.stringify({ id: event.id, type: event.type }));
 
   switch (event.type) {
     case 'checkout.session.completed': {

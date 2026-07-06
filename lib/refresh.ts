@@ -20,7 +20,8 @@
 
 import { AGENTS, type AgentName } from '@/lib/agents';
 import { runAgent, type SimEvent } from '@/lib/simulator';
-import { runClaudeLive, SYSTEM_PROMPTS, type LiveEvent } from '@/lib/claude';
+import { SYSTEM_PROMPTS, type LiveEvent } from '@/lib/claude';
+import { runAgentLive } from '@/lib/run-live';
 import {
   getBrain,
   appendBrain,
@@ -53,7 +54,7 @@ async function runOnce(opts: {
 
   if (opts.apiKey) {
     const sys = SYSTEM_PROMPTS[a.name] || SYSTEM_PROMPTS.researcher;
-    await runClaudeLive({
+    await runAgentLive({
       apiKey: opts.apiKey,
       modelId: opts.modelId,
       agent: a,

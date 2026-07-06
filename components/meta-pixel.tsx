@@ -54,11 +54,26 @@ fbq('track', 'PageView');`,
 }
 
 /** Helper: fire a Meta Pixel event from anywhere in the client. No-op if pixel
- *  is not loaded (dev / preview). */
-export function trackPixel(event: string, params?: Record<string, unknown>) {
+ *  is not loaded (dev / preview).
+ *
+ *  Pass `eventID` for events that ALSO fire server-side via the Conversions API
+ *  (e.g. Subscribe / Purchase from the Stripe webhook). Meta dedups a browser
+ *  event against its CAPI twin only when both carry the SAME event name AND the
+ *  same eventID, and the pixel eventID MUST ride in fbq's 4th-argument options
+ *  object, not inside the custom params. Putting it in params (as transaction_id)
+ *  does not dedup and the conversion double-counts. */
+export function trackPixel(
+  event: string,
+  params?: Record<string, unknown>,
+  eventID?: string,
+) {
   if (typeof window === 'undefined') return;
   // @ts-expect-error fbq global comes from the snippet above
   const fbq = window.fbq;
   if (typeof fbq !== 'function') return;
-  fbq('track', event, params ?? {});
+  if (eventID) {
+    fbq('track', event, params ?? {}, { eventID });
+  } else {
+    fbq('track', event, params ?? {});
+  }
 }

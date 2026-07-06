@@ -67,6 +67,16 @@ interface AnthropicResponse {
   };
 }
 
+export interface ClaudeAttachment {
+  id: string;
+  name: string;
+  mediaType: string;
+  size: number;
+  kind: 'image' | 'document' | 'text';
+  data?: string;
+  text?: string;
+}
+
 export type LiveErrorKind =
   | 'auth'
   | 'rate_limit'
@@ -336,16 +346,22 @@ export async function runClaudeLive(opts: {
   modelId: string;
   agent: Agent;
   goal: string;
+  attachments?: ClaudeAttachment[];
   emit: (e: LiveEvent) => void;
   signal: AbortSignal;
   systemPrompt: string;
   maxSteps?: number;
 }): Promise<void> {
-  const { apiKey, modelId, agent, goal, emit, signal, systemPrompt, maxSteps = 6 } = opts;
+  const { apiKey, modelId, agent, goal, attachments = [], emit, signal, systemPrompt, maxSteps = 6 } = opts;
   const model = pickModel(modelId);
-  const messages: Array<{ role: string; content: unknown }> = [{ role: 'user', content: goal }];
+  const messages: Array<{ role: string; content: unknown }> = [
+    { role: 'user', content: buildUserContent(goal, attachments) },
+  ];
 
-  emit({ type: 'thinking', text: `live mode: ${model}, byok, max ${maxSteps} steps.` });
+  emit({
+    type: 'thinking',
+    text: `live mode: ${model}, byok, max ${maxSteps} steps.${attachments.length ? ` ${attachments.length} attachment${attachments.length === 1 ? '' : 's'} included.` : ''}`,
+  });
 
   let cumIn = 0;
   let cumOut = 0;
@@ -449,6 +465,71 @@ export async function runClaudeLive(opts: {
     type: 'done',
     summary: `reached ${maxSteps}-step cap · ${cumIn} in / ${cumOut} out · est $${cost.toFixed(4)}`,
   });
+}
+
+function buildUserContent(goal: string, attachments: ClaudeAttachment[]): unknown {
+  if (attachments.length === 0) return goal;
+
+  const blocks: Array<Record<string, unknown>> = [
+    {
+      type: 'text',
+      text: [
+        goal,
+        '',
+        `Attached context: ${attachments
+          .map((a) => `${a.name} (${a.mediaType || 'unknown'}, ${formatBytes(a.size)})`)
+          .join(', ')}`,
+      ].join('\n'),
+    },
+  ];
+
+  for (const file of attachments) {
+    if (file.kind === 'image' && file.data) {
+      blocks.push({
+        type: 'image',
+        source: {
+          type: 'base64',
+          media_type: file.mediaType,
+          data: file.data,
+        },
+      });
+      continue;
+    }
+
+    if (file.kind === 'document' && file.data) {
+      blocks.push({
+        type: 'document',
+        source: {
+          type: 'base64',
+          media_type: file.mediaType,
+          data: file.data,
+        },
+      });
+      continue;
+    }
+
+    if (file.kind === 'text' && file.text) {
+      blocks.push({
+        type: 'text',
+        text: [
+          '',
+          `<attachment name="${file.name}" media_type="${file.mediaType || 'text/plain'}">`,
+          file.text,
+          '</attachment>',
+        ].join('\n'),
+      });
+    }
+  }
+
+  return blocks;
+}
+
+function formatBytes(bytes: number): string {
+  if (bytes < 1024) return `${bytes} B`;
+  const kb = bytes / 1024;
+  if (kb < 1024) return `${kb.toFixed(kb >= 10 ? 0 : 1)} KB`;
+  const mb = kb / 1024;
+  return `${mb.toFixed(mb >= 10 ? 0 : 1)} MB`;
 }
 
 export const SYSTEM_PROMPTS: Record<string, string> = {

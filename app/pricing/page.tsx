@@ -13,6 +13,9 @@ export const metadata: Metadata = {
   alternates: { canonical: '/pricing' },
 };
 
+// Note: the root layout (app/layout.tsx) already emits a site-wide
+// SoftwareApplication + Offer graph (Free/Solo/Team), so we do NOT repeat it
+// here. This page only adds the FAQPage schema via <Faq />.
 export default function PricingPage() {
   return (
     <>

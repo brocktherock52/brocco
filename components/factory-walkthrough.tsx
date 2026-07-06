@@ -75,8 +75,10 @@ const STAGES: Stage[] = [
   },
 ];
 
-/** Lazy, poster-free video. Gates download on scroll, opens on motion. */
-function LazyVideo({ src, className }: { src: string; className?: string }) {
+/** Lazy video. Gates download on scroll, opens on motion. A poster paints the
+ *  first frame the instant the element mounts so there's no black flash (CLS)
+ *  while the MP4 decodes. */
+function LazyVideo({ src, poster, className }: { src: string; poster?: string; className?: string }) {
   const ref = useRef<HTMLDivElement>(null);
   const [visible, setVisible] = useState(false);
   useEffect(() => {
@@ -107,6 +109,7 @@ function LazyVideo({ src, className }: { src: string; className?: string }) {
       {visible && (
         <video
           src={src}
+          poster={poster}
           autoPlay
           muted
           loop
@@ -145,6 +148,10 @@ function CinematicOpener() {
           animate={{ opacity: [0.5, 0.9, 0.5] }}
           transition={{ duration: 5, repeat: Infinity, ease: 'easeInOut' }}
         />
+        {/* No poster here: the only startframe for factory.mp4 lives in
+            public/assets/video-src/, which .vercelignore excludes from the
+            deploy. The stage cards below DO get posters (they live in the
+            kept /assets/factory/ dir). */}
         <LazyVideo src="/assets/video/factory.mp4" className="absolute inset-0" />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_45%,transparent_0%,rgba(0,0,0,0.4)_92%)]" />
         <div className="absolute bottom-0 left-0 right-0 z-10 flex items-center gap-2 bg-gradient-to-t from-black/80 via-black/20 to-transparent p-5 pt-12 font-mono text-[11px] uppercase tracking-[0.18em] text-white/75">
@@ -169,7 +176,11 @@ function StageCard({ stage, index }: { stage: Stage; index: number }) {
       className="group relative"
     >
       <div className="relative aspect-[9/16] w-full overflow-hidden rounded-2xl border border-white/10 bg-[#06080f] transition-colors group-hover:border-white/20">
-        <LazyVideo src={stage.video} className="absolute inset-0" />
+        <LazyVideo
+          src={stage.video}
+          poster={stage.video.replace('.mp4', '-poster.jpg')}
+          className="absolute inset-0"
+        />
         <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_50%_40%,transparent_0%,rgba(0,0,0,0.45)_90%)]" />
         <span className="absolute left-3 top-3 rounded-full border border-white/10 bg-black/50 px-2 py-0.5 font-mono text-[10px] tracking-[0.18em] text-white/80 backdrop-blur">
           {stage.num}

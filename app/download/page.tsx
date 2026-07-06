@@ -185,7 +185,7 @@ export default function DownloadPage() {
               <div className="mt-6 flex flex-wrap items-center justify-between gap-3 border-t border-white/[0.06] pt-5 text-[13px]">
                 <span className="inline-flex items-center gap-2 font-mono text-[11px] text-ink-faint">
                   <Logomark className="h-5 w-5" />
-                  brocco.dev · v2.4
+                  brocco.dev · v2.1
                 </span>
                 <Link
                   href="/security"
@@ -239,7 +239,7 @@ pip install -e .`}</Pre>
             <p className="mt-3 text-[14.5px] leading-relaxed text-ink-dim">
               The same agents are available over HTTP. Pass your Anthropic key as a Bearer token (BYOK passthrough).
             </p>
-            <Pre>{`curl -N https://brocco-site.vercel.app/api/v1/run \\
+            <Pre>{`curl -N https://brocco.dev/api/v1/run \\
   -H "Authorization: Bearer sk-ant-YOUR-KEY" \\
   -H "Content-Type: application/json" \\
   -d '{"agent": "researcher", "prompt": "Top 3 alternatives to Notion under $20/mo"}'`}</Pre>

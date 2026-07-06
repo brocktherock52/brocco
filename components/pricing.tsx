@@ -23,7 +23,7 @@ const TIERS = [
     value: 'No card. Ever.',
     monthly: 0,
     annual: 0,
-    cta: { label: 'Start free', href: '/signup', primary: false },
+    cta: { label: 'Start free · 100 runs', href: '/signup', primary: false },
     features: [
       'The core agent cast',
       '100 agent runs / month (BYOK)',

@@ -4,6 +4,7 @@
 // every visitor.
 export const revalidate = 300;
 
+import type { Metadata } from 'next';
 import { Nav } from '@/components/nav';
 import { HeroBento } from '@/components/hero-bento';
 import { BroadcastConsole } from '@/components/hero-demo';
@@ -38,6 +39,14 @@ import { SectionReveal } from '@/components/section-reveal';
 //   1. Hero        2. Live demo     3. The team
 //   4. Pricing     5. Capabilities  6. (Mission Control)
 //   7. Features    8. Factory       9. Social proof   10. FAQ   11. Final CTA
+
+// The title + description are inherited from the root layout default (the
+// layout title template appends "- brocco.dev", so setting a string title here
+// would double-brand). We only add the self-canonical the home page was
+// missing, which the audit flagged as the one real SEO gap.
+export const metadata: Metadata = {
+  alternates: { canonical: '/' },
+};
 
 export default function HomePage() {
   return (

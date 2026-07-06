@@ -54,13 +54,16 @@ export default async function VerticalPage({ params }: PageProps) {
               </h1>
               <p className="mt-6 max-w-2xl text-[17px] leading-relaxed text-ink-dim">{v.lead}</p>
               <div className="mt-7 flex flex-wrap gap-3">
-                <Link href="/signup" className="btn-primary">
-                  Start free <ArrowRight className="h-3.5 w-3.5" />
+                <Link href={`/app?for=${v.slug}`} className="btn-primary">
+                  Open your {v.audience} workspace <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
-                <Link href="/pricing" className="btn-ghost">
-                  See pricing
+                <Link href="/signup" className="btn-ghost">
+                  Start free
                 </Link>
               </div>
+              <p className="mt-2.5 text-[12.5px] text-ink-faint">
+                No account or card needed to try it. Opens ready to go for {v.audience}.
+              </p>
             </div>
             {v.image && (
               <div className="relative overflow-hidden rounded-3xl border border-white/[0.08] bg-bg-1/40 shadow-glow2">

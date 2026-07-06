@@ -6,14 +6,18 @@
 marketing/
 render/
 
-# Internal / non-build dirs
-backups/
-research/
-sessions/
-session_logs/
-docs/
-__tests__/
-tests/
+# Internal / non-build dirs.
+# NOTE: patterns are anchored with a leading slash so they only match the
+# project-root folder, never a same-named route dir under app/. Without the
+# anchor, a bare "docs/" also excluded app/docs/, which 404'd the live /docs
+# page (fixed 2026-06-02).
+/backups/
+/research/
+/sessions/
+/session_logs/
+/docs/
+/__tests__/
+/tests/
 
 # Heavy public media the website does not reference
 # (kept: agents-nano, cast-v7-video, factory, video, episodes-for-posting, icons)

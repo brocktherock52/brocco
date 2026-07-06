@@ -30,7 +30,7 @@ export function ByokModal({
       localStorage.removeItem(KEY_STORAGE);
       onSaved(null);
       toast.success('Key removed. Demo mode is on.');
-    } else if (!/^sk-[a-zA-Z0-9_-]{15,}$/.test(val.trim())) {
+    } else if (!/^(sk-|xai-)[a-zA-Z0-9_-]{15,}$/.test(val.trim())) {
       toast.error('That does not look like a valid key. Continue anyway?', {
         action: {
           label: 'Save anyway',
@@ -64,7 +64,7 @@ export function ByokModal({
                 Bring your own API key
               </Dialog.Title>
               <Dialog.Description className="mt-1 text-[13.5px] text-ink-dim">
-                Anthropic, OpenAI, or any OpenAI-compatible endpoint. Stored in <strong>your browser only</strong>, never sent to brocco.
+                Anthropic (<span className="font-mono">sk-ant-…</span>) or xAI / Grok (<span className="font-mono">xai-…</span>). Use the key that matches the model you pick. Stored in <strong>your browser only</strong>, never sent to brocco.
               </Dialog.Description>
             </div>
             <Dialog.Close className="rounded-md p-1 text-ink-faint hover:bg-white/[0.06] hover:text-white">
@@ -86,14 +86,24 @@ export function ByokModal({
           </div>
 
           <div className="mt-5 flex items-center justify-between gap-3">
-            <a
-              href="https://console.anthropic.com/settings/keys"
-              target="_blank"
-              rel="noopener"
-              className="text-[12.5px] text-cyan-glow underline-offset-4 hover:underline"
-            >
-              Get an Anthropic key →
-            </a>
+            <span className="flex flex-wrap items-center gap-x-3 gap-y-1 text-[12.5px]">
+              <a
+                href="https://console.anthropic.com/settings/keys"
+                target="_blank"
+                rel="noopener"
+                className="text-cyan-glow underline-offset-4 hover:underline"
+              >
+                Anthropic key →
+              </a>
+              <a
+                href="https://console.x.ai"
+                target="_blank"
+                rel="noopener"
+                className="text-cyan-glow underline-offset-4 hover:underline"
+              >
+                xAI / Grok key →
+              </a>
+            </span>
             <button onClick={save} className="btn-primary text-[13px] px-5 py-2">
               Save key
             </button>

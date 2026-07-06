@@ -198,8 +198,8 @@ export const VERTICALS: VerticalSeed[] = [
   {
     slug: 'wholesalers',
     audience: 'real-estate wholesalers',
-    hero: 'Find the deal. Pitch the buyer. Close the spread.',
-    lead: 'Brocco runs the unglamorous wholesale stack: county records, motivated-seller signal, buyer matching, contract drafting. One license replaces three.',
+    hero: 'Stop chasing leads. Start closing deals.',
+    lead: 'You don\'t pull lists, skip trace, write offers, or chase aged leads by hand anymore. Brocco\'s AI team runs the whole wholesale pipeline for you, around the clock, and hands you deals ready to close.',
     pains: [
       'Pulling motivated-seller leads is a Tuesday.',
       'Buyer matching is an inbox of 200 spreadsheets.',

@@ -100,7 +100,7 @@ export function SocialProof() {
         </motion.div>
 
         <p className="mt-6 text-center text-[11px] italic text-ink-faint">
-          Beta users; identifying details withheld until v2.2 case studies ship.
+          Beta users; identifying details withheld until full case studies ship.
         </p>
       </div>
     </section>

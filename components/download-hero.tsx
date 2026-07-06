@@ -30,7 +30,7 @@ export function DownloadHero() {
           className="mx-auto flex w-max items-center gap-2 rounded-full border border-white/[0.08] bg-white/[0.03] px-3.5 py-1.5 backdrop-blur"
         >
           <Download className="h-3 w-3 text-cyan-glow" />
-          <span className="text-[12px] font-medium text-ink-dim">Install brocco · v2.4 PWA</span>
+          <span className="text-[12px] font-medium text-ink-dim">Install brocco · v2.1 PWA</span>
         </motion.div>
 
         {/* mark */}

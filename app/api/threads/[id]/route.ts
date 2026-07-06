@@ -65,6 +65,14 @@ export async function PATCH(req: NextRequest, ctx: { params: Promise<{ id: strin
     return NextResponse.json({ error: 'no_valid_fields' }, { status: 400 });
   }
 
-  const [row] = await db.update(threads).set(patch).where(eq(threads.id, id)).returning();
+  // Defense-in-depth: scope the UPDATE to the owner too, not just the id. The
+  // ownership precondition above already 404s a foreign thread, but keeping the
+  // userId on the write means a future refactor that drops the precondition
+  // can never turn this into an IDOR.
+  const [row] = await db
+    .update(threads)
+    .set(patch)
+    .where(and(eq(threads.id, id), eq(threads.userId, user.id)))
+    .returning();
   return NextResponse.json({ thread: row });
 }

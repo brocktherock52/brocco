@@ -96,25 +96,58 @@ export default async function BlogPostPage({ params }: PageProps) {
               ))}
             </p>
 
-            {/* Outline rendered as a real article-ish skeleton. Long-form prose
-                fills in iteratively; today's value is the SEO + structure. */}
-            <div className="mt-12 space-y-12">
-              {post.outline.map((sec) => (
-                <section key={sec.h2}>
-                  <h2 className="text-[24px] font-semibold tracking-tight">
-                    <span className="font-serif italic font-normal text-grad-brand">{sec.h2}</span>
-                  </h2>
-                  <p className="mt-3 text-[15.5px] leading-relaxed text-ink-dim">
-                    Long-form copy in progress. The outline below is what this section will cover. Open the dashboard to see brocco run the patterns described here.
-                  </p>
-                  <ul className="mt-4 space-y-2 pl-5 list-disc text-[14.5px] leading-relaxed text-ink-dim">
-                    {sec.bullets.map((b) => (
-                      <li key={b}>{b}</li>
-                    ))}
-                  </ul>
-                </section>
-              ))}
+            {/* Full prose body when present; otherwise the outline as a concise
+                section summary (no "copy in progress" placeholder). */}
+            <div className="mt-12 space-y-10">
+              {post.body
+                ? post.body.map((sec) => (
+                    <section key={sec.h2}>
+                      <h2 className="text-[24px] font-semibold tracking-tight">
+                        <span className="font-serif italic font-normal text-grad-brand">{sec.h2}</span>
+                      </h2>
+                      {sec.paragraphs.map((p, i) => (
+                        <p key={i} className="mt-4 text-[15.5px] leading-[1.7] text-ink-dim">
+                          {p}
+                        </p>
+                      ))}
+                      {sec.bullets && (
+                        <ul className="mt-4 space-y-2 pl-5 list-disc text-[14.5px] leading-relaxed text-ink-dim">
+                          {sec.bullets.map((b) => (
+                            <li key={b}>{b}</li>
+                          ))}
+                        </ul>
+                      )}
+                    </section>
+                  ))
+                : post.outline.map((sec) => (
+                    <section key={sec.h2}>
+                      <h2 className="text-[24px] font-semibold tracking-tight">
+                        <span className="font-serif italic font-normal text-grad-brand">{sec.h2}</span>
+                      </h2>
+                      <ul className="mt-4 space-y-2 pl-5 list-disc text-[14.5px] leading-relaxed text-ink-dim">
+                        {sec.bullets.map((b) => (
+                          <li key={b}>{b}</li>
+                        ))}
+                      </ul>
+                    </section>
+                  ))}
             </div>
+
+            {/* Post-specific internal-link CTA (SEO + conversion). */}
+            {post.cta && (
+              <div className="mt-12">
+                <Link
+                  href={post.cta.href}
+                  className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-brand to-cyan px-6 py-3.5 text-[15px] font-semibold text-white shadow-glow2 transition-all hover:shadow-glow"
+                >
+                  {post.cta.label}
+                  <ArrowLeft className="h-4 w-4 rotate-180" />
+                </Link>
+                {post.cta.note && (
+                  <p className="mt-2 text-[12.5px] text-ink-faint">{post.cta.note}</p>
+                )}
+              </div>
+            )}
 
             <div className="mt-16 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-6">
               <p className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-faint">

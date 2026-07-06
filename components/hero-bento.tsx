@@ -32,11 +32,8 @@ import {
 } from 'framer-motion';
 import {
   ArrowRight,
-  Apple,
   ChevronRight,
   Download,
-  KeySquare,
-  Monitor,
   Sparkles,
   TerminalSquare,
   Zap,
@@ -53,6 +50,8 @@ import {
   SlackIcon,
   ZapierIcon,
   N8nIcon,
+  AppleIcon,
+  WindowsIcon,
 } from './brand-icons';
 
 // -----------------------------------------------------------------------------
@@ -709,11 +708,23 @@ function TerminalTile() {
 // -----------------------------------------------------------------------------
 // INSTALL TILE: install paths (mac/win/mcp) as a compact selector card
 // -----------------------------------------------------------------------------
+// Each path is a real, navigable link. Icons are the actual platform marks
+// (redrawn Apple / Windows logos from brand-icons, Anthropic for Claude
+// Desktop) instead of the generic lucide apple/monitor glyphs. Copy reflects
+// what actually ships today: PWA install everywhere, MCP for Claude Desktop,
+// REST for everything else. The Tauri .exe/.dmg are still "coming soon" on
+// /download, so they're no longer promised here.
 const INSTALL_PATHS = [
-  { id: 'mac', label: 'macOS', sub: 'Apple silicon / Intel', icon: Apple, href: '/download' },
-  { id: 'win', label: 'Windows', sub: 'pwa or .exe', icon: Monitor, href: '/download' },
-  { id: 'mcp', label: 'Claude Desktop', sub: 'mcp server', icon: KeySquare, href: '/download#mcp-setup' },
-  { id: 'cli', label: 'CLI / curl', sub: 'rest + sse', icon: TerminalSquare, href: '/docs' },
+  { id: 'mac', label: 'macOS', sub: 'Apple silicon / Intel', icon: AppleIcon, href: '/download' },
+  { id: 'win', label: 'Windows', sub: 'PWA · Win 10 / 11', icon: WindowsIcon, href: '/download' },
+  {
+    id: 'mcp',
+    label: 'Claude Desktop',
+    sub: 'MCP server',
+    icon: AnthropicIcon,
+    href: '/download#mcp-setup',
+  },
+  { id: 'cli', label: 'CLI / curl', sub: 'REST + SSE', icon: TerminalSquare, href: '/docs' },
 ];
 
 function InstallTile() {
@@ -735,11 +746,13 @@ function InstallTile() {
           const isActive = active === p.id;
           return (
             <li key={p.id}>
-              <button
+              <Link
+                href={p.href}
                 onMouseEnter={() => setActive(p.id)}
                 onFocus={() => setActive(p.id)}
+                aria-label={`Install brocco for ${p.label}`}
                 className={cn(
-                  'relative w-full overflow-hidden rounded-xl border px-3 py-3 text-left transition-colors',
+                  'relative block w-full overflow-hidden rounded-xl border px-3 py-3 text-left transition-colors',
                   isActive
                     ? 'border-brand/40 bg-brand/10 text-white'
                     : 'border-white/[0.06] bg-white/[0.015] text-ink-dim hover:border-white/[0.14] hover:text-white',
@@ -759,7 +772,7 @@ function InstallTile() {
                 <p className="mt-0.5 font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-faint">
                   {p.sub}
                 </p>
-              </button>
+              </Link>
             </li>
           );
         })}

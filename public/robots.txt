@@ -1,7 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://brocco.dev/sitemap.xml
-
-User-agent: *
-Disallow: /assets/personal/

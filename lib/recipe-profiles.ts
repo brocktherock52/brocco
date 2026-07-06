@@ -211,8 +211,8 @@ export const RECIPE_PROFILES: RecipeProfile[] = [
   // at run time with their own model key. ---
   {
     slug: 'motivated-seller-leads',
-    name: 'Motivated-seller lead pull',
-    tagline: 'Turn public distress signals into a ranked call list.',
+    name: 'Done-for-you seller leads',
+    tagline: 'Never hunt for a motivated seller again.',
     audience: 'Real estate wholesalers, investors, acquisitions reps.',
     whatYouGet: [
       'A deduped list of candidate properties in your target area and price band.',
@@ -229,7 +229,7 @@ export const RECIPE_PROFILES: RecipeProfile[] = [
   {
     slug: 'skip-trace-and-outreach',
     name: 'Skip trace and outreach sequence',
-    tagline: 'From a raw address list to ready-to-send seller touches.',
+    tagline: 'Every owner found and contacted, without you lifting a finger.',
     audience: 'Wholesalers, land investors, acquisitions teams.',
     whatYouGet: [
       'A structured contact sheet from the addresses you provide.',
@@ -246,7 +246,7 @@ export const RECIPE_PROFILES: RecipeProfile[] = [
   {
     slug: 'comp-analysis-arv',
     name: 'Comp analysis and offer math',
-    tagline: 'ARV, repair band, and a defensible max offer in minutes.',
+    tagline: 'Know your max offer cold, before the competition wakes up.',
     audience: 'Wholesalers, flippers, buy-and-hold investors.',
     whatYouGet: [
       'A comp set for the subject property with adjustments explained.',
@@ -263,7 +263,7 @@ export const RECIPE_PROFILES: RecipeProfile[] = [
   {
     slug: 'cash-buyer-dispo',
     name: 'Cash-buyer match and dispo blast',
-    tagline: 'Package the deal, find the buyers, write the blast.',
+    tagline: 'Sell the contract before the ink is dry.',
     audience: 'Wholesalers running disposition.',
     whatYouGet: [
       'A clean deal one-sheet (numbers, photos placeholder, terms).',
@@ -297,7 +297,7 @@ export const RECIPE_PROFILES: RecipeProfile[] = [
   {
     slug: 'loi-and-contract-draft',
     name: 'LOI and assignable contract draft',
-    tagline: 'Paperwork drafted with the blanks ready, not the weekend gone.',
+    tagline: 'Get your weekend back. The paperwork writes itself.',
     audience: 'Wholesalers and investors. Not legal advice; have counsel review.',
     whatYouGet: [
       'A letter of intent tailored to the deal terms you provide.',

@@ -34,7 +34,7 @@ export default async function SuccessPage({
     return (
       <>
         <Nav />
-        <AutoSignin verifyUrl={claim.verifyUrl} sessionId={sessionId} />
+        <AutoSignin verifyUrl={claim.verifyUrl} sessionId={sessionId} plan={claim.plan} />
         <main className="flex min-h-[calc(100vh-200px)] items-center justify-center pt-32">
           <div className="container-x text-center">
             <div className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-400/10">
@@ -62,7 +62,7 @@ export default async function SuccessPage({
   return (
     <>
       <Nav />
-      <SuccessTracker />
+      <SuccessTracker plan={claim.ok ? claim.plan : undefined} />
       <main className="flex min-h-[calc(100vh-200px)] items-center justify-center pt-32">
         <div className="container-x text-center">
           <div className="mx-auto inline-flex h-14 w-14 items-center justify-center rounded-full border border-emerald-400/30 bg-emerald-400/10">

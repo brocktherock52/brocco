@@ -3,27 +3,48 @@
 import { useEffect } from 'react';
 import { trackPixel } from '@/components/meta-pixel';
 import { trackEvent } from '@/components/posthog-provider';
+import { planValue } from './auto-signin';
 
-/** Fires Meta Pixel + PostHog "Subscribe" once on the success page. The
- *  matching server-side CAPI event is dispatched from app/api/stripe-webhook
- *  on checkout.session.completed. transaction_id rides on both for dedup. */
-export function SuccessTracker() {
+/** Fires Meta Pixel + PostHog "Subscribe" + "Purchase" once on the success page.
+ *  The matching server-side CAPI event is dispatched from app/api/stripe-webhook
+ *  on checkout.session.completed. transaction_id rides on both for dedup.
+ *  Purchase carries value + currency for value-based ad bidding (consultant note
+ *  2026-06-02). */
+export function SuccessTracker({ plan }: { plan?: string }) {
   useEffect(() => {
     if (typeof window === 'undefined') return;
     const url = new URL(window.location.href);
     const sessionId = url.searchParams.get('session_id') || '';
-    trackPixel('Subscribe', {
-      content_category: 'subscription',
-      content_name: 'brocco_paid',
-      currency: 'USD',
-      transaction_id: sessionId,
-    });
+    const value = planValue(plan);
+    trackPixel(
+      'Subscribe',
+      {
+        content_category: 'subscription',
+        content_name: 'brocco_paid',
+        currency: 'USD',
+        transaction_id: sessionId,
+      },
+      sessionId,
+    );
+    trackPixel(
+      'Purchase',
+      {
+        content_category: 'subscription',
+        content_name: plan ? `brocco_${plan}` : 'brocco_paid',
+        currency: 'USD',
+        value,
+        transaction_id: sessionId,
+      },
+      sessionId,
+    );
     trackPixel('Lead', { content_name: 'subscribe' });
     trackEvent('subscribe', {
       transaction_id: sessionId,
       content_name: 'brocco_paid',
+      plan: plan ?? 'unknown',
+      value,
       currency: 'USD',
     });
-  }, []);
+  }, [plan]);
   return null;
 }

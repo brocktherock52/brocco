@@ -31,12 +31,15 @@ export async function POST(req: Request): Promise<Response> {
   }
 
   const tier = String(body.tier || '').toLowerCase();
-  const interval = String(body.interval || 'monthly').toLowerCase();
+  let interval = String(body.interval || 'monthly').toLowerCase();
   const email = typeof body.email === 'string' ? body.email : undefined;
 
-  if (!['solo', 'team'].includes(tier)) {
-    return Response.json({ error: 'tier must be solo or team' }, { status: 400 });
+  if (!['solo', 'team', 'wholesaler'].includes(tier)) {
+    return Response.json({ error: 'tier must be solo, team, or wholesaler' }, { status: 400 });
   }
+  // Wholesaler is a monthly-only $20 plan (the HMHW funnel). Never look up a
+  // nonexistent annual price for it.
+  if (tier === 'wholesaler') interval = 'monthly';
   if (!['monthly', 'annual'].includes(interval)) {
     return Response.json({ error: 'interval must be monthly or annual' }, { status: 400 });
   }

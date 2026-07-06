@@ -3,7 +3,7 @@ import { Nav } from '@/components/nav';
 import { Footer } from '@/components/footer';
 
 export const metadata: Metadata = {
-  title: 'Terms of service',
+  title: 'Terms of Service',
   description: 'Terms of service for brocco.dev. Plain-language summary up top.',
   alternates: { canonical: '/terms' },
 };

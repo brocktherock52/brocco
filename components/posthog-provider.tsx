@@ -31,6 +31,11 @@ export function PostHogProvider() {
       capture_pageview: false, // we capture manually for App Router
       autocapture: true,
       capture_pageleave: true,
+      // Heatmaps (consultant note 2026-06-02): capture $heatmap data so we can
+      // see where attention/clicks land on the landers + pricing, prune the
+      // sections people skip, and confirm the CTA is the hottest element. View
+      // them in PostHog -> Heatmaps (or the toolbar) once traffic flows.
+      enable_heatmaps: true,
       loaded: (ph) => {
         (ph as any).__loaded = true;
       },

@@ -10,7 +10,7 @@ import { CheckoutClient } from './checkout-client';
 // signals before sending the visitor to enter their card. Stripe Checkout
 // itself is opened on click of the primary CTA via /api/checkout.
 
-type Tier = 'solo' | 'team';
+type Tier = 'solo' | 'team' | 'wholesaler';
 
 interface TierSpec {
   id: Tier;
@@ -18,11 +18,28 @@ interface TierSpec {
   tagline: string;
   monthly: number;
   annual: number;
+  monthlyOnly?: boolean;
   perks: string[];
   bestFor: string;
 }
 
 const TIERS: Record<Tier, TierSpec> = {
+  wholesaler: {
+    id: 'wholesaler',
+    name: 'Wholesaler',
+    tagline: 'The full wholesaling stack, for less than a dinner.',
+    monthly: 20,
+    annual: 20,
+    monthlyOnly: true,
+    bestFor: 'HMHW students. Solo wholesalers. Anyone running deals.',
+    perks: [
+      'Every real-estate tool: leads, skip trace, comps, offers, contracts',
+      'All agents, unlocked',
+      'Run any step of the A-to-Z walkthrough on your own market',
+      'Your leads and contacts stay yours',
+      '7-day trial. Cancel anytime.',
+    ],
+  },
   solo: {
     id: 'solo',
     name: 'Solo',
@@ -104,6 +121,7 @@ export default async function CheckoutPage({ params }: { params: Promise<{ tier:
             name={spec.name}
             monthly={spec.monthly}
             annual={spec.annual}
+            monthlyOnly={spec.monthlyOnly}
             perks={spec.perks}
             bestFor={spec.bestFor}
             tagline={spec.tagline}

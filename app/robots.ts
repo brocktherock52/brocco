@@ -7,7 +7,15 @@ const SITE = process.env.NEXT_PUBLIC_BASE_URL || 'https://brocco.dev';
 export default function robots(): MetadataRoute.Robots {
   return {
     rules: [
-      { userAgent: '*', allow: '/', disallow: ['/app', '/billing/', '/account', '/api/'] },
+      // /assets/personal/ holds the founder's personal video/photo source files.
+      // This disallow used to live in the static public/robots.txt, but the
+      // dynamic route wins and shadowed it, so the rule was silently inactive.
+      // Ported here so crawlers actually honor it.
+      {
+        userAgent: '*',
+        allow: '/',
+        disallow: ['/app', '/billing/', '/account', '/api/', '/assets/personal/'],
+      },
     ],
     sitemap: `${SITE}/sitemap.xml`,
   };

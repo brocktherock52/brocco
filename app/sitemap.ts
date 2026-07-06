@@ -6,6 +6,7 @@ import { TOOL_PROFILES } from '@/lib/tool-profiles';
 import { RECIPE_PROFILES } from '@/lib/recipe-profiles';
 import { INTEGRATION_PROFILES } from '@/lib/integration-profiles';
 import { capabilities as CAPABILITIES } from '@/lib/capabilities-data';
+import { ALTERNATIVES } from '@/lib/alternatives';
 
 // 2026-05-22: was hardcoded to the Vercel preview domain. Now uses the public
 // base URL so Google indexes the real domain and not the staging URL.
@@ -55,6 +56,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: 'monthly' as const,
     priority: 0.85,
   }));
+  // BOFU comparison pages (traffic research 2026-06-02, channel #1).
+  const alternatives = ALTERNATIVES.map((a) => ({
+    url: `${SITE}/alternatives/${a.slug}`,
+    lastModified: now,
+    changeFrequency: 'monthly' as const,
+    priority: 0.9,
+  }));
   return [
     { url: `${SITE}/`, lastModified: now, changeFrequency: 'weekly', priority: 1 },
     { url: `${SITE}/real-estate`, lastModified: now, changeFrequency: 'weekly', priority: 0.9 },
@@ -87,6 +95,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...verticals,
     ...integrations,
     ...capabilities,
+    ...alternatives,
     ...blog,
   ];
 }
