@@ -44,8 +44,8 @@ const STAGES: Stage[] = [
   {
     id: 'dispatch',
     num: '02',
-    title: 'team dispatched',
-    copy: 'sully splits it into parallel tracks across the team.',
+    title: 'choose your team',
+    copy: 'select the specialists you want to work on the goal.',
     video: '/assets/factory/stage-2.mp4',
     chip: { label: 'supervisor', color: '#22C55E' },
   },
@@ -61,15 +61,15 @@ const STAGES: Stage[] = [
     id: 'deliver',
     num: '04',
     title: 'outputs land',
-    copy: 'finished artifacts hit your dashboard.',
+    copy: 'review the responses in your dashboard.',
     video: '/assets/factory/stage-4.mp4',
     chip: { label: 'artifacts', color: '#A78BFA' },
   },
   {
     id: 'ship',
     num: '05',
-    title: 'you ship',
-    copy: 'one prompt in, finished work out.',
+    title: 'you review',
+    copy: 'check the results, then export what you need.',
     video: '/assets/factory/stage-5.mp4',
     chip: { label: 'shipped', color: '#22C55E' },
   },
@@ -217,7 +217,7 @@ export function FactoryWalkthrough() {
             <span className="text-grad-brand">the brocco factory.</span>
           </h2>
           <p className="mt-5 max-w-xl text-[17px] leading-relaxed text-ink-dim">
-            one prompt in, finished work out. here is the whole line, start to ship.
+            An illustrated walkthrough of the workflow: choose agents, submit a task, review the results. The animation is a concept preview.
           </p>
         </div>
 

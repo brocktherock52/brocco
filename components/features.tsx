@@ -18,47 +18,47 @@ import { ArrowRight, Check, X } from 'lucide-react';
 const ROWS = [
   {
     capability: 'Multi-agent orchestration',
-    them: 'one mega-prompt, vibes',
-    us: 'supervisor + sub-agents, each with own tools + memory',
+    them: 'write separate prompts for each task',
+    us: 'select multiple agents and broadcast one goal',
   },
   {
     capability: 'Tool registry',
-    them: 'JSON schemas pasted into a system prompt',
-    us: 'Python factory in, agent uses it next run',
+    them: 'copy source material between tabs',
+    us: 'built-in web search and page-reading tools',
   },
   {
     capability: 'Audit trails',
-    them: 'whatever the model logged, if anything',
-    us: 'every prompt + tool call + result in JSONL, replayable',
+    them: 'reconstruct the steps from separate chats',
+    us: 'review streamed messages, tool calls, and results',
   },
   {
     capability: 'Persistent memory',
-    them: 'rebuild context every call',
-    us: 'per-agent KV survives across runs',
+    them: 'paste the same background into new chats',
+    us: 'save project context for later work',
   },
   {
     capability: 'Prompt caching',
-    them: 'flip a flag, hope for the best',
-    us: 'on by default, ~80% hit on repeated workflows',
+    them: 'configure provider caching yourself',
+    us: 'Anthropic prompt-cache support where available',
   },
   {
-    capability: 'Hosting',
-    them: 'one of two SaaS lock-ins',
-    us: 'self-host on Hetzner / Vercel / laptop, or hosted',
+    capability: 'Workspace access',
+    them: 'assemble a separate interface for each task',
+    us: 'one browser workspace for your agents',
   },
   {
     capability: 'BYOK',
-    them: 'paid add-on or not supported',
-    us: 'Anthropic + OpenAI + Ollama + Groq on every plan',
+    them: 'manage provider settings across tools',
+    us: 'Anthropic or xAI key on a paid plan; provider usage billed separately',
   },
   {
     capability: 'Streaming',
-    them: 'poll, wait, refresh',
-    us: 'SSE end-to-end, every token, every tool call',
+    them: 'switch between task windows for updates',
+    us: 'responses and tool progress stream in agent panes',
   },
   {
     capability: 'Data retention',
-    them: '"we may use your data to improve the product"',
+    them: 'review the data policy for each service',
     us: 'provider data policies apply; see our privacy policy',
   },
 ];
@@ -77,12 +77,11 @@ export function Features() {
         <div className="max-w-2xl">
           <p className="pill">features</p>
           <h2 className="mt-5 text-display-lg lowercase">
-            <span className="text-grad">production-grade. audit-ready.</span>{' '}
-            <span className="text-grad-brand">yours.</span>
+            <span className="text-grad">one workspace.</span>{' '}
+            <span className="text-grad-brand">clear steps.</span>
           </h2>
           <p className="mt-4 max-w-xl text-[16px] text-ink-dim">
-            the capabilities side by side: how everyone else does it, how brocco does it. each row
-            is a thing we got tired of reinventing.
+            Bring your tasks into one workspace. Here is how the dashboard helps you organize and review the work.
           </p>
         </div>
 
@@ -94,7 +93,7 @@ export function Features() {
           <div className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-ink-faint">
             <span className="inline-flex items-center gap-1.5">
               <X className="h-3 w-3 text-accent-rose" />
-              generic agent stack
+              manual setup
             </span>
           </div>
           <div className="font-mono text-[10.5px] uppercase tracking-[0.22em] text-brand-glow">
@@ -150,8 +149,7 @@ export function Features() {
 
         <div className="mt-10 flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
           <p className="max-w-xl text-[13.5px] leading-relaxed text-ink-faint">
-            this is what we mean by &ldquo;production-grade.&rdquo; not a buzzword. concrete
-            decisions we already made on your behalf.
+            The trial previews the dashboard. A paid plan and configured model access are required for live runs.
           </p>
           <Link
             href="/begin"

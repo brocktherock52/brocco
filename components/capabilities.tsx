@@ -2,6 +2,15 @@ import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import { capabilities } from '@/lib/capabilities-data';
 
+const WORKFLOW_PREVIEWS: Record<string, { name: string; tagline: string }> = {
+  'website-builder': { name: 'Website planning', tagline: 'Example: draft a page outline, copy, and code for review.' },
+  'content-studio': { name: 'Content planning', tagline: 'Example: develop hooks, scripts, and captions from your brief.' },
+  'outreach-engine': { name: 'Outreach drafts', tagline: 'Example: prepare messages using the audience context you provide.' },
+  'market-intel': { name: 'Market analysis', tagline: 'Example: compare market information and explain assumptions.' },
+  'deep-research': { name: 'Research briefs', tagline: 'Example: summarize sources and flag questions to verify.' },
+  automation: { name: 'Operations planning', tagline: 'Example: turn a recurring task into a checklist for review.' },
+};
+
 /**
  * Capabilities, the homepage section that reframes every venture lane as
  * something the brocco team ships for you: sites, content, outreach, intel,
@@ -16,11 +25,10 @@ export function Capabilities() {
           <p className="pill">capabilities</p>
           <h2 className="mt-5 text-display-lg lowercase">
             <span className="text-grad">one team.</span>{' '}
-            <span className="text-grad-brand">everything you need shipped.</span>
+            <span className="text-grad-brand">different ways to work.</span>
           </h2>
           <p className="mt-4 max-w-xl text-[16px] text-ink-dim">
-            not a chatbot. a team of agents that builds sites, makes content, runs outreach, and
-            turns research into decisions, end to end, with you in the approval loop.
+            Illustrative tasks to adapt to your needs. Ask for research, plans, and drafts, then review the results before using them.
           </p>
         </div>
 
@@ -42,9 +50,9 @@ export function Capabilities() {
                   </span>
                 </div>
                 <h3 className="mt-3 text-[15px] font-semibold tracking-tight text-white group-hover:text-cyan-glow">
-                  {c.name}
+                  {WORKFLOW_PREVIEWS[c.slug]?.name ?? c.name}
                 </h3>
-                <p className="mt-2 text-[13.5px] leading-relaxed text-ink-dim">{c.tagline}</p>
+                <p className="mt-2 text-[13.5px] leading-relaxed text-ink-dim">{WORKFLOW_PREVIEWS[c.slug]?.tagline ?? 'Explore an illustrative workflow.'}</p>
               </div>
             </Link>
           ))}

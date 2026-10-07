@@ -45,10 +45,10 @@ const PRODUCT: MegaItem[] = [
   { href: '/app', label: 'dashboard', desc: 'multi-agent panes, broadcast mode', Icon: Boxes },
   { href: '/agents', label: 'the cast', desc: 'your AI team, one prompt', Icon: Cpu },
   { href: '/capabilities', label: 'capabilities', desc: 'sites, content, outreach, intel, ops', Icon: Sparkles },
-  { href: '/tools', label: 'tools', desc: '13 typed interfaces, audit-logged', Icon: Wrench },
+  { href: '/tools', label: 'tools', desc: 'tool reference and workflow guides', Icon: Wrench },
   { href: '/recipes', label: 'recipes', desc: '11 broadcast patterns', Icon: Sparkles },
-  { href: '/integrations', label: 'integrations', desc: 'anthropic, openai, ollama, slack, more', Icon: Plug },
-  { href: '/download#mcp-setup', label: 'mcp server', desc: 'inside claude desktop + cursor', Icon: TerminalSquare },
+  { href: '/integrations', label: 'integrations', desc: 'provider and integration guides', Icon: Plug },
+  { href: '/download#mcp-setup', label: 'mcp setup', desc: 'installation and setup notes', Icon: TerminalSquare },
 ];
 
 const SOLUTIONS: MegaItem[] = [

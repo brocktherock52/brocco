@@ -6,11 +6,11 @@ import { ChevronDown } from 'lucide-react';
 const buildQuestions = (hostedAvailable: boolean) => [
   {
     q: 'What does brocco actually do for me?',
-    a: 'Brocco runs multiple AI agents in parallel from a single prompt. Pick agents on the left, type a goal, hit Run, and watch each agent work in its own pane with live tool calls and streaming output. The recipes gallery has 11 ready-to-run workflows: market research, launch day, customer deep dive, content sprint, and more.',
+    a: 'Brocco lets you select multiple AI agents, send them one goal, and review their responses and tool activity in separate panes. Recipes provide starting prompts for tasks such as research, planning, and drafting. Live runs require a paid subscription and configured model access.',
   },
   {
     q: 'Why not just use my Claude subscription?',
-    a: 'You can, for one task, in one thread, that you babysit prompt by prompt. Brocco is what you reach for when that gets old. One prompt fans out to a whole team running in parallel, so research, a plan, and outreach drafts land at once instead of one after another. Every run exports as a polished, branded PDF, a deliverable you can hand a client, not a wall of chat. And the projects you save keep watching themselves: brocco flags when a project\'s findings have gone stale and re-runs them, so you are not re-asking the same questions every week. Same models you already trust (bring your own key), minus the copy-paste and the babysitting.',
+    a: 'Brocco organizes multiple agent responses in one workspace, with shared goals, saved projects, and export options. A Claude chat subscription is separate from Anthropic API access. If you use your own key in Brocco, your model provider bills that usage separately from your Brocco subscription.',
   },
   {
     q: 'What is included in the 7-day trial?',
@@ -42,7 +42,7 @@ const buildQuestions = (hostedAvailable: boolean) => [
   },
   {
     q: 'Can I cancel anytime?',
-    a: 'Yes. One-click cancel from the Stripe billing portal. We prorate the unused portion of your current period back to your card. No exit interviews.',
+    a: 'Yes. Open billing from your account to cancel through Stripe. Our terms provide for a prorated refund of the unused portion of paid plans on cancellation in good standing. Contact help@brocco.dev for refund assistance.',
   },
   {
     q: 'How is this different from Zapier or n8n?',
@@ -50,15 +50,15 @@ const buildQuestions = (hostedAvailable: boolean) => [
   },
   {
     q: 'Can I self-host?',
-    a: 'Yes. Enterprise customers get a Helm chart and an air-gap-compatible Docker image. The runtime is Python; you can run it on a $5 VPS if you want.',
+    a: 'The Solo and Team offer on this page is access to the Brocco web dashboard. Refer to the public repository for available code and setup information. Contact us about deployment requirements before relying on a self-hosted setup.',
   },
   {
     q: 'How long until I have my first agent running?',
     a: 'Add your card at checkout, then create your account to preview the dashboard. Live runs unlock when your paid subscription starts after seven days, or sooner if you confirm early activation. Then choose a workflow, connect any required credentials, and submit your task.',
   },
   {
-    q: 'SOC 2 / GDPR / security details?',
-    a: 'SOC 2 Type II audit in progress. GDPR compliant since launch. AES-256 at rest, TLS 1.3 in transit. Detailed security overview at /security.',
+    q: 'Where can I review data handling and security details?',
+    a: 'Our privacy policy describes saved project data, model requests, and API-key handling. Review your model provider\'s own data policies too. Contact help@brocco.dev for questions about controls or documentation required by your team.',
   },
 ];
 

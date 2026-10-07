@@ -23,14 +23,14 @@ const TIERS = [
     features: [
       'All agents and the skills library',
       'One seat',
-      'Built-in tools and integrations',
+      'Built-in web search and page-reading tools',
       'Export your finished work',
     ],
   },
   {
     id: 'team',
     name: 'Team',
-    desc: 'An AI workspace for your whole team.',
+    desc: 'Higher run limits when hosted AI is available.',
     monthly: 199,
     annual: 1990,
     popular: false,
@@ -38,8 +38,8 @@ const TIERS = [
     dailyRuns: 500,
     features: [
       'Everything in Solo',
-      'Five seats',
-      'Shared team workflows',
+      'One account workspace',
+      'Saved projects and workflows',
       'Export your finished work',
     ],
   },
@@ -98,11 +98,15 @@ export function Pricing({ standalone = false, hostedAvailable = false }: { stand
               <SpotlightCard tilt={false} className={cn('card relative flex h-full flex-col p-6', tier.popular && 'border-brand/40 bg-bg-1/90 shadow-glow')}>
                 {tier.popular && (
                   <span className="absolute -top-3 left-1/2 inline-flex -translate-x-1/2 items-center gap-1 rounded-full bg-brand px-3 py-1 text-xs font-bold uppercase tracking-wider text-white">
-                    <Zap className="h-3 w-3" /> Most popular
+                    <Zap className="h-3 w-3" /> Start here
                   </span>
                 )}
                 <h3 className="text-xl font-semibold tracking-tight">{tier.name}</h3>
                 <p className="mt-1 text-base text-ink-dim">{tier.desc}</p>
+                {tier.id === 'team' && <p className="mt-2 text-sm text-ink-faint">
+                  Team member invitations and shared seats are not available yet.
+                  {!hostedAvailable && ' With hosted AI unavailable, both plans currently provide the same BYOK workspace.'}
+                </p>}
                 <div className="mt-6 flex items-baseline gap-2">
                   <span className="text-4xl font-bold tracking-tight tabular-nums">${tier[interval].toLocaleString('en-US')}</span>
                   <span className="text-base text-ink-faint">/ {interval === 'annual' ? 'year' : 'month'}</span>

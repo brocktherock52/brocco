@@ -1,38 +1,35 @@
 'use client';
 
 import { motion } from 'framer-motion';
-import { Quote, Star } from 'lucide-react';
+import { ClipboardList } from 'lucide-react';
 import { SpotlightCard } from './ui/spotlight-card';
 
-const TESTIMONIALS = [
+const WORKFLOW_EXAMPLES = [
   {
-    quote:
-      'Replaced 8 Zapier zaps with 3 brocco agents. Saved $340/mo and the audit logs alone are worth the switch.',
-    name: 'Anonymous beta user',
-    role: 'Ops lead, Series B SaaS',
+    prompt: 'Compare these three competitors using their public pages. List sources, differences, and questions I should verify.',
+    name: 'Research brief',
+    role: 'Example prompt for researcher and analyst',
   },
   {
-    quote:
-      'The broadcast pattern is the killer feature. One prompt, five specialists working in parallel. Nothing else does this.',
-    name: 'Founder, indie',
-    role: 'Solo SaaS',
+    prompt: 'Turn this product brief into a launch checklist and three draft announcements. Flag any missing information.',
+    name: 'Launch planning',
+    role: 'Example prompt for planner and outreach',
   },
   {
-    quote:
-      'Took me 11 minutes from signup to a working agent that actually drafts cold emails I can send. JSONL audit trail seals it.',
-    name: 'GTM lead',
-    role: 'YC startup',
+    prompt: 'Draft three introductory emails from the context I provide. Keep them for my review before I send anything.',
+    name: 'Outreach drafts',
+    role: 'Example prompt for outreach',
   },
 ];
 
-const LOGOS = ['Anthropic', 'OpenAI', 'Stripe', 'Vercel', 'Tavily', 'Ollama', 'Postgres'];
+const PROVIDERS = ['Anthropic Claude', 'xAI Grok'];
 
 export function SocialProof() {
   return (
     <section className="relative py-24 md:py-32">
       <div className="container-x">
         <p className="text-center font-mono text-[11px] uppercase tracking-[0.2em] text-ink-faint">
-          Built on infrastructure your security team already approved
+          Supported model providers
         </p>
 
         {/* Marquee-style logo strip with edge fade */}
@@ -48,7 +45,7 @@ export function SocialProof() {
             style={{ background: 'linear-gradient(to left, var(--tw-bg-0,#0A0A0F), transparent)' }}
           />
           <ul className="flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-[14px] text-ink-dim md:gap-x-12">
-            {LOGOS.map((l) => (
+            {PROVIDERS.map((l) => (
               <li
                 key={l}
                 className="opacity-60 transition-all hover:opacity-100 hover:text-white hover:tracking-wide"
@@ -66,7 +63,7 @@ export function SocialProof() {
           variants={{ hidden: {}, show: { transition: { staggerChildren: 0.08 } } }}
           className="mt-14 grid gap-4 md:grid-cols-3"
         >
-          {TESTIMONIALS.map((t, i) => (
+          {WORKFLOW_EXAMPLES.map((t, i) => (
             <motion.figure
               key={i}
               variants={{
@@ -81,15 +78,9 @@ export function SocialProof() {
                 spotlightColor="rgba(167, 139, 250, 0.18)"
                 className="card group h-full overflow-hidden p-6"
               >
-                <Quote className="absolute right-4 top-4 h-8 w-8 text-brand/25 transition-colors group-hover:text-brand/45" />
-                <div className="flex gap-0.5 text-amber-300">
-                  {[0, 1, 2, 3, 4].map((s) => (
-                    <Star key={s} className="h-3.5 w-3.5 fill-current" />
-                  ))}
-                </div>
-                <blockquote className="mt-3 text-[14px] leading-relaxed text-ink/95">
-                  &ldquo;{t.quote}&rdquo;
-                </blockquote>
+                <ClipboardList className="absolute right-4 top-4 h-8 w-8 text-brand/25 transition-colors group-hover:text-brand/45" />
+                <p className="font-mono text-[11px] uppercase tracking-wider text-brand-glow">Illustrative workflow</p>
+                <p className="mt-3 text-[14px] leading-relaxed text-ink/95">{t.prompt}</p>
                 <figcaption className="mt-4 border-t border-white/[0.06] pt-3">
                   <div className="text-[13px] font-semibold">{t.name}</div>
                   <div className="text-[11.5px] text-ink-faint">{t.role}</div>
@@ -100,7 +91,7 @@ export function SocialProof() {
         </motion.div>
 
         <p className="mt-6 text-center text-[11px] italic text-ink-faint">
-          Beta users; identifying details withheld until full case studies ship.
+          Example prompts to adapt to your work. Review generated outputs. Live runs require a paid plan and configured model access.
         </p>
       </div>
     </section>

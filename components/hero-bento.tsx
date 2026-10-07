@@ -39,15 +39,7 @@ import {
 import { AnimatedNumber } from './ui/animated-number';
 import { AGENTS } from '@/lib/agents';
 import { cn } from '@/lib/utils';
-import {
-  AnthropicIcon,
-  OpenAIIcon,
-  OllamaIcon,
-  CursorIcon,
-  SlackIcon,
-  ZapierIcon,
-  N8nIcon,
-} from './brand-icons';
+import { AnthropicIcon } from './brand-icons';
 
 // -----------------------------------------------------------------------------
 // Tile shell, every bento tile uses the same skin so they read as one set.
@@ -168,7 +160,7 @@ function HeadlineTile() {
           <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
         </span>
         <span className="font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-dim">
-          live · jsonl audit
+          illustrative workspace preview
         </span>
       </motion.div>
 
@@ -199,9 +191,8 @@ function HeadlineTile() {
         transition={{ duration: 0.7, delay: 0.4 }}
         className="relative mt-5 max-w-[500px] text-[17px] leading-[1.55] text-ink-dim"
       >
-        One prompt in. Your AI team splits the goal, runs in parallel, and hands you back a sourced
-        research drop, a launch plan, and outreach drafts, exported as one polished, branded PDF.
-        Ship before your coffee cools.{' '}
+        Give multiple agents one goal. Review their research, plans, and drafts side by side,
+        then export the work you want to keep.{' '}
         <span className="text-white">Explore the dashboard for seven days.</span> Card required; live tools unlock with a paid plan.
       </motion.p>
 
@@ -281,10 +272,10 @@ function MetricsTile() {
             <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400 opacity-60" />
             <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-emerald-400" />
           </span>
-          telemetry · last 60s
+          illustrative metrics
         </span>
         <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint">
-          byok meter
+          sample values
         </span>
       </header>
 
@@ -322,12 +313,12 @@ function MetricsTile() {
       <div className="mt-4 flex min-h-0 flex-1 flex-col">
         <div className="flex items-center justify-between">
           <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint">
-            streaming · 3 agents
+            simulated · 3 agents
           </span>
           <button
             type="button"
             onClick={() => setPaused((p) => !p)}
-            aria-label={paused ? 'play telemetry' : 'pause telemetry'}
+            aria-label={paused ? 'play simulated metrics' : 'pause simulated metrics'}
             title={paused ? 'play' : 'pause'}
             className="inline-flex h-5 w-5 items-center justify-center rounded-full border border-white/[0.10] bg-white/[0.04] text-ink-dim transition-colors hover:border-cyan/40 hover:bg-white/[0.08] hover:text-white"
           >
@@ -393,6 +384,7 @@ function MetricsTile() {
 
       {/* Live activity stream */}
       <LiveActivityStream />
+      <p className="mt-3 text-[11px] leading-relaxed text-ink-faint">Animated examples; these figures are not customer activity, measured performance, or a cost estimate.</p>
     </Tile>
   );
 }
@@ -514,7 +506,7 @@ function AgentStackTile() {
     <Tile className="flex h-full flex-col p-6">
       <header className="flex items-center justify-between">
         <span className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-faint">
-          broadcast · 5 panes live
+          sample broadcast · 5 agents
         </span>
         <Link
           href="/agents"
@@ -647,7 +639,7 @@ function TerminalTile() {
         </AnimatePresence>
         <span className="ml-auto inline-flex items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.18em] text-emerald-400">
           <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-          streaming
+          scripted preview
         </span>
       </header>
 
@@ -770,18 +762,12 @@ export function HeroBento() {
           className="mt-6 flex flex-wrap items-center justify-between gap-x-6 gap-y-2 rounded-2xl border border-white/[0.06] bg-bg-1/30 px-5 py-3 backdrop-blur"
         >
           <span className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-faint">
-            wired into
+            model providers
           </span>
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2.5 text-ink-dim">
             {[
               { label: 'Anthropic', Icon: AnthropicIcon },
-              { label: 'OpenAI', Icon: OpenAIIcon },
-              { label: 'Ollama', Icon: OllamaIcon },
-              { label: 'Cursor', Icon: CursorIcon },
-              { label: 'Claude Desktop', Icon: AnthropicIcon },
-              { label: 'Slack', Icon: SlackIcon },
-              { label: 'Zapier', Icon: ZapierIcon },
-              { label: 'n8n', Icon: N8nIcon },
+              { label: 'xAI / Grok', Icon: Sparkles },
             ].map(({ label, Icon }) => (
               <span
                 key={label}
@@ -794,7 +780,7 @@ export function HeroBento() {
             ))}
           </div>
           <span className="inline-flex items-center gap-1.5 font-mono text-[10.5px] uppercase tracking-[0.18em] text-cyan-glow">
-            <Zap className="h-3 w-3" /> 8 integrations on day one
+            <Zap className="h-3 w-3" /> your API key · provider usage billed separately
           </span>
         </motion.div>
       </div>

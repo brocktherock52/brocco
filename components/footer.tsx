@@ -48,7 +48,7 @@ export function Footer() {
               </span>
             </Link>
             <p className="mt-4 max-w-xs text-[13.5px] text-ink-dim">
-              your AI team. one prompt. ship before coffee. built on Claude, hosted on Vercel.
+              your AI workspace. research, plans, and drafts with Anthropic Claude or xAI Grok.
             </p>
             <p className="mt-3 max-w-xs font-mono text-[11px] uppercase tracking-[0.18em] text-ink-faint">
               a BDP Industries product

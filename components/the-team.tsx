@@ -62,26 +62,26 @@ const PEEKS: PeekRow[] = [
   {
     agent: 'researcher',
     accent: '#67E8F9',
-    output: 'three competitors shipped overnight. brief on your desk, sources cited.',
-    meta: '04:12 . 18 sources',
+    output: 'Compare three competitors from the public sources I provide. Cite sources and flag gaps.',
+    meta: 'example prompt',
   },
   {
     agent: 'outreach',
     accent: '#FBBF24',
-    output: '12 cold drafts ready to review. three flagged hot. nothing sent.',
-    meta: '06:02 . 12 drafts',
+    output: 'Draft introductory emails for this audience using my product brief. Keep them for review.',
+    meta: 'example prompt',
   },
   {
     agent: 'analyst',
     accent: '#A78BFA',
-    output: 'reply rate dropped to 6.2%. two subject-line patterns underperforming. three fixes proposed.',
-    meta: '06:14 . gmail synced',
+    output: 'Review the reply data I paste below. Identify patterns and explain your assumptions.',
+    meta: 'example prompt',
   },
   {
     agent: 'supervisor',
     accent: '#22C55E',
-    output: 'today: 4 deep-work blocks, 2 calls, 1 deadline. designer queued for the 2-4 block.',
-    meta: '06:30 . today plan',
+    output: 'Organize this goal into research, planning, and drafting tasks for my review.',
+    meta: 'example prompt',
   },
 ];
 
@@ -119,12 +119,12 @@ export function TheTeam() {
           <h2 className="mt-5 text-display-xl">
             <span className="text-grad">open the app.</span>{' '}
             <span className="font-serif italic font-normal text-grad-brand">
-              your team already worked.
+              choose your team.
             </span>
           </h2>
           <p className="mx-auto mt-5 max-w-xl text-[15.5px] leading-relaxed text-ink-dim">
-            a core cast of specialists, plus hundreds of skills you can spin up. each with a job,
-            a tool list, a desk. they show up when you broadcast. they ship while you sleep.
+            Choose specialists, give them a goal, and review their responses in separate panes.
+            The characters below illustrate the team; live runs start when you submit a task on a paid plan.
           </p>
         </div>
 
@@ -138,7 +138,7 @@ export function TheTeam() {
           <div className="mb-5 flex items-center gap-3">
             <span className="inline-flex h-2 w-2 rounded-full bg-brand shadow-[0_0_10px_rgba(34,197,94,0.7)]" />
             <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-ink-faint">
-              today's briefing . 06:30 local
+              illustrative briefing prompts
             </span>
           </div>
           <ul className="grid grid-cols-1 gap-3 md:grid-cols-2">

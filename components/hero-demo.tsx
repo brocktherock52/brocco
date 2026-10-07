@@ -201,7 +201,7 @@ export function BroadcastConsole() {
         {/* Section label */}
         <div className="mb-5 flex flex-col items-center text-center">
           <span className="inline-flex items-center gap-2 rounded-full border border-white/[0.10] bg-white/[0.04] px-3 py-1 font-mono text-[10.5px] uppercase tracking-[0.2em] text-ink-dim backdrop-blur">
-            <Sparkles className="h-3 w-3 text-cyan-glow" /> broadcast console · live preview
+            <Sparkles className="h-3 w-3 text-cyan-glow" /> broadcast console · scripted preview
           </span>
           <h2 className="mt-4 text-display-lg">
             <span className="text-grad">Type one goal. </span>
@@ -368,7 +368,7 @@ export function BroadcastConsole() {
                   <div className="rounded-2xl border border-emerald-400/20 bg-emerald-400/[0.04] p-4">
                     <div className="mb-3 flex items-center gap-2 font-mono text-[10.5px] uppercase tracking-[0.18em] text-emerald-400">
                       <FileText className="h-3.5 w-3.5" />
-                      {preset.deliverables.length} files delivered
+                      {preset.deliverables.length} example outputs
                     </div>
                     <div className="flex flex-wrap gap-2">
                       {preset.deliverables.map((d, i) => (

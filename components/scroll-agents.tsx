@@ -176,7 +176,7 @@ export function ScrollAgents() {
           className="absolute right-2 top-1 font-mono text-[9px] uppercase tracking-[0.2em] text-ink-faint"
           style={{ opacity: scrollPct > 2 ? 1 : 0, transition: 'opacity 0.3s' }}
         >
-          building · {scrollPct}%
+          page progress · {scrollPct}%
         </p>
       </div>
 
@@ -293,7 +293,7 @@ function BentoComet({ bento }: { bento: Bento }) {
           >
             {bento.agent.label}
           </span>
-          <span className="whitespace-nowrap text-[10px] text-ink-dim">{bento.task}</span>
+          <span className="whitespace-nowrap text-[10px] text-ink-dim">example: {bento.task}</span>
         </div>
       </div>
     </motion.div>
