@@ -234,7 +234,7 @@ export function FactoryWalkthrough() {
         {/* Single CTA */}
         <div className="mt-12 flex flex-col items-center justify-center gap-3 text-center sm:flex-row">
           <Link
-            href="/signup"
+            href="/begin"
             className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-brand to-cyan px-6 py-3.5 text-[15px] font-semibold text-white shadow-glow2 transition-all hover:shadow-glow"
           >
             <Sparkles className="h-4 w-4" />

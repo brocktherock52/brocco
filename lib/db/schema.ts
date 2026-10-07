@@ -141,6 +141,14 @@ export const billingCustomers = pgTable('billing_customers', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
 }, (table) => [index('billing_customers_user_idx').on(table.userId)]);
 
+// First verified trial claim wins even when two browser tabs finish together.
+// Retaining the record prevents a canceled preview trial from being reset.
+export const billingTrialClaims = pgTable('billing_trial_claims', {
+  userId: uuid('user_id').primaryKey().references(() => users.id, { onDelete: 'cascade' }),
+  subscriptionId: text('subscription_id').notNull().unique(),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+});
+
 export const hostedUsage = pgTable('hosted_usage', {
   userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
   month: text('month').notNull(),

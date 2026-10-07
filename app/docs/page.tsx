@@ -14,7 +14,7 @@ const SECTIONS = [
   {
     icon: Zap,
     title: 'Quickstart',
-    body: 'Create an account at /signup, choose a plan, and add your card for the seven-day dashboard preview. Live runs require a paid subscription and any model or integration credentials needed by your workflow.',
+    body: 'Start at /begin to add your card at secure checkout, then create your account for the seven-day dashboard preview. Choose your plan on the pricing page first if needed. Live runs require a paid subscription and any model or integration credentials needed by your workflow.',
     href: '/app',
     cta: 'Open the app',
   },

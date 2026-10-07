@@ -21,6 +21,7 @@ async function mockApplication(page: Page, initialAccess: BillingAccess) {
     activations: [] as Record<string, unknown>[],
     runs: [] as Record<string, unknown>[],
     magicLinks: [] as Record<string, unknown>[],
+    checkouts: [] as Record<string, unknown>[],
     unexpected: [] as string[], accessChecks: 0,
   };
   await page.addInitScript(() => {
@@ -48,6 +49,11 @@ async function mockApplication(page: Page, initialAccess: BillingAccess) {
         state.access = paid;
         await route.fulfill({ json: { success: true } });
       }
+    } else if (path === '/api/checkout/guest' && request.method() === 'POST') {
+      state.checkouts.push(request.postDataJSON());
+      await route.fulfill({ json: state.checkouts.length % 2 === 1
+        ? { prepared: true }
+        : { url: 'https://checkout.stripe.com/c/pay/cs_test_conversion' } });
     } else if (path === '/api/auth/sign-in/magic-link' && request.method() === 'POST') {
       state.magicLinks.push(request.postDataJSON());
       await route.fulfill({ json: { status: true } });
@@ -66,6 +72,9 @@ async function mockApplication(page: Page, initialAccess: BillingAccess) {
       state.unexpected.push(`${request.method()} ${path}`);
       await route.fulfill({ status: 503, json: { error: 'Unmocked API blocked by conversion test' } });
     }
+  });
+  await page.route('https://checkout.stripe.com/**', async (route) => {
+    await route.fulfill({ contentType: 'text/html', body: '<!doctype html><html><body><h1>Mock secure checkout</h1></body></html>' });
   });
   await page.route(/https:\/\/(api\.anthropic\.com|api\.openai\.com|api\.x\.ai|api\.stripe\.com)\//, async (route) => {
     state.unexpected.push(route.request().url());
@@ -87,7 +96,7 @@ async function openPaywall(page: Page) {
   return dialog;
 }
 
-test.describe('account → dashboard preview → paid tools', () => {
+test.describe('card checkout → account → dashboard preview → paid tools', () => {
   test.use({ contextOptions: { reducedMotion: 'reduce' }, serviceWorkers: 'block' });
   test.setTimeout(60_000);
 
@@ -220,32 +229,34 @@ test.describe('account → dashboard preview → paid tools', () => {
     expect(state.unexpected).toEqual([]);
   });
 
-  test('homepage and pricing preserve the selected annual plan through email auth', async ({ page }) => {
+  test('homepage opens card checkout immediately and pricing preserves the selected annual plan', async ({ page }) => {
     const state = await mockApplication(page, signedOut);
     await page.goto('/');
     const heroTrial = page.locator('#main').getByRole('link', { name: 'Start 7-day trial', exact: true });
-    await expect(heroTrial).toHaveAttribute('href', '/signup');
+    await expect(heroTrial).toHaveAttribute('href', '/begin');
     await heroTrial.click();
-    await expect(page.getByRole('heading', { name: 'Create your account.' })).toBeVisible();
+    await expect(page).toHaveURL('https://checkout.stripe.com/c/pay/cs_test_conversion');
+    await expect(page.getByRole('heading', { name: 'Mock secure checkout' })).toBeVisible();
+    expect(state.checkouts).toEqual([
+      { tier: 'solo', interval: 'monthly' }, { tier: 'solo', interval: 'monthly' },
+    ]);
+    expect(state.magicLinks).toEqual([]);
 
     await page.goto('/pricing');
     await expect(page.getByRole('link', { name: 'Start 7-day trial with Solo, billed monthly', exact: true }))
-      .toHaveAttribute('href', '/signup?callbackURL=%2Fstart%3Ftier%3Dsolo%26interval%3Dmonthly');
+      .toHaveAttribute('href', '/begin?tier=solo&interval=monthly');
     await page.getByRole('button', { name: 'Annual · save 2 months', exact: true }).click();
     await expect(page.getByText('$490', { exact: true })).toBeVisible();
     await expect(page.getByText('$1,990', { exact: true })).toBeVisible();
     const teamTrial = page.getByRole('link', { name: 'Start 7-day trial with Team, billed annually', exact: true });
-    await expect(teamTrial).toHaveAttribute('href', '/signup?callbackURL=%2Fstart%3Ftier%3Dteam%26interval%3Dannual');
+    await expect(teamTrial).toHaveAttribute('href', '/begin?tier=team&interval=annual');
     await teamTrial.click();
-    await expect(page).toHaveURL(/\/signup\?callbackURL=%2Fstart%3Ftier%3Dteam%26interval%3Dannual$/);
-    await page.getByRole('textbox', { name: 'Email address' }).fill('conversion@example.invalid');
-    await page.getByRole('button', { name: 'Create account with email' }).click();
-    await expect(page.getByRole('heading', { name: 'Check your inbox.' })).toBeVisible();
-    expect(state.magicLinks).toHaveLength(1);
-    expect(state.magicLinks[0]).toMatchObject({
-      email: 'conversion@example.invalid', callbackURL: '/start?tier=team&interval=annual',
-      newUserCallbackURL: '/start?tier=team&interval=annual',
-    });
+    await expect(page).toHaveURL('https://checkout.stripe.com/c/pay/cs_test_conversion');
+    await expect(page.getByRole('heading', { name: 'Mock secure checkout' })).toBeVisible();
+    expect(state.checkouts.slice(2)).toEqual([
+      { tier: 'team', interval: 'annual' }, { tier: 'team', interval: 'annual' },
+    ]);
+    expect(state.magicLinks).toEqual([]);
     expect(state.activations).toEqual([]);
     expect(state.runs).toEqual([]);
     expect(state.unexpected).toEqual([]);

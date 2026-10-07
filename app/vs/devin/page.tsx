@@ -74,7 +74,7 @@ export default function VsDevinPage() {
         },
         {
           q: 'Pricing comparison?',
-          a: 'Brocco: seven-day dashboard preview with a card required, Solo $49/mo (2,000 runs on the paid plan), Team $199/mo (10,000 runs). Devin: tiered, starts higher, public pricing varies. If you are spending under $30/mo on agent runs today, brocco is dramatically cheaper.',
+          a: 'Brocco offers a seven-day dashboard preview with a card required. Solo is $49/month or $490/year; Team is $199/month or $1,990/year. Live tools require paid activation. When hosted AI is unavailable, connect your own supported API key; provider usage is billed separately. Compare current Devin plans and your expected usage rather than assuming one is always cheaper.',
         },
       ]}
     />

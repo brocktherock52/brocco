@@ -57,7 +57,7 @@ const FAQ = [
   },
   {
     q: 'How much does it cost?',
-    a: 'Create an account and add a card for a seven-day dashboard preview. Live tools require an active paid plan: Solo is $49/month or $490/year, Team is $199/month or $1,990/year. Billing begins automatically after seven days unless you cancel, or sooner if you confirm paid activation.',
+    a: 'Add your card at checkout, then create your account for a seven-day dashboard preview. Live tools require an active paid plan: Solo is $49/month or $490/year, Team is $199/month or $1,990/year. Billing begins automatically after seven days unless you cancel, or sooner if you confirm paid activation.',
   },
   {
     q: 'Why not just use ChatGPT or Claude directly?',
@@ -102,7 +102,7 @@ export default function RealEstateHub() {
               you wake up to deals in the pipeline instead of a to-do list.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Link href="/signup" className="btn-primary">
+              <Link href="/begin" className="btn-primary">
                 Start 7-day trial <ArrowRight className="h-4 w-4" />
               </Link>
               <Link

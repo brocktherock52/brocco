@@ -2,7 +2,7 @@
  * Ad warm-landers (consultant note 2026-06-02).
  *
  * These power /go/[slug]: stripped-down, no-navigation landing pages whose only
- * clickable action is the CTA to /signup. The consultant's point was that a
+ * clickable action is the CTA to /begin. The consultant's point was that a
  * page with top navigation leaks high-intent paid traffic, and that a single
  * "pre-warming" page that hits a specific buyer's pain hard converts far better.
  *
@@ -11,7 +11,7 @@
  *   2. pains[]   -> agitate the specific pain this buyer feels
  *   3. how[]     -> objection handling: "ok, prove it / how does it work"
  *   4. proof[]   -> trust + risk reversal
- *   5. one CTA   -> /signup
+ *   5. one CTA   -> /begin
  *
  * Adding a new ad/persona variant is a DATA edit here, not a new page, so the
  * "AI makes hundreds of these for different targetings" idea is a config loop.
@@ -52,7 +52,7 @@ export const LANDERS: Lander[] = [
     how: [
       {
         title: 'Say the job once',
-        body: 'Tell it your county, your price band, your buy box, in one plain sentence. No setup, no learning curve.',
+        body: 'On a paid plan, connect your model key and any required data credentials. Then describe your county, price band, and buy box in one sentence.',
       },
       {
         title: 'The team runs it for you',

@@ -49,7 +49,7 @@ export default function VsN8nPage() {
           'You want the agent to choose the path, not pre-define it.',
           'Your workflow needs reasoning, not just routing.',
           'You want a clean JSONL audit log per run for compliance.',
-          'You bring your own Claude key and want zero data retention.',
+          'You want to use your own Anthropic or xAI provider account on a paid plan.',
           'You need the same agents inside Claude Desktop, Cursor, and a CLI.',
         ],
         competitor: [
@@ -63,7 +63,7 @@ export default function VsN8nPage() {
       faq={[
         {
           q: 'Can I run brocco from inside an n8n workflow?',
-          a: 'Yes. Use n8n\'s HTTP Request node, POST to /api/v1/run with a Bearer Anthropic key, and the brocco run streams back via SSE. Treat brocco as the "reasoning step" in an otherwise deterministic n8n graph.',
+          a: 'The current /api/v1/run endpoint requires a signed-in Brocco session, a paid subscription, and configured hosted AI. An Anthropic key as a Bearer token does not grant access. Use the dashboard for supported runs; a standalone n8n API credential flow is not currently offered.',
         },
         {
           q: 'Does n8n already have AI agents?',
@@ -75,7 +75,7 @@ export default function VsN8nPage() {
         },
         {
           q: 'Cost comparison?',
-          a: 'n8n self-hosted: free + your VPS cost. n8n Starter Cloud: $24/mo for 2,500 executions. Brocco offers a seven-day dashboard preview with a card required. Live tools require a paid plan. Brocco Solo: $49/mo with 2,000 runs covered. n8n is cheaper at high volume of simple steps; brocco is cheaper when each "task" is one reasoning run instead of 12 pre-defined nodes.',
+          a: 'Brocco Solo is $49/month or $490/year; Team is $199/month or $1,990/year. The seven-day dashboard preview requires a card and does not include live tools. When hosted AI is unavailable, your own API key is required and your provider bills usage separately. Compare total costs for your actual workflow, including n8n hosting or cloud usage.',
         },
       ]}
     />

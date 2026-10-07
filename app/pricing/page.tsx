@@ -25,7 +25,7 @@ export default function PricingPage() {
         <Pricing standalone hostedAvailable={hostedAvailable} />
         <ComparisonTable hostedAvailable={hostedAvailable} />
         <Integrations />
-        <Faq />
+        <Faq hostedAvailable={hostedAvailable} />
         <FinalCta />
       </main>
       <Footer />

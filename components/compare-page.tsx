@@ -104,7 +104,7 @@ export function ComparePage(props: ComparePageProps) {
               transition={{ duration: 0.7, delay: 0.28 }}
               className="mt-8 flex flex-wrap items-center justify-center gap-3"
             >
-              <Link href="/signup" className="btn-primary group">
+              <Link href="/begin" className="btn-primary group">
                 <span>Start 7-day trial</span>
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </Link>

@@ -384,7 +384,7 @@ export function Nav() {
                 sign in
               </Link>
               <Link
-                href="/signup"
+                href="/begin"
                 className="group relative inline-flex shrink-0 items-center gap-1.5 overflow-hidden whitespace-nowrap rounded-full bg-gradient-to-r from-rose-500 to-orange-500 px-4 py-2 text-[13px] font-semibold text-white shadow-[0_0_22px_-2px_rgba(244,63,94,0.65)] outline-none transition-all hover:shadow-[0_0_32px_0_rgba(244,63,94,0.8)] focus-visible:ring-2 focus-visible:ring-rose-400/70"
               >
                 {/* sheen sweep on hover */}
@@ -479,7 +479,7 @@ export function Nav() {
                 {signedIn ? 'account' : 'sign in'}
               </Link>
               <Link
-                href={signedIn ? '/app' : '/signup'}
+                href={signedIn ? '/app' : '/begin'}
                 onClick={() => setOpen(false)}
                 className={cn(
                   'inline-flex items-center justify-center gap-1.5 rounded-full px-4 py-2.5 text-sm font-semibold text-white',

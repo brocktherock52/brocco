@@ -388,7 +388,7 @@ export function BroadcastConsole() {
                       ))}
                     </div>
                     <div className="mt-4 flex flex-wrap items-center gap-3">
-                      <Link href="/signup" className="btn-primary px-5 py-2.5 text-[13.5px]">
+                      <Link href="/begin" className="btn-primary px-5 py-2.5 text-[13.5px]">
                         Start 7-day trial
                         <ArrowRight className="h-3.5 w-3.5" />
                       </Link>

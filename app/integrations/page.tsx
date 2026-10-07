@@ -9,7 +9,7 @@ import { INTEGRATION_PROFILES } from '@/lib/integration-profiles';
 export const metadata: Metadata = {
   title: 'Integrations - brocco.dev',
   description:
-    'Connect Anthropic, OpenAI, Ollama, Stripe, Slack, Gmail, Notion, Postgres. BYOK on free; hosted with ZDR on paid.',
+    'Explore Brocco integration guides. A paid subscription is required for live tools; customer API keys and separate provider billing apply when hosted AI is unavailable.',
   alternates: { canonical: '/integrations' },
   keywords: ['ai integrations', 'agent integrations', 'mcp integrations'],
 };

@@ -26,7 +26,7 @@ export default function VsCrewAiPage() {
       }}
       oneLine={{
         brocco:
-          'A hosted multi-agent dashboard. Your AI team, 13 tools, 4 recipes, JSONL log. 11-min median time to first run. BYOK or hosted.',
+          'A multi-agent dashboard with agents, tools, recipes, and a JSONL log. Paid plan required; BYOK, or hosted where configured.',
         competitor:
           'A Python framework + enterprise platform for designing, deploying, and monitoring multi-agent crews. You write the agents and tasks; CrewAI orchestrates them.',
       }}
@@ -47,7 +47,7 @@ export default function VsCrewAiPage() {
       wins={{
         brocco: [
           'You want a working multi-agent dashboard today, not in two sprints.',
-          'You bring your own Claude key and want clean BYOK + ZDR.',
+          'You want to use your own Anthropic or xAI provider account on a paid plan.',
           'You want a JSONL audit log out of the box for compliance.',
           'You want the agents inside Claude Desktop or n8n (MCP + REST).',
           'Your team is not Python-first.',
@@ -74,7 +74,7 @@ export default function VsCrewAiPage() {
         },
         {
           q: 'Pricing reality?',
-          a: 'CrewAI core is open source: free + your hosting. Brocco offers a seven-day dashboard preview with a card required; live tools require a paid plan. CrewAI Enterprise pricing is custom and gated. Brocco Solo is $49/mo public, Team $199/mo. If you are evaluating which to spend $200/mo on, brocco gets you running in 11 minutes; CrewAI is a longer commitment.',
+          a: 'CrewAI core is open source with your own hosting and provider costs. Brocco offers a seven-day dashboard preview with a card required; live tools require a paid plan. Brocco Solo is $49/month or $490/year; Team is $199/month or $1,990/year. When hosted AI is unavailable, connect your own supported API key; provider usage is billed separately.',
         },
       ]}
     />

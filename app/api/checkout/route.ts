@@ -1,5 +1,6 @@
 import { auth } from '@/lib/auth';
 import { accessForSubscription, bestSubscription, billingErrorResponse, bindCustomer, ownedSubscriptions, publicAppUrl, sameOrigin, stripeRequest, type StripeCheckout, type StripeCustomer } from '@/lib/billing';
+import { firstTrialClaim } from '@/lib/billing-trial-claims';
 
 export const runtime = 'nodejs';
 
@@ -24,12 +25,16 @@ export async function POST(req: Request): Promise<Response> {
       return Response.json({ url: `${publicAppUrl(req)}/app`, existingSubscription: true, access: accessForSubscription(existing) }, { headers: { 'Cache-Control': 'no-store' } });
     }
     let customer = customers[0];
+    if (subscriptions.length || await firstTrialClaim(session.user.id)) {
+      return Response.json({ error: 'trial_already_used', detail: 'Your account has already used a subscription or trial. Open your account to manage billing, or contact help@brocco.dev to restart a paid plan.' }, { status: 409, headers: { 'Cache-Control': 'no-store' } });
+    }
     if (!customer) {
       customer = await stripeRequest<StripeCustomer>('/customers', new URLSearchParams({
         email: session.user.email, 'metadata[brocco_user_id]': session.user.id,
       }), `brocco-customer-${session.user.id}`);
     }
-    const history = await stripeRequest<{ data: StripeCheckout[] }>(`/checkout/sessions?customer=${encodeURIComponent(customer.id)}&limit=100`);
+    const history = await stripeRequest<{ data: StripeCheckout[]; has_more?: boolean }>(`/checkout/sessions?customer=${encodeURIComponent(customer.id)}&limit=100`);
+    if (history.has_more) return Response.json({ error: 'checkout_limit', detail: 'Please contact help@brocco.dev to review your checkout.' }, { status: 409, headers: { 'Cache-Control': 'no-store' } });
     const ownedHistory = history.data.filter((checkout) => checkout.mode === 'subscription' && checkout.client_reference_id === session.user.id);
     const ownedOpen = ownedHistory.filter((checkout) => checkout.status === 'open');
     const reusable = ownedOpen.find((checkout) => checkout.metadata?.tier === tier && checkout.metadata?.interval === interval && checkout.url);
@@ -52,7 +57,7 @@ export async function POST(req: Request): Promise<Response> {
       'metadata[brocco_user_id]': session.user.id, 'metadata[tier]': tier, 'metadata[interval]': interval,
       'subscription_data[metadata][brocco_user_id]': session.user.id,
       'subscription_data[metadata][preview_only_trial]': 'true',
-      'custom_text[submit][message]': 'Your 7-day trial includes dashboard preview only. Tools unlock after payment. You can end your trial and pay early, or your subscription starts billing when the trial ends. Cancel before then to avoid a charge.',
+      'custom_text[submit][message]': 'Your 7-day trial includes dashboard preview only. Tools unlock after payment. You can end your trial and pay early, or your subscription starts billing when the trial ends. Cancel before then to avoid a charge.' + (process.env.ANTHROPIC_API_KEY ? '' : ' Paid tool use currently requires your own Anthropic or xAI API key; provider charges are separate.'),
     });
     const checkout = await stripeRequest<StripeCheckout>('/checkout/sessions', form,
       // Concurrent requests with different plan choices share a key and fail

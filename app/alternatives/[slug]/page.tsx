@@ -70,7 +70,7 @@ export default async function AlternativePage({ params }: PageProps) {
             <p className="mt-4 text-[13.5px] leading-relaxed text-ink-faint">{a.competitorBlurb}</p>
             <div className="mt-7 flex flex-wrap items-center gap-3">
               <Link
-                href="/signup"
+                href="/begin"
                 className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-500 to-orange-500 px-6 py-3.5 text-[15px] font-semibold text-white shadow-[0_0_22px_-2px_rgba(244,63,94,0.6)] transition-all hover:shadow-[0_0_32px_0_rgba(244,63,94,0.8)]"
               >
                 Start 7-day trial <ArrowRight className="h-4 w-4" />
@@ -141,7 +141,7 @@ export default async function AlternativePage({ params }: PageProps) {
             </dl>
             <div className="mt-10 flex flex-wrap items-center gap-3">
               <Link
-                href="/signup"
+                href="/begin"
                 className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-rose-500 to-orange-500 px-6 py-3.5 text-[15px] font-semibold text-white shadow-[0_0_22px_-2px_rgba(244,63,94,0.6)] transition-all hover:shadow-[0_0_32px_0_rgba(244,63,94,0.8)]"
               >
                 Start 7-day trial <ArrowRight className="h-4 w-4" />

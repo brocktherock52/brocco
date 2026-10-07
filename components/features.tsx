@@ -59,7 +59,7 @@ const ROWS = [
   {
     capability: 'Data retention',
     them: '"we may use your data to improve the product"',
-    us: 'ZDR enabled by default on paid, never trained on',
+    us: 'provider data policies apply; see our privacy policy',
   },
 ];
 
@@ -154,7 +154,7 @@ export function Features() {
             decisions we already made on your behalf.
           </p>
           <Link
-            href="/signup"
+            href="/begin"
             className="group inline-flex shrink-0 items-center gap-2 self-start rounded-full bg-gradient-to-r from-brand to-cyan px-6 py-3.5 text-[15px] font-semibold text-white shadow-glow2 transition-all hover:shadow-glow md:self-auto"
           >
             <span>Start 7-day trial</span>

@@ -132,7 +132,7 @@ export default function AutoWholesalePage() {
               your dispo team and keep your cut. Explore the six steps below, then start your dashboard preview.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Link href="/signup" className="btn-primary">
+              <Link href="/begin" className="btn-primary">
                 Start 7-day trial <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
@@ -209,7 +209,7 @@ export default function AutoWholesalePage() {
                         </div>
                         <div className="sm:w-[150px] sm:shrink-0 sm:text-right">
                           <Link
-                            href="/signup"
+                            href="/begin"
                             className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.12] bg-white/[0.05] px-4 py-2 text-[13px] font-medium text-cyan-glow transition-colors hover:bg-white/[0.09] hover:text-white"
                           >
                             Start 7-day trial
@@ -284,7 +284,7 @@ export default function AutoWholesalePage() {
                 your own market. Cancel before the trial ends to avoid the first subscription charge.
               </p>
               <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <Link href="/signup" className="btn-primary">
+                <Link href="/begin" className="btn-primary">
                   Start 7-day trial <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link href="/pricing" className="btn-ghost">

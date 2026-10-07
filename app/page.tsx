@@ -24,7 +24,7 @@ import { FinalCta } from '@/components/final-cta';
 import { Footer } from '@/components/footer';
 import { SectionReveal } from '@/components/section-reveal';
 
-// Homepage conversion actions all lead to account creation and the dashboard preview.
+// Homepage conversion actions open card checkout before the account claim.
 
 // The title + description are inherited from the root layout default (the
 // layout title template appends "- brocco.dev", so setting a string title here
@@ -61,7 +61,7 @@ export default function HomePage() {
           <SocialProof />
         </SectionReveal>
         <SectionReveal>
-          <Faq />
+          <Faq hostedAvailable={Boolean(process.env.ANTHROPIC_API_KEY)} />
         </SectionReveal>
         <FinalCta />
       </main>

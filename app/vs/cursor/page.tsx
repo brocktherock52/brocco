@@ -26,7 +26,7 @@ export default function VsCursorPage() {
       }}
       oneLine={{
         brocco:
-          'A multi-agent dashboard. Type one goal, your AI team works in parallel with full JSONL audit logs. BYOK or hosted.',
+          'A multi-agent dashboard. Type one goal, your AI team works in parallel with full JSONL audit logs. Paid plan required; BYOK, or hosted where configured.',
         competitor:
           'An AI-native fork of VS Code with a built-in agent that edits files, runs commands, and reviews diffs. Best when the work IS code.',
       }}
@@ -51,7 +51,7 @@ export default function VsCursorPage() {
           'You want one prompt to fan out to 5 agents at once (Broadcast).',
           'You need an audit log your security team will actually approve.',
           'You want to expose brocco agents inside Claude Desktop, n8n, or Zapier.',
-          'You bring your own Anthropic key and want zero data retention.',
+          'You want to use your own Anthropic or xAI provider account on a paid plan.',
         ],
         competitor: [
           'Your job is writing and editing code, full stop.',
@@ -71,7 +71,7 @@ export default function VsCursorPage() {
         },
         {
           q: 'Is brocco cheaper than Cursor?',
-          a: 'Not by sticker price. Cursor Pro is $20/mo, brocco Solo is $49/mo. Brocco Solo includes 2,000 monthly runs on the paid plan. Start with a seven-day dashboard preview; a card is required. Total cost depends on usage.',
+          a: 'Brocco Solo is $49/month or $490/year. Start with a seven-day dashboard preview; a card is required and live tools need paid activation. When hosted AI is unavailable, your own API key is required and your provider bills usage separately. Compare the current plans and total usage costs for your workflow.',
         },
         {
           q: 'Do they share any infrastructure?',

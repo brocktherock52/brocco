@@ -54,7 +54,7 @@ export default async function VerticalPage({ params }: PageProps) {
               </h1>
               <p className="mt-6 max-w-2xl text-[17px] leading-relaxed text-ink-dim">{v.lead}</p>
               <div className="mt-7 flex flex-wrap gap-3">
-                <Link href="/signup" className="btn-primary">
+                <Link href="/begin" className="btn-primary">
                   Start 7-day trial <ArrowRight className="h-3.5 w-3.5" />
                 </Link>
               </div>

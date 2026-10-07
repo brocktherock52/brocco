@@ -59,7 +59,7 @@ export function Pricing({ standalone = false, hostedAvailable = false }: { stand
             <span className="text-grad-brand">choose your plan.</span>
           </h2>
           <p className="mt-4 text-base text-ink-dim">
-            Create an account, add a card, and explore the dashboard for seven days.
+            Add your card at secure checkout, then create your account to explore the dashboard for seven days.
             Live tools and agent runs require an active paid subscription.
           </p>
           <p className="mt-3 text-base text-ink-dim">
@@ -109,7 +109,7 @@ export function Pricing({ standalone = false, hostedAvailable = false }: { stand
                 </div>
                 <p className="mt-2 text-sm text-ink-dim">After the 7-day dashboard preview, unless canceled.</p>
                 <Link
-                  href={`/signup?callbackURL=${encodeURIComponent(`/start?tier=${tier.id}&interval=${interval}`)}`}
+                  href={`/begin?tier=${tier.id}&interval=${interval}`}
                   onClick={() => trackEvent('trial_plan_selected', { tier: tier.id, interval })}
                   className={cn('mt-6 min-h-12 w-full', tier.popular ? 'btn-primary' : 'btn-ghost')}
                   aria-label={`Start 7-day trial with ${tier.name}, billed ${interval === 'annual' ? 'annually' : 'monthly'}`}

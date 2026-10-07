@@ -220,9 +220,9 @@ export function RealEstateDemo() {
             <p className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-faint">
               scripted preview · the real runs live in the app, on your lists
             </p>
-            <Link href="/signup" className="btn-primary text-[14px]">
+            <Link href="/begin" className="btn-primary text-[14px]">
               <Sparkles className="h-4 w-4" />
-              run it on your market · free
+              Start 7-day trial
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

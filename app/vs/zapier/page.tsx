@@ -26,7 +26,7 @@ export default function VsZapierPage() {
       }}
       oneLine={{
         brocco:
-          'A multi-agent dashboard. The agent reads each step output, picks the next tool, and adapts. Full JSONL trace. BYOK or hosted.',
+          'A multi-agent dashboard. The agent reads each step output, picks the next tool, and adapts. Full JSONL trace. Paid plan required; BYOK, or hosted where configured.',
         competitor:
           'A workflow automation platform with 6,000+ app integrations. Triggers and pre-defined Zap steps. No-code, fast to ship deterministic chains.',
       }}
@@ -38,7 +38,7 @@ export default function VsZapierPage() {
         { label: 'BYOK (LLM provider)', brocco: true, competitor: false },
         { label: 'Free tier', brocco: false, competitor: '100 tasks / mo' },
         { label: 'Paid entry', brocco: '$49 / mo (Solo)', competitor: '$20 / mo (Starter)' },
-        { label: 'Cost per run / task', brocco: '~$0.01 - $0.10 (token-based)', competitor: '$0.20 / task' },
+        { label: 'Cost per run / task', brocco: 'Subscription plus provider usage with BYOK', competitor: '$0.20 / task' },
         { label: 'Self-host', brocco: true, competitor: false },
         { label: 'REST API to invoke', brocco: 'POST /api/v1/run (SSE)', competitor: 'Webhooks' },
         { label: 'Inside Claude Desktop (MCP)', brocco: true, competitor: false },
@@ -48,7 +48,7 @@ export default function VsZapierPage() {
         brocco: [
           'The workflow needs judgment, not just a fixed pipeline.',
           'You want a JSONL audit log your security team can review.',
-          'You bring your own Claude or OpenAI key and want ZDR.',
+          'You want to use your own Anthropic or xAI provider account on a paid plan.',
           'You hit Zap-shape-change errors weekly and want a system that adapts.',
           'You want to expose the agent inside Claude Desktop or Cursor.',
         ],
@@ -66,11 +66,11 @@ export default function VsZapierPage() {
         },
         {
           q: 'How do I trigger a brocco agent from a Zap?',
-          a: 'Use Zapier\'s Webhook by Zapier action and POST to /api/v1/run with your Anthropic key as the Bearer token. The brocco run streams back via SSE.',
+          a: 'The current /api/v1/run endpoint requires a signed-in Brocco session, a paid subscription, and configured hosted AI. An Anthropic key as a Bearer token does not grant access. Use the dashboard for supported runs; a standalone Zapier API credential flow is not currently offered.',
         },
         {
           q: 'What is the actual cost difference?',
-          a: 'A 6-step Zap costs $0.20 per task on Starter. A 6-step brocco run on Sonnet 4.6 costs roughly $0.01-$0.04 in tokens (BYOK) or is included up to your tier limit. Brocco is usually cheaper at scale, more expensive on tiny workloads.',
+          a: 'Brocco Solo is $49/month or $490/year; Team is $199/month or $1,990/year. When hosted AI is unavailable, your own API key is required and your provider bills usage separately. Compare total subscription and provider costs for your actual workflow. The seven-day preview does not include live runs.',
         },
         {
           q: 'Do you have native Slack / Notion / Stripe integrations?',

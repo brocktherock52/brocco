@@ -16,7 +16,7 @@ export interface PostSeed {
   // link CTA) instead of the outline skeleton. Added 2026-06-02 so blog posts
   // are real, indexable, ranking content rather than "copy in progress" stubs.
   body?: PostSection[];
-  // Internal link target for the post's CTA (e.g. '/real-estate', '/signup').
+  // Internal link target for the post's CTA (e.g. '/real-estate', '/begin').
   cta?: { label: string; href: string; note?: string };
 }
 
@@ -39,7 +39,7 @@ export const POSTS: PostSeed[] = [
       'The average wholesaler pays for five or six tools that do not talk to each other: one to pull lists, one to skip trace, one for comps, one to dial, one to store contracts. Every deal is a relay race between tabs. AI collapses that relay into a single handoff.',
     cta: {
       label: 'Start 7-day trial',
-      href: '/signup',
+      href: '/begin',
       note: '7-day dashboard preview. Card required. Live tools require a paid subscription.',
     },
     body: [
@@ -94,7 +94,7 @@ export const POSTS: PostSeed[] = [
       'New wholesalers obsess over finding deals and panic about dispo. Veterans flip it: they build the buyers list first, so the moment a deal is under contract the phone calls write themselves. Here is how to build that list without a year of networking.',
     cta: {
       label: 'Start 7-day trial',
-      href: '/signup',
+      href: '/begin',
       note: '7-day dashboard preview. Card required. Live tools require a paid subscription.',
     },
     body: [
@@ -153,7 +153,7 @@ export const POSTS: PostSeed[] = [
       'Every wholesaler hits the same wall: the deal is in the data, but pulling it, cleaning it, skip tracing it, and actually contacting people eats the whole week. Here is how to hand that entire pipeline to an AI team and wake up to a ranked call list instead of a to-do list.',
     cta: {
       label: 'Start 7-day trial',
-      href: '/signup',
+      href: '/begin',
       note: '7-day dashboard preview. Card required. Live tools require a paid subscription.',
     },
     body: [
@@ -282,8 +282,8 @@ export const POSTS: PostSeed[] = [
       'BYOK ("bring your own key") sounds like a pricing trick. It is actually a security posture. Here is the difference, and what brocco ships by default.',
     outline: [
       { h2: 'The three BYOK postures', bullets: ['Server proxy', 'Client direct', 'Hosted with ZDR'] },
-      { h2: 'How brocco does it', bullets: ['Dashboard preview before paid activation', 'Hosted runtime with ZDR on paid', 'Audit log stays on your side'] },
-      { h2: 'What "zero data retention" actually means', bullets: ['Anthropic side: not stored after the run', 'Brocco side: nothing logged after the JSONL is exported'] },
+      { h2: 'How brocco does it', bullets: ['Dashboard preview before paid activation', 'Paid tools require your API key when hosted AI is unavailable; provider usage is billed separately', 'Saved conversations and tool requests are handled as described in the privacy policy; provider retention follows the provider\'s terms'] },
+      { h2: 'Check where your data goes', bullets: ['Provider retention depends on your provider agreement; BYOK alone does not guarantee zero retention', 'Brocco stores saved conversations and project content as described in the privacy policy'] },
     ],
   },
   {

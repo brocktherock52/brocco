@@ -154,7 +154,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                 Try it for yourself
               </p>
               <p className="mt-2 text-[15px] leading-relaxed text-ink-dim">
-                Explore the dashboard with a <Link href="/signup" className="text-cyan-glow underline-offset-4 hover:underline">7-day trial</Link>. A card is required. Activate a paid subscription to run this workflow with the required model and integration credentials.
+                Explore the dashboard with a <Link href="/begin" className="text-cyan-glow underline-offset-4 hover:underline">7-day trial</Link>. A card is required. Activate a paid subscription to run this workflow with the required model and integration credentials.
               </p>
             </div>
           </div>

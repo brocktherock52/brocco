@@ -8,6 +8,7 @@ import { auth } from '@/lib/auth';
 
 vi.mock('@/lib/auth', () => ({ auth: { api: { getSession: vi.fn() } } }));
 vi.mock('@/lib/billing-customers', () => ({ linkedCustomerIds: vi.fn(async () => []), linkCustomer: vi.fn(async () => {}) }));
+vi.mock('@/lib/billing-trial-claims', () => ({ firstTrialClaim: vi.fn(async () => null) }));
 
 const user = { id: '11111111-1111-4111-8111-111111111111', email: 'buyer@example.com', emailVerified: true };
 const customer = { id: 'cus_owned', email: user.email, metadata: { brocco_user_id: user.id } };
@@ -119,6 +120,13 @@ describe('checkout and billing ownership', () => {
     subscriptions = [subscription({ status: 'trialing' })];
     const response = await checkout(request('/api/checkout', { tier: 'solo' }));
     expect((await response.json()).existingSubscription).toBe(true);
+    expect(calls.some((call) => call.path === '/checkout/sessions')).toBe(false);
+  });
+  it('does not reset a consumed trial or silently switch to an immediate paid checkout', async () => {
+    subscriptions = [subscription({ status: 'canceled', trial_start: 100, trial_end: 700 })];
+    const response = await checkout(request('/api/checkout', { tier: 'solo' }));
+    expect(response.status).toBe(409);
+    expect((await response.json()).error).toBe('trial_already_used');
     expect(calls.some((call) => call.path === '/checkout/sessions')).toBe(false);
   });
   it('expires an unfinished wrong-plan checkout before creating the selected plan', async () => {

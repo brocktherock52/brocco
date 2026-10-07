@@ -166,10 +166,9 @@ async function handleEvent(event: StripeEvent): Promise<void> {
         currency: typeof obj.currency === 'string' ? obj.currency.toUpperCase() : 'USD',
         transactionId,
       });
-      // Durable backstop for the sign-in flow: create/upsert the paying user
-      // with the right plan even if they closed the tab before /billing/success
-      // ran the claim. Idempotent with the success-page claim (both upsert by
-      // email). We re-fetch the session by id to read the plan price authoritatively.
+      // Re-fetch current state: unclaimed guest trials are scheduled to cancel
+      // without renewal; already owned customers refresh their display plan.
+      // A webhook never creates or signs in a user from a billing email.
       if (transactionId) await recordPaidCheckout(transactionId);
       break;
     }

@@ -213,7 +213,7 @@ function HeadlineTile() {
         className="relative mt-6 flex flex-wrap items-center gap-3"
       >
         <Link
-          href="/signup"
+          href="/begin"
           className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-brand to-cyan px-6 py-3.5 text-[15px] font-semibold text-white shadow-glow2 transition-all hover:shadow-glow"
         >
           <Sparkles className="h-4 w-4" />

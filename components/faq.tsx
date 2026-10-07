@@ -3,7 +3,7 @@
 import * as Accordion from '@radix-ui/react-accordion';
 import { ChevronDown } from 'lucide-react';
 
-const QA = [
+const buildQuestions = (hostedAvailable: boolean) => [
   {
     q: 'What does brocco actually do for me?',
     a: 'Brocco runs multiple AI agents in parallel from a single prompt. Pick agents on the left, type a goal, hit Run, and watch each agent work in its own pane with live tool calls and streaming output. The recipes gallery has 11 ready-to-run workflows: market research, launch day, customer deep dive, content sprint, and more.',
@@ -14,7 +14,7 @@ const QA = [
   },
   {
     q: 'What is included in the 7-day trial?',
-    a: 'The trial is a seven-day dashboard preview. Create your account, choose Solo or Team, and add a payment card at checkout. Explore the workspace and sample workflows; live tool calls and agent runs require an active paid subscription. You can confirm early activation to end the preview and start your paid plan sooner.',
+    a: 'The trial is a seven-day dashboard preview. Choose Solo or Team, add a payment card at secure checkout, then create your account to claim the workspace. Explore the workspace and sample workflows; live tool calls and agent runs require an active paid subscription. You can confirm early activation to end the preview and start your paid plan sooner.',
   },
   {
     q: 'When will I be charged?',
@@ -22,15 +22,19 @@ const QA = [
   },
   {
     q: 'Do I need an API key to preview the dashboard?',
-    a: 'No API key is needed for the dashboard preview. Live tool usage requires a paid plan. Model and integration credentials may also be needed for the workflow you choose; adding a key does not unlock live tools during the preview.',
+    a: hostedAvailable
+      ? 'No API key is needed for the dashboard preview. Live tools require a paid plan. Hosted AI is available within your plan limits; attachments and some integrations need your own credentials. Adding a key does not unlock tools during the preview.'
+      : 'No API key is needed for the dashboard preview. Live tools require both a paid plan and your own Anthropic or xAI API key. Your provider bills usage separately from your Brocco subscription. Adding a key does not unlock tools during the preview.',
   },
   {
     q: 'Which models are supported?',
-    a: 'Anthropic: Claude Opus 4.7 (1M context), Sonnet 4.6, Haiku 4.5. OpenAI-compatible (any endpoint): GPT-4o and successors, plus local models via Ollama, vLLM, llama.cpp, OpenRouter, Groq, Together. Switch in the BYOK panel any time.',
+    a: 'The dashboard supports Anthropic Claude and xAI Grok. Connect the API key for your chosen provider and select an available model in the dashboard. Provider usage is billed separately when you use your own key.',
   },
   {
     q: 'What if I exceed my monthly run limit?',
-    a: 'Runs over the included quota are billed at $0.05 each on Solo and $0.03 each on Team. No surprise overages. Hard-cap usage in dashboard settings. Trial accounts cannot run live tools or incur usage overages.',
+    a: hostedAvailable
+      ? 'Hosted runs stop at your monthly or daily plan limit; Brocco does not automatically bill per-run overages. Wait for the limit to reset or connect your own supported API key, with usage billed by your provider. Each agent counts separately. Trial accounts cannot run live tools.'
+      : 'Hosted AI is not currently included. Paid tools use your own supported API key, and your provider bills usage under its own limits and pricing. Brocco does not automatically charge per-run overages. Trial accounts cannot run live tools.',
   },
   {
     q: 'Do you train models on my data?',
@@ -50,7 +54,7 @@ const QA = [
   },
   {
     q: 'How long until I have my first agent running?',
-    a: 'After creating an account and adding your card, you can preview the dashboard. Live runs unlock when your paid subscription starts after seven days, or sooner if you confirm early activation. Then choose a workflow, connect any required credentials, and submit your task.',
+    a: 'Add your card at checkout, then create your account to preview the dashboard. Live runs unlock when your paid subscription starts after seven days, or sooner if you confirm early activation. Then choose a workflow, connect any required credentials, and submit your task.',
   },
   {
     q: 'SOC 2 / GDPR / security details?',
@@ -58,19 +62,18 @@ const QA = [
   },
 ];
 
-// FAQPage structured data, built from the same QA source so it can never drift
-// from the visible copy. Eligible for the FAQ rich result in Google search.
-const faqLd = {
-  '@context': 'https://schema.org',
-  '@type': 'FAQPage',
-  mainEntity: QA.map((item) => ({
-    '@type': 'Question',
-    name: item.q,
-    acceptedAnswer: { '@type': 'Answer', text: item.a },
-  })),
-};
-
-export function Faq() {
+export function Faq({ hostedAvailable = false }: { hostedAvailable?: boolean }) {
+  const QA = buildQuestions(hostedAvailable);
+  // The structured data uses the same availability-aware copy as the page.
+  const faqLd = {
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: QA.map((item) => ({
+      '@type': 'Question',
+      name: item.q,
+      acceptedAnswer: { '@type': 'Answer', text: item.a },
+    })),
+  };
   return (
     <section id="faq" className="relative py-24 md:py-32">
       <script

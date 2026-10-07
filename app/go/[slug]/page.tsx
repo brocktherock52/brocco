@@ -10,7 +10,7 @@ import { LANDERS, getLander } from '@/lib/landers';
  * /go/[slug] : ad warm-landers (consultant note 2026-06-02).
  *
  * Deliberately NO <Nav /> and NO <Footer /> with site links. The only
- * navigable action on the page is the CTA to /signup. Paid traffic from
+ * navigable action on the page is the CTA to /begin. Paid traffic from
  * Meta / TikTok / Snap ads lands here, gets its specific pain hit, and has
  * exactly one place to go: the offer. The top navigation was leaking that
  * intent on the main pages.
@@ -42,7 +42,7 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 // CTA target: the offer. The ?from tag lets pricing + analytics attribute which
 // lander (and therefore which ad) drove the click.
 function signupHref(slug: string) {
-  return `/signup?from=go-${slug}`;
+  return `/begin?from=go-${slug}`;
 }
 
 export default async function LanderPage({ params }: PageProps) {

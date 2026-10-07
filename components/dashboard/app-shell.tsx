@@ -894,7 +894,7 @@ export function AppShell() {
           ) : (
             <span className="inline-flex items-center gap-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
-              optional API key
+              {billingAccess?.hostedAvailable ? 'optional API key' : 'connect API key'}
             </span>
           )}
         </button>

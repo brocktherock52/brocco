@@ -16,7 +16,7 @@ export default function TermsPage() {
         <div className="container-x max-w-3xl">
           <p className="pill">Terms of service</p>
           <h1 className="mt-5 text-display-lg text-grad">Use brocco fairly. We will too.</h1>
-          <p className="mt-4 text-[15px] text-ink-dim">Last updated: 2026-05-05.</p>
+          <p className="mt-4 text-[15px] text-ink-dim">Last updated: 2026-10-07.</p>
 
           <div className="mt-10 rounded-2xl border border-white/[0.06] bg-white/[0.02] p-5">
             <h3 className="font-mono text-[11px] uppercase tracking-wider text-ink-faint">Plain-language summary</h3>
@@ -37,13 +37,15 @@ export default function TermsPage() {
               <p>No spam, harassment, malware, scraping behind authentication, generating illegal content, or violating third-party rights. We follow <a href="https://www.anthropic.com/legal/aup" className="text-cyan-glow underline-offset-4 hover:underline">Anthropic's AUP</a>.</p>
             </Section>
             <Section title="3. Billing">
-              <p>Paid plans bill in advance via Stripe. Annual plans are paid upfront. Overages on Solo/Team are billed at $0.05 / $0.03 per run respectively unless you set a hard cap. You can cancel from the customer portal at any time.</p>
+              <p>Stripe collects your card during checkout. The seven-day trial includes dashboard preview only; live tools require confirmed payment. After you verify your account and connect the subscription, billing begins at the end of the trial at the price and interval shown at checkout unless you cancel. It then renews automatically until canceled. Annual plans are paid upfront. Guest trials that remain unconnected to a verified account are scheduled to cancel at the end of the trial.</p>
+              <p className="mt-3">You can explicitly choose to end the trial early and pay to unlock tools. We show the price before that confirmation. You can manage or cancel your subscription through your account. If account setup is incomplete, the checkout completion page also lets you cancel an unclaimed trial.</p>
+              <p className="mt-3">When hosted AI is unavailable, live tools require your own supported provider API key; that provider bills usage separately from your Brocco subscription. Configured hosted usage limits stop additional runs instead of automatically charging overages.</p>
             </Section>
             <Section title="4. Service availability">
               <p>We target 99.9% uptime on paid tiers. Live status at the security page. The seven-day dashboard preview is best-effort and does not include live tool use.</p>
             </Section>
             <Section title="5. IP and data">
-              <p>You retain all rights to inputs and outputs. We grant you a non-exclusive license to use the brocco software for the duration of your subscription. Your data never trains a model.</p>
+              <p>You retain all rights to inputs and outputs. We grant you a non-exclusive license to use the brocco software for the duration of your subscription. We do not use your project content to train models. Third-party model providers process requests under their own policies, as described in our privacy policy.</p>
             </Section>
             <Section title="6. Termination">
               <p>Either party may terminate at any time. We will refund the unused pro-rated portion of paid plans on cancellation in good standing.</p>

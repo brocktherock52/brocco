@@ -44,7 +44,7 @@ export class BillingError extends Error {
 }
 
 /** Never expose Stripe's raw response, which may contain customer/payment data. */
-export async function stripeRequest<T>(path: string, form?: URLSearchParams, idempotencyKey?: string): Promise<T> {
+export async function stripeRequest<T>(path: string, form?: URLSearchParams, idempotencyKey?: string, method?: 'DELETE'): Promise<T> {
   const key = process.env.STRIPE_API_KEY;
   if (!key) throw new BillingError('billing_unavailable', 'Billing is temporarily unavailable. Please try again shortly.');
   const headers: Record<string, string> = { Authorization: `Bearer ${key}`, 'Stripe-Version': '2025-04-30.basil' };
@@ -53,7 +53,7 @@ export async function stripeRequest<T>(path: string, form?: URLSearchParams, ide
   let response: Response;
   try {
     response = await fetch(`https://api.stripe.com/v1${path}`, {
-      method: form ? 'POST' : 'GET', headers, body: form?.toString(), cache: 'no-store',
+      method: method || (form ? 'POST' : 'GET'), headers, body: form?.toString(), cache: 'no-store',
       signal: AbortSignal.timeout(15_000),
     });
   } catch {
@@ -112,7 +112,12 @@ export async function ownedCustomers(user: BillingUser): Promise<StripeCustomer[
   // Email fallback supports legacy customers and the search index's delay
   // immediately after account creation. Metadata survives billing-email edits.
   const byEmail = await stripeList<StripeCustomer>(`/customers?email=${encodeURIComponent(user.email.trim().toLowerCase())}&limit=100`);
-  const customers = [...new Map([...linked, ...byId, ...byEmail].filter((customer) => !customer.deleted && (!customer.metadata?.brocco_user_id || customer.metadata.brocco_user_id === user.id)).map((customer) => [customer.id, customer])).values()];
+  const customers = [...new Map([...linked, ...byId, ...byEmail].filter((customer) => !customer.deleted &&
+    (!customer.metadata?.brocco_user_id || customer.metadata.brocco_user_id === user.id) &&
+    // An anonymous checkout is claimed only through verified identity and its
+    // signed browser intent, never through the legacy email fallback.
+    (customer.metadata?.brocco_guest_checkout !== 'true' || customer.metadata?.brocco_user_id === user.id)
+  ).map((customer) => [customer.id, customer])).values()];
   await Promise.all(customers.map((customer) => linkCustomer(user.id, customer.id)));
   return customers;
 }
@@ -131,7 +136,8 @@ export async function ownedSubscriptions(user: BillingUser): Promise<{ customers
   const customers = await ownedCustomers(user);
   const groups = await Promise.all(customers.map((customer) => customerSubscriptions(customer.id)));
   const subscriptions = groups.flat().filter((subscription) =>
-    planForSubscription(subscription) && (!subscription.metadata?.brocco_user_id || subscription.metadata.brocco_user_id === user.id));
+    planForSubscription(subscription) && (!subscription.metadata?.brocco_user_id || subscription.metadata.brocco_user_id === user.id) &&
+    (subscription.metadata?.brocco_guest_checkout !== 'true' || subscription.metadata?.brocco_user_id === user.id));
   return { customers, subscriptions };
 }
 

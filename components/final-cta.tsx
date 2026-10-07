@@ -67,7 +67,7 @@ export function FinalCta() {
               transition={{ duration: 0.6, delay: 0.15 }}
               className="mx-auto mt-5 max-w-xl text-[16px] text-ink-dim"
             >
-              Create your account and explore the dashboard for seven days with a card on file.
+              Add your card at checkout, then create your account for a seven-day dashboard preview.
               Live tools require a paid subscription. Cancel before the trial ends to avoid a charge.
             </motion.p>
             <motion.div
@@ -77,7 +77,7 @@ export function FinalCta() {
               transition={{ duration: 0.6, delay: 0.3 }}
               className="mt-9 flex flex-wrap items-center justify-center gap-3"
             >
-              <MagneticLink href="/signup" className="btn-primary group text-base px-7 py-3.5">
+              <MagneticLink href="/begin" className="btn-primary group text-base px-7 py-3.5">
                 <span>Start 7-day trial</span>
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </MagneticLink>

@@ -52,7 +52,7 @@ export default async function RecipePage({ params }: PageProps) {
             <p className="mt-5 max-w-2xl text-[17px] leading-relaxed text-ink-dim">{r.tagline}</p>
             <p className="mt-3 text-[14px] text-ink-faint">For: {r.audience}</p>
             <div className="mt-7 flex flex-wrap gap-3">
-              <Link href="/signup" className="btn-primary">
+              <Link href="/begin" className="btn-primary">
                 Start 7-day trial <ArrowRight className="h-3.5 w-3.5" />
               </Link>
               <Link href="/recipes" className="btn-ghost">All recipes</Link>
