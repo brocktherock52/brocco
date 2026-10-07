@@ -1,5 +1,5 @@
 /**
- * Better-auth browser client. Exposes the magic-link sign-in method plus
+ * Better-auth browser client. Exposes social and magic-link sign-in methods plus
  * the useSession hook for client components.
  */
 'use client';

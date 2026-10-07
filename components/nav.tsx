@@ -41,7 +41,7 @@ interface MegaItem {
 }
 
 const PRODUCT: MegaItem[] = [
-  { href: '/#mission-control', label: 'mission control', desc: 'the operator add-on, run every venture', Icon: Workflow },
+  { href: '/mission-control', label: 'mission control', desc: 'the operator add-on, run every venture', Icon: Workflow },
   { href: '/app', label: 'dashboard', desc: 'multi-agent panes, broadcast mode', Icon: Boxes },
   { href: '/agents', label: 'the cast', desc: 'your AI team, one prompt', Icon: Cpu },
   { href: '/capabilities', label: 'capabilities', desc: 'sites, content, outreach, intel, ops', Icon: Sparkles },
@@ -118,7 +118,7 @@ export function Nav() {
   const [openMega, setOpenMega] = useState<string | null>(null);
   // Reflect the session everywhere the marketing nav appears, so a signed-in
   // user landing back on the home page sees "account / open app" instead of
-  // "sign in / start free trial". The cookie keeps the session across pages;
+  // "sign in / start trial". The cookie keeps the session across pages;
   // this just renders it.
   const { data: session } = useSession();
   const signedIn = !!session?.user;
@@ -383,13 +383,8 @@ export function Nav() {
               >
                 sign in
               </Link>
-              {/* Pricing CTA, deliberately RED + glowing so it is the hottest,
-                  most eye-drawing element in the nav (consultant 2026-06-02:
-                  "the heat map should be absolutely bright red where the button
-                  that takes them to pricing is"). Repointed to /pricing so it
-                  literally is that button. */}
               <Link
-                href="/pricing"
+                href="/signup"
                 className="group relative inline-flex shrink-0 items-center gap-1.5 overflow-hidden whitespace-nowrap rounded-full bg-gradient-to-r from-rose-500 to-orange-500 px-4 py-2 text-[13px] font-semibold text-white shadow-[0_0_22px_-2px_rgba(244,63,94,0.65)] outline-none transition-all hover:shadow-[0_0_32px_0_rgba(244,63,94,0.8)] focus-visible:ring-2 focus-visible:ring-rose-400/70"
               >
                 {/* sheen sweep on hover */}
@@ -397,7 +392,7 @@ export function Nav() {
                   aria-hidden
                   className="pointer-events-none absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)] group-hover:translate-x-full"
                 />
-                <span className="relative">see pricing</span>
+                <span className="relative">Start 7-day trial</span>
                 <ArrowRight className="relative h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
               </Link>
             </>
@@ -484,7 +479,7 @@ export function Nav() {
                 {signedIn ? 'account' : 'sign in'}
               </Link>
               <Link
-                href={signedIn ? '/app' : '/pricing'}
+                href={signedIn ? '/app' : '/signup'}
                 onClick={() => setOpen(false)}
                 className={cn(
                   'inline-flex items-center justify-center gap-1.5 rounded-full px-4 py-2.5 text-sm font-semibold text-white',
@@ -493,7 +488,7 @@ export function Nav() {
                     : 'bg-gradient-to-r from-rose-500 to-orange-500 shadow-[0_0_22px_-2px_rgba(244,63,94,0.65)]',
                 )}
               >
-                {signedIn ? 'open app' : 'see pricing'} <ArrowRight className="h-3.5 w-3.5" />
+                {signedIn ? 'open app' : 'Start 7-day trial'} <ArrowRight className="h-3.5 w-3.5" />
               </Link>
             </div>
             {/* Follow row, so social is visible in the mobile menu too. */}

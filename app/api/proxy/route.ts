@@ -4,10 +4,13 @@
    302 into an internal address to bypass the check. */
 
 import { checkUrl } from '@/lib/ssrf';
+import { requireToolAccess } from '@/lib/billing-access';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
 
 export async function GET(req: Request): Promise<Response> {
+  const denied = await requireToolAccess(req);
+  if (denied) return denied;
   const url = new URL(req.url).searchParams.get('url');
   if (!url) return new Response('url query param required', { status: 400 });
 

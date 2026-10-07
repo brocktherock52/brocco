@@ -23,7 +23,7 @@ export default function PrivacyPage() {
               <p>The minimum to run the product. Anonymous analytics (page views, web vitals via Vercel) and, if you create an account, the email tied to your Stripe customer.</p>
             </Section>
             <Section title="What we never collect">
-              <p>Your prompts. On the free tier, prompts go from your browser directly to your model provider. On paid tiers, our hosted runtime calls Anthropic with zero-data-retention enabled. We never log prompt content after a run completes.</p>
+              <p>Your prompts. For browser-direct model calls, prompts go from your browser directly to your model provider. Live model calls require a paid subscription. On paid tiers, our hosted runtime calls Anthropic with zero-data-retention enabled. We never log prompt content after a run completes.</p>
             </Section>
             <Section title="Bring your own key (BYOK)">
               <p>Keys you paste into the dashboard are stored in your browser's localStorage only. They never reach our servers. Clear them anytime from the BYOK panel.</p>

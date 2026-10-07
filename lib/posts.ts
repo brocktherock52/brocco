@@ -38,9 +38,9 @@ export const POSTS: PostSeed[] = [
     intro:
       'The average wholesaler pays for five or six tools that do not talk to each other: one to pull lists, one to skip trace, one for comps, one to dial, one to store contracts. Every deal is a relay race between tabs. AI collapses that relay into a single handoff.',
     cta: {
-      label: 'Run the whole pipeline free',
-      href: '/for/wholesalers',
-      note: '100 free runs a month, no card. One prompt, finished work back.',
+      label: 'Start 7-day trial',
+      href: '/signup',
+      note: '7-day dashboard preview. Card required. Live tools require a paid subscription.',
     },
     body: [
       {
@@ -93,9 +93,9 @@ export const POSTS: PostSeed[] = [
     intro:
       'New wholesalers obsess over finding deals and panic about dispo. Veterans flip it: they build the buyers list first, so the moment a deal is under contract the phone calls write themselves. Here is how to build that list without a year of networking.',
     cta: {
-      label: 'Build your cash-buyer list free',
-      href: '/real-estate',
-      note: '100 free runs a month, no card. Package the deal, find the buyers, write the blast.',
+      label: 'Start 7-day trial',
+      href: '/signup',
+      note: '7-day dashboard preview. Card required. Live tools require a paid subscription.',
     },
     body: [
       {
@@ -152,9 +152,9 @@ export const POSTS: PostSeed[] = [
     intro:
       'Every wholesaler hits the same wall: the deal is in the data, but pulling it, cleaning it, skip tracing it, and actually contacting people eats the whole week. Here is how to hand that entire pipeline to an AI team and wake up to a ranked call list instead of a to-do list.',
     cta: {
-      label: 'Pull your first motivated-seller list free',
-      href: '/real-estate',
-      note: '100 free runs a month, no card. Bring your own key and run it on your own market.',
+      label: 'Start 7-day trial',
+      href: '/signup',
+      note: '7-day dashboard preview. Card required. Live tools require a paid subscription.',
     },
     body: [
       {
@@ -282,7 +282,7 @@ export const POSTS: PostSeed[] = [
       'BYOK ("bring your own key") sounds like a pricing trick. It is actually a security posture. Here is the difference, and what brocco ships by default.',
     outline: [
       { h2: 'The three BYOK postures', bullets: ['Server proxy', 'Client direct', 'Hosted with ZDR'] },
-      { h2: 'How brocco does it', bullets: ['Browser → Anthropic direct on free tier', 'Hosted runtime with ZDR on paid', 'Audit log stays on your side'] },
+      { h2: 'How brocco does it', bullets: ['Dashboard preview before paid activation', 'Hosted runtime with ZDR on paid', 'Audit log stays on your side'] },
       { h2: 'What "zero data retention" actually means', bullets: ['Anthropic side: not stored after the run', 'Brocco side: nothing logged after the JSONL is exported'] },
     ],
   },

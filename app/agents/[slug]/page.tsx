@@ -82,8 +82,8 @@ export default async function AgentProfilePage({ params }: PageProps) {
             </h1>
             <p className="mt-5 max-w-2xl text-[17px] leading-relaxed text-ink-dim">{a.lead}</p>
             <div className="mt-7 flex flex-wrap gap-3">
-              <Link href={`/app#agent=${a.slug}`} className="btn-primary">
-                Open in dashboard <ArrowRight className="h-3.5 w-3.5" />
+              <Link href="/signup" className="btn-primary">
+                Start 7-day trial <ArrowRight className="h-3.5 w-3.5" />
               </Link>
               <Link href="#recipes" className="btn-ghost">
                 See related recipes

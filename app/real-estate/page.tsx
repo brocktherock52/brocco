@@ -11,7 +11,7 @@ import { RealEstateDemo } from '@/components/real-estate-demo';
 
 // Single shareable real-estate hub: /real-estate. The page people in
 // HoldMyHandWholesale (and other RE niches) get sent to. Aggregates the
-// real-estate niche pages + the real-estate tool recipes with a free-first CTA.
+// real-estate niche pages + the real-estate tool recipes with a trial signup CTA.
 
 const NICHE_SLUGS = ['wholesalers', 'land-investors', 'creative-finance-investors', 'real-estate-agents'];
 const TOOL_SLUGS = [
@@ -28,7 +28,7 @@ const SITE = process.env.NEXT_PUBLIC_BASE_URL || 'https://brocco.dev';
 export const metadata: Metadata = {
   title: 'AI for Real Estate - your wholesaling and investing team in a tab',
   description:
-    'brocco is an AI team for real estate. Pull motivated-seller leads, skip trace and write outreach, run comps and max-offer math, match cash buyers, draft LOIs and contracts, and revive aged leads. For wholesalers, land and creative-finance investors, and agents. 100 free runs, bring your own key.',
+    'brocco is an AI team for real estate. Pull motivated-seller leads, skip trace and write outreach, run comps and max-offer math, match cash buyers, draft LOIs and contracts, and revive aged leads. For wholesalers, land and creative-finance investors, and agents. 7-day dashboard preview, card required.',
   alternates: { canonical: '/real-estate' },
   keywords: [
     'ai for real estate', 'real estate wholesaling ai', 'ai for wholesalers', 'wholesaling software',
@@ -38,7 +38,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'AI for Real Estate - your wholesaling and investing team in a tab',
     description:
-      'Pull leads, skip trace, run comps, match cash buyers, draft contracts, and follow up. An AI team for wholesalers, investors, and agents. 100 free runs, bring your own key.',
+      'Pull leads, skip trace, run comps, match cash buyers, draft contracts, and follow up. An AI team for wholesalers, investors, and agents. 7-day dashboard preview, card required.',
     url: `${SITE}/real-estate`,
     type: 'website',
   },
@@ -57,7 +57,7 @@ const FAQ = [
   },
   {
     q: 'How much does it cost?',
-    a: 'You get 100 free runs every month with no card. Power users bring their own API key and run effectively unlimited. Paid plans add hosted runs and team features.',
+    a: 'Create an account and add a card for a seven-day dashboard preview. Live tools require an active paid plan: Solo is $49/month or $490/year, Team is $199/month or $1,990/year. Billing begins automatically after seven days unless you cancel, or sooner if you confirm paid activation.',
   },
   {
     q: 'Why not just use ChatGPT or Claude directly?',
@@ -103,7 +103,7 @@ export default function RealEstateHub() {
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link href="/signup" className="btn-primary">
-                start free · 100 runs <ArrowRight className="h-4 w-4" />
+                Start 7-day trial <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 href="/auto-wholesale"
@@ -113,7 +113,7 @@ export default function RealEstateHub() {
               </Link>
             </div>
             <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.18em] text-ink-faint">
-              100 free runs / mo · no card · bring your own key · your data stays yours
+              7-day dashboard preview · card required · live tools on paid plans
             </p>
           </div>
         </section>

@@ -234,14 +234,14 @@ export function FactoryWalkthrough() {
         {/* Single CTA */}
         <div className="mt-12 flex flex-col items-center justify-center gap-3 text-center sm:flex-row">
           <Link
-            href="/checkout/solo"
+            href="/signup"
             className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-brand to-cyan px-6 py-3.5 text-[15px] font-semibold text-white shadow-glow2 transition-all hover:shadow-glow"
           >
             <Sparkles className="h-4 w-4" />
-            <span>start your trial . $49/mo</span>
+            <span>Start 7-day trial</span>
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </Link>
-          <span className="text-[12.5px] text-ink-faint">7-day free trial. cancel anytime.</span>
+          <span className="text-[12.5px] text-ink-faint">7-day dashboard preview. Card required. Cancel before billing starts.</span>
         </div>
       </div>
     </section>

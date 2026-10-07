@@ -7,6 +7,8 @@ node_modules/
 .vercel
 .next/
 tsconfig.tsbuildinfo
+test-results/
+playwright-report/
 
 # --- Internal / proprietary: kept local, NEVER published to the public repo ---
 # Business strategy, handoffs, the content/marketing automation machine, raw

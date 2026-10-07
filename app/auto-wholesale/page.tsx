@@ -29,12 +29,12 @@ const SITE = process.env.NEXT_PUBLIC_BASE_URL || 'https://brocco.dev';
 export const metadata: Metadata = {
   title: 'Auto-Wholesale A to Z - find, lock, and dispo deals with your AI team',
   description:
-    'The step-by-step walkthrough: use Brocco to pull motivated-seller leads, skip trace, run comps and max offer, draft the contract, and lock the deal. Then dispo it through your team and keep your assignment fee. Built for wholesalers. 100 free runs, no card.',
+    'The step-by-step walkthrough: use Brocco to pull motivated-seller leads, skip trace, run comps and max offer, draft the contract, and lock the deal. Then dispo it through your team and keep your assignment fee. Built for wholesalers. 7-day dashboard preview, card required.',
   alternates: { canonical: '/auto-wholesale' },
   openGraph: {
     title: 'Auto-Wholesale A to Z - your AI team finds and locks the deal',
     description:
-      'Find leads, skip trace, run comps, draft contracts, lock the deal, hand it to dispo. The whole wholesaling pipeline, automated. 100 free runs, no card.',
+      'Find leads, skip trace, run comps, draft contracts, lock the deal, hand it to dispo. The whole wholesaling pipeline, automated. 7-day dashboard preview, card required.',
     url: `${SITE}/auto-wholesale`,
     type: 'website',
   },
@@ -129,11 +129,11 @@ export default function AutoWholesalePage() {
             <p className="mx-auto mt-5 max-w-2xl text-[16px] leading-relaxed text-ink-dim">
               Your AI team runs the front end: finds motivated sellers, skip traces, runs comps and
               your max offer, and drafts the contract so you can lock the deal. Then you hand it to
-              your dispo team and keep your cut. Follow the six steps below, try each one free.
+              your dispo team and keep your cut. Explore the six steps below, then start your dashboard preview.
             </p>
             <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
               <Link href="/signup" className="btn-primary">
-                start free · 100 runs <ArrowRight className="h-4 w-4" />
+                Start 7-day trial <ArrowRight className="h-4 w-4" />
               </Link>
               <Link
                 href="#walkthrough"
@@ -143,7 +143,7 @@ export default function AutoWholesalePage() {
               </Link>
             </div>
             <p className="mt-4 font-mono text-[11px] uppercase tracking-[0.18em] text-ink-faint">
-              no card · bring your own key · your leads and contacts stay yours
+              card required · 7-day dashboard preview · live tools on paid plans
             </p>
           </div>
         </section>
@@ -209,10 +209,10 @@ export default function AutoWholesalePage() {
                         </div>
                         <div className="sm:w-[150px] sm:shrink-0 sm:text-right">
                           <Link
-                            href={`/app?recipe=${s.slug}`}
+                            href="/signup"
                             className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.12] bg-white/[0.05] px-4 py-2 text-[13px] font-medium text-cyan-glow transition-colors hover:bg-white/[0.09] hover:text-white"
                           >
-                            try this step
+                            Start 7-day trial
                             <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover:translate-x-0.5" />
                           </Link>
                         </div>
@@ -277,15 +277,15 @@ export default function AutoWholesalePage() {
                 }}
               />
               <h2 className="mx-auto max-w-2xl text-display-lg lowercase">
-                <span className="text-grad">try the whole thing free.</span>
+                <span className="text-grad">preview your workspace.</span>
               </h2>
               <p className="mx-auto mt-3 max-w-xl text-[15px] leading-relaxed text-ink-dim">
-                100 runs a month, no card. Open your wholesaling workspace and run any step above on
-                your own market. Bring your own AI key and it is effectively unlimited.
+                Explore the dashboard for seven days with a card on file. Activate a paid plan to run the steps on
+                your own market. Cancel before the trial ends to avoid the first subscription charge.
               </p>
               <div className="mt-7 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <Link href="/app?for=wholesalers" className="btn-primary">
-                  open your wholesaling workspace <ArrowRight className="h-4 w-4" />
+                <Link href="/signup" className="btn-primary">
+                  Start 7-day trial <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link href="/pricing" className="btn-ghost">
                   see pricing

@@ -26,7 +26,7 @@ export default function VsDevinPage() {
       }}
       oneLine={{
         brocco:
-          'A multi-agent dashboard. Your AI team, 13 tools, parallel panes, JSONL audit log. BYOK on free, hosted on paid.',
+          'A multi-agent dashboard. Your AI team, 13 tools, parallel panes, JSONL audit log. Seven-day dashboard preview; live tools on paid plans.',
         competitor:
           'An autonomous AI engineer. Reads a task, plans, codes, runs tests, ships a PR. One agent, one pane, async by default.',
       }}
@@ -35,7 +35,7 @@ export default function VsDevinPage() {
         { label: 'Pane model', brocco: 'N parallel panes (Broadcast)', competitor: '1 sandbox at a time' },
         { label: 'Visibility during run', brocco: 'Live tool calls + token stream', competitor: 'Activity log + replay' },
         { label: 'BYOK', brocco: true, competitor: false },
-        { label: 'Free tier', brocco: '100 runs / mo BYOK', competitor: false },
+        { label: 'Free tier', brocco: false, competitor: false },
         { label: 'Paid entry', brocco: '$49 / mo (Solo)', competitor: '$50 - $200+ / mo' },
         { label: 'JSONL audit log', brocco: true, competitor: 'Task history' },
         { label: 'REST API to invoke', brocco: 'POST /api/v1/run (SSE)', competitor: 'Slack + UI' },
@@ -74,7 +74,7 @@ export default function VsDevinPage() {
         },
         {
           q: 'Pricing comparison?',
-          a: 'Brocco: free tier (100 runs BYOK), Solo $49/mo (2,000 runs covered), Team $199/mo (10,000 runs). Devin: tiered, starts higher, public pricing varies. If you are spending under $30/mo on agent runs today, brocco is dramatically cheaper.',
+          a: 'Brocco: seven-day dashboard preview with a card required, Solo $49/mo (2,000 runs on the paid plan), Team $199/mo (10,000 runs). Devin: tiered, starts higher, public pricing varies. If you are spending under $30/mo on agent runs today, brocco is dramatically cheaper.',
         },
       ]}
     />

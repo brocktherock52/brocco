@@ -163,14 +163,14 @@ export function TheTeam() {
 
         <div className="mx-auto mt-10 flex flex-col items-center gap-3">
           <Link
-            href="/app"
+            href="/signup"
             className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-brand to-cyan px-6 py-3.5 text-[15px] font-semibold text-white shadow-glow2 transition-all hover:shadow-glow"
           >
             <Sparkles className="h-4 w-4" />
-            <span>open the app . it's running</span>
+            <span>Start 7-day trial</span>
             <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
           </Link>
-          <span className="text-[12.5px] text-ink-faint">100 free runs every month. no card.</span>
+          <span className="text-[12.5px] text-ink-faint">7-day dashboard preview. Card required. Live tools on paid plans.</span>
         </div>
       </div>
     </section>

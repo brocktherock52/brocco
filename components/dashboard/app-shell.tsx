@@ -27,8 +27,9 @@ import { AGENTS, type AgentName } from '@/lib/agents';
 import { runAgent, type SimEvent } from '@/lib/simulator';
 import { SYSTEM_PROMPTS, type ClaudeAttachment, type LiveEvent } from '@/lib/claude';
 import { runAgentLive } from '@/lib/run-live';
-import { recordRun, freeTierExceeded, remainingFreeRuns, getUsage } from '@/lib/usage';
+import { recordRun, getUsage } from '@/lib/usage';
 import { uid } from '@/lib/utils';
+import { fetchBillingAccess, type BillingAccess } from '@/lib/billing-client';
 import { AgentCard } from './agent-card';
 import { AgentOffice } from './agent-office';
 import { JsonlLog } from './jsonl-log';
@@ -153,6 +154,30 @@ export function AppShell() {
   const [workspace, setWorkspace] = useState<{ label: string; examples: string[] } | null>(null);
   const [byokOpen, setByokOpen] = useState(false);
   const [upsellOpen, setUpsellOpen] = useState(false);
+  const [billingAccess, setBillingAccess] = useState<BillingAccess | null>(null);
+  const [checkingAccess, setCheckingAccess] = useState(false);
+  const checkingAccessRef = useRef(false);
+
+  useEffect(() => { void fetchBillingAccess().then(setBillingAccess).catch(() => {}); }, []);
+
+  async function requireTools(source: string): Promise<BillingAccess | null> {
+    if (checkingAccessRef.current) return null;
+    checkingAccessRef.current = true;
+    setCheckingAccess(true);
+    try {
+      const access = await fetchBillingAccess();
+      setBillingAccess(access);
+      if (!access.canUseTools) {
+        setUpsellSource(source);
+        setUpsellOpen(true);
+        return null;
+      }
+      return access;
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : 'Could not check subscription access.');
+      return null;
+    } finally { checkingAccessRef.current = false; setCheckingAccess(false); }
+  }
   // Where the upsell was triggered from, for the PostHog upsell funnel.
   const [upsellSource, setUpsellSource] = useState('run_limit');
   const [keyState, setKeyState] = useState<string | null>(null);
@@ -294,18 +319,11 @@ export function AppShell() {
     });
   }, [history]);
 
-  // Tier-based parallel pane cap. Free is BYOK (the user's own tokens), so we
-  // let free/demo users actually FEEL the parallel-team superpower with 3 panes
-  // at once instead of 1. Solo gets 8, Team (and BYOK live mode) is unbounded.
-  // The tier lookup intentionally lives on the client only until a real billing
-  // layer ships. See marketing/audit/app-audit-2026-05-22.md Finding 2c.
+  // Display capabilities from the server; browser storage and BYOK never grant access.
   type Tier = 'free' | 'solo' | 'team';
-  const tier: Tier = useMemo(() => {
-    if (keyState) return 'team';
-    if (typeof window === 'undefined') return 'free';
-    const t = (localStorage.getItem('brocco:tier') || 'free').toLowerCase();
-    return t === 'team' ? 'team' : t === 'solo' ? 'solo' : 'free';
-  }, [keyState]);
+  const tier: Tier = billingAccess?.canUseTools
+    ? billingAccess.plan === 'team' ? 'team' : 'solo'
+    : 'free';
   const paneCap = tier === 'team' ? Infinity : tier === 'solo' ? 8 : 3;
   const activePaneCount = panes.filter((p) => p.status === 'running' || p.status === 'pending').length;
 
@@ -438,22 +456,23 @@ export function AppShell() {
       return;
     }
 
-    const live = !!keyState;
-    if (!live && freeTierExceeded(usage)) {
-      // Braeden's monetization lever: don't hard-stop, present the choice
-      // (BYOK free vs upgrade to Solo) in a modal and track which they pick.
-      trackEvent('run_limit_reached');
-      setUpsellSource('run_limit');
-      setUpsellOpen(true);
+    const access = await requireTools('run');
+    if (!access) return;
+    if (!keyState && access.hostedAvailable === false) {
+      setByokOpen(true);
+      toast.message('Connect your own API key to run tools.', { description: 'Your AI provider bills usage separately.' });
       return;
     }
+    const live = true;
+    const runTier = access.plan === 'team' ? 'team' : 'solo';
+    const runCap = runTier === 'team' ? Infinity : 8;
 
     // v3.0: broadcast is always on; runAgents is just selected.
     // Enforce the tier's parallel-pane cap. If the user is already at the cap
     // we still allow the queue but trim the batch to what fits.
     const runAgents = selected;
-    const headroom = Math.max(0, paneCap - activePaneCount);
-    if (headroom === 0 && tier !== 'team') {
+    const headroom = Math.max(0, runCap - activePaneCount);
+    if (headroom === 0 && runTier !== 'team') {
       toast.error('Parallel run limit reached', {
         description: tier === 'free'
           ? 'Free tier runs 3 panes at a time. Stop a run or upgrade for 8+ in parallel.'
@@ -462,7 +481,7 @@ export function AppShell() {
       });
       return;
     }
-    const allowedAgents = tier === 'team' ? runAgents : runAgents.slice(0, headroom);
+    const allowedAgents = runTier === 'team' ? runAgents : runAgents.slice(0, headroom);
     if (allowedAgents.length < runAgents.length) {
       toast.message(`Running ${allowedAgents.length} of ${runAgents.length} agents`, {
         description: `${tier} tier caps parallel panes at ${paneCap}. Upgrade to unlock the rest.`,
@@ -574,7 +593,7 @@ export function AppShell() {
         if (live) {
           const sys = SYSTEM_PROMPTS[a.name] || SYSTEM_PROMPTS.researcher;
           return runAgentLive({
-            apiKey: keyState!,
+            apiKey: keyState || '',
             modelId: model,
             agent: a,
             goal: goalSnapshot,
@@ -662,7 +681,7 @@ export function AppShell() {
       const next = demoRunsThisSession + 1;
       setDemoRunsThisSession(next);
       toast.success('All agents finished.', {
-        description: `${remainingFreeRuns(u)} free demo runs left this month.`,
+        description: 'Simulation finished. Connect your API key for live output.',
       });
       // Nudge after 1st and 3rd demo run, only when no key is set yet.
       if (!keyState && (next === 1 || next === 3)) {
@@ -720,11 +739,14 @@ export function AppShell() {
   /** Re-run a single failed/cancelled pane without restarting all agents.
    *  Replaces the pane in-place with a fresh AbortController + empty events. */
   async function retryPane(paneId: string) {
+    const access = await requireTools('retry');
+    if (!access) return;
+    if (!keyState && access.hostedAvailable === false) { setByokOpen(true); return; }
     const pane = panes.find((p) => p.id === paneId);
     if (!pane) return;
     const a = AGENTS.find((x) => x.name === pane.agent);
     if (!a) return;
-    const live = !!keyState;
+    const live = true;
     const ctrl = new AbortController();
     setPanes((curr) =>
       curr.map((p) =>
@@ -753,7 +775,7 @@ export function AppShell() {
       if (live) {
         const sys = SYSTEM_PROMPTS[a.name] || SYSTEM_PROMPTS.researcher;
         await runAgentLive({
-          apiKey: keyState!,
+          apiKey: keyState || '',
           modelId: model,
           agent: a,
           goal,
@@ -803,6 +825,7 @@ export function AppShell() {
   return (
     <div className="relative flex h-screen flex-col bg-bg-0 text-ink">
       <AppAmbient />
+      {billingAccess && !billingAccess.canUseTools && <div className="relative z-30 flex flex-wrap items-center justify-between gap-2 border-b border-border bg-bg-2 px-4 py-2 text-sm"><span>Dashboard trial. Running tools starts your paid subscription.</span><button onClick={() => { setUpsellSource('trial_banner'); setUpsellOpen(true); }} className="text-cyan-glow underline">Unlock tools</button><Link href="/account" className="text-ink-dim underline">Manage trial</Link></div>}
       {/* TOP BAR */}
       {/* relative z-30: the header's backdrop-blur makes it its own stacking
           context, so its absolutely-positioned dropdowns (model picker) were
@@ -817,7 +840,7 @@ export function AppShell() {
 
         <WorkspaceBadge />
 
-        <ModeBadge live={!!keyState} />
+        <ModeBadge live={!!billingAccess?.canUseTools && (!!keyState || billingAccess.hostedAvailable !== false)} />
 
         <span className="hidden h-5 w-px bg-white/[0.10] md:block" />
 
@@ -828,7 +851,7 @@ export function AppShell() {
             className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.10] bg-white/[0.04] px-3 py-1.5 font-mono text-[12px] text-ink-dim hover:bg-white/[0.07] hover:text-white"
           >
             <Cpu className="h-3 w-3 text-brand-glow" />
-            {MODELS.find((m) => m.id === model)?.label}
+            {keyState ? MODELS.find((m) => m.id === model)?.label : billingAccess?.hostedAvailable === false ? 'Connect your API key' : 'Brocco hosted AI'}
             <ChevronDown className="h-3 w-3 text-ink-faint" />
           </button>
           <AnimatePresence>
@@ -871,7 +894,7 @@ export function AppShell() {
           ) : (
             <span className="inline-flex items-center gap-1.5">
               <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
-              demo mode
+              optional API key
             </span>
           )}
         </button>
@@ -1086,9 +1109,10 @@ export function AppShell() {
                       </span>
                       <button
                         onClick={run}
+                        disabled={checkingAccess}
                         title={
-                          !keyState
-                            ? 'run a simulated demo (connect your key for real output)'
+                          !billingAccess?.canUseTools
+                            ? 'check your subscription to unlock tools'
                             : running
                               ? 'fire another batch in parallel'
                               : 'broadcast to selected agents'
@@ -1097,7 +1121,7 @@ export function AppShell() {
                       >
                         <span className="inline-flex items-center gap-1.5">
                           <Play className="h-3.5 w-3.5 fill-current" />
-                          {running ? 'run another' : keyState ? 'broadcast' : 'run demo'}
+                          {checkingAccess ? 'checking access...' : running ? 'run another' : 'broadcast'}
                           <ArrowRight className="h-3.5 w-3.5" />
                         </span>
                       </button>
@@ -1105,42 +1129,13 @@ export function AppShell() {
                   </div>
                 </div>
                 <p className="mt-3 text-center font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-faint">
-                  {`${workspace?.label ? `${workspace.label.toLowerCase()} workspace` : 'your AI team'} · ${selected.length}/9 specialists · ${keyState ? 'live mode' : 'demo preview'}`}
+                  {`${workspace?.label ? `${workspace.label.toLowerCase()} workspace` : 'your AI team'} · ${selected.length}/9 specialists · ${billingAccess?.canUseTools ? keyState ? 'your API key' : billingAccess.hostedAvailable === false ? 'connect your API key' : 'hosted AI' : 'dashboard preview'}`}
                 </p>
               </div>
             </div>
           </div>
 
-          {/* Demo-mode banner. Non-technical users (e.g. real-estate folks) were
-              confused that runs returned simulated, code-looking output. Make it
-              unmistakable that demo output is a preview, with a one-click path to
-              connect their own key for real results. Hidden once a key is set. */}
-          {!keyState && (
-            <div className="border-b border-amber-400/20 bg-amber-400/[0.07] px-4 py-2.5">
-              <div className="mx-auto flex w-full max-w-3xl items-center gap-3">
-                <span className="inline-flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-amber-400/15 text-amber-300">
-                  <Sparkles className="h-3.5 w-3.5" />
-                </span>
-                <p className="flex-1 text-[12.5px] leading-snug text-amber-100/90">
-                  <span className="font-semibold">Demo mode.</span> Results below are a{' '}
-                  <span className="font-semibold">simulated preview</span>, not real AI output. Add your
-                  own Anthropic key (free to create, stays in your browser) to put your team to work for
-                  real.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => {
-                    trackEvent('connect_key_clicked', { source: 'demo_banner' });
-                    setByokOpen(true);
-                  }}
-                  className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-amber-400/30 bg-amber-400/15 px-3 py-1.5 text-[12px] font-semibold text-amber-100 transition hover:bg-amber-400/25"
-                >
-                  <KeyRound className="h-3.5 w-3.5" />
-                  connect your key
-                </button>
-              </div>
-            </div>
-          )}
+          {billingAccess?.canUseTools && !keyState && <div className="border-b border-border bg-bg-1 px-4 py-2 text-sm text-ink-dim">{billingAccess.hostedAvailable === false ? 'Connect your own Anthropic or xAI API key for live tools. Your provider bills usage separately.' : 'Hosted AI is ready. Attachments require your own API key.'}</div>}
 
           {/* Proactive nudge slot, appears above panes when there's an
               active suggestion, invisible otherwise. */}
@@ -1440,10 +1435,7 @@ export function AppShell() {
         open={upsellOpen}
         source={upsellSource}
         onClose={() => setUpsellOpen(false)}
-        onUseKey={() => {
-          setUpsellOpen(false);
-          setByokOpen(true);
-        }}
+        onActivated={setBillingAccess}
       />
       <GuidedOnboarding />
     </div>
@@ -1557,7 +1549,7 @@ function ModeBadge({ live }: { live: boolean }) {
   return (
     <span className="hidden md:inline-flex items-center gap-1.5 rounded-full border border-amber-400/30 bg-amber-400/10 px-2.5 py-0.5 font-mono text-[11px] text-amber-300">
       <span className="h-1.5 w-1.5 rounded-full bg-amber-400" />
-      demo mode
+      dashboard preview
     </span>
   );
 }

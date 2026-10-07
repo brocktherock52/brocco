@@ -18,7 +18,7 @@ export const INTEGRATION_PROFILES: IntegrationProfile[] = [
     name: 'Anthropic',
     category: 'model',
     tagline: 'Claude Opus, Sonnet, Haiku via your API key. BYOK or hosted.',
-    setup: 'Add your ANTHROPIC_API_KEY in /app settings. Free tier: 100 BYOK runs/month against your Anthropic account. Paid tier: hosted with ZDR enabled on the account.',
+    setup: 'Add your ANTHROPIC_API_KEY in /app settings when your workflow needs it. A paid subscription is required for live calls; adding a key does not unlock live tools during the dashboard preview.',
     configSnippet: `// /app settings → BYOK
 ANTHROPIC_API_KEY=sk-ant-...
 ANTHROPIC_MODEL=claude-opus-4-7  // or claude-sonnet-4-6, claude-haiku-4-5`,

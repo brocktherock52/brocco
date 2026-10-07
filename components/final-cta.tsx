@@ -1,7 +1,7 @@
 'use client';
 
 import { motion, useReducedMotion } from 'framer-motion';
-import { ArrowRight, Calendar } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { MagneticLink } from './ui/magnetic';
 
 export function FinalCta() {
@@ -67,8 +67,8 @@ export function FinalCta() {
               transition={{ duration: 0.6, delay: 0.15 }}
               className="mx-auto mt-5 max-w-xl text-[16px] text-ink-dim"
             >
-              brocco runs your business while you sleep. 100 agent runs free, every month, forever.
-              no card.
+              Create your account and explore the dashboard for seven days with a card on file.
+              Live tools require a paid subscription. Cancel before the trial ends to avoid a charge.
             </motion.p>
             <motion.div
               initial={{ opacity: 0, y: 12 }}
@@ -78,12 +78,8 @@ export function FinalCta() {
               className="mt-9 flex flex-wrap items-center justify-center gap-3"
             >
               <MagneticLink href="/signup" className="btn-primary group text-base px-7 py-3.5">
-                <span>start free · 100 runs</span>
+                <span>Start 7-day trial</span>
                 <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-              </MagneticLink>
-              <MagneticLink href="/pricing" className="btn-ghost text-base px-7 py-3.5">
-                <Calendar className="h-4 w-4" />
-                see plans
               </MagneticLink>
             </motion.div>
           </div>

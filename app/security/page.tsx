@@ -35,7 +35,7 @@ const PILLARS = [
   {
     icon: KeyRound,
     title: 'BYOK on every plan',
-    body: 'Bring your own Anthropic / OpenAI / Ollama key. On free tier, prompts go directly from your browser to your provider. We never see them.',
+    body: 'Bring your own Anthropic / OpenAI / Ollama key. For browser-direct integrations, prompts go directly from your browser to your provider. Live calls require a paid subscription; adding a key does not unlock tools in the dashboard preview.',
   },
   {
     icon: Server,

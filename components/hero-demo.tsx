@@ -17,7 +17,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence, useReducedMotion } from 'framer-motion';
-import { ArrowRight, CornerDownLeft, FileText, Download, Sparkles } from 'lucide-react';
+import { ArrowRight, CornerDownLeft, FileText, Sparkles } from 'lucide-react';
 import { AGENTS, type AgentName } from '@/lib/agents';
 import { cn } from '@/lib/utils';
 
@@ -388,15 +388,9 @@ export function BroadcastConsole() {
                       ))}
                     </div>
                     <div className="mt-4 flex flex-wrap items-center gap-3">
-                      <Link href="/app" className="btn-primary px-5 py-2.5 text-[13.5px]">
-                        Run this for real
+                      <Link href="/signup" className="btn-primary px-5 py-2.5 text-[13.5px]">
+                        Start 7-day trial
                         <ArrowRight className="h-3.5 w-3.5" />
-                      </Link>
-                      <Link
-                        href="/app"
-                        className="inline-flex items-center gap-1.5 font-mono text-[11px] uppercase tracking-[0.16em] text-ink-dim transition-colors hover:text-white"
-                      >
-                        <Download className="h-3.5 w-3.5" /> download .zip in dashboard
                       </Link>
                     </div>
                   </div>
@@ -407,7 +401,7 @@ export function BroadcastConsole() {
         </motion.div>
 
         <p className="mx-auto mt-3 max-w-[940px] text-center font-mono text-[10px] uppercase tracking-[0.18em] text-ink-faint">
-          preview is scripted · real runs stream live in your dashboard with your own key
+          scripted preview · live tools require an active paid subscription
         </p>
       </div>
     </section>

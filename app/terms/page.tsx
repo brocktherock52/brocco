@@ -40,7 +40,7 @@ export default function TermsPage() {
               <p>Paid plans bill in advance via Stripe. Annual plans are paid upfront. Overages on Solo/Team are billed at $0.05 / $0.03 per run respectively unless you set a hard cap. You can cancel from the customer portal at any time.</p>
             </Section>
             <Section title="4. Service availability">
-              <p>We target 99.9% uptime on paid tiers. Live status at the security page. Free tier is best-effort.</p>
+              <p>We target 99.9% uptime on paid tiers. Live status at the security page. The seven-day dashboard preview is best-effort and does not include live tool use.</p>
             </Section>
             <Section title="5. IP and data">
               <p>You retain all rights to inputs and outputs. We grant you a non-exclusive license to use the brocco software for the duration of your subscription. Your data never trains a model.</p>

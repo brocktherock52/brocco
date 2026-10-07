@@ -2,7 +2,7 @@
  * Ad warm-landers (consultant note 2026-06-02).
  *
  * These power /go/[slug]: stripped-down, no-navigation landing pages whose only
- * clickable action is the CTA to /pricing. The consultant's point was that a
+ * clickable action is the CTA to /signup. The consultant's point was that a
  * page with top navigation leaks high-intent paid traffic, and that a single
  * "pre-warming" page that hits a specific buyer's pain hard converts far better.
  *
@@ -11,7 +11,7 @@
  *   2. pains[]   -> agitate the specific pain this buyer feels
  *   3. how[]     -> objection handling: "ok, prove it / how does it work"
  *   4. proof[]   -> trust + risk reversal
- *   5. one CTA   -> /pricing
+ *   5. one CTA   -> /signup
  *
  * Adding a new ad/persona variant is a DATA edit here, not a new page, so the
  * "AI makes hundreds of these for different targetings" idea is a config loop.
@@ -64,12 +64,12 @@ export const LANDERS: Lander[] = [
       },
     ],
     proof: [
-      '100 free runs / mo',
-      'No card to start',
-      'Bring your own key, we never see it',
-      'Cancel in one click',
+      '7-day dashboard preview',
+      'Card required',
+      'Live tools on paid plans',
+      'Cancel before billing starts',
     ],
-    ctaLabel: 'Get my AI team',
+    ctaLabel: 'Start 7-day trial',
     image: '/assets/real-estate/croc-building-house.png',
   },
   {
@@ -98,12 +98,12 @@ export const LANDERS: Lander[] = [
       },
     ],
     proof: [
-      '100 free runs / mo',
-      'No card to start',
+      '7-day dashboard preview',
+      'Card required',
       'Your data stays yours',
-      'Cancel in one click',
+      'Cancel before billing starts',
     ],
-    ctaLabel: 'Get my AI team',
+    ctaLabel: 'Start 7-day trial',
     image: '/assets/real-estate/croc-agent.png',
   },
   {
@@ -132,12 +132,12 @@ export const LANDERS: Lander[] = [
       },
     ],
     proof: [
-      '100 free runs / mo',
-      'No card to start',
-      'Bring your own key, we never see it',
-      'Cancel in one click',
+      '7-day dashboard preview',
+      'Card required',
+      'Live tools on paid plans',
+      'Cancel before billing starts',
     ],
-    ctaLabel: 'Get my AI team',
+    ctaLabel: 'Start 7-day trial',
     image: '/assets/real-estate/croc-creative-finance.png',
   },
 ];

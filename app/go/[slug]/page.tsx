@@ -10,7 +10,7 @@ import { LANDERS, getLander } from '@/lib/landers';
  * /go/[slug] : ad warm-landers (consultant note 2026-06-02).
  *
  * Deliberately NO <Nav /> and NO <Footer /> with site links. The only
- * navigable action on the page is the CTA to /pricing. Paid traffic from
+ * navigable action on the page is the CTA to /signup. Paid traffic from
  * Meta / TikTok / Snap ads lands here, gets its specific pain hit, and has
  * exactly one place to go: the offer. The top navigation was leaking that
  * intent on the main pages.
@@ -41,8 +41,8 @@ export async function generateMetadata({ params }: PageProps): Promise<Metadata>
 
 // CTA target: the offer. The ?from tag lets pricing + analytics attribute which
 // lander (and therefore which ad) drove the click.
-function pricingHref(slug: string) {
-  return `/pricing?from=go-${slug}`;
+function signupHref(slug: string) {
+  return `/signup?from=go-${slug}`;
 }
 
 export default async function LanderPage({ params }: PageProps) {
@@ -67,7 +67,7 @@ export default async function LanderPage({ params }: PageProps) {
       <header className="container-x flex items-center justify-between pt-8">
         <Wordmark className="text-[15px]" />
         <span className="hidden font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-faint sm:inline">
-          100 free runs · no card
+          7-day preview · card required
         </span>
       </header>
 
@@ -84,13 +84,13 @@ export default async function LanderPage({ params }: PageProps) {
           <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-ink-dim">{l.sub}</p>
 
           <div className="mt-8">
-            <Link href={pricingHref(l.slug)} className="btn-primary text-[16px]">
+            <Link href={signupHref(l.slug)} className="btn-primary text-[16px]">
               <Sparkles className="h-4 w-4" />
               <span>{l.ctaLabel}</span>
               <ArrowRight className="h-4 w-4" />
             </Link>
             <p className="mt-3 font-mono text-[11px] uppercase tracking-[0.18em] text-ink-faint">
-              start free · 100 runs / mo · no card
+              7-day dashboard preview · card required · live tools on paid plans
             </p>
           </div>
         </div>
@@ -165,7 +165,7 @@ export default async function LanderPage({ params }: PageProps) {
             ))}
           </div>
           <div className="mt-8">
-            <Link href={pricingHref(l.slug)} className="btn-primary text-[16px]">
+            <Link href={signupHref(l.slug)} className="btn-primary text-[16px]">
               <Sparkles className="h-4 w-4" />
               <span>{l.ctaLabel}</span>
               <ArrowRight className="h-4 w-4" />

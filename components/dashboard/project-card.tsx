@@ -10,6 +10,7 @@ import { getBrain, type BrainEntry } from '@/lib/threads-client';
 import type { AgentName } from '@/lib/agents';
 import { trackEvent } from '@/components/posthog-provider';
 import { WatchSettings } from './watch-settings';
+import { fetchBillingAccess } from '@/lib/billing-client';
 
 // One saved project in the history drawer. Carries the freshness dot, the
 // "Watching · every 72h" indicator, a Refresh action that runs the
@@ -60,6 +61,10 @@ export function ProjectCard({
 
   async function doRefresh() {
     if (busy) return;
+    try {
+      const access = await fetchBillingAccess();
+      if (!access.canUseTools) { onUpgrade?.(); return; }
+    } catch { toast.error('Could not check subscription access. Please retry.'); return; }
     setBusy(true);
     // Funnel: the refresh action is the core of the retention loop. Track the
     // click and (below) whether it surfaced changes, so PostHog can show how

@@ -29,7 +29,7 @@ export function ByokModal({
     if (!val) {
       localStorage.removeItem(KEY_STORAGE);
       onSaved(null);
-      toast.success('Key removed. Demo mode is on.');
+      toast.success('Key removed. Connect a key to use live tools.');
     } else if (!/^(sk-|xai-)[a-zA-Z0-9_-]{15,}$/.test(val.trim())) {
       toast.error('That does not look like a valid key. Continue anyway?', {
         action: {
@@ -82,7 +82,7 @@ export function ByokModal({
 
           <div className="mt-3 flex items-center gap-2 text-[11.5px] text-ink-faint">
             <ShieldCheck className="h-3 w-3 text-emerald-400" />
-            Local-only. No telemetry. Clear with the same button to switch back to demo mode.
+            Your key stays in this browser. Use the same button to remove it.
           </div>
 
           <div className="mt-5 flex items-center justify-between gap-3">

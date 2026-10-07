@@ -87,7 +87,7 @@ function* outreachSteps(goal: string): Generator<Event> {
   yield { type: 'tool_result', tool: 'search_web', result: searchResultFor(goal) };
   yield {
     type: 'text',
-    text: `**Variant A - short**\nsubject: 8 minutes saved per zap\n\nSaw your post about replacing zapier. We do that in 1 prompt. Want a 60-sec walkthrough?\n\n**Variant B - medium**\nsubject: your ops stack, agentic\n\n${pick(['Caught your launch on PH', 'Read your changelog Friday', 'Your Series B post hit my feed'])}. Brocco runs your kind of workflow in parallel agents with full audit logs. 100 free runs, BYOK.\n\nReply 'send' for the demo.\n\n**Variant C - bold**\nsubject: stop hiring chatbots\n\nYour ops team is doing work agents should be doing. Brocco is what ${pick(['Linear', 'Vercel', 'Stripe'])} built internally, except shipped to you.`,
+    text: `**Variant A - short**\nsubject: 8 minutes saved per zap\n\nSaw your post about replacing zapier. We do that in 1 prompt. Want a 60-sec walkthrough?\n\n**Variant B - medium**\nsubject: your ops stack, agentic\n\n${pick(['Caught your launch on PH', 'Read your changelog Friday', 'Your Series B post hit my feed'])}. Brocco runs your kind of workflow in parallel agents with full audit logs. 7-day dashboard preview. Card required; live tools on paid plans.\n\nReply 'send' for the demo.\n\n**Variant C - bold**\nsubject: stop hiring chatbots\n\nYour ops team is doing work agents should be doing. Brocco is what ${pick(['Linear', 'Vercel', 'Stripe'])} built internally, except shipped to you.`,
   };
   yield { type: 'tool_call', tool: 'file_save', input: { filename: 'outreach.md', content: '...' } };
   yield { type: 'tool_result', tool: 'file_save', result: 'saved 0.9kb to outreach.md' };

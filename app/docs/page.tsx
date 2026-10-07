@@ -14,7 +14,7 @@ const SECTIONS = [
   {
     icon: Zap,
     title: 'Quickstart',
-    body: 'Open /app, paste a goal, hit run. Bring your own key on free tier (Anthropic or any OpenAI-compatible).',
+    body: 'Create an account at /signup, choose a plan, and add your card for the seven-day dashboard preview. Live runs require a paid subscription and any model or integration credentials needed by your workflow.',
     href: '/app',
     cta: 'Open the app',
   },

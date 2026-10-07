@@ -55,7 +55,7 @@ export default async function CapabilityPage({ params }: PageProps) {
             <p className="mt-5 max-w-2xl text-[17px] leading-relaxed text-ink-dim">{c.hero}</p>
             <div className="mt-7 flex flex-wrap gap-3">
               <Link href="/signup" className="btn-primary">
-                start free <ArrowRight className="h-3.5 w-3.5" />
+                Start 7-day trial <ArrowRight className="h-3.5 w-3.5" />
               </Link>
               <Link href="/capabilities" className="btn-ghost">
                 all capabilities

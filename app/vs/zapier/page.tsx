@@ -36,7 +36,7 @@ export default function VsZapierPage() {
         { label: 'Apps / integrations', brocco: '8 first-class + custom tool factory', competitor: '6,000+' },
         { label: 'Audit log', brocco: 'JSONL, exportable', competitor: 'Task history (UI only)' },
         { label: 'BYOK (LLM provider)', brocco: true, competitor: false },
-        { label: 'Free tier', brocco: '100 runs / mo BYOK', competitor: '100 tasks / mo' },
+        { label: 'Free tier', brocco: false, competitor: '100 tasks / mo' },
         { label: 'Paid entry', brocco: '$49 / mo (Solo)', competitor: '$20 / mo (Starter)' },
         { label: 'Cost per run / task', brocco: '~$0.01 - $0.10 (token-based)', competitor: '$0.20 / task' },
         { label: 'Self-host', brocco: true, competitor: false },

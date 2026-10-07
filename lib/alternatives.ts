@@ -48,7 +48,7 @@ export const ALTERNATIVES: Alternative[] = [
       'PropStream is a property-data and lead-list platform (now also owning BatchLeads/BatchDialer) used to pull lists, comps, and owner info.',
     metaTitle: 'PropStream Alternative for Wholesalers (2026) | brocco',
     metaDescription:
-      'Looking for a PropStream alternative? brocco replaces a stack of single-feature tools with one AI deal team that pulls leads, runs comps, drafts the LOI, and builds your buyer list. BYOK pricing, 100 free runs.',
+      'Looking for a PropStream alternative? brocco replaces a stack of single-feature tools with one AI deal team that pulls leads, runs comps, drafts the LOI, and builds your buyer list. 7-day dashboard preview, card required.',
     keywords: ['propstream alternative', 'propstream alternatives', 'cheaper than propstream', 'propstream vs', 'ai property data tool'],
     h1Lead: 'A PropStream alternative that finishes the deal,',
     h1Rest: 'not just the lookup.',
@@ -61,7 +61,7 @@ export const ALTERNATIVES: Alternative[] = [
       { feature: 'Drafts the LOI / assignable contract', brocco: 'Yes', them: 'No' },
       { feature: 'Builds a cash-buyer match list', brocco: 'Yes', them: 'Partial / manual' },
       { feature: 'Runs the whole pipeline in one step', brocco: 'Yes, agents work in parallel', them: 'No, you operate each tool' },
-      { feature: 'Pricing model', brocco: 'Free tier + $49/mo, BYOK (no per-record markup)', them: 'Monthly subscription, add-ons per feature' },
+      { feature: 'Pricing model', brocco: 'Solo $49/mo after a 7-day dashboard preview', them: 'Monthly subscription, add-ons per feature' },
     ],
     whenThemBetter: [
       'You want a mature, decade-old nationwide property database with deep filtering and are comfortable doing the analysis and outreach yourself.',
@@ -75,7 +75,7 @@ export const ALTERNATIVES: Alternative[] = [
       },
       {
         q: 'Is brocco cheaper than PropStream?',
-        a: 'brocco has a free tier (100 runs a month, no card) and a $49/mo Solo plan, and it uses bring-your-own-key pricing so you pay model cost directly with no per-record markup. PropStream is a monthly subscription with add-ons. Your real cost depends on volume, but BYOK removes the per-lead surcharge that data tools charge.',
+        a: 'brocco offers a seven-day dashboard preview with a card required. Solo costs $49/month or $490/year after the preview; live tools require an active paid plan. PropStream is a monthly subscription with add-ons. Compare the data and integration costs for your workflow alongside the subscription.',
       },
       {
         q: 'Does brocco have its own property database?',
@@ -90,7 +90,7 @@ export const ALTERNATIVES: Alternative[] = [
       'DealMachine is a driving-for-dollars app: you spot distressed houses, save them, skip trace, and send mail/SMS from your phone.',
     metaTitle: 'DealMachine Alternative: AI vs Driving for Dollars (2026) | brocco',
     metaDescription:
-      'A DealMachine alternative for 2026: instead of driving neighborhoods to find one house at a time, brocco pulls and scores motivated-seller lists, skip traces, and writes the outreach for you. 100 free runs, BYOK.',
+      'A DealMachine alternative for 2026: instead of driving neighborhoods to find one house at a time, brocco pulls and scores motivated-seller lists, skip traces, and writes the outreach for you. 7-day dashboard preview, card required.',
     keywords: ['dealmachine alternative', 'dealmachine alternatives', 'driving for dollars alternative', 'ai for wholesaling', 'dealmachine vs'],
     h1Lead: 'A DealMachine alternative that pulls the leads,',
     h1Rest: "so you're not driving for them.",
@@ -103,7 +103,7 @@ export const ALTERNATIVES: Alternative[] = [
       { feature: 'Writes the outreach', brocco: 'Call/SMS/letter drafted', them: 'Mail/SMS templates, you send' },
       { feature: 'Drafts the LOI / contract', brocco: 'Yes', them: 'No' },
       { feature: 'Cash-buyer match list', brocco: 'Yes', them: 'No' },
-      { feature: 'Pricing model', brocco: 'Free tier + $49/mo, BYOK', them: 'Subscription + skip-trace/mail credits' },
+      { feature: 'Pricing model', brocco: 'Solo $49/mo after a 7-day dashboard preview', them: 'Subscription + skip-trace/mail credits' },
     ],
     whenThemBetter: [
       'You genuinely enjoy driving for dollars and want the best mobile app for tagging houses on the go.',
@@ -128,7 +128,7 @@ export const ALTERNATIVES: Alternative[] = [
       'BatchLeads (now part of PropStream) is a list-building, skip-tracing, and SMS/dialer platform for real-estate investors.',
     metaTitle: 'BatchLeads Alternative for Wholesalers (2026) | brocco',
     metaDescription:
-      'A BatchLeads alternative that does more than lists and dialing: brocco pulls and scores motivated-seller leads, skip traces, runs comps, and drafts the LOI in one AI run. 100 free runs, BYOK.',
+      'A BatchLeads alternative that does more than lists and dialing: brocco pulls and scores motivated-seller leads, skip traces, runs comps, and drafts the LOI in one AI run. 7-day dashboard preview, card required.',
     keywords: ['batchleads alternative', 'batchleads alternatives', 'batchdialer alternative', 'skip tracing tool alternative', 'ai list building real estate'],
     h1Lead: 'A BatchLeads alternative that scores the list',
     h1Rest: 'and writes the first call.',
@@ -140,7 +140,7 @@ export const ALTERNATIVES: Alternative[] = [
       { feature: 'Comps + ARV + MAO', brocco: 'Yes', them: 'Limited' },
       { feature: 'Drafts the LOI / contract', brocco: 'Yes', them: 'No' },
       { feature: 'Cash-buyer match list', brocco: 'Yes', them: 'No' },
-      { feature: 'Pricing model', brocco: 'Free tier + $49/mo, BYOK', them: 'Subscription + per-record / messaging credits' },
+      { feature: 'Pricing model', brocco: 'Solo $49/mo after a 7-day dashboard preview', them: 'Subscription + per-record / messaging credits' },
     ],
     whenThemBetter: [
       'You want an all-in-one built-in dialer and SMS platform and prefer to send from the same tool.',
@@ -165,7 +165,7 @@ export const ALTERNATIVES: Alternative[] = [
       'REsimpli is an all-in-one real-estate investor CRM with lead management, marketing, driving for dollars, and list pulling.',
     metaTitle: 'REsimpli Alternative for Wholesalers (2026) | brocco',
     metaDescription:
-      'A REsimpli alternative focused on the work, not just the CRM: brocco pulls and scores leads, skip traces, runs comps, drafts the LOI, and builds your buyer list with an AI team. 100 free runs, BYOK.',
+      'A REsimpli alternative focused on the work, not just the CRM: brocco pulls and scores leads, skip traces, runs comps, drafts the LOI, and builds your buyer list with an AI team. 7-day dashboard preview, card required.',
     keywords: ['resimpli alternative', 'resimpli alternatives', 'real estate investor crm alternative', 'ai wholesaling crm', 'resimpli vs'],
     h1Lead: 'A REsimpli alternative that does the deal work,',
     h1Rest: 'not only the CRM.',
@@ -177,7 +177,7 @@ export const ALTERNATIVES: Alternative[] = [
       { feature: 'Writes outreach + follow-up', brocco: 'Drafted + cadence', them: 'Templates + automation' },
       { feature: 'Drafts the LOI / contract', brocco: 'Yes', them: 'Document storage, not drafting' },
       { feature: 'Full CRM / pipeline boards', brocco: 'No (use your CRM)', them: 'Yes, full CRM' },
-      { feature: 'Pricing model', brocco: 'Free tier + $49/mo, BYOK', them: 'Tiered subscription' },
+      { feature: 'Pricing model', brocco: 'Solo $49/mo after a 7-day dashboard preview', them: 'Tiered subscription' },
     ],
     whenThemBetter: [
       'You need a full CRM as your system of record with pipeline boards, KPIs, and team management.',

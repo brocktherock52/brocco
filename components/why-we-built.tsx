@@ -57,8 +57,8 @@ const ENTRIES = [
     kicker: 'on data',
     title: 'your data does not train models',
     body:
-      'on free tier, prompts go from your browser to your provider. on paid, our hosted runtime calls anthropic with zdr enabled by default. byok on every plan so the key never leaves your wallet.',
-    closer: 'byok is not a pricing trick. it is a security posture.',
+      'the dashboard preview uses examples. when you activate your paid plan, live workflows connect to the model and integrations you choose. see our privacy and security pages for data handling details.',
+    closer: 'choose which tools and providers your workflow uses.',
   },
 ];
 

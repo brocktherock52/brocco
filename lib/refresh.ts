@@ -19,9 +19,8 @@
 'use client';
 
 import { AGENTS, type AgentName } from '@/lib/agents';
-import { runAgent, type SimEvent } from '@/lib/simulator';
 import { SYSTEM_PROMPTS, type LiveEvent } from '@/lib/claude';
-import { runAgentLive } from '@/lib/run-live';
+import { runAgentLive, assertClientToolAccess } from '@/lib/run-live';
 import {
   getBrain,
   appendBrain,
@@ -52,10 +51,10 @@ async function runOnce(opts: {
   const chunks: string[] = [];
   const ctrl = new AbortController();
 
-  if (opts.apiKey) {
+  {
     const sys = SYSTEM_PROMPTS[a.name] || SYSTEM_PROMPTS.researcher;
     await runAgentLive({
-      apiKey: opts.apiKey,
+      apiKey: opts.apiKey || '',
       modelId: opts.modelId,
       agent: a,
       goal: opts.goal,
@@ -65,17 +64,7 @@ async function runOnce(opts: {
         if (e.type === 'text' && e.text) chunks.push(e.text);
         if (e.type === 'done' && e.summary) chunks.push(e.summary);
       },
-    }).catch(() => {});
-  } else {
-    await runAgent(
-      a,
-      opts.goal,
-      (e: SimEvent) => {
-        if (e.type === 'text' && e.text) chunks.push(e.text);
-        if (e.type === 'done' && e.summary) chunks.push(e.summary);
-      },
-      { cancelled: false },
-    );
+    });
   }
   return chunks.join('\n').trim();
 }
@@ -187,6 +176,7 @@ export async function refreshProjectWithDiff(opts: {
   lastRunMs: number | null;
 }): Promise<RefreshResult> {
   const { threadId, goal, agents, apiKey, modelId, lastRunMs } = opts;
+  await assertClientToolAccess();
 
   // 1. read the brain so this iteration builds on the last
   const brain = threadId ? await getBrain(threadId) : [];

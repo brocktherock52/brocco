@@ -30,7 +30,7 @@ export default function IntegrationsIndex() {
               <span className="font-serif italic font-normal text-grad-brand">Real keys.</span>
             </h1>
             <p className="mx-auto mt-5 max-w-xl text-[16px] text-ink-dim">
-              Connect the tools your team already uses. BYOK on the free tier; hosted with zero data retention on paid.
+              Connect the tools your team already uses. Preview the dashboard for seven days; live integrations require an active paid plan.
             </p>
           </div>
         </section>

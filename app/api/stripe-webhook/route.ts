@@ -3,7 +3,7 @@
    idempotency scaffold + full subscription lifecycle.
    Edge runtime, no Stripe SDK. */
 
-import { recordPaidCheckout } from '@/lib/billing-claim';
+import { recordPaidCheckout, syncCustomerPlan } from '@/lib/billing-claim';
 
 export const runtime = 'edge';
 
@@ -170,50 +170,19 @@ async function handleEvent(event: StripeEvent): Promise<void> {
       // with the right plan even if they closed the tab before /billing/success
       // ran the claim. Idempotent with the success-page claim (both upsert by
       // email). We re-fetch the session by id to read the plan price authoritatively.
-      if (transactionId) {
-        try {
-          await recordPaidCheckout(transactionId);
-        } catch (e) {
-          console.error('[stripe-webhook] recordPaidCheckout failed', e);
-        }
-      }
+      if (transactionId) await recordPaidCheckout(transactionId);
       break;
     }
-    case 'invoice.payment_succeeded': {
-      // Renewal payment. Extend the subscription period in the customer record.
-      // TODO(brocco-persistence): update customer's current_period_end.
-      console.log('[stripe-webhook] renewal payment', { customer: obj.customer, amount: obj.amount_paid });
-      break;
-    }
-    case 'invoice.payment_failed': {
-      // Payment failed. Customer is in dunning. Mark account as past_due.
-      // TODO(brocco-persistence): set status = past_due. Email the customer.
-      console.warn('[stripe-webhook] payment failed', { customer: obj.customer, attempt: obj.attempt_count });
-      break;
-    }
-    case 'customer.subscription.updated': {
-      // Plan change (upgrade/downgrade) or cancel_at_period_end toggle.
-      // TODO(brocco-persistence): update plan tier + cancel_at_period_end on customer row.
-      console.log('[stripe-webhook] subscription updated', {
-        customer: obj.customer,
-        status: obj.status,
-        cancel_at_period_end: obj.cancel_at_period_end,
-      });
-      break;
-    }
-    case 'customer.subscription.deleted': {
-      // Subscription canceled or expired. Revoke access.
-      // TODO(brocco-persistence): set status = canceled. Move user back to free tier.
-      console.log('[stripe-webhook] subscription deleted', { customer: obj.customer });
-      break;
-    }
+    case 'invoice.paid':
+    case 'invoice.payment_succeeded':
+    case 'invoice.payment_failed':
+    case 'customer.subscription.updated':
+    case 'customer.subscription.deleted':
+    case 'customer.subscription.paused':
+    case 'customer.subscription.resumed':
     case 'customer.subscription.created': {
-      // New subscription. Often paired with checkout.session.completed.
-      // TODO(brocco-persistence): ensure customer row exists with correct plan.
-      console.log('[stripe-webhook] subscription created', {
-        customer: obj.customer,
-        items: (obj.items as { data?: unknown[] } | undefined)?.data?.length,
-      });
+      // Read current Stripe state, never the event's potentially stale state.
+      if (typeof obj.customer === 'string') await syncCustomerPlan(obj.customer);
       break;
     }
     default:
@@ -245,13 +214,15 @@ export async function POST(req: Request): Promise<Response> {
 
   // Idempotency: skip if we've already processed this event.id.
   // Returning 200 (not an error) so Stripe stops retrying.
-  if (!rememberEvent(event.id)) {
+  if (!event.id || !event.type || !event.data?.object) return new Response('invalid event', { status: 400 });
+  if (SEEN_EVENT_IDS.has(event.id)) {
     console.log('[stripe-webhook] duplicate event ignored', event.id);
     return new Response('ok (duplicate)', { status: 200 });
   }
 
   try {
     await handleEvent(event);
+    rememberEvent(event.id);
   } catch (e) {
     console.error('[stripe-webhook] handler error', e);
     // Returning 500 will cause Stripe to retry. That's intentional:

@@ -36,7 +36,7 @@ export default function VsCursorPage() {
         { label: 'Agents in parallel', brocco: 'Up to 9 (Broadcast)', competitor: '1 active agent' },
         { label: 'Built-in tool registry', brocco: '13 (search, http, file, memory, delegate)', competitor: 'File ops + shell + Cursor tools' },
         { label: 'BYOK', brocco: true, competitor: true },
-        { label: 'Free tier', brocco: '100 runs / mo (BYOK)', competitor: 'Free with limits' },
+        { label: 'Free tier', brocco: false, competitor: 'Free with limits' },
         { label: 'Paid entry', brocco: '$49 / mo (Solo)', competitor: '$20 / mo (Pro)' },
         { label: 'JSONL audit trail', brocco: true, competitor: false },
         { label: 'MCP server (use inside Claude Desktop)', brocco: true, competitor: 'Partial' },
@@ -71,7 +71,7 @@ export default function VsCursorPage() {
         },
         {
           q: 'Is brocco cheaper than Cursor?',
-          a: 'Not by sticker price. Cursor Pro is $20/mo, brocco Solo is $49/mo. Brocco covers more tokens at Solo and ships a free BYOK tier with 100 runs/mo. Total cost depends on usage.',
+          a: 'Not by sticker price. Cursor Pro is $20/mo, brocco Solo is $49/mo. Brocco Solo includes 2,000 monthly runs on the paid plan. Start with a seven-day dashboard preview; a card is required. Total cost depends on usage.',
         },
         {
           q: 'Do they share any infrastructure?',

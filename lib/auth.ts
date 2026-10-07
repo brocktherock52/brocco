@@ -17,6 +17,7 @@ import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
 import { magicLink } from 'better-auth/plugins';
 import { db } from './db';
+import { getAuthBaseURL, getSocialProviders } from './auth-config';
 import {
   users,
   sessions,
@@ -24,10 +25,7 @@ import {
   verifications,
 } from './db/schema';
 
-const BASE_URL =
-  process.env.NEXT_PUBLIC_BASE_URL ||
-  process.env.BETTER_AUTH_URL ||
-  'http://localhost:3000';
+const BASE_URL = getAuthBaseURL();
 
 // True when we're serving over HTTPS (prod). We pin the secure-cookie decision
 // off this rather than letting better-auth sniff the per-request protocol:
@@ -138,10 +136,11 @@ export const auth = betterAuth({
   emailAndPassword: {
     enabled: false,
   },
+  socialProviders: getSocialProviders(),
   user: {
     additionalFields: {
-      plan: { type: 'string', defaultValue: 'free', required: false },
-      lastSeenAt: { type: 'date', required: false },
+      plan: { type: 'string', defaultValue: 'free', required: false, input: false },
+      lastSeenAt: { type: 'date', required: false, input: false },
     },
   },
   session: {
@@ -195,6 +194,7 @@ export const auth = betterAuth({
     'http://localhost:3000',
     'https://brocco.dev',
     'https://brocco-site.vercel.app',
+    'https://appleid.apple.com',
   ],
 });
 

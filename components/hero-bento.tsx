@@ -3,7 +3,7 @@
 /**
  * HeroBento, completely reimagined hero.
  *
- * A 5-tile asymmetric bento grid (signature 21st.dev / linear / vercel
+ * A four-tile asymmetric bento grid (signature 21st.dev / linear / vercel
  * pattern). Each tile is its own scene with its own choreography. Nothing
  * about this layout reads "centered headline + mascot mosaic" the way
  * the previous hero did.
@@ -33,12 +33,9 @@ import {
 import {
   ArrowRight,
   ChevronRight,
-  Download,
   Sparkles,
-  TerminalSquare,
   Zap,
 } from 'lucide-react';
-import { MagneticLink } from './ui/magnetic';
 import { AnimatedNumber } from './ui/animated-number';
 import { AGENTS } from '@/lib/agents';
 import { cn } from '@/lib/utils';
@@ -50,8 +47,6 @@ import {
   SlackIcon,
   ZapierIcon,
   N8nIcon,
-  AppleIcon,
-  WindowsIcon,
 } from './brand-icons';
 
 // -----------------------------------------------------------------------------
@@ -207,13 +202,10 @@ function HeadlineTile() {
         One prompt in. Your AI team splits the goal, runs in parallel, and hands you back a sourced
         research drop, a launch plan, and outreach drafts, exported as one polished, branded PDF.
         Ship before your coffee cools.{' '}
-        <span className="text-white">100 free runs every month</span>, no card.
+        <span className="text-white">Explore the dashboard for seven days.</span> Card required; live tools unlock with a paid plan.
       </motion.p>
 
-      {/* CTAs. Free-first: the north-star is free-tier signups, so the primary
-          path claims 100 free runs (-> /signup capture -> demo dashboard). The
-          paid 7-day trial lives on /pricing and in the nav; the live demo is the
-          secondary, equal-friction option. */}
+      {/* One signup path for the dashboard preview. */}
       <motion.div
         initial={{ opacity: 0, y: 12 }}
         animate={{ opacity: 1, y: 0 }}
@@ -225,13 +217,9 @@ function HeadlineTile() {
           className="group inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-brand to-cyan px-6 py-3.5 text-[15px] font-semibold text-white shadow-glow2 transition-all hover:shadow-glow"
         >
           <Sparkles className="h-4 w-4" />
-          <span>start free · 100 runs</span>
+          <span>Start 7-day trial</span>
           <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
         </Link>
-        <MagneticLink href="/app" className="btn-ghost group text-[15px] px-6 py-3.5" strength={10}>
-          <span>try the live demo</span>
-          <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-        </MagneticLink>
       </motion.div>
 
       {/* Reassurance row */}
@@ -242,12 +230,12 @@ function HeadlineTile() {
         className="relative mt-7 flex flex-wrap items-center gap-x-4 gap-y-1.5 font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-faint"
       >
         <span className="inline-flex items-center gap-1.5">
-          <Sparkles className="h-3 w-3 text-cyan-glow" /> 100 free runs / mo
+          <Sparkles className="h-3 w-3 text-cyan-glow" /> 7-day dashboard preview
         </span>
         <span>·</span>
-        <span>no card</span>
+        <span>card required</span>
         <span>·</span>
-        <span>11 min to first run</span>
+        <span>cancel before billing starts</span>
       </motion.div>
 
       {/* SpawnConveyor removed 2026-05-22. The CSS conveyor was decorative
@@ -262,8 +250,6 @@ function HeadlineTile() {
 // is the Higgsfield Kling 3.0 video in components/brocco-factory.tsx. The hero
 // no longer needs a decorative CSS conveyor.
 
-// (HeroSubscribeButton removed 2026-05-25: hero is now free-first. The paid
-// 7-day trial lives on /pricing and in the nav.)
 
 // -----------------------------------------------------------------------------
 // METRICS TILE: animated counters with a pulsing micro-sparkline
@@ -706,97 +692,7 @@ function TerminalTile() {
 }
 
 // -----------------------------------------------------------------------------
-// INSTALL TILE: install paths (mac/win/mcp) as a compact selector card
-// -----------------------------------------------------------------------------
-// Each path is a real, navigable link. Icons are the actual platform marks
-// (redrawn Apple / Windows logos from brand-icons, Anthropic for Claude
-// Desktop) instead of the generic lucide apple/monitor glyphs. Copy reflects
-// what actually ships today: PWA install everywhere, MCP for Claude Desktop,
-// REST for everything else. The Tauri .exe/.dmg are still "coming soon" on
-// /download, so they're no longer promised here.
-const INSTALL_PATHS = [
-  { id: 'mac', label: 'macOS', sub: 'Apple silicon / Intel', icon: AppleIcon, href: '/download' },
-  { id: 'win', label: 'Windows', sub: 'PWA · Win 10 / 11', icon: WindowsIcon, href: '/download' },
-  {
-    id: 'mcp',
-    label: 'Claude Desktop',
-    sub: 'MCP server',
-    icon: AnthropicIcon,
-    href: '/download#mcp-setup',
-  },
-  { id: 'cli', label: 'CLI / curl', sub: 'REST + SSE', icon: TerminalSquare, href: '/docs' },
-];
-
-function InstallTile() {
-  const [active, setActive] = useState('mac');
-
-  return (
-    <Tile className="flex h-full flex-col p-6">
-      <header className="flex items-center justify-between">
-        <span className="font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-faint">
-          install
-        </span>
-        <span className="font-mono text-[10px] uppercase tracking-[0.18em] text-cyan-glow">
-          4 paths · 1 runtime
-        </span>
-      </header>
-
-      <ul className="mt-5 grid grid-cols-2 gap-2">
-        {INSTALL_PATHS.map((p) => {
-          const isActive = active === p.id;
-          return (
-            <li key={p.id}>
-              <Link
-                href={p.href}
-                onMouseEnter={() => setActive(p.id)}
-                onFocus={() => setActive(p.id)}
-                aria-label={`Install brocco for ${p.label}`}
-                className={cn(
-                  'relative block w-full overflow-hidden rounded-xl border px-3 py-3 text-left transition-colors',
-                  isActive
-                    ? 'border-brand/40 bg-brand/10 text-white'
-                    : 'border-white/[0.06] bg-white/[0.015] text-ink-dim hover:border-white/[0.14] hover:text-white',
-                )}
-              >
-                {isActive && (
-                  <motion.span
-                    layoutId="install-pill"
-                    transition={{ type: 'spring', stiffness: 320, damping: 28 }}
-                    className="absolute inset-0 -z-10 rounded-xl bg-gradient-to-br from-brand/20 to-cyan/10"
-                  />
-                )}
-                <div className="flex items-center gap-2">
-                  <p.icon className="h-4 w-4" />
-                  <span className="text-[13px] font-semibold tracking-tight">{p.label}</span>
-                </div>
-                <p className="mt-0.5 font-mono text-[10.5px] uppercase tracking-[0.18em] text-ink-faint">
-                  {p.sub}
-                </p>
-              </Link>
-            </li>
-          );
-        })}
-      </ul>
-
-      <div className="mt-auto pt-5">
-        <MagneticLink
-          href={INSTALL_PATHS.find((p) => p.id === active)?.href || '/download'}
-          className="btn-ghost w-full justify-between text-[13px]"
-          strength={8}
-        >
-          <span className="inline-flex items-center gap-1.5">
-            <Download className="h-3.5 w-3.5" />
-            install for {INSTALL_PATHS.find((p) => p.id === active)?.label}
-          </span>
-          <ArrowRight className="h-3.5 w-3.5" />
-        </MagneticLink>
-      </div>
-    </Tile>
-  );
-}
-
-// -----------------------------------------------------------------------------
-// MAIN: HeroBento composes the 5 tiles in a 12-col bento grid.
+// MAIN: HeroBento composes the four tiles in a 12-col bento grid.
 // -----------------------------------------------------------------------------
 export function HeroBento() {
   const reduce = useReducedMotion();
@@ -836,8 +732,7 @@ export function HeroBento() {
           {/* Bento layout 2026-05-28, pulled TerminalTile up into row 2 so
               brocco.run sits directly under the headline (was leaving ~90px of
               dead space below HeadlineTile because row-span-2 stretched it).
-              Row 1: headline + metrics. Row 2: terminal + agent stack. Row 3:
-              install spans full width.
+              Row 1: headline + metrics. Row 2: terminal + agent stack.
 
               HEADLINE, row 1 left, 8 cols. */}
           <motion.div variants={tileVariants} className="lg:col-span-8 lg:min-h-[440px]">
@@ -859,10 +754,6 @@ export function HeroBento() {
             <AgentStackTile />
           </motion.div>
 
-          {/* INSTALL, row 3 full width, gives the section a strong closer */}
-          <motion.div variants={tileVariants} className="lg:col-span-12 lg:min-h-[260px]">
-            <InstallTile />
-          </motion.div>
         </motion.div>
 
         {/* Live network strip, full-bleed agent mesh under the bento.

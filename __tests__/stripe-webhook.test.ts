@@ -9,6 +9,9 @@
 */
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { POST } from '@/app/api/stripe-webhook/route';
+import { recordPaidCheckout, syncCustomerPlan } from '@/lib/billing-claim';
+
+vi.mock('@/lib/billing-claim', () => ({ recordPaidCheckout: vi.fn(async () => {}), syncCustomerPlan: vi.fn(async () => {}) }));
 
 const SECRET = 'whsec_test_secret_do_not_use_in_prod';
 
@@ -50,6 +53,8 @@ describe('POST /api/stripe-webhook', () => {
 
   beforeEach(() => {
     process.env.STRIPE_WEBHOOK_SECRET = SECRET;
+    vi.mocked(recordPaidCheckout).mockReset().mockResolvedValue(undefined);
+    vi.mocked(syncCustomerPlan).mockReset().mockResolvedValue(undefined);
   });
 
   afterEach(() => {
@@ -154,5 +159,15 @@ describe('POST /api/stripe-webhook', () => {
       const resp = await POST(makeRequest(payload, sig));
       expect(resp.status, `event type ${type} should return 200`).toBe(200);
     }
+    expect(syncCustomerPlan).toHaveBeenCalledTimes(5);
+  });
+
+  it('retries a failed entitlement sync instead of marking the event processed', async () => {
+    vi.mocked(syncCustomerPlan).mockRejectedValueOnce(new Error('temporary database outage'));
+    const payload = JSON.stringify(makeEvent('evt_retry_after_failure', 'customer.subscription.deleted'));
+    const sig = await signPayload(SECRET, payload, Math.floor(Date.now() / 1000));
+    expect((await POST(makeRequest(payload, sig))).status).toBe(500);
+    expect((await POST(makeRequest(payload, sig))).status).toBe(200);
+    expect(syncCustomerPlan).toHaveBeenCalledTimes(2);
   });
 });

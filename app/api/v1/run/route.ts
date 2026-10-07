@@ -6,8 +6,13 @@
 
 import { checkUrl } from '@/lib/ssrf';
 import { errorResponse, makeRequestId } from '@/lib/errors';
+import { requireToolAccess } from '@/lib/billing-access';
+import { AGENTS } from '@/lib/agents';
+import { SYSTEM_PROMPTS } from '@/lib/claude';
+import { reserveHostedRun } from '@/lib/hosted-usage';
 
-export const runtime = 'edge';
+export const runtime = 'nodejs';
+export const maxDuration = 60;
 
 interface ToolUseBlock { type: 'tool_use'; id: string; name: string; input: Record<string, unknown> }
 interface TextBlock { type: 'text'; text: string }
@@ -70,7 +75,9 @@ async function executeTool(name: string, input: Record<string, unknown>, signal:
       const r = await fetch(check.url!.toString(), {
         headers: { 'User-Agent': 'Brocco-Demo/1.0' },
         signal,
+        redirect: 'manual',
       });
+      if (r.status >= 300 && r.status < 400) return 'ERROR: redirects are not followed';
       const text = (await r.text()).slice(0, 3500);
       return `status=${r.status}\n\n${text}`;
     }
@@ -81,19 +88,11 @@ async function executeTool(name: string, input: Record<string, unknown>, signal:
   }
 }
 
-function getCookie(req: Request, name: string): string | null {
-  const raw = req.headers.get('cookie') ?? '';
-  for (const part of raw.split(';')) {
-    const [k, v] = part.trim().split('=');
-    if (k === name) return v ?? '';
-  }
-  return null;
-}
-
 async function callAnthropicStreaming(
   apiKey: string,
   messages: Array<{ role: string; content: unknown }>,
   signal: AbortSignal,
+  system: string = SYSTEM,
 ): Promise<Response> {
   // Anthropic native streaming. Each retry is a fresh fetch.
   let lastErr: { status: number; body: string } | null = null;
@@ -110,7 +109,7 @@ async function callAnthropicStreaming(
         model: 'claude-sonnet-4-6',
         max_tokens: 2048,
         stream: true,
-        system: [{ type: 'text', text: SYSTEM, cache_control: { type: 'ephemeral' } }],
+        system: [{ type: 'text', text: system, cache_control: { type: 'ephemeral' } }],
         tools: TOOLS,
         messages,
       }),
@@ -241,32 +240,35 @@ export async function POST(req: Request): Promise<Response> {
   if (!apiKey) {
     return errorResponse(
       'demo_offline',
-      'ANTHROPIC_API_KEY not configured on server. Sign up to run agents on your own key.',
+      'Hosted AI is temporarily unavailable. Please retry, or connect your own API key in settings.',
       { requestId },
     );
   }
 
-  if (getCookie(req, 'brocco_demo_used') === '1') {
-    return errorResponse(
-      'rate_limit',
-      "You've used your free demo run for today. Sign up free for 100 runs/month.",
-      { requestId },
-    );
-  }
-
-  let body: { prompt?: unknown };
+  let body: { prompt?: unknown; agent?: unknown; attachments?: unknown };
   try {
     body = await req.json();
   } catch {
     return errorResponse('invalid_json', 'Request body is not valid JSON', { requestId });
   }
   const prompt = typeof body.prompt === 'string' ? body.prompt.trim() : '';
-  if (prompt.length < 4 || prompt.length > 1000) {
+  if (prompt.length < 4 || prompt.length > 8000) {
     return errorResponse(
       'validation_failed',
-      `Prompt must be 4-1000 characters. Got ${prompt.length}.`,
+      `Prompt must be 4-8000 characters. Got ${prompt.length}.`,
       { requestId },
     );
+  }
+  if (body.attachments !== undefined && (!Array.isArray(body.attachments) || body.attachments.length > 0)) {
+    return errorResponse('validation_failed', 'Hosted runs do not support attachments yet. Remove the attachments or connect your own API key.', { requestId });
+  }
+  const agent = typeof body.agent === 'string' ? body.agent : 'researcher';
+  if (!AGENTS.some((item) => item.name === agent)) return errorResponse('validation_failed', 'Choose a supported agent.', { requestId });
+  const system = `${SYSTEM_PROMPTS[agent]}\nHosted tools available: search_web and http_get only. Return complete deliverables as Markdown or code in your answer. Do not claim to save files, send messages, or perform actions you cannot execute. Use no more than 6 tool steps.`;
+  const denied = await requireToolAccess(req, (user, access) => reserveHostedRun(user.id, access.plan!));
+  if (denied) {
+    denied.headers.set('X-Brocco-Request-Id', requestId);
+    return denied;
   }
 
   // AbortController that fires when the SSE consumer disconnects.
@@ -289,7 +291,7 @@ export async function POST(req: Request): Promise<Response> {
       }, 5_000);
 
       try {
-        send({ type: 'run_started', request_id: requestId, agent: 'demo', prompt });
+        send({ type: 'run_started', request_id: requestId, agent, prompt });
         const messages: Array<{ role: string; content: unknown }> = [{ role: 'user', content: prompt }];
 
         for (let step = 1; step <= MAX_STEPS; step++) {
@@ -298,7 +300,7 @@ export async function POST(req: Request): Promise<Response> {
 
           let resp: Response;
           try {
-            resp = await callAnthropicStreaming(apiKey, messages, upstreamAbort.signal);
+            resp = await callAnthropicStreaming(apiKey, messages, upstreamAbort.signal, system);
           } catch (e) {
             const err = e as { status?: number; message?: string };
             const code = err.status === 429 ? 'upstream_rate_limit'
@@ -361,6 +363,7 @@ export async function POST(req: Request): Promise<Response> {
           });
           const toolResults = await Promise.all(toolPromises);
           messages.push({ role: 'user', content: toolResults });
+          if (step === MAX_STEPS) send({ type: 'run_finished', status: 'error', error: 'This run reached its tool-step limit. Try a narrower goal.', request_id: requestId });
         }
       } catch (e) {
         send({
@@ -393,7 +396,6 @@ export async function POST(req: Request): Promise<Response> {
       'X-Accel-Buffering': 'no',
       'X-Brocco-Request-Id': requestId,
       Connection: 'keep-alive',
-      'Set-Cookie': 'brocco_demo_used=1; Max-Age=86400; Path=/; SameSite=Lax; HttpOnly; Secure',
     },
   });
 }

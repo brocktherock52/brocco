@@ -2,6 +2,23 @@
 
 All notable changes to Brocco. Format: [Keep a Changelog](https://keepachangelog.com/en/1.1.0/). Versioning: semver under the `vMAJOR.MINOR-tag` scheme until 1.0.
 
+## [Unreleased], account and billing conversion (2026-10-07)
+
+### Added
+- Google and Apple account sign-in with configuration-aware buttons, secure callback preservation, and setup documentation.
+- Account-first card-required seven-day dashboard trial and a tool paywall with explicit confirmation before starting paid service.
+- Stripe-backed subscription access checks, billing recovery, and verified payment gating for hosted and BYOK tools.
+
+### Changed
+- Unified marketing calls to action and removed obsolete free-run/no-card offers.
+- Existing checkout links preserve the chosen plan and billing interval through signup.
+- Paid dashboard runs use hosted AI when configured; otherwise pricing and checkout disclose the need for a personal API key and separate provider billing.
+
+### Fixed
+- Prevented client-side plan changes, anonymous checkout claims, duplicate subscription creation, and stale or forged browser plan values from granting paid access.
+- Removed unverified checkout-success messages and added recoverable billing errors.
+- Invoice amount changes require a fresh review before payment; declined or incomplete payments leave tools locked.
+
 ## [Unreleased], daily-essential push (2026-05-12)
 
 ### Added

@@ -7,22 +7,23 @@ import { FinalCta } from '@/components/final-cta';
 import { Footer } from '@/components/footer';
 
 export const metadata: Metadata = {
-  title: 'Pricing - simple, transparent, free to start',
+  title: 'Pricing - Solo and Team with a 7-day dashboard preview',
   description:
-    'Free tier with BYOK forever. Solo $49/mo, Team $199/mo. Annual save 17%. Enterprise custom. Cancel anytime.',
+    'Preview the dashboard for seven days with a card on file. Solo $49/month or $490/year; Team $199/month or $1,990/year. Live tools require a paid subscription.',
   alternates: { canonical: '/pricing' },
 };
 
 // Note: the root layout (app/layout.tsx) already emits a site-wide
-// SoftwareApplication + Offer graph (Free/Solo/Team), so we do NOT repeat it
+// SoftwareApplication + Offer graph (Solo/Team), so we do NOT repeat it
 // here. This page only adds the FAQPage schema via <Faq />.
 export default function PricingPage() {
+  const hostedAvailable = Boolean(process.env.ANTHROPIC_API_KEY);
   return (
     <>
       <Nav />
       <main>
-        <Pricing standalone />
-        <ComparisonTable />
+        <Pricing standalone hostedAvailable={hostedAvailable} />
+        <ComparisonTable hostedAvailable={hostedAvailable} />
         <Integrations />
         <Faq />
         <FinalCta />
@@ -32,35 +33,34 @@ export default function PricingPage() {
   );
 }
 
-function ComparisonTable() {
+function ComparisonTable({ hostedAvailable }: { hostedAvailable: boolean }) {
   const rows: { label: string; values: (string | boolean)[] }[] = [
-    { label: 'Monthly runs', values: ['100 (BYOK)', '2,000', '10,000', 'Unlimited'] },
-    { label: 'Agents in parallel', values: ['1', '5', 'Unlimited', 'Unlimited'] },
-    { label: 'BYOK', values: [true, true, true, true] },
-    { label: 'JSONL audit trail', values: [true, true, true, true] },
-    { label: 'Recipes gallery', values: [true, true, true, true] },
-    { label: 'Tokens covered', values: [false, true, true, true] },
-    { label: 'Custom Python tools', values: [false, true, true, true] },
-    { label: 'Seats', values: ['1', '1', '5', 'Unlimited'] },
-    { label: 'SSO + audit logs', values: [false, false, true, true] },
-    { label: 'SOC 2 Type II report', values: [false, false, false, true] },
-    { label: 'On-prem / air-gap', values: [false, false, false, true] },
-    { label: 'SLA', values: ['Community', 'Email', '1-hour', 'Custom'] },
+    { label: 'Dashboard preview', values: ['7 days', '7 days'] },
+    { label: 'Card required for trial', values: [true, true] },
+    { label: 'Live tools during preview', values: [false, false] },
+    ...(hostedAvailable ? [
+      { label: 'Monthly hosted agent runs on paid plan', values: ['2,000', '10,000'] },
+      { label: 'Daily hosted fair-use limit (per agent)', values: ['100 runs / day', '500 runs / day'] },
+    ] : [
+      { label: 'Live model access', values: ['Your API key required', 'Your API key required'] },
+      { label: 'Provider usage', values: ['Billed separately by your provider', 'Billed separately by your provider'] },
+    ]),
+    { label: 'Seats', values: ['1', '5'] },
+    { label: 'Monthly billing after preview', values: ['$49 / month', '$199 / month'] },
+    { label: 'Annual billing after preview', values: ['$490 / year', '$1,990 / year'] },
   ];
 
   return (
     <section className="py-16 md:py-24">
       <div className="container-x">
-        <h2 className="text-center text-display-lg text-grad">Compare every tier</h2>
+        <h2 className="text-center text-display-lg text-grad">Compare the plans</h2>
         <div className="mt-10 overflow-x-auto rounded-2xl border border-white/[0.06] bg-white/[0.02]">
           <table className="w-full text-left text-[13.5px]">
             <thead className="border-b border-white/[0.06] bg-white/[0.02]">
               <tr>
                 <th className="px-4 py-3.5 font-mono text-[11px] uppercase tracking-wider text-ink-faint">Feature</th>
-                <th className="px-4 py-3.5 font-semibold">Free</th>
                 <th className="px-4 py-3.5 font-semibold">Solo</th>
                 <th className="px-4 py-3.5 font-semibold text-brand-glow">Team</th>
-                <th className="px-4 py-3.5 font-semibold">Enterprise</th>
               </tr>
             </thead>
             <tbody>

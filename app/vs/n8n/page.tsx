@@ -26,7 +26,7 @@ export default function VsN8nPage() {
       }}
       oneLine={{
         brocco:
-          'A multi-agent reasoning dashboard. The agent picks the next tool. JSONL audit log. BYOK on free, hosted on paid.',
+          'A multi-agent reasoning dashboard. The agent picks the next tool. JSONL audit log. Seven-day dashboard preview; live tools on paid plans.',
         competitor:
           'An open-source workflow automation engine with hundreds of pre-built nodes. Self-hosted or n8n Cloud. You design the graph; n8n executes it.',
       }}
@@ -38,7 +38,7 @@ export default function VsN8nPage() {
         { label: 'BYOK (LLM provider)', brocco: true, competitor: 'AI nodes only' },
         { label: 'JSONL audit log per run', brocco: true, competitor: 'Execution log (UI)' },
         { label: 'Visual editor', brocco: 'Markdown agents', competitor: 'Drag-drop canvas' },
-        { label: 'Free tier', brocco: '100 runs / mo BYOK', competitor: 'Free self-host or Starter cloud' },
+        { label: 'Free tier', brocco: false, competitor: 'Free self-host or Starter cloud' },
         { label: 'Paid entry', brocco: '$49 / mo (Solo)', competitor: '$24 / mo (Starter Cloud)' },
         { label: 'AI agent capability', brocco: 'Native (the product)', competitor: 'AI nodes (LangChain integration)' },
         { label: 'MCP server (Claude Desktop)', brocco: true, competitor: false },
@@ -75,7 +75,7 @@ export default function VsN8nPage() {
         },
         {
           q: 'Cost comparison?',
-          a: 'n8n self-hosted: free + your VPS cost. n8n Starter Cloud: $24/mo for 2,500 executions. Brocco free: 100 runs/mo BYOK. Brocco Solo: $49/mo with 2,000 runs covered. n8n is cheaper at high volume of simple steps; brocco is cheaper when each "task" is one reasoning run instead of 12 pre-defined nodes.',
+          a: 'n8n self-hosted: free + your VPS cost. n8n Starter Cloud: $24/mo for 2,500 executions. Brocco offers a seven-day dashboard preview with a card required. Live tools require a paid plan. Brocco Solo: $49/mo with 2,000 runs covered. n8n is cheaper at high volume of simple steps; brocco is cheaper when each "task" is one reasoning run instead of 12 pre-defined nodes.',
         },
       ]}
     />

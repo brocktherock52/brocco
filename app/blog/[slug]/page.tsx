@@ -154,7 +154,7 @@ export default async function BlogPostPage({ params }: PageProps) {
                 Try it for yourself
               </p>
               <p className="mt-2 text-[15px] leading-relaxed text-ink-dim">
-                Run the workflow in this article inside <Link href="/app" className="text-cyan-glow underline-offset-4 hover:underline">/app</Link>. Demo mode runs without a key; bring your Anthropic key for live Claude calls.
+                Explore the dashboard with a <Link href="/signup" className="text-cyan-glow underline-offset-4 hover:underline">7-day trial</Link>. A card is required. Activate a paid subscription to run this workflow with the required model and integration credentials.
               </p>
             </div>
           </div>

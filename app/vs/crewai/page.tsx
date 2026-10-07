@@ -37,7 +37,7 @@ export default function VsCrewAiPage() {
         { label: 'Built-in agents', brocco: '9 (researcher, coder, outreach, etc.)', competitor: 'Bring your own' },
         { label: 'Tool registry', brocco: '13 + factory', competitor: 'Bring your own + LangChain tools' },
         { label: 'BYOK (LLM provider)', brocco: true, competitor: true },
-        { label: 'Free tier', brocco: '100 runs / mo BYOK', competitor: 'Open-source SDK free' },
+        { label: 'Free tier', brocco: false, competitor: 'Open-source SDK free' },
         { label: 'Paid entry', brocco: '$49 / mo (Solo)', competitor: 'Enterprise (custom)' },
         { label: 'JSONL audit per run', brocco: true, competitor: 'Custom logging' },
         { label: 'MCP server (Claude Desktop)', brocco: true, competitor: false },
@@ -74,7 +74,7 @@ export default function VsCrewAiPage() {
         },
         {
           q: 'Pricing reality?',
-          a: 'CrewAI core is open source: free + your hosting. Brocco free tier: 100 runs / mo BYOK. CrewAI Enterprise pricing is custom and gated. Brocco Solo is $49/mo public, Team $199/mo. If you are evaluating which to spend $200/mo on, brocco gets you running in 11 minutes; CrewAI is a longer commitment.',
+          a: 'CrewAI core is open source: free + your hosting. Brocco offers a seven-day dashboard preview with a card required; live tools require a paid plan. CrewAI Enterprise pricing is custom and gated. Brocco Solo is $49/mo public, Team $199/mo. If you are evaluating which to spend $200/mo on, brocco gets you running in 11 minutes; CrewAI is a longer commitment.',
         },
       ]}
     />

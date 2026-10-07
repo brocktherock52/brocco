@@ -137,7 +137,6 @@ const ldJson = {
       description:
         'Multi-agent AI dashboard. Bring your own key. Broadcast one prompt to N agents in parallel.',
       offers: [
-        { '@type': 'Offer', name: 'Free', price: '0', priceCurrency: 'USD' },
         { '@type': 'Offer', name: 'Solo', price: '49', priceCurrency: 'USD' },
         { '@type': 'Offer', name: 'Team', price: '199', priceCurrency: 'USD' },
       ],

@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og';
 
 export const runtime = 'edge';
-export const alt = 'brocco.dev pricing, simple, transparent, free to start';
+export const alt = 'brocco.dev pricing, 7-day dashboard preview, card required';
 export const size = { width: 1200, height: 630 };
 export const contentType = 'image/png';
 
@@ -44,15 +44,14 @@ export default function PricingOg() {
               color: 'transparent',
             }}
           >
-            simple. transparent. free to start.
+            meet your AI team.
           </h1>
         </div>
 
         <div style={{ display: 'flex', gap: 40, fontSize: 26, color: '#A8B0BC' }}>
-          <span><strong style={{ color: '#fff' }}>$0</strong> free</span>
-          <span><strong style={{ color: '#fff' }}>$49</strong> solo</span>
-          <span><strong style={{ color: '#fff' }}>$199</strong> team</span>
-          <span>BYOK, no card</span>
+          <span><strong style={{ color: '#fff' }}>$49/mo</strong> solo</span>
+          <span><strong style={{ color: '#fff' }}>$199/mo</strong> team</span>
+          <span>7-day preview · card required</span>
         </div>
       </div>
     ),

@@ -13,8 +13,16 @@ const QA = [
     a: 'You can, for one task, in one thread, that you babysit prompt by prompt. Brocco is what you reach for when that gets old. One prompt fans out to a whole team running in parallel, so research, a plan, and outreach drafts land at once instead of one after another. Every run exports as a polished, branded PDF, a deliverable you can hand a client, not a wall of chat. And the projects you save keep watching themselves: brocco flags when a project\'s findings have gone stale and re-runs them, so you are not re-asking the same questions every week. Same models you already trust (bring your own key), minus the copy-paste and the babysitting.',
   },
   {
-    q: 'Do I need an API key to start?',
-    a: 'Free tier: yes, you bring your own key (Anthropic, OpenAI, or any OpenAI-compatible endpoint like Ollama running locally). It is stored in your browser only, never on our servers. Paid tiers: we cover the tokens; you just pay per run.',
+    q: 'What is included in the 7-day trial?',
+    a: 'The trial is a seven-day dashboard preview. Create your account, choose Solo or Team, and add a payment card at checkout. Explore the workspace and sample workflows; live tool calls and agent runs require an active paid subscription. You can confirm early activation to end the preview and start your paid plan sooner.',
+  },
+  {
+    q: 'When will I be charged?',
+    a: 'Your selected plan starts automatically when the seven-day trial ends: Solo is $49 monthly or $490 annually; Team is $199 monthly or $1,990 annually. It renews each billing period until you cancel. Cancel in the billing portal before the trial ends to avoid the first charge. If you confirm early activation, your paid subscription begins then.',
+  },
+  {
+    q: 'Do I need an API key to preview the dashboard?',
+    a: 'No API key is needed for the dashboard preview. Live tool usage requires a paid plan. Model and integration credentials may also be needed for the workflow you choose; adding a key does not unlock live tools during the preview.',
   },
   {
     q: 'Which models are supported?',
@@ -22,11 +30,11 @@ const QA = [
   },
   {
     q: 'What if I exceed my monthly run limit?',
-    a: 'Runs over the included quota are billed at $0.05 each on Solo and $0.03 each on Team. No surprise overages. Hard-cap usage in dashboard settings. Free tier never overcharges since you are using your own key.',
+    a: 'Runs over the included quota are billed at $0.05 each on Solo and $0.03 each on Team. No surprise overages. Hard-cap usage in dashboard settings. Trial accounts cannot run live tools or incur usage overages.',
   },
   {
     q: 'Do you train models on my data?',
-    a: 'No. Ever. On the free tier, your prompts go directly from your browser to your model provider; brocco never sees them. On paid tiers, our hosted runtime calls Anthropic with zero-data-retention enabled by default.',
+    a: 'See our privacy and security pages for details about how prompts, model providers, and integrations handle your data. The dashboard preview uses examples; live workflows send the data needed to the model and tools you choose.',
   },
   {
     q: 'Can I cancel anytime?',
@@ -42,7 +50,7 @@ const QA = [
   },
   {
     q: 'How long until I have my first agent running?',
-    a: 'Median time from signup to first successful run is 11 minutes. The starter pack includes 4 ready agents (researcher, coder, outreach, supervisor) and 11 tools. Drop a markdown file, hit run.',
+    a: 'After creating an account and adding your card, you can preview the dashboard. Live runs unlock when your paid subscription starts after seven days, or sooner if you confirm early activation. Then choose a workflow, connect any required credentials, and submit your task.',
   },
   {
     q: 'SOC 2 / GDPR / security details?',

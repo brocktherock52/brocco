@@ -50,8 +50,8 @@ export default async function ToolProfilePage({ params }: PageProps) {
             </h1>
             <p className="mt-5 max-w-2xl text-[17px] leading-relaxed text-ink-dim">{t.tagline}</p>
             <div className="mt-7 flex flex-wrap gap-3">
-              <Link href="/app" className="btn-primary">
-                Open in dashboard <ArrowRight className="h-3.5 w-3.5" />
+              <Link href="/signup" className="btn-primary">
+                Start 7-day trial <ArrowRight className="h-3.5 w-3.5" />
               </Link>
               <Link href="/tools" className="btn-ghost">Back to tools</Link>
             </div>

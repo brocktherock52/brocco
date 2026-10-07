@@ -134,13 +134,17 @@ Existing animation keyframes (defined in `tailwind.config.ts`):
 |---|---|---|
 | Hero (post v4.6 merge) | `components/hero-bento.tsx` | Homepage hero with bento layout |
 | Atmosphere | `components/breathing-bg.tsx` | The ONE allowed atmospheric layer (slow gradient drift) |
-| Nav | `components/nav.tsx` | Site nav. Post v3.0 PR 1: 3 items + Install button + Open app CTA |
+| Nav | `components/nav.tsx` | Informational navigation, sign-in link, and Start 7-day trial CTA; signed-in users can open the app |
 | Streaming pane | `components/dashboard/stream-pane.tsx` | Agent live output rendering |
-| Pricing | `components/pricing.tsx` | Single-screen pricing |
+| Pricing | `components/pricing.tsx` | Solo and Team cards, monthly/annual billing, and the shared trial signup CTA |
 | Footer | `components/footer.tsx` | Footer with grouped links |
 | Install button | `components/install-button.tsx` | PWA install trigger |
 | Command palette | `components/command-palette.tsx` | Cmd+K |
 | Logo | `components/logo.tsx` | Wordmark |
+
+### Conversion flow
+
+The marketing conversion action is **Start 7-day trial**, linking to `/signup`. Pricing cards preserve the chosen tier and interval through a `callbackURL` to `/start`. The trial requires a card and provides seven days of dashboard preview; live agent runs and tools require paid activation. Show the recurring price, automatic billing after the trial, and how to cancel before the first charge. Homepage install and Mission Control promotions are removed; informational navigation and footer links remain.
 
 ### Components flagged for review or removal
 

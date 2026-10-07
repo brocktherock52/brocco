@@ -13,7 +13,8 @@
  * drizzle adapter contract. The threads + messages tables match the
  * scaffold brief verbatim (users.id is a uuid foreign key target).
  */
-import { pgTable, text, timestamp, uuid, jsonb, boolean, integer } from 'drizzle-orm/pg-core';
+import { pgTable, text, timestamp, uuid, jsonb, boolean, integer, primaryKey, check, index } from 'drizzle-orm/pg-core';
+import { sql } from 'drizzle-orm';
 
 export const users = pgTable('users', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -133,6 +134,26 @@ export const messages = pgTable('messages', {
   meta: jsonb('meta').$type<Record<string, unknown>>(),
   createdAt: timestamp('created_at').defaultNow().notNull(),
 });
+
+export const billingCustomers = pgTable('billing_customers', {
+  customerId: text('customer_id').primaryKey(),
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  createdAt: timestamp('created_at').notNull().defaultNow(),
+}, (table) => [index('billing_customers_user_idx').on(table.userId)]);
+
+export const hostedUsage = pgTable('hosted_usage', {
+  userId: uuid('user_id').notNull().references(() => users.id, { onDelete: 'cascade' }),
+  month: text('month').notNull(),
+  runs: integer('runs').notNull().default(0),
+  day: text('day').notNull(),
+  dayRuns: integer('day_runs').notNull().default(0),
+  updatedAt: timestamp('updated_at').notNull().defaultNow(),
+}, (table) => [
+  primaryKey({ columns: [table.userId, table.month] }),
+  check('hosted_usage_nonnegative', sql`${table.runs} >= 0 AND ${table.dayRuns} >= 0`),
+  check('hosted_usage_month_format', sql`${table.month} ~ '^[0-9]{4}-[0-9]{2}$'`),
+  check('hosted_usage_day_format', sql`${table.day} ~ '^[0-9]{4}-[0-9]{2}-[0-9]{2}$'`),
+]);
 
 export type User = typeof users.$inferSelect;
 export type Session = typeof sessions.$inferSelect;

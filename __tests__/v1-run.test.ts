@@ -7,6 +7,9 @@
 */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { POST } from '@/app/api/v1/run/route';
+import { requireToolAccess } from '@/lib/billing-access';
+
+vi.mock('@/lib/billing-access', () => ({ requireToolAccess: vi.fn(async () => null) }));
 
 function makeRequest(body: unknown, cookie?: string): Request {
   const headers: HeadersInit = { 'content-type': 'application/json' };
@@ -23,6 +26,7 @@ describe('POST /api/v1/run', () => {
 
   beforeEach(() => {
     process.env.ANTHROPIC_API_KEY = 'sk-ant-test-fake';
+    vi.mocked(requireToolAccess).mockResolvedValue(null);
   });
 
   afterEach(() => {
@@ -36,16 +40,16 @@ describe('POST /api/v1/run', () => {
     expect(resp.status).toBe(503);
     const body = await resp.json();
     expect(body.code).toBe('demo_offline');
-    expect(body.detail).toMatch(/ANTHROPIC_API_KEY/);
+    expect(body.detail).toMatch(/Hosted AI/);
     expect(body.request_id).toMatch(/^req_/);
     expect(body.doc_url).toMatch(/demo_offline/);
   });
 
-  it('429 rate_limit when cookie is set', async () => {
-    const resp = await POST(makeRequest({ prompt: 'hello world' }, 'brocco_demo_used=1'));
-    expect(resp.status).toBe(429);
+  it('does not apply the retired free-demo cookie limit to paid users', async () => {
+    const resp = await POST(makeRequest({ prompt: 'hi' }, 'brocco_demo_used=1'));
+    expect(resp.status).toBe(400);
     const body = await resp.json();
-    expect(body.code).toBe('rate_limit');
+    expect(body.code).toBe('validation_failed');
     expect(body.request_id).toMatch(/^req_/);
   });
 
@@ -61,12 +65,12 @@ describe('POST /api/v1/run', () => {
     expect(resp.status).toBe(400);
     const body = await resp.json();
     expect(body.code).toBe('validation_failed');
-    expect(body.detail).toMatch(/4-1000/);
+    expect(body.detail).toMatch(/4-8000/);
     expect(body.detail).toMatch(/Got 2/);
   });
 
   it('400 validation_failed when prompt is too long', async () => {
-    const resp = await POST(makeRequest({ prompt: 'x'.repeat(1001) }));
+    const resp = await POST(makeRequest({ prompt: 'x'.repeat(8001) }));
     expect(resp.status).toBe(400);
     const body = await resp.json();
     expect(body.code).toBe('validation_failed');
@@ -83,5 +87,18 @@ describe('POST /api/v1/run', () => {
     delete process.env.ANTHROPIC_API_KEY;
     const resp = await POST(makeRequest({ prompt: 'hello world' }));
     expect(resp.headers.get('X-Brocco-Request-Id')).toMatch(/^req_/);
+  });
+
+  it('rejects unpaid execution before contacting any provider', async () => {
+    vi.mocked(requireToolAccess).mockResolvedValue(Response.json({ error: 'subscription_required' }, { status: 402 }));
+    const fetchSpy = vi.spyOn(globalThis, 'fetch');
+    const response = await POST(makeRequest({ prompt: 'Research competitors' }));
+    expect(response.status).toBe(402);
+    expect(fetchSpy).not.toHaveBeenCalled();
+  });
+
+  it('rejects unsupported agents and attachments instead of silently ignoring them', async () => {
+    expect((await POST(makeRequest({ prompt: 'Research competitors', agent: 'unknown' }))).status).toBe(400);
+    expect((await POST(makeRequest({ prompt: 'Research competitors', attachments: [{}] }))).status).toBe(400);
   });
 });
